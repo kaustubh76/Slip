@@ -164,6 +164,18 @@ export type {
   WebhookRepo,
 } from "./ports/store.js";
 export type { Receipt } from "./receipt.js";
+export {
+  assertRecordInvariants,
+  type HoldAction,
+  type HoldPlan,
+  initialHold,
+  initialPayment,
+  initialPaymentEvent,
+  leaseKeyString,
+  type PaymentPlan,
+  planHoldDecision,
+  planPaymentTransition,
+} from "./records.js";
 export { type AgentReport, lowerMedian } from "./report.js";
 export {
   canMove,

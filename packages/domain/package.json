@@ -2,7 +2,7 @@
   "name": "@slip/domain",
   "version": "0.0.1",
   "private": true,
-  "description": "Slip domain: money in integer cents, ids and errors.",
+  "description": "Slip domain: types, money in integer cents, state machines, persistence port, shared invariants.",
   "type": "module",
   "exports": {
     ".": {
