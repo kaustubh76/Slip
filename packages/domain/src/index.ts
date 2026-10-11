@@ -1,3 +1,26 @@
+export {
+  ATTEMPT_ORIGINS,
+  type Attempt,
+  type AttemptOrigin,
+  CHECK_RESULT_VERSION,
+  type CheckoutRequest,
+  type CheckoutRequestInput,
+  CheckoutRequestSchema,
+  type CheckResult,
+  CheckResultSchema,
+  type ClassifierAnswer,
+  ClassifierAnswerSchema,
+  type Decision,
+  DecisionSchema,
+  OUTCOMES,
+  type Outcome,
+  OutcomeSchema,
+  parseStoredCheckResult,
+  RULE_CODES,
+  RULE_OUTCOME,
+  type RuleCode,
+  RuleCodeSchema,
+} from "./attempt.js";
 export type { Branded } from "./brand.js";
 export {
   ConflictError,
@@ -50,3 +73,27 @@ export {
   parseUsdStringToCents,
   pctHundredths,
 } from "./money.js";
+export {
+  AVAILABILITIES,
+  type Availability,
+  AvailabilitySchema,
+  CONDITIONS,
+  type Condition,
+  ConditionSchema,
+  type Offer,
+  type OfferInput,
+  OfferSchema,
+  type OfferSnapshot,
+  type OfferSnapshotInput,
+  OfferSnapshotSchema,
+  type SelectedOption,
+  SelectedOptionSchema,
+} from "./offer.js";
+export {
+  DEFAULT_POLICY,
+  MAX_SNAPSHOT_AGE_MS,
+  type Policy,
+  type PolicyInput,
+  PolicySchema,
+  policyWith,
+} from "./policy.js";
