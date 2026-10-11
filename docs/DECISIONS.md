@@ -186,3 +186,11 @@ A hold whose capture was attempted (approved, then the capture was declined) is 
 up: that approval was spent on the capture, and a follow-up would charge again without asking. A
 live authorization is approved by capturing it; an unsettled one is not ready. The follow-up is
 always PAID by OWNER_APPROVED: a re-check that rejects is refused by the application, not recorded.
+
+## D28 · 2026-10-12 · Open holds are found at any age; half-done revokes are findable
+
+Checkout dedupe looks at recent attempts (10 minutes), but a PENDING hold can be two days old. If
+dedupe only saw recent ones, a second HELD attempt would place a second authorization, and an owner
+approving both would pay twice. `holds.listOpen(agent, product)` returns PENDING holds at any age.
+`holds.listPendingOnRevokedMandates` lets the resolver finish a revoke that stopped before
+declining its holds, so their authorizations are voided rather than left to expire.

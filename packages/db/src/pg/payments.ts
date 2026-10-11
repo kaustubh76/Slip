@@ -9,7 +9,7 @@ import {
   planHoldDecision,
   planPaymentTransition,
 } from "@slip/domain";
-import { and, asc, eq, inArray, lt, lte } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, lt, lte } from "drizzle-orm";
 import type { Db } from "../client.js";
 import type { VaultCipher } from "../crypto.js";
 import {
@@ -232,6 +232,42 @@ export function pgHolds(db: Db, cipher: VaultCipher): HoldRepo {
           .innerJoin(attempts, eq(attempts.id, holds.attemptId))
           .where(and(eq(attempts.mandateId, mandateId), eq(holds.status, "PENDING")))
           .orderBy(asc(holds.createdAt), asc(holds.attemptId));
+        return loadReceipts(
+          db,
+          rows.map((row) => row.attempt),
+        );
+      }),
+
+    listOpen: (agentId, productId) =>
+      guarded(async () => {
+        const rows = await db
+          .select({ attempt: attempts })
+          .from(holds)
+          .innerJoin(attempts, eq(attempts.id, holds.attemptId))
+          .where(
+            and(
+              eq(attempts.agentId, agentId),
+              eq(attempts.productId, productId),
+              eq(holds.status, "PENDING"),
+            ),
+          )
+          .orderBy(desc(attempts.createdAt), desc(attempts.id));
+        return loadReceipts(
+          db,
+          rows.map((row) => row.attempt),
+        );
+      }),
+
+    listPendingOnRevokedMandates: (limit) =>
+      guarded(async () => {
+        const rows = await db
+          .select({ attempt: attempts })
+          .from(holds)
+          .innerJoin(attempts, eq(attempts.id, holds.attemptId))
+          .innerJoin(mandates, eq(mandates.id, attempts.mandateId))
+          .where(and(eq(holds.status, "PENDING"), eq(mandates.status, "REVOKED")))
+          .orderBy(asc(holds.createdAt), asc(holds.attemptId))
+          .limit(limit);
         return loadReceipts(
           db,
           rows.map((row) => row.attempt),

@@ -224,6 +224,13 @@ export interface HoldRepo {
     input: { now: Date; voidRequestId: RequestId },
   ): Promise<HoldDecision>;
   listPending(mandateId: MandateId): Promise<Receipt[]>;
+  /**
+   * PENDING holds for this agent and product at any age, newest first. Checkout dedupe uses it:
+   * a hold older than the dedupe window must still stop a second authorization.
+   */
+  listOpen(agentId: AgentId, productId: string): Promise<Receipt[]>;
+  /** PENDING holds whose mandate is REVOKED — a revoke that stopped before declining them. */
+  listPendingOnRevokedMandates(limit: number): Promise<Receipt[]>;
   listExpiring(now: Date, limit: number): Promise<Hold[]>;
   /**
    * Approves a hold that has no live authorization — none was placed, or PayPal failed or voided

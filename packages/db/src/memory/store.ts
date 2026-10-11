@@ -764,6 +764,31 @@ export function createMemoryStore(): Store {
           .map((h) => receiptOf(attempts.get(h.attemptId) as AttemptRecord));
       },
 
+      async listOpen(agentId, productId) {
+        return [...holds.values()]
+          .filter((h) => h.status === "PENDING")
+          .map((h) => attempts.get(h.attemptId) as AttemptRecord)
+          .filter((r) => r.attempt.agentId === agentId && r.attempt.productId === productId)
+          .sort(newestFirst)
+          .map(receiptOf);
+      },
+
+      async listPendingOnRevokedMandates(limit) {
+        return [...holds.values()]
+          .filter(
+            (h) =>
+              h.status === "PENDING" &&
+              mandates.get(attempts.get(h.attemptId)?.attempt.mandateId ?? "")?.mandate.status ===
+                "REVOKED",
+          )
+          .sort(
+            (a, b) =>
+              a.createdAt.getTime() - b.createdAt.getTime() || (a.attemptId < b.attemptId ? -1 : 1),
+          )
+          .slice(0, limit)
+          .map((h) => receiptOf(attempts.get(h.attemptId) as AttemptRecord));
+      },
+
       async listExpiring(now, limit) {
         return [...holds.values()]
           .filter((h) => h.status === "PENDING" && h.expiresAt.getTime() <= now.getTime())

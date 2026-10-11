@@ -1020,6 +1020,47 @@ export function describeStoreContract(label: string, make: () => Promise<Harness
         },
       );
 
+      it("listOpen sees a pending hold at any age, for this agent and product only", async () => {
+        const w = await world(store);
+        const productId = newProductId();
+        const old = await decided(store, w, { ...markets.aboveCap(), productId, now: at(-600) });
+        await record(store, old, { withOrder: false, holdExpiresAt: at(600) });
+        const decidedHold = await decided(store, w, {
+          ...markets.aboveCap(),
+          productId,
+          now: at(-5),
+        });
+        await record(store, decidedHold, { withOrder: false });
+        await store.holds.decline(decidedHold.id, {
+          by: "owner",
+          now: at(-4),
+          voidRequestId: newRequestId(),
+        });
+        const elsewhere = await decided(store, w, markets.aboveCap());
+        await record(store, elsewhere, { withOrder: false });
+        const open = await store.holds.listOpen(w.agentId, productId);
+        expect(open.map((r) => r.attempt.id)).toEqual([old.id]);
+        expect(open[0]?.hold?.status).toBe("PENDING");
+      });
+
+      it("listPendingOnRevokedMandates finds holds a revoke left open", async () => {
+        const w = await world(store);
+        const left = await heldWithAuthorization(w);
+        const closed = await heldWithAuthorization(w);
+        const active = await world(store);
+        const untouched = await heldWithAuthorization(active);
+        await store.mandates.revoke(w.mandateId, at(1));
+        await store.holds.decline(closed.id, {
+          by: "system:revoked",
+          now: at(2),
+          voidRequestId: newRequestId(),
+        });
+        const ids = (await store.holds.listPendingOnRevokedMandates(1000)).map((r) => r.attempt.id);
+        expect(ids).toContain(left.id);
+        expect(ids).not.toContain(closed.id);
+        expect(ids).not.toContain(untouched.id);
+      });
+
       it("listPending shows the mandate's open holds; unknown hold is NotFound", async () => {
         const w = await world(store);
         const open = await heldWithAuthorization(w);
