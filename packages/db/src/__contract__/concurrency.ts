@@ -116,6 +116,34 @@ export function describeConcurrency(label: string, make: () => Promise<Concurren
       }
     });
 
+    it("approve racing a revoke: the approval lands first or is refused — never after", async () => {
+      for (let i = 0; i < 5; i += 1) {
+        const w = await world(store);
+        const attempt = await decided(store, w, markets.aboveCap());
+        await record(store, attempt);
+        await authorize(store, attempt.id);
+        const [approved, revoked] = await Promise.allSettled([
+          store.holds.approve(attempt.id, {
+            by: "owner",
+            now: at(5),
+            captureRequestId: newRequestId(),
+          }),
+          store.mandates.revoke(w.mandateId, at(5)),
+        ]);
+        expect(revoked.status).toBe("fulfilled");
+        const hold = await store.holds.get(attempt.id);
+        const payment = await store.payments.get(attempt.id);
+        if (approved.status === "fulfilled") {
+          expect(hold?.status).toBe("APPROVED");
+          expect(payment?.status).toBe("CAPTURING");
+        } else {
+          expect(approved.reason).toBeInstanceOf(MandateNotActiveError);
+          expect(hold?.status).toBe("PENDING");
+          expect(payment?.status).toBe("AUTHORIZED");
+        }
+      }
+    });
+
     it("revoke racing a checkout: either the checkout landed first or it is refused — never after", async () => {
       for (let i = 0; i < 5; i += 1) {
         const w = await world(store);

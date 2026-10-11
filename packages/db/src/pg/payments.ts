@@ -1,6 +1,7 @@
 import {
   type HoldAction,
   type HoldRepo,
+  MandateNotActiveError,
   NotFoundError,
   type PaymentPlan,
   type PaymentRepo,
@@ -10,10 +11,33 @@ import {
 import { and, asc, eq, inArray, lt, lte, notExists, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import type { Db } from "../client.js";
-import { attempts, holds, paymentEvents, paymentOperations, payments } from "../schema.js";
+import {
+  attempts,
+  holds,
+  mandates,
+  paymentEvents,
+  paymentOperations,
+  payments,
+} from "../schema.js";
 import { guarded } from "./errors.js";
 import { loadPayment, loadReceipts, requirePayment } from "./receipts.js";
 import { toHold, toPayment, toPaymentEvent } from "./rows.js";
+
+/** Refuses unless the attempt's mandate is ACTIVE; holds a share lock on the mandate row. */
+async function assertMandateActive(tx: Db, attemptId: string): Promise<void> {
+  const [row] = await tx
+    .select({ id: mandates.id, status: mandates.status })
+    .from(attempts)
+    .innerJoin(mandates, eq(mandates.id, attempts.mandateId))
+    .where(eq(attempts.id, attemptId))
+    .for("share", { of: mandates });
+  if (row === undefined) {
+    throw new NotFoundError("attempt", attemptId);
+  }
+  if (row.status !== "ACTIVE") {
+    throw new MandateNotActiveError(row.id, row.status);
+  }
+}
 
 /** Writes a planned payment move: the row, its new operation and its event, in the caller's tx. */
 async function writePaymentPlan(tx: Db, plan: PaymentPlan): Promise<void> {
@@ -145,6 +169,11 @@ export function pgHolds(db: Db): HoldRepo {
         }
         const payment = await loadPayment(tx, attemptId, "update");
         const plan = planHoldDecision(toHold(row), payment, action);
+        if (action.kind === "approve" && plan.result === "applied") {
+          // The kill switch: no approval moves money once the mandate is revoked. FOR SHARE makes
+          // a concurrent revoke wait for this approval, or this approval see the revoke.
+          await assertMandateActive(tx, attemptId);
+        }
         if (plan.result === "applied") {
           await tx
             .update(holds)

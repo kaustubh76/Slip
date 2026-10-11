@@ -163,3 +163,11 @@ Inside the transaction that writes the decision, the mandate is read `FOR SHARE`
 ACTIVE, and the check's policy version must be the current one; a concurrent revoke or limit
 change waits or wins cleanly. The vault id for the charge is decrypted in that same transaction,
 so there is no window between "decided" and "allowed to charge".
+
+## D26 · 2026-10-12 · Approving a hold requires an active mandate
+
+The kill switch must stop every movement of money, and a hold approval is one: it starts a
+capture. `holds.approve` checks the attempt's mandate is ACTIVE inside its transaction (share lock,
+so a concurrent revoke either waits or is seen). Declining and expiring stay allowed after a
+revoke because they release money; an approval already made before the revoke repeats as
+`unchanged`, and its capture completes.

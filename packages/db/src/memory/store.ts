@@ -219,6 +219,17 @@ export function createMemoryStore(): Store {
     }
     const payment = payments.get(attemptId) ?? null;
     const plan = planHoldDecision(copy(hold), payment === null ? null : copy(payment), action);
+    if (action.kind === "approve" && plan.result === "applied") {
+      // The kill switch: no approval moves money once the mandate is revoked.
+      const mandateId = attempts.get(attemptId)?.attempt.mandateId;
+      const mandate = mandateId === undefined ? undefined : mandates.get(mandateId);
+      if (mandate === undefined) {
+        throw new NotFoundError("attempt", attemptId);
+      }
+      if (mandate.mandate.status !== "ACTIVE") {
+        throw new MandateNotActiveError(mandate.mandate.id, mandate.mandate.status);
+      }
+    }
     if (plan.paymentPlan?.changed) {
       // Validate the payment write before touching the hold, as one transaction would.
       assertPaymentUnique(plan.paymentPlan.payment);

@@ -860,6 +860,48 @@ export function describeStoreContract(label: string, make: () => Promise<Harness
         expect(expired.payment?.status).toBe("INITIATED");
       });
 
+      it("the kill switch: no approval after a revoke, but decline still releases the hold", async () => {
+        const w = await world(store);
+        const attempt = await heldWithAuthorization(w);
+        await authorize(store, attempt.id);
+        await store.mandates.revoke(w.mandateId, at(2));
+        await expect(
+          store.holds.approve(attempt.id, {
+            by: "owner",
+            now: at(5),
+            captureRequestId: newRequestId(),
+          }),
+        ).rejects.toBeInstanceOf(MandateNotActiveError);
+        expect((await store.holds.get(attempt.id))?.status).toBe("PENDING");
+        expect((await store.payments.get(attempt.id))?.status).toBe("AUTHORIZED");
+        const declined = await store.holds.decline(attempt.id, {
+          by: "system:revoked",
+          now: at(6),
+          voidRequestId: newRequestId(),
+        });
+        expect(declined.hold.status).toBe("DECLINED");
+        expect(declined.payment?.status).toBe("VOIDING");
+      });
+
+      it("an approval made before a revoke repeats as unchanged after it", async () => {
+        const w = await world(store);
+        const attempt = await heldWithAuthorization(w);
+        await authorize(store, attempt.id);
+        await store.holds.approve(attempt.id, {
+          by: "owner",
+          now: at(5),
+          captureRequestId: newRequestId(),
+        });
+        await store.mandates.revoke(w.mandateId, at(6));
+        const again = await store.holds.approve(attempt.id, {
+          by: "owner",
+          now: at(7),
+          captureRequestId: newRequestId(),
+        });
+        expect(again.result).toBe("unchanged");
+        expect(again.payment?.status).toBe("CAPTURING");
+      });
+
       it("a reused request id refuses the whole decision", async () => {
         const w = await world(store);
         const one = await heldWithAuthorization(w);
