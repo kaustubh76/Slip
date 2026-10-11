@@ -19,8 +19,11 @@
     "test": "pnpm typecheck && vitest run",
     "test:unit": "vitest run",
     "test:watch": "vitest",
+    "db:up": "docker compose up -d --wait db",
+    "db:down": "docker compose down",
     "db:generate": "tsc -b packages/domain && pnpm --filter @slip/db exec drizzle-kit generate",
-    "db:migrate": "pnpm --filter @slip/db migrate"
+    "db:migrate": "pnpm --filter @slip/db migrate",
+    "test:pg": "pnpm db:up && SLIP_TEST_DATABASE_URL=postgres://slip:slip@localhost:54329/postgres vitest run --project db"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",

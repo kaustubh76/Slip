@@ -1,0 +1,22 @@
+# Local Postgres for development and for the real-Postgres test suite (`pnpm test:pg`).
+# Postgres 18 matches the engine PGlite embeds, so both test paths run the same SQL.
+# Port 54329 avoids clashing with a Postgres already on 5432.
+services:
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: slip
+      POSTGRES_PASSWORD: slip
+      POSTGRES_DB: slip
+    ports:
+      - "54329:5432"
+    volumes:
+      - slip-pg:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U slip -d slip"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  slip-pg:
