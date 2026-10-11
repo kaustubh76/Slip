@@ -171,3 +171,18 @@ capture. `holds.approve` checks the attempt's mandate is ACTIVE inside its trans
 so a concurrent revoke either waits or is seen). Declining and expiring stay allowed after a
 revoke because they release money; an approval already made before the revoke repeats as
 `unchanged`, and its capture completes.
+
+## D27 · 2026-10-12 · An order-less hold is approved and paid in one transaction
+
+Supersedes the second half of D21. A hold with no live authorization — none was placed (Channel3
+was down, no price), or PayPal failed or voided it before any capture — is approved by
+`holds.approveWithFollowUp`: the hold becomes APPROVED in the same transaction that records the
+OWNER_APPROVAL attempt and its INITIATED one-step payment, after every `record` check (lease,
+agent, ACTIVE mandate, current policy). If any check fails, nothing is written and the hold stays
+PENDING, so there is no "approved but not yet paid" state to recover from, and the crash-recovery
+listing is gone. `attempts.record` refuses OWNER_APPROVAL attempts.
+
+A hold whose capture was attempted (approved, then the capture was declined) is never followed
+up: that approval was spent on the capture, and a follow-up would charge again without asking. A
+live authorization is approved by capturing it; an unsettled one is not ready. The follow-up is
+always PAID by OWNER_APPROVED: a re-check that rejects is refused by the application, not recorded.

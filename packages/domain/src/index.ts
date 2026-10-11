@@ -165,6 +165,7 @@ export type {
 } from "./ports/store.js";
 export type { Receipt } from "./receipt.js";
 export {
+  assertDirectRecord,
   assertRecordInvariants,
   type HoldAction,
   type HoldPlan,
@@ -173,6 +174,7 @@ export {
   initialPaymentEvent,
   leaseKeyString,
   type PaymentPlan,
+  planApprovalWithFollowUp,
   planHoldDecision,
   planPaymentTransition,
 } from "./records.js";

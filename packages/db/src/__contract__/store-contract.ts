@@ -23,6 +23,7 @@ import {
   authorize,
   capture,
   decided,
+  followUpFor,
   markets,
   NOW,
   newAttemptId,
@@ -526,66 +527,13 @@ export function describeStoreContract(label: string, make: () => Promise<Harness
         await expect(record(store, paid, { payment: null })).rejects.toBeInstanceOf(InvariantError);
       });
 
-      it("owner approval of an order-less hold: one follow-up attempt that pays", async () => {
+      it("an OWNER_APPROVAL attempt cannot be recorded on its own", async () => {
         const w = await world(store);
-        const productId = newProductId();
-        const parent = await decided(store, w, { ...markets.aboveCap(), productId });
+        const parent = await decided(store, w, markets.aboveCap());
         await record(store, parent, { withOrder: false });
-
-        const child = async (id = newAttemptId()) => {
-          const rerun = await decided(store, w, {
-            ...markets.aboveCap(),
-            productId,
-            now: at(10),
-            id,
-          });
-          return {
-            ...rerun,
-            origin: "OWNER_APPROVAL" as const,
-            parentAttemptId: parent.id,
-            decision: {
-              ...rerun.decision,
-              outcome: "PAID" as const,
-              ruleCode: "OWNER_APPROVED" as const,
-              checkResult: {
-                ...rerun.decision.checkResult,
-                ruleCode: "OWNER_APPROVED" as const,
-                ruleCodes: ["OWNER_APPROVED" as const, ...rerun.decision.checkResult.ruleCodes],
-              },
-            },
-          };
-        };
-
-        // Not approved yet → refused.
-        await expect(record(store, await child())).rejects.toBeInstanceOf(InvariantError);
-
-        expect(await store.holds.listApprovedAwaitingPayment(100)).not.toContainEqual(
-          expect.objectContaining({ attempt: parent }),
-        );
-        await store.holds.approve(parent.id, {
-          by: "owner",
-          now: at(5),
-          captureRequestId: newRequestId(),
-        });
-        const awaiting = await store.holds.listApprovedAwaitingPayment(100);
-        expect(awaiting.map((r) => r.attempt.id)).toContain(parent.id);
-
-        const followUp = await child();
-        const { receipt, vaultId } = await record(store, followUp);
-        expect(receipt.payment).toMatchObject({
-          intent: "CAPTURE",
-          status: "INITIATED",
-          amountCents: 25000,
-        });
-        expect(vaultId).toBe(w.vaultId);
-        expect((await store.attempts.findChild(parent.id))?.attempt.id).toBe(followUp.id);
-        expect(
-          (await store.holds.listApprovedAwaitingPayment(100)).map((r) => r.attempt.id),
-        ).not.toContain(parent.id);
-
-        // A second follow-up for the same hold is refused.
-        await capture(store, followUp.id, at(11));
-        await expectConflict(record(store, await child()), Conflict.CHILD_ATTEMPT_EXISTS);
+        const followUp = await followUpFor(store, w, parent);
+        await expect(store.attempts.record(followUp)).rejects.toBeInstanceOf(InvariantError);
+        expect(await store.attempts.findChild(parent.id)).toBeNull();
       });
     });
 
@@ -917,6 +865,160 @@ export function describeStoreContract(label: string, make: () => Promise<Harness
         expect((await store.holds.get(two.id))?.status).toBe("PENDING");
         expect((await store.payments.get(two.id))?.status).toBe("AUTHORIZED");
       });
+
+      it("order-less hold: approval and its one-step follow-up land together", async () => {
+        const w = await world(store);
+        const parent = await decided(store, w, markets.aboveCap());
+        await record(store, parent, { withOrder: false });
+        const followUp = await followUpFor(store, w, parent);
+        const { hold, recorded } = await store.holds.approveWithFollowUp({
+          attemptId: parent.id,
+          by: "owner@example.com",
+          followUp,
+        });
+        expect(hold).toMatchObject({
+          status: "APPROVED",
+          decidedBy: "owner@example.com",
+          decidedAt: at(10),
+        });
+        expect(recorded.vaultId).toBe(w.vaultId);
+        expect(recorded.receipt.attempt).toMatchObject({
+          origin: "OWNER_APPROVAL",
+          parentAttemptId: parent.id,
+        });
+        expect(recorded.receipt.payment).toMatchObject({
+          intent: "CAPTURE",
+          status: "INITIATED",
+          amountCents: 25000,
+        });
+        expect((await store.attempts.findChild(parent.id))?.attempt.id).toBe(followUp.attempt.id);
+        expect((await store.holds.get(parent.id))?.status).toBe("APPROVED");
+
+        // Approving again (a double click) is refused; nothing more is written.
+        await expect(
+          store.holds.approveWithFollowUp({
+            attemptId: parent.id,
+            by: "owner@example.com",
+            followUp: await followUpFor(store, w, parent, { now: at(11) }),
+          }),
+        ).rejects.toBeInstanceOf(HoldAlreadyDecidedError);
+      });
+
+      it.each([
+        ["failed", "FAILED"],
+        ["voided by PayPal", "VOIDED"],
+      ] as const)(
+        "a hold whose authorization %s can be approved with a follow-up",
+        async (_label, end) => {
+          const w = await world(store);
+          const parent = await decided(store, w, markets.aboveCap());
+          await record(store, parent);
+          if (end === "FAILED") {
+            await store.payments.transition(parent.id, "FAILED", {
+              patch: { failureReason: "DENIED" },
+              now: at(1),
+            });
+          } else {
+            await authorize(store, parent.id);
+            await store.payments.transition(parent.id, "VOIDED", { now: at(2) });
+          }
+          const { hold } = await store.holds.approveWithFollowUp({
+            attemptId: parent.id,
+            by: "owner",
+            followUp: await followUpFor(store, w, parent),
+          });
+          expect(hold.status).toBe("APPROVED");
+        },
+      );
+
+      it("a live or unsettled authorization is never followed up", async () => {
+        const w = await world(store);
+        const unsettled = await decided(store, w, markets.aboveCap());
+        await record(store, unsettled);
+        await expect(
+          store.holds.approveWithFollowUp({
+            attemptId: unsettled.id,
+            by: "owner",
+            followUp: await followUpFor(store, w, unsettled),
+          }),
+        ).rejects.toBeInstanceOf(HoldNotReadyError);
+        const live = await decided(store, w, markets.aboveCap());
+        await record(store, live);
+        await authorize(store, live.id);
+        await expect(
+          store.holds.approveWithFollowUp({
+            attemptId: live.id,
+            by: "owner",
+            followUp: await followUpFor(store, w, live),
+          }),
+        ).rejects.toBeInstanceOf(InvariantError);
+        expect((await store.holds.get(live.id))?.status).toBe("PENDING");
+      });
+
+      it("a declined capture is never followed up: that approval was already given", async () => {
+        const w = await world(store);
+        const parent = await decided(store, w, markets.aboveCap());
+        await record(store, parent);
+        await authorize(store, parent.id);
+        await store.holds.approve(parent.id, {
+          by: "owner",
+          now: at(5),
+          captureRequestId: newRequestId(),
+        });
+        await store.payments.transition(parent.id, "FAILED", {
+          patch: { failureReason: "CAPTURE_DECLINED" },
+          now: at(6),
+        });
+        await expect(
+          store.holds.approveWithFollowUp({
+            attemptId: parent.id,
+            by: "owner",
+            followUp: await followUpFor(store, w, parent),
+          }),
+        ).rejects.toBeInstanceOf(HoldAlreadyDecidedError);
+        expect(await store.attempts.findChild(parent.id)).toBeNull();
+      });
+
+      it.each([
+        ["the lease is lost", "lease"],
+        ["the mandate is revoked", "revoked"],
+        ["the policy changed", "policy"],
+        ["the hold expired", "expired"],
+      ] as const)(
+        "atomic: when %s the hold stays PENDING and nothing is written",
+        async (_label, mode) => {
+          const w = await world(store);
+          const parent = await decided(store, w, markets.aboveCap());
+          await record(store, parent, { withOrder: false, holdExpiresAt: at(30) });
+          const followUp = await followUpFor(store, w, parent, {
+            now: mode === "expired" ? at(30) : at(10),
+          });
+          const key = { agentId: w.agentId, productId: parent.productId };
+          let expected: new (...args: never[]) => Error = LeaseLostError;
+          if (mode === "lease") {
+            await store.leases.release(key, followUp.leaseHolder);
+            await store.leases.acquire(key, "someone-else", 60_000, at(10));
+          } else if (mode === "revoked") {
+            await store.mandates.revoke(w.mandateId, at(9));
+            expected = MandateNotActiveError;
+          } else if (mode === "policy") {
+            await store.mandates.updatePolicy(
+              w.mandateId,
+              { orderCapCents: 30_000 as never },
+              at(9),
+            );
+            expected = PolicyChangedError;
+          } else {
+            expected = HoldExpiredError;
+          }
+          await expect(
+            store.holds.approveWithFollowUp({ attemptId: parent.id, by: "owner", followUp }),
+          ).rejects.toBeInstanceOf(expected);
+          expect((await store.holds.get(parent.id))?.status).toBe("PENDING");
+          expect(await store.attempts.findChild(parent.id)).toBeNull();
+          expect(await store.payments.get(followUp.attempt.id)).toBeNull();
+        },
+      );
 
       it("listPending shows the mandate's open holds; unknown hold is NotFound", async () => {
         const w = await world(store);

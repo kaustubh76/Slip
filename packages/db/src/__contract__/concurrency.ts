@@ -12,6 +12,7 @@ import {
   at,
   authorize,
   decided,
+  followUpFor,
   markets,
   NOW,
   newProductId,
@@ -141,6 +142,25 @@ export function describeConcurrency(label: string, make: () => Promise<Concurren
           expect(hold?.status).toBe("PENDING");
           expect(payment?.status).toBe("AUTHORIZED");
         }
+      }
+    });
+
+    it("two owners approving one order-less hold at once: exactly one follow-up pays", async () => {
+      for (let i = 0; i < 5; i += 1) {
+        const w = await world(store);
+        const parent = await decided(store, w, markets.aboveCap());
+        await record(store, parent, { withOrder: false });
+        const a = await followUpFor(store, w, parent, { holder: "shared" });
+        const b = await followUpFor(store, w, parent, { holder: "shared" });
+        const settled = await Promise.allSettled([
+          store.holds.approveWithFollowUp({ attemptId: parent.id, by: "owner-a", followUp: a }),
+          store.holds.approveWithFollowUp({ attemptId: parent.id, by: "owner-b", followUp: b }),
+        ]);
+        expect(settled.filter((s) => s.status === "fulfilled")).toHaveLength(1);
+        const loser = settled.find((s) => s.status === "rejected") as PromiseRejectedResult;
+        expect(loser.reason).toBeInstanceOf(HoldAlreadyDecidedError);
+        const child = await store.attempts.findChild(parent.id);
+        expect(child?.payment?.status).toBe("INITIATED");
       }
     });
 

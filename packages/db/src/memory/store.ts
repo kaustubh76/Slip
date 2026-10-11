@@ -2,6 +2,7 @@ import {
   type Agent,
   type AgentReport,
   type Attempt,
+  assertDirectRecord,
   assertRecordInvariants,
   ConflictError,
   classifyMove,
@@ -32,9 +33,12 @@ import {
   PolicyChangedError,
   PolicySchema,
   parseStoredCheckResult,
+  planApprovalWithFollowUp,
   planHoldDecision,
   planPaymentTransition,
   type Receipt,
+  type RecordAttemptInput,
+  type RecordedAttempt,
   SelectedOptionSchema,
   type Store,
   type WebhookEvent,
@@ -249,6 +253,103 @@ export function createMemoryStore(): Store {
       hold: copy(holds.get(attemptId) as Hold),
       payment: stored === undefined ? null : copy(stored),
       result: plan.result,
+    };
+  };
+
+  /**
+   * The checks and writes of `attempts.record`. Everything is checked before anything changes, so
+   * a refusal leaves no trace — and `holds.approveWithFollowUp` can call it before approving.
+   */
+  const recordChecked = (input: RecordAttemptInput): RecordedAttempt => {
+    assertRecordInvariants(input);
+    const { attempt } = input;
+    const payment = initialPayment(input);
+    const hold = initialHold(input);
+    const now = attempt.createdAt;
+    const key = { agentId: attempt.agentId, productId: attempt.productId };
+
+    const lease = leases.get(leaseKeyString(key));
+    if (
+      lease === undefined ||
+      lease.holder !== input.leaseHolder ||
+      lease.expiresAt.getTime() <= now.getTime()
+    ) {
+      throw new LeaseLostError(leaseKeyString(key));
+    }
+
+    const agent = agents.get(attempt.agentId);
+    if (agent === undefined) {
+      throw new NotFoundError("agent", attempt.agentId);
+    }
+    if (agent.agent.mandateId !== attempt.mandateId) {
+      throw new InvariantError(
+        `agent ${attempt.agentId} does not act under mandate ${attempt.mandateId}`,
+      );
+    }
+    if (agent.agent.revokedAt !== null) {
+      throw new ConflictError(Conflict.AGENT_REVOKED, `agent ${attempt.agentId} is revoked`);
+    }
+
+    const mandate = mandates.get(attempt.mandateId);
+    if (mandate === undefined) {
+      throw new NotFoundError("mandate", attempt.mandateId);
+    }
+    if (mandate.mandate.status !== "ACTIVE") {
+      throw new MandateNotActiveError(mandate.mandate.id, mandate.mandate.status);
+    }
+    const checked = attempt.decision.checkResult.policyVersion;
+    const current = latestPolicy(attempt.mandateId);
+    if (current === undefined || current.version !== checked) {
+      throw new PolicyChangedError(checked, current?.version ?? 0);
+    }
+
+    // Constraints, in the order Postgres meets them: unique indexes during the insert,
+    // foreign keys at the end of the statement.
+    if (attempts.has(attempt.id)) {
+      throw new ConflictError(Conflict.ATTEMPT_EXISTS, `attempt ${attempt.id} exists`);
+    }
+    if (
+      attempt.parentAttemptId !== null &&
+      [...attempts.values()].some((r) => r.attempt.parentAttemptId === attempt.parentAttemptId)
+    ) {
+      throw new ConflictError(
+        Conflict.CHILD_ATTEMPT_EXISTS,
+        "the hold already has a follow-up attempt",
+      );
+    }
+    const snapshotRef = attempt.decision.checkResult.snapshotId;
+    if (snapshotRef !== null && !snapshots.has(snapshotRef)) {
+      throw new InvariantError(`snapshot ${snapshotRef} does not exist`);
+    }
+    if (payment !== null) {
+      assertPaymentUnique(payment);
+      for (const op of payment.operations) {
+        if (requestIdInUse(op.requestId)) {
+          throw new ConflictError(Conflict.REQUEST_ID_IN_USE, "request id already used");
+        }
+      }
+    }
+
+    const { decision, selectedOptions, ...rest } = attempt;
+    const record: AttemptRecord = {
+      attempt: copy(rest),
+      selectedOptions: jsonRoundTrip(selectedOptions),
+      outcome: decision.outcome,
+      ruleCode: decision.ruleCode,
+      checkResultJson: jsonRoundTrip(decision.checkResult),
+    };
+    attempts.set(attempt.id, record);
+    if (payment !== null) {
+      payments.set(payment.attemptId, copy(payment));
+      const event = initialPaymentEvent(payment);
+      events.set(payment.attemptId, [{ ...event, detail: jsonRoundTrip(event.detail) }]);
+    }
+    if (hold !== null) {
+      holds.set(hold.attemptId, copy(hold));
+    }
+    return {
+      receipt: receiptOf(record),
+      vaultId: payment !== null ? mandate.vaultId : null,
     };
   };
 
@@ -536,112 +637,8 @@ export function createMemoryStore(): Store {
 
     attempts: {
       async record(input) {
-        assertRecordInvariants(input);
-        const { attempt } = input;
-        const payment = initialPayment(input);
-        const hold = initialHold(input);
-        const now = attempt.createdAt;
-        const key = { agentId: attempt.agentId, productId: attempt.productId };
-
-        const lease = leases.get(leaseKeyString(key));
-        if (
-          lease === undefined ||
-          lease.holder !== input.leaseHolder ||
-          lease.expiresAt.getTime() <= now.getTime()
-        ) {
-          throw new LeaseLostError(leaseKeyString(key));
-        }
-
-        const agent = agents.get(attempt.agentId);
-        if (agent === undefined) {
-          throw new NotFoundError("agent", attempt.agentId);
-        }
-        if (agent.agent.mandateId !== attempt.mandateId) {
-          throw new InvariantError(
-            `agent ${attempt.agentId} does not act under mandate ${attempt.mandateId}`,
-          );
-        }
-        if (agent.agent.revokedAt !== null) {
-          throw new ConflictError(Conflict.AGENT_REVOKED, `agent ${attempt.agentId} is revoked`);
-        }
-
-        const mandate = mandates.get(attempt.mandateId);
-        if (mandate === undefined) {
-          throw new NotFoundError("mandate", attempt.mandateId);
-        }
-        if (mandate.mandate.status !== "ACTIVE") {
-          throw new MandateNotActiveError(mandate.mandate.id, mandate.mandate.status);
-        }
-        const checked = attempt.decision.checkResult.policyVersion;
-        const current = latestPolicy(attempt.mandateId);
-        if (current === undefined || current.version !== checked) {
-          throw new PolicyChangedError(checked, current?.version ?? 0);
-        }
-
-        if (attempt.parentAttemptId !== null) {
-          const parent = attempts.get(attempt.parentAttemptId);
-          if (
-            parent === undefined ||
-            parent.attempt.agentId !== attempt.agentId ||
-            parent.attempt.productId !== attempt.productId ||
-            parent.outcome !== "HELD" ||
-            holds.get(attempt.parentAttemptId)?.status !== "APPROVED" ||
-            payments.has(attempt.parentAttemptId)
-          ) {
-            throw new InvariantError(
-              `attempt ${attempt.id}: parent ${attempt.parentAttemptId} is not an approved hold without a payment for the same agent and product`,
-            );
-          }
-        }
-
-        // Constraints, in the order Postgres meets them: unique indexes during the insert,
-        // foreign keys at the end of the statement.
-        if (attempts.has(attempt.id)) {
-          throw new ConflictError(Conflict.ATTEMPT_EXISTS, `attempt ${attempt.id} exists`);
-        }
-        if (
-          attempt.parentAttemptId !== null &&
-          [...attempts.values()].some((r) => r.attempt.parentAttemptId === attempt.parentAttemptId)
-        ) {
-          throw new ConflictError(
-            Conflict.CHILD_ATTEMPT_EXISTS,
-            "the hold already has a follow-up attempt",
-          );
-        }
-        const snapshotRef = attempt.decision.checkResult.snapshotId;
-        if (snapshotRef !== null && !snapshots.has(snapshotRef)) {
-          throw new InvariantError(`snapshot ${snapshotRef} does not exist`);
-        }
-        if (payment !== null) {
-          assertPaymentUnique(payment);
-          for (const op of payment.operations) {
-            if (requestIdInUse(op.requestId)) {
-              throw new ConflictError(Conflict.REQUEST_ID_IN_USE, "request id already used");
-            }
-          }
-        }
-
-        const { decision, selectedOptions, ...rest } = attempt;
-        const record: AttemptRecord = {
-          attempt: copy(rest),
-          selectedOptions: jsonRoundTrip(selectedOptions),
-          outcome: decision.outcome,
-          ruleCode: decision.ruleCode,
-          checkResultJson: jsonRoundTrip(decision.checkResult),
-        };
-        attempts.set(attempt.id, record);
-        if (payment !== null) {
-          payments.set(payment.attemptId, copy(payment));
-          const event = initialPaymentEvent(payment);
-          events.set(payment.attemptId, [{ ...event, detail: jsonRoundTrip(event.detail) }]);
-        }
-        if (hold !== null) {
-          holds.set(hold.attemptId, copy(hold));
-        }
-        return {
-          receipt: receiptOf(record),
-          vaultId: payment !== null ? mandate.vaultId : null,
-        };
+        assertDirectRecord(input);
+        return recordChecked(input);
       },
 
       async get(id) {
@@ -778,22 +775,27 @@ export function createMemoryStore(): Store {
           .map((h) => copy(h));
       },
 
-      async listApprovedAwaitingPayment(limit) {
-        const children = new Set(
-          [...attempts.values()].map((r) => r.attempt.parentAttemptId).filter((id) => id !== null),
+      async approveWithFollowUp(input) {
+        const hold = holds.get(input.attemptId);
+        if (hold === undefined) {
+          throw new NotFoundError("hold", input.attemptId);
+        }
+        const parent = attempts.get(input.attemptId);
+        if (parent === undefined) {
+          throw new NotFoundError("attempt", input.attemptId);
+        }
+        const parentPayment = payments.get(input.attemptId);
+        const approved = planApprovalWithFollowUp(
+          copy(hold),
+          toAttempt(parent),
+          parentPayment === undefined ? null : copy(parentPayment),
+          { by: input.by, followUp: input.followUp },
         );
-        return [...holds.values()]
-          .filter(
-            (h) =>
-              h.status === "APPROVED" && !payments.has(h.attemptId) && !children.has(h.attemptId),
-          )
-          .sort(
-            (a, b) =>
-              (a.decidedAt?.getTime() ?? 0) - (b.decidedAt?.getTime() ?? 0) ||
-              (a.attemptId < b.attemptId ? -1 : 1),
-          )
-          .slice(0, limit)
-          .map((h) => receiptOf(attempts.get(h.attemptId) as AttemptRecord));
+        // recordChecked refuses before changing anything, so a refused follow-up leaves the
+        // hold PENDING — the in-memory equivalent of the Postgres transaction rollback.
+        const recorded = recordChecked(input.followUp);
+        holds.set(input.attemptId, copy(approved));
+        return { hold: copy(approved), recorded };
       },
     },
 

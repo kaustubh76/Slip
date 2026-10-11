@@ -15,7 +15,7 @@ export function createPgStore(db: Db, cipher: VaultCipher): Store {
     snapshots: pgSnapshots(db),
     attempts: pgAttempts(db, cipher),
     payments: pgPayments(db),
-    holds: pgHolds(db),
+    holds: pgHolds(db, cipher),
     webhooks: pgWebhooks(db),
     leases: pgLeases(db),
     reports: pgReports(db),

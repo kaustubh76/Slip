@@ -5,12 +5,13 @@ import {
   NotFoundError,
   type PaymentPlan,
   type PaymentRepo,
+  planApprovalWithFollowUp,
   planHoldDecision,
   planPaymentTransition,
 } from "@slip/domain";
-import { and, asc, eq, inArray, lt, lte, notExists, sql } from "drizzle-orm";
-import { alias } from "drizzle-orm/pg-core";
+import { and, asc, eq, inArray, lt, lte } from "drizzle-orm";
 import type { Db } from "../client.js";
+import type { VaultCipher } from "../crypto.js";
 import {
   attempts,
   holds,
@@ -19,9 +20,10 @@ import {
   paymentOperations,
   payments,
 } from "../schema.js";
+import { recordInTransaction } from "./attempts.js";
 import { guarded } from "./errors.js";
 import { loadPayment, loadReceipts, requirePayment } from "./receipts.js";
-import { toHold, toPayment, toPaymentEvent } from "./rows.js";
+import { toAttempt, toHold, toPayment, toPaymentEvent } from "./rows.js";
 
 /** Refuses unless the attempt's mandate is ACTIVE; holds a share lock on the mandate row. */
 async function assertMandateActive(tx: Db, attemptId: string): Promise<void> {
@@ -155,7 +157,7 @@ export function pgPayments(db: Db): PaymentRepo {
   };
 }
 
-export function pgHolds(db: Db): HoldRepo {
+export function pgHolds(db: Db, cipher: VaultCipher): HoldRepo {
   const decide = (attemptId: string, action: HoldAction) =>
     guarded(() =>
       db.transaction(async (tx) => {
@@ -247,36 +249,47 @@ export function pgHolds(db: Db): HoldRepo {
         return rows.map(toHold);
       }),
 
-    listApprovedAwaitingPayment: (limit) =>
-      guarded(async () => {
-        const child = alias(attempts, "child");
-        const rows = await db
-          .select({ attempt: attempts })
-          .from(holds)
-          .innerJoin(attempts, eq(attempts.id, holds.attemptId))
-          .where(
-            and(
-              eq(holds.status, "APPROVED"),
-              notExists(
-                db
-                  .select({ one: sql`1` })
-                  .from(payments)
-                  .where(eq(payments.attemptId, holds.attemptId)),
-              ),
-              notExists(
-                db
-                  .select({ one: sql`1` })
-                  .from(child)
-                  .where(eq(child.parentAttemptId, holds.attemptId)),
-              ),
-            ),
-          )
-          .orderBy(asc(holds.decidedAt), asc(holds.attemptId))
-          .limit(limit);
-        return loadReceipts(
-          db,
-          rows.map((row) => row.attempt),
-        );
-      }),
+    approveWithFollowUp: (input) =>
+      guarded(() =>
+        db.transaction(async (tx) => {
+          const [row] = await tx
+            .select()
+            .from(holds)
+            .where(eq(holds.attemptId, input.attemptId))
+            .for("update");
+          if (row === undefined) {
+            throw new NotFoundError("hold", input.attemptId);
+          }
+          const [parentRow] = await tx
+            .select()
+            .from(attempts)
+            .where(eq(attempts.id, input.attemptId));
+          if (parentRow === undefined) {
+            throw new NotFoundError("attempt", input.attemptId);
+          }
+          const approved = planApprovalWithFollowUp(
+            toHold(row),
+            toAttempt(parentRow),
+            await loadPayment(tx, input.attemptId, "update"),
+            { by: input.by, followUp: input.followUp },
+          );
+          // The follow-up runs every record check (lease, agent, ACTIVE mandate, current policy);
+          // if any fails the transaction rolls back and the hold stays PENDING.
+          const recorded = await recordInTransaction(tx, cipher, input.followUp);
+          await tx
+            .update(holds)
+            .set({
+              status: approved.status,
+              decidedAt: approved.decidedAt,
+              decidedBy: approved.decidedBy,
+            })
+            .where(eq(holds.attemptId, input.attemptId));
+          const [stored] = await tx
+            .select()
+            .from(holds)
+            .where(eq(holds.attemptId, input.attemptId));
+          return { hold: toHold(stored as typeof holds.$inferSelect), recorded };
+        }),
+      ),
   };
 }

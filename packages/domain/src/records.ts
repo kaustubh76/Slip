@@ -1,4 +1,4 @@
-import { RULE_OUTCOME } from "./attempt.js";
+import { type Attempt, RULE_OUTCOME } from "./attempt.js";
 import {
   ConflictError,
   HoldAlreadyDecidedError,
@@ -307,6 +307,84 @@ export function planHoldDecision(
     },
     paymentPlan,
   };
+}
+
+/** `attempts.record` takes the agent's own attempts only (see `planApprovalWithFollowUp`). */
+export function assertDirectRecord(input: RecordAttemptInput): void {
+  if (input.attempt.origin !== "AGENT") {
+    throw new InvariantError(
+      `attempt ${input.attempt.id}: an OWNER_APPROVAL attempt is recorded together with its hold approval`,
+    );
+  }
+}
+
+/**
+ * Plans the approval of a hold that has no live authorization, paid by a follow-up attempt. Returns
+ * the approved hold; the store writes it in the same transaction as `record(followUp)`.
+ *
+ * Allowed only when the held attempt has no payment, or one that PayPal failed or voided
+ * **before any capture** — a hold whose capture was attempted already had its approval, and a
+ * follow-up would charge again without asking. A live authorization is approved by capturing it
+ * (`holds.approve`); one not yet settled is `HoldNotReadyError`.
+ */
+export function planApprovalWithFollowUp(
+  hold: Hold,
+  parent: Attempt,
+  parentPayment: Payment | null,
+  input: { by: string; followUp: RecordAttemptInput },
+): Hold {
+  const { followUp } = input;
+  const child = followUp.attempt;
+  const now = child.createdAt;
+
+  if (hold.status !== "PENDING") {
+    throw new HoldAlreadyDecidedError(hold.attemptId, hold.status);
+  }
+  if (now.getTime() >= hold.expiresAt.getTime()) {
+    throw new HoldExpiredError(hold.attemptId);
+  }
+
+  if (parentPayment !== null) {
+    const captureTried = parentPayment.operations.some((op) => op.kind === "CAPTURE");
+    const deadBeforeCapture =
+      (parentPayment.status === "FAILED" || parentPayment.status === "VOIDED") && !captureTried;
+    if (!deadBeforeCapture) {
+      if (parentPayment.status === "AUTHORIZED") {
+        throw new InvariantError(
+          `hold ${hold.attemptId} has a live authorization; approve it by capturing (holds.approve)`,
+        );
+      }
+      if (["INITIATED", "UNKNOWN", "PENDING"].includes(parentPayment.status)) {
+        throw new HoldNotReadyError(hold.attemptId, parentPayment.status);
+      }
+      throw new InvariantError(
+        `hold ${hold.attemptId}: a capture was already attempted (payment ${parentPayment.status}); no follow-up`,
+      );
+    }
+  }
+
+  const fail = (rule: string): never => {
+    throw new InvariantError(`follow-up ${child.id} for hold ${hold.attemptId}: ${rule}`);
+  };
+  if (child.origin !== "OWNER_APPROVAL" || child.parentAttemptId !== hold.attemptId) {
+    fail("must be an OWNER_APPROVAL attempt whose parent is this hold");
+  }
+  if (
+    child.agentId !== parent.agentId ||
+    child.productId !== parent.productId ||
+    child.mandateId !== parent.mandateId
+  ) {
+    fail("must be for the same agent, product and mandate as the held attempt");
+  }
+  if (child.decision.outcome !== "PAID" || child.decision.ruleCode !== "OWNER_APPROVED") {
+    fail("must be PAID by OWNER_APPROVED (a re-check that rejects is refused, not recorded)");
+  }
+  if (followUp.payment?.intent !== "CAPTURE" || followUp.hold !== null) {
+    fail("pays in one step: a CAPTURE payment and no hold");
+  }
+  assertRecordInvariants(followUp);
+
+  return { ...hold, status: "APPROVED", decidedAt: now, decidedBy: input.by };
 }
 
 export function leaseKeyString(key: LeaseKey): string {

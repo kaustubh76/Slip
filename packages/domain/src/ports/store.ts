@@ -150,7 +150,8 @@ export interface AttemptRepo {
    * Writes the attempt, its INITIATED payment (with the ORDER request id) and its PENDING hold in
    * one transaction — after confirming, in that transaction, that the caller still holds the
    * checkout lease, the mandate is ACTIVE, and the attempt was checked under the current policy.
-   * Nothing is written if any of that fails.
+   * Nothing is written if any of that fails. Only the agent's own attempts: an OWNER_APPROVAL
+   * follow-up is written by `holds.approveWithFollowUp`.
    */
   record(input: RecordAttemptInput): Promise<RecordedAttempt>;
   get(id: AttemptId): Promise<Receipt | null>;
@@ -203,10 +204,10 @@ export interface HoldDecision {
 export interface HoldRepo {
   get(attemptId: AttemptId): Promise<Hold | null>;
   /**
-   * PENDING → APPROVED before `expiresAt`. With an authorization: payment AUTHORIZED → CAPTURING
-   * with this capture request id, in the same transaction. A payment that is not AUTHORIZED yet
-   * is `HoldNotReadyError`. Without a payment: the caller re-checks and records an
-   * OWNER_APPROVAL attempt.
+   * Approves a hold that has a live authorization: PENDING → APPROVED before `expiresAt`, and the
+   * payment AUTHORIZED → CAPTURING with this capture request id, in the same transaction. Needs
+   * an ACTIVE mandate. A payment that is not AUTHORIZED yet is `HoldNotReadyError`. A hold with no
+   * live authorization is approved with `approveWithFollowUp` instead.
    */
   approve(
     attemptId: AttemptId,
@@ -224,8 +225,18 @@ export interface HoldRepo {
   ): Promise<HoldDecision>;
   listPending(mandateId: MandateId): Promise<Receipt[]>;
   listExpiring(now: Date, limit: number): Promise<Hold[]>;
-  /** APPROVED holds with no payment and no OWNER_APPROVAL follow-up yet (crash recovery). */
-  listApprovedAwaitingPayment(limit: number): Promise<Receipt[]>;
+  /**
+   * Approves a hold that has no live authorization — none was placed, or PayPal failed or voided
+   * it before any capture — and records the OWNER_APPROVAL attempt that pays in one step, in one
+   * transaction: the hold becomes APPROVED only if the follow-up passes every `record` check
+   * (lease, agent, ACTIVE mandate, current policy). A hold whose capture was attempted is never
+   * followed up; that would charge again without asking.
+   */
+  approveWithFollowUp(input: {
+    attemptId: AttemptId;
+    by: string;
+    followUp: RecordAttemptInput;
+  }): Promise<{ hold: Hold; recorded: RecordedAttempt }>;
 }
 
 export interface WebhookEvent {

@@ -220,3 +220,48 @@ export async function capture(store: Store, id: AttemptId, now = at(1)) {
     now,
   });
 }
+
+/**
+ * The OWNER_APPROVAL follow-up for a held attempt: the check re-run on a fresh snapshot of the
+ * same product, then decided by the owner's approval. Takes the lease the record needs.
+ */
+export async function followUpFor(
+  store: Store,
+  w: World,
+  parent: Attempt,
+  options: { now?: Date; market?: { offers: Offer[]; chosen: Offer }; holder?: string } = {},
+): Promise<RecordAttemptInput> {
+  const now = options.now ?? at(10);
+  const rerun = await decided(store, w, {
+    ...(options.market ?? markets.aboveCap()),
+    productId: parent.productId,
+    now,
+  });
+  const holder = options.holder ?? `holder-${randomUUID()}`;
+  await store.leases.acquire(
+    { agentId: w.agentId, productId: parent.productId },
+    holder,
+    60_000,
+    now,
+  );
+  const attempt: Attempt = {
+    ...rerun,
+    origin: "OWNER_APPROVAL",
+    parentAttemptId: parent.id,
+    decision: {
+      outcome: "PAID",
+      ruleCode: "OWNER_APPROVED",
+      checkResult: {
+        ...rerun.decision.checkResult,
+        ruleCode: "OWNER_APPROVED",
+        ruleCodes: ["OWNER_APPROVED", ...rerun.decision.checkResult.ruleCodes],
+      },
+    },
+  };
+  return {
+    attempt,
+    payment: { intent: "CAPTURE", requestId: newRequestId() },
+    hold: null,
+    leaseHolder: holder,
+  };
+}

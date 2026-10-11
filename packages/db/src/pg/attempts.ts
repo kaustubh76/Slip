@@ -1,5 +1,6 @@
 import {
   type AttemptRepo,
+  assertDirectRecord,
   assertRecordInvariants,
   ConflictError,
   InvariantError,
@@ -12,6 +13,8 @@ import {
   NotFoundError,
   type PageRequest,
   PolicyChangedError,
+  type RecordAttemptInput,
+  type RecordedAttempt,
   type SnapshotRepo,
 } from "@slip/domain";
 import { and, desc, eq, gte, type SQL, sql } from "drizzle-orm";
@@ -31,7 +34,7 @@ import {
   policies,
 } from "../schema.js";
 import { guarded } from "./errors.js";
-import { loadPayment, loadReceipts } from "./receipts.js";
+import { loadReceipts } from "./receipts.js";
 import { attemptValues, paymentValues, toSnapshot } from "./rows.js";
 
 export function pgSnapshots(db: Db): SnapshotRepo {
@@ -81,6 +84,121 @@ function checkPage(page: PageRequest): void {
   }
 }
 
+/**
+ * The checks and writes of `attempts.record`, inside the caller's transaction, so a hold approval
+ * can write its follow-up attempt atomically with the hold (`holds.approveWithFollowUp`).
+ */
+export async function recordInTransaction(
+  tx: Db,
+  cipher: VaultCipher,
+  input: RecordAttemptInput,
+): Promise<RecordedAttempt> {
+  assertRecordInvariants(input);
+  const { attempt } = input;
+  const payment = initialPayment(input);
+  const hold = initialHold(input);
+  const now = attempt.createdAt;
+  const key = { agentId: attempt.agentId, productId: attempt.productId };
+
+  // 1. The caller must still hold the checkout lease (fencing): if it expired and another
+  //    checkout took over, this decision is stale and must not be written.
+  const [lease] = await tx
+    .select()
+    .from(checkoutLeases)
+    .where(
+      and(
+        eq(checkoutLeases.agentId, attempt.agentId),
+        eq(checkoutLeases.productId, attempt.productId),
+      ),
+    )
+    .for("update");
+  if (
+    lease === undefined ||
+    lease.holder !== input.leaseHolder ||
+    lease.expiresAt.getTime() <= now.getTime()
+  ) {
+    throw new LeaseLostError(leaseKeyString(key));
+  }
+
+  // 2. The agent is still allowed to act, under this mandate.
+  const [agent] = await tx.select().from(agents).where(eq(agents.id, attempt.agentId)).for("share");
+  if (agent === undefined) {
+    throw new NotFoundError("agent", attempt.agentId);
+  }
+  if (agent.mandateId !== attempt.mandateId) {
+    throw new InvariantError(`agent ${agent.id} does not act under mandate ${attempt.mandateId}`);
+  }
+  if (agent.revokedAt !== null) {
+    throw new ConflictError(Conflict.AGENT_REVOKED, `agent ${agent.id} is revoked`);
+  }
+
+  // 3. The mandate is ACTIVE and the check ran under its current policy. FOR SHARE makes a
+  //    concurrent revoke or policy edit wait until this decision is written.
+  const [mandate] = await tx
+    .select()
+    .from(mandates)
+    .where(eq(mandates.id, attempt.mandateId))
+    .for("share");
+  if (mandate === undefined) {
+    throw new NotFoundError("mandate", attempt.mandateId);
+  }
+  if (mandate.status !== "ACTIVE") {
+    throw new MandateNotActiveError(mandate.id, mandate.status);
+  }
+  const [current] = await tx
+    .select({ version: policies.version })
+    .from(policies)
+    .where(eq(policies.mandateId, mandate.id))
+    .orderBy(desc(policies.version))
+    .limit(1);
+  const checked = attempt.decision.checkResult.policyVersion;
+  if (current === undefined || current.version !== checked) {
+    throw new PolicyChangedError(checked, current?.version ?? 0);
+  }
+
+  // 4. Write the decision, then the write-ahead payment, its ORDER request id and the hold.
+  await tx.insert(attempts).values(attemptValues(attempt));
+  if (payment !== null) {
+    await tx.insert(payments).values(paymentValues(payment, attempt.decision.outcome));
+    for (const op of payment.operations) {
+      await tx.insert(paymentOperations).values({
+        attemptId: payment.attemptId,
+        kind: op.kind,
+        requestId: op.requestId,
+        createdAt: op.createdAt,
+      });
+    }
+    const event = initialPaymentEvent(payment);
+    await tx.insert(paymentEvents).values({
+      attemptId: event.attemptId,
+      fromStatus: event.fromStatus,
+      toStatus: event.toStatus,
+      detail: event.detail,
+      at: event.at,
+    });
+  }
+  if (hold !== null) {
+    await tx.insert(holds).values({
+      attemptId: hold.attemptId,
+      attemptOutcome: attempt.decision.outcome,
+      status: hold.status,
+      createdAt: hold.createdAt,
+      expiresAt: hold.expiresAt,
+    });
+  }
+
+  const [stored] = await tx.select().from(attempts).where(eq(attempts.id, attempt.id));
+  const [receipt] = await loadReceipts(tx, stored === undefined ? [] : [stored]);
+  if (receipt === undefined) {
+    throw new InvariantError(`attempt ${attempt.id} was not written`);
+  }
+  const vaultId =
+    payment !== null && mandate.vaultIdCiphertext !== null
+      ? cipher.decrypt(mandate.vaultIdCiphertext, mandate.id)
+      : null;
+  return { receipt, vaultId };
+}
+
 export function pgAttempts(db: Db, cipher: VaultCipher): AttemptRepo {
   const page = (filter: SQL, request: PageRequest) =>
     guarded(async () => {
@@ -111,144 +229,8 @@ export function pgAttempts(db: Db, cipher: VaultCipher): AttemptRepo {
   return {
     record: (input) =>
       guarded(async () => {
-        assertRecordInvariants(input);
-        const { attempt } = input;
-        const payment = initialPayment(input);
-        const hold = initialHold(input);
-        const now = attempt.createdAt;
-        const key = { agentId: attempt.agentId, productId: attempt.productId };
-
-        return db.transaction(async (tx) => {
-          // 1. The caller must still hold the checkout lease (fencing): if it expired and another
-          //    checkout took over, this decision is stale and must not be written.
-          const [lease] = await tx
-            .select()
-            .from(checkoutLeases)
-            .where(
-              and(
-                eq(checkoutLeases.agentId, attempt.agentId),
-                eq(checkoutLeases.productId, attempt.productId),
-              ),
-            )
-            .for("update");
-          if (
-            lease === undefined ||
-            lease.holder !== input.leaseHolder ||
-            lease.expiresAt.getTime() <= now.getTime()
-          ) {
-            throw new LeaseLostError(leaseKeyString(key));
-          }
-
-          // 2. The agent is still allowed to act, under this mandate.
-          const [agent] = await tx
-            .select()
-            .from(agents)
-            .where(eq(agents.id, attempt.agentId))
-            .for("share");
-          if (agent === undefined) {
-            throw new NotFoundError("agent", attempt.agentId);
-          }
-          if (agent.mandateId !== attempt.mandateId) {
-            throw new InvariantError(
-              `agent ${agent.id} does not act under mandate ${attempt.mandateId}`,
-            );
-          }
-          if (agent.revokedAt !== null) {
-            throw new ConflictError(Conflict.AGENT_REVOKED, `agent ${agent.id} is revoked`);
-          }
-
-          // 3. The mandate is ACTIVE and the check ran under its current policy. FOR SHARE makes a
-          //    concurrent revoke or policy edit wait until this decision is written.
-          const [mandate] = await tx
-            .select()
-            .from(mandates)
-            .where(eq(mandates.id, attempt.mandateId))
-            .for("share");
-          if (mandate === undefined) {
-            throw new NotFoundError("mandate", attempt.mandateId);
-          }
-          if (mandate.status !== "ACTIVE") {
-            throw new MandateNotActiveError(mandate.id, mandate.status);
-          }
-          const [current] = await tx
-            .select({ version: policies.version })
-            .from(policies)
-            .where(eq(policies.mandateId, mandate.id))
-            .orderBy(desc(policies.version))
-            .limit(1);
-          const checked = attempt.decision.checkResult.policyVersion;
-          if (current === undefined || current.version !== checked) {
-            throw new PolicyChangedError(checked, current?.version ?? 0);
-          }
-
-          // 4. An owner-approval follow-up must point at an approved hold that had no order.
-          if (attempt.parentAttemptId !== null) {
-            const [parent] = await tx
-              .select()
-              .from(attempts)
-              .where(eq(attempts.id, attempt.parentAttemptId));
-            const [parentHold] = await tx
-              .select()
-              .from(holds)
-              .where(eq(holds.attemptId, attempt.parentAttemptId))
-              .for("update");
-            const parentPayment = await loadPayment(tx, attempt.parentAttemptId, "none");
-            if (
-              parent === undefined ||
-              parent.agentId !== attempt.agentId ||
-              parent.productId !== attempt.productId ||
-              parent.outcome !== "HELD" ||
-              parentHold?.status !== "APPROVED" ||
-              parentPayment !== null
-            ) {
-              throw new InvariantError(
-                `attempt ${attempt.id}: parent ${attempt.parentAttemptId} is not an approved hold without a payment for the same agent and product`,
-              );
-            }
-          }
-
-          // 5. Write the decision, then the write-ahead payment, its ORDER request id and the hold.
-          await tx.insert(attempts).values(attemptValues(attempt));
-          if (payment !== null) {
-            await tx.insert(payments).values(paymentValues(payment, attempt.decision.outcome));
-            for (const op of payment.operations) {
-              await tx.insert(paymentOperations).values({
-                attemptId: payment.attemptId,
-                kind: op.kind,
-                requestId: op.requestId,
-                createdAt: op.createdAt,
-              });
-            }
-            const event = initialPaymentEvent(payment);
-            await tx.insert(paymentEvents).values({
-              attemptId: event.attemptId,
-              fromStatus: event.fromStatus,
-              toStatus: event.toStatus,
-              detail: event.detail,
-              at: event.at,
-            });
-          }
-          if (hold !== null) {
-            await tx.insert(holds).values({
-              attemptId: hold.attemptId,
-              attemptOutcome: attempt.decision.outcome,
-              status: hold.status,
-              createdAt: hold.createdAt,
-              expiresAt: hold.expiresAt,
-            });
-          }
-
-          const [stored] = await tx.select().from(attempts).where(eq(attempts.id, attempt.id));
-          const [receipt] = await loadReceipts(tx, stored === undefined ? [] : [stored]);
-          if (receipt === undefined) {
-            throw new InvariantError(`attempt ${attempt.id} was not written`);
-          }
-          const vaultId =
-            payment !== null && mandate.vaultIdCiphertext !== null
-              ? cipher.decrypt(mandate.vaultIdCiphertext, mandate.id)
-              : null;
-          return { receipt, vaultId };
-        });
+        assertDirectRecord(input);
+        return db.transaction((tx) => recordInTransaction(tx, cipher, input));
       }),
 
     get: (id) =>
