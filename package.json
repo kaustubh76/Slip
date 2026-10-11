@@ -18,7 +18,9 @@
     "format": "biome format --write .",
     "test": "pnpm typecheck && vitest run",
     "test:unit": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "db:generate": "tsc -b packages/domain && pnpm --filter @slip/db exec drizzle-kit generate",
+    "db:migrate": "pnpm --filter @slip/db migrate"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",

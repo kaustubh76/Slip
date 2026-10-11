@@ -6,6 +6,9 @@
     },
     {
       "path": "packages/check"
+    },
+    {
+      "path": "packages/db"
     }
   ]
 }

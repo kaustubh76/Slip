@@ -1,0 +1,46 @@
+{
+  "name": "@slip/db",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Slip persistence: Postgres store (Drizzle, postgres.js or PGlite), in-memory fake, migrations.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "development": "./src/index.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./memory": {
+      "types": "./dist/memory/index.d.ts",
+      "development": "./src/memory/index.ts",
+      "import": "./dist/memory/index.js",
+      "default": "./dist/memory/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "drizzle"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "test": "vitest run",
+    "generate": "drizzle-kit generate",
+    "migrate": "tsx --conditions=development src/bin/migrate.ts"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "catalog:",
+    "@slip/domain": "workspace:*",
+    "drizzle-orm": "catalog:",
+    "postgres": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@slip/check": "workspace:*",
+    "@types/node": "catalog:",
+    "drizzle-kit": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
