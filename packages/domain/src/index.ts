@@ -38,6 +38,14 @@ export {
   SlipError,
 } from "./errors.js";
 export {
+  DEFAULT_HOLD_TTL_MS,
+  HOLD_STATUSES,
+  HOLD_TRANSITIONS,
+  type Hold,
+  type HoldStatus,
+  SYSTEM_DECIDER,
+} from "./hold.js";
+export {
   type AgentId,
   type AttemptId,
   agentId,
@@ -55,6 +63,16 @@ export {
   snapshotId,
   uuidSchema,
 } from "./ids.js";
+export {
+  type Agent,
+  type AgentAuth,
+  MANDATE_STATUSES,
+  MANDATE_TRANSITIONS,
+  type Mandate,
+  type MandateStatus,
+  type Owner,
+  type PolicyLimits,
+} from "./mandate.js";
 export {
   type Cents,
   CentsSchema,
@@ -90,6 +108,29 @@ export {
   SelectedOptionSchema,
 } from "./offer.js";
 export {
+  applyPaymentPatch,
+  canTransition,
+  classifyPaymentMove,
+  ENTRY_OPERATION,
+  IN_FLIGHT_PAYMENT_STATUSES,
+  isTerminal,
+  missingPaymentFields,
+  PAYMENT_INTENTS,
+  PAYMENT_OPERATION_KINDS,
+  PAYMENT_STATUSES,
+  PAYMENT_TRANSITIONS,
+  type Payment,
+  type PaymentEvent,
+  type PaymentIntent,
+  type PaymentOperation,
+  type PaymentOperationKind,
+  type PaymentPatch,
+  type PaymentStatus,
+  statusesFor,
+  TERMINAL_PAYMENT_STATUSES,
+  transition,
+} from "./payment.js";
+export {
   DEFAULT_POLICY,
   MAX_SNAPSHOT_AGE_MS,
   type Policy,
@@ -97,3 +138,12 @@ export {
   PolicySchema,
   policyWith,
 } from "./policy.js";
+export {
+  canMove,
+  classifyMove,
+  isAcyclic,
+  isReachable,
+  type TransitionResult,
+  type Transitions,
+  terminalStatuses,
+} from "./state-machine.js";
