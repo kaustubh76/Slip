@@ -1,0 +1,30 @@
+{
+  "name": "slip",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Slip checks every purchase an AI agent tries to make before PayPal moves the money.",
+  "license": "MIT",
+  "packageManager": "pnpm@10.18.2",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "clean": "rm -rf packages/*/dist apps/*/dist",
+    "typecheck": "tsc -b && pnpm -r --workspace-concurrency=1 exec tsc -p tsconfig.test.json",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "test": "pnpm typecheck && vitest run",
+    "test:unit": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "catalog:",
+    "@types/node": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
