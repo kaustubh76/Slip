@@ -13,7 +13,7 @@ pay, reject, or hold for a human.
 The demo runs in PayPal sandbox with Slip as the seller. Prices, offers and commission rates are
 real (Channel3); no order reaches a retailer; no real money moves. Read
 [docs/SPEC.md](docs/SPEC.md) for the full spec and [docs/diagram.png](docs/diagram.png) for the
-execution flow.
+execution flow. Design decisions are logged in [docs/DECISIONS.md](docs/DECISIONS.md).
 
 ## Layout
 
@@ -45,5 +45,9 @@ Requires Node ≥ 22.12 and pnpm 10 (`corepack enable` picks the pinned version)
 
 ## Status
 
-Increment 0 (foundation, `domain`, `check`) is in progress. See `docs/SPEC.md` §15 for the
-roadmap.
+Increment 0 is done: the monorepo foundation, `@slip/domain` and `@slip/check`, with the spec's
+regression scenarios, boundary cases and property tests green (`pnpm test`). Nothing talks to a
+network yet. Next, in order: persistence (`db`), orchestration with fake adapters (`app`), the
+MCP server, the owner UI; then, once API keys are available, the Channel3 and PayPal adapters,
+the steering classifier and SlipBench. See `docs/SPEC.md` §15 for dates and `docs/DECISIONS.md`
+for what changed from the written spec.
