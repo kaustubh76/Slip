@@ -18,36 +18,55 @@ execution flow. Design decisions are logged in [docs/DECISIONS.md](docs/DECISION
 ## Layout
 
 ```
-packages/domain    types, money (integer cents), policy, payment state machine — no I/O
-packages/check     the pure check: freshness → variant → locate → comparable → gap → rules
-packages/offers    Channel3 client + snapshot cache                       (increment 1)
-packages/db        Drizzle schema, migrations, repositories               (increment 2)
-packages/paypal    PayPal REST adapter: orders, holds, vault, webhooks    (increment 3)
-packages/app       use cases: runCheckout, holds, resolver, reconcile     (increment 4)
-packages/steering  schema-locked steering classifier                     (increment 5)
-apps/mcp           MCP server: search, checkout, get_receipt, get_report (increment 6)
-apps/web           owner UI: mandate, receipts, holds, limits, report    (increment 7)
-study/  bench/     market study and SlipBench                            (increments 1, 8)
+packages/domain    types, money (integer cents), state machines, the Store port,
+                   shared invariants — no I/O                                    (done)
+packages/check     the pure check: freshness → variant → locate → comparable → gap → rules (done)
+packages/db        Postgres store (Drizzle on postgres.js or PGlite), in-memory fake,
+                   migrations with database-level guards                         (done)
+packages/app       use cases: runCheckout, holds, resolver, reconcile     (next)
+apps/mcp           MCP server: search, checkout, get_receipt, get_report
+apps/web           owner UI: mandate, receipts, holds, limits, report
+packages/offers    Channel3 client + snapshot cache                       (needs Channel3 key)
+packages/paypal    PayPal REST adapter: orders, holds, vault, webhooks    (needs PayPal sandbox)
+packages/steering  schema-locked steering classifier                     (needs Anthropic key)
+study/  bench/     market study and SlipBench
 ```
 
-Dependencies point inward: apps → app → check/domain. Adapters implement ports declared in
-`app`; every adapter ships a fake used by tests and by the benchmark replay.
+Dependencies point inward: apps → app → check / domain. Adapters implement ports declared in
+`@slip/domain`; every adapter ships a fake the tests and the benchmark replay use.
 
 ## Run
 
 ```sh
 pnpm install
-pnpm test        # builds every package, then runs all test projects
-pnpm lint        # biome
+pnpm test          # type-checks everything (tests included), then runs every test project
+pnpm lint          # biome
 ```
+
+`pnpm test` needs nothing else: the database tests run on PGlite, an in-process Postgres.
+
+Real Postgres (Docker):
+
+```sh
+pnpm db:up         # Postgres 18 on localhost:54329 (docker compose)
+pnpm test:pg       # same store contract + database guards + concurrency races on real Postgres
+DATABASE_URL=postgres://slip:slip@localhost:54329/slip pnpm db:migrate
+```
+
+No Docker: `DATABASE_URL=pglite://.data/slip pnpm db:migrate` gives a Postgres on disk.
+
+Schema changes: edit `packages/db/src/schema.ts`, run `pnpm db:generate`, commit the new SQL in
+`packages/db/drizzle/`. Triggers and lookup tables live in hand-written migrations.
 
 Requires Node ≥ 22.12 and pnpm 10 (`corepack enable` picks the pinned version).
 
 ## Status
 
-Increment 0 is done: the monorepo foundation, `@slip/domain` and `@slip/check`, with the spec's
-regression scenarios, boundary cases and property tests green (`pnpm test`). Nothing talks to a
-network yet. Next, in order: persistence (`db`), orchestration with fake adapters (`app`), the
-MCP server, the owner UI; then, once API keys are available, the Channel3 and PayPal adapters,
-the steering classifier and SlipBench. See `docs/SPEC.md` §15 for dates and `docs/DECISIONS.md`
-for what changed from the written spec.
+Done: the check, the domain model and persistence. Every write that can move money — the
+decision, the write-ahead payment, hold decisions — is atomic, fenced by the checkout lease,
+refused once the mandate is revoked, and guarded twice: by shared pure rules in code and by
+constraints and triggers in Postgres. The in-memory fake passes the same contract as Postgres.
+
+Next: orchestration (`app`) on the fakes, then the MCP server and the owner UI; the Channel3,
+PayPal and classifier adapters follow once API keys are available. See `docs/SPEC.md` §15 for
+dates and `docs/DECISIONS.md` for every departure from the written spec.
