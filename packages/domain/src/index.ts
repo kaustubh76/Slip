@@ -138,6 +138,33 @@ export {
   PolicySchema,
   policyWith,
 } from "./policy.js";
+export type {
+  AgentRepo,
+  AttemptRepo,
+  Cursor,
+  HoldDecision,
+  HoldRepo,
+  LeaseKey,
+  LeaseRepo,
+  MandateRepo,
+  NewHold,
+  NewPayment,
+  OwnerRepo,
+  Page,
+  PageRequest,
+  PaymentRepo,
+  PaymentTransitionInput,
+  RecordAttemptInput,
+  RecordedAttempt,
+  ReportRepo,
+  SnapshotRepo,
+  Store,
+  Transitioned,
+  WebhookEvent,
+  WebhookRepo,
+} from "./ports/store.js";
+export type { Receipt } from "./receipt.js";
+export { type AgentReport, lowerMedian } from "./report.js";
 export {
   canMove,
   classifyMove,
