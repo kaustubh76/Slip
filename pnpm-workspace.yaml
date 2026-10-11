@@ -14,6 +14,7 @@ catalogMode: strict
 catalog:
   "@biomejs/biome": 2.5.15
   "@types/node": 26.6.5
+  fast-check: 4.10.2
   tsx: 4.23.15
   typescript: 7.0.2
   vitest: 5.0.3
