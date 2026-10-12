@@ -3,16 +3,20 @@ import {
   DEFAULT_POLICY,
   InvalidIdError,
   type Mandate,
+  MandateNotActiveError,
   mandateId,
   type OwnerId,
+  type Policy,
   type PolicyLimits,
   PolicySchema,
   requestId,
 } from "@slip/domain";
 import type { z } from "zod";
 import type { AppDeps } from "./deps.js";
+import { closeHold } from "./holds.js";
 import { derivedUuid } from "./keys.js";
 import { callPayPal } from "./payments.js";
+import { deleteVaultToken } from "./vault.js";
 
 /**
  * The owner's mandate: their one-time consent, given at PayPal, for Slip to charge a saved
@@ -27,6 +31,7 @@ import { callPayPal } from "./payments.js";
 export type OwnerRefusalReason =
   | "NOT_FOUND"
   | "INVALID_LIMITS"
+  | "INVALID_NAME"
   | "PAYPAL_UNAVAILABLE"
   | "SETUP_FAILED"
   | "REVOKED";
@@ -37,11 +42,12 @@ export interface OwnerRefusal {
   message: string;
 }
 
-const refuse = (reason: OwnerRefusalReason, message: string): OwnerRefusal => ({
+export const refuseOwner = (reason: OwnerRefusalReason, message: string): OwnerRefusal => ({
   status: "refused",
   reason,
   message,
 });
+const refuse = refuseOwner;
 
 /** Limits an owner may set; anything left out keeps its default (or its current value). */
 export const PolicyLimitsInputSchema = PolicySchema.omit({ version: true }).partial().strict();
@@ -246,4 +252,78 @@ export async function pollSetup(deps: AppDeps, mandate: Mandate): Promise<SetupS
     return "revoked";
   }
   return state;
+}
+
+/**
+ * The kill switch. The mandate is revoked first — from that moment the store refuses every charge
+ * and every approval — then each open hold is declined and its reservation released, then the
+ * saved payment method is deleted at PayPal. If anything after the first step fails, the
+ * resolver finishes it. Revoking again is harmless.
+ */
+export async function revokeMandate(
+  deps: AppDeps,
+  ownerId: OwnerId,
+  id: string,
+): Promise<
+  | {
+      status: "revoked";
+      mandate: Mandate;
+      holdsDeclined: number;
+      vault: "deleted" | "nothing-to-delete" | "failed";
+    }
+  | OwnerRefusal
+> {
+  const mandate = await ownedMandate(deps, ownerId, id);
+  if (mandate === null) {
+    return refuse("NOT_FOUND", "There is no such mandate.");
+  }
+  const revoked = await deps.store.mandates.revoke(mandate.id, deps.clock.now());
+  if (revoked.result === "applied") {
+    deps.log.info("mandate.revoked", { mandateId: mandate.id });
+  }
+  let holdsDeclined = 0;
+  for (const held of await deps.store.holds.listPending(mandate.id)) {
+    const closed = await closeHold(deps, held, ownerId);
+    holdsDeclined += closed.status === "done" ? 1 : 0;
+  }
+  const vault = await deleteVaultToken(deps, mandate.id);
+  return {
+    status: "revoked",
+    mandate: (await deps.store.mandates.get(mandate.id)) ?? revoked.value,
+    holdsDeclined,
+    vault,
+  };
+}
+
+/**
+ * New limits, as the next policy version; attempts already decided keep the version they were
+ * checked under, and a checkout running across the change is checked again (D25).
+ */
+export async function updateLimits(
+  deps: AppDeps,
+  ownerId: OwnerId,
+  id: string,
+  changes: unknown,
+): Promise<{ status: "updated"; policy: Policy } | OwnerRefusal> {
+  const mandate = await ownedMandate(deps, ownerId, id);
+  if (mandate === null) {
+    return refuse("NOT_FOUND", "There is no such mandate.");
+  }
+  const limits = parseLimits(changes);
+  if ("status" in limits) {
+    return limits;
+  }
+  if (Object.keys(limits).length === 0) {
+    return { status: "updated", policy: await deps.store.mandates.currentPolicy(mandate.id) };
+  }
+  try {
+    const policy = await deps.store.mandates.updatePolicy(mandate.id, limits, deps.clock.now());
+    deps.log.info("mandate.limits_updated", { mandateId: mandate.id, version: policy.version });
+    return { status: "updated", policy };
+  } catch (error) {
+    if (error instanceof MandateNotActiveError) {
+      return refuse("REVOKED", "This mandate was revoked; its limits can no longer change.");
+    }
+    throw error;
+  }
 }

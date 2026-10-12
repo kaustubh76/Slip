@@ -292,3 +292,15 @@ lists an item leaves once handled are drained until a page has nothing new.
   polled from 5 minutes old, by cursor; one PayPal still has nothing approved for after 3 days is
   given up (revoked). PayPal is asked once more before giving up, so a late approval is kept.
 - A method PayPal saves after the owner revoked is deleted at PayPal and never stored.
+
+## D36 · 2026-10-12 · Revoking is ordered so that a crash never leaves money able to move
+
+`revokeMandate` revokes the mandate first: from that write on, the store refuses every charge and
+every approval (D25, D26). Only then are open holds declined (by the owner) and voided, and the
+saved method deleted at PayPal. A crash after the first step leaves work the resolver finishes
+(D28, D29, D34); it never leaves a window in which money could still move. Revoking again is a
+no-op that retries whatever is left.
+
+Agent keys are per agent: revoking one stops that agent at once and touches nothing else. A key is
+shown once when issued; lists show only its prefix, and no key is ever logged. A revoked mandate
+gets no new agents; limits change only as a new policy version, refused after a revoke.

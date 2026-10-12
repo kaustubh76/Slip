@@ -1,3 +1,4 @@
+export { issueAgentKey, listAgents, revokeAgentKey } from "./agents.js";
 export { type CheckoutResult, runCheckout, viewOf } from "./checkout/checkout.js";
 export {
   checkOffers,
@@ -51,8 +52,11 @@ export {
   PolicyLimitsInputSchema,
   parseLimits,
   pollSetup,
+  refuseOwner,
+  revokeMandate,
   type SetupState,
   startMandate,
+  updateLimits,
 } from "./mandates.js";
 export {
   afterAuthorizationCheck,

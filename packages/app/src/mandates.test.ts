@@ -1,10 +1,18 @@
 import { randomUUID } from "node:crypto";
-import { type Mandate, type OwnerId, ownerId, type PaymentGateway } from "@slip/domain";
-import { driveUntilSettled } from "@slip/domain/testing";
+import { type Cents, type Mandate, type OwnerId, ownerId, type PaymentGateway } from "@slip/domain";
+import { driveUntilSettled, offer } from "@slip/domain/testing";
 import { describe, expect, it } from "vitest";
-import { type Harness, harness } from "./__fixtures__/harness.js";
+import { type Harness, harness, market, seedAgent } from "./__fixtures__/harness.js";
+import { runCheckout } from "./checkout/checkout.js";
+import { approveHold } from "./holds.js";
 import { derivedUuid } from "./keys.js";
-import { completeMandateSetup, finishSetup, startMandate } from "./mandates.js";
+import {
+  completeMandateSetup,
+  finishSetup,
+  revokeMandate,
+  startMandate,
+  updateLimits,
+} from "./mandates.js";
 import { runResolver } from "./resolver.js";
 
 const MINUTE = 60_000;
@@ -209,5 +217,121 @@ describe("the resolver's setup poll", () => {
     h.gateway.approveSetup(late.reference);
     await resolve(h);
     expect((await h.store.mandates.get(late.mandate.id))?.status).toBe("ACTIVE");
+  });
+});
+
+describe("revokeMandate — the kill switch", () => {
+  async function withHold() {
+    const h = harness();
+    const seeded = await seedAgent(h);
+    const chosen = offer({ price: 250 });
+    market(h, "p1", [offer({ price: 249 }), chosen]);
+    const held = await runCheckout(h.deps, seeded.apiKey, {
+      productId: "p1",
+      chosenOfferUrl: chosen.url,
+      reason: "",
+    });
+    const id = held.status === "decided" ? held.receipt.attempt.id : "";
+    return { h, seeded, id, chosen };
+  }
+
+  it("stops every charge, releases open holds and deletes the saved method at PayPal", async () => {
+    const { h, seeded, id, chosen } = await withHold();
+    const result = await revokeMandate(h.deps, seeded.ownerId, seeded.mandateId);
+    expect(result).toMatchObject({
+      status: "revoked",
+      mandate: { status: "REVOKED" },
+      holdsDeclined: 1,
+      vault: "deleted",
+    });
+    expect(await h.store.holds.get(id as never)).toMatchObject({
+      status: "DECLINED",
+      decidedBy: seeded.ownerId,
+    });
+    expect((await h.store.payments.get(id as never))?.status).toBe("VOIDED");
+    expect(h.gateway.hasVault(seeded.vaultId)).toBe(false);
+    expect((await h.store.mandates.get(seeded.mandateId))?.vaultDeletedAt).not.toBeNull();
+
+    expect(
+      await runCheckout(h.deps, seeded.apiKey, {
+        productId: "p2",
+        chosenOfferUrl: chosen.url,
+        reason: "",
+      }),
+    ).toMatchObject({ reason: "MANDATE_NOT_ACTIVE" });
+    expect(
+      await approveHold(h.deps, seeded.ownerId, id, { expectedAmountCents: 25_000 as Cents }),
+    ).toMatchObject({ reason: "ALREADY_DECIDED" });
+  });
+
+  it("a token PayPal would not delete is left for the resolver, and revoking again is harmless", async () => {
+    const { h, seeded } = await withHold();
+    h.gateway.nextDelete("fail");
+    expect(await revokeMandate(h.deps, seeded.ownerId, seeded.mandateId)).toMatchObject({
+      vault: "failed",
+    });
+    expect(h.gateway.hasVault(seeded.vaultId)).toBe(true);
+
+    expect(await revokeMandate(h.deps, seeded.ownerId, seeded.mandateId)).toMatchObject({
+      status: "revoked",
+      holdsDeclined: 0,
+      vault: "deleted",
+    });
+    expect(h.gateway.hasVault(seeded.vaultId)).toBe(false);
+    expect(await revokeMandate(h.deps, seeded.ownerId, seeded.mandateId)).toMatchObject({
+      vault: "nothing-to-delete",
+    });
+  });
+
+  it("only the owner can revoke", async () => {
+    const { h, seeded } = await withHold();
+    expect(await revokeMandate(h.deps, await owner(h), seeded.mandateId)).toMatchObject({
+      reason: "NOT_FOUND",
+    });
+    expect((await h.store.mandates.get(seeded.mandateId))?.status).toBe("ACTIVE");
+  });
+});
+
+describe("updateLimits", () => {
+  it("adds a policy version that the next checkout is checked under", async () => {
+    const h = harness();
+    const seeded = await seedAgent(h);
+    const updated = await updateLimits(h.deps, seeded.ownerId, seeded.mandateId, {
+      orderCapCents: 30_000,
+    });
+    expect(updated).toMatchObject({
+      status: "updated",
+      policy: { version: 2, orderCapCents: 30_000 },
+    });
+
+    const chosen = offer({ price: 250 });
+    market(h, "p1", [chosen, offer({ price: 249 })]);
+    const result = await runCheckout(h.deps, seeded.apiKey, {
+      productId: "p1",
+      chosenOfferUrl: chosen.url,
+      reason: "",
+    });
+    expect(result.status === "decided" && result.view).toMatchObject({
+      outcome: "PAID",
+      policyVersion: 2,
+    });
+  });
+
+  it("refuses limits it cannot use, changes nothing when asked for no change, and nothing after a revoke", async () => {
+    const h = harness();
+    const seeded = await seedAgent(h);
+    expect(
+      await updateLimits(h.deps, seeded.ownerId, seeded.mandateId, { flagPctHundredths: -1 }),
+    ).toMatchObject({ reason: "INVALID_LIMITS" });
+    expect(await updateLimits(h.deps, seeded.ownerId, seeded.mandateId, {})).toMatchObject({
+      policy: { version: 1 },
+    });
+    await h.store.mandates.revoke(seeded.mandateId, h.clock.now());
+    expect(
+      await updateLimits(h.deps, seeded.ownerId, seeded.mandateId, { orderCapCents: 1_000 }),
+    ).toMatchObject({ reason: "REVOKED" });
+    expect(
+      await updateLimits(h.deps, await owner(h), seeded.mandateId, { orderCapCents: 1_000 }),
+    ).toMatchObject({ reason: "NOT_FOUND" });
   });
 });
