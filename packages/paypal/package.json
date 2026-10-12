@@ -1,0 +1,30 @@
+{
+  "name": "@slip/paypal",
+  "version": "0.0.1",
+  "private": true,
+  "description": "PayPal gateway: the REST adapter (Increment 3) and an in-memory fake.",
+  "type": "module",
+  "exports": {
+    "./fake": {
+      "types": "./dist/fake.d.ts",
+      "development": "./src/fake.ts",
+      "import": "./dist/fake.js",
+      "default": "./dist/fake.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@slip/domain": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
