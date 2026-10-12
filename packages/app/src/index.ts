@@ -1,3 +1,4 @@
+export { type CheckoutResult, runCheckout, viewOf } from "./checkout/checkout.js";
 export {
   checkOffers,
   currentSnapshot,
@@ -28,5 +29,12 @@ export {
   afterVoid,
   type Step,
 } from "./outcomes.js";
+export {
+  applyStep,
+  operation,
+  releaseAuthorization,
+  sendOrder,
+  sendVoid,
+} from "./payments.js";
 export { type OfferSummary, percentOf, type ReceiptView, renderReceipt } from "./receipt-view.js";
 export { jsonLogger, randomIds, silentLogger, systemClock } from "./runtime.js";
