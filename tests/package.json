@@ -1,0 +1,27 @@
+{
+  "name": "@slip/tests",
+  "version": "0.0.1",
+  "private": true,
+  "description": "End-to-end scenarios through the application on the in-memory store and PGlite, and the testkit the MCP and web increments reuse.",
+  "type": "module",
+  "exports": {
+    "./testkit": {
+      "development": "./src/testkit.ts",
+      "default": "./src/testkit.ts"
+    }
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@slip/app": "workspace:*",
+    "@slip/db": "workspace:*",
+    "@slip/domain": "workspace:*",
+    "@slip/offers": "workspace:*",
+    "@slip/paypal": "workspace:*",
+    "@slip/steering": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

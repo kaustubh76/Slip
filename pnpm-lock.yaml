@@ -220,6 +220,36 @@ importers:
         specifier: 'catalog:'
         version: 5.0.3(@types/node@26.6.5)(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(tsx@4.23.15))
 
+  tests:
+    devDependencies:
+      '@slip/app':
+        specifier: workspace:*
+        version: link:../packages/app
+      '@slip/db':
+        specifier: workspace:*
+        version: link:../packages/db
+      '@slip/domain':
+        specifier: workspace:*
+        version: link:../packages/domain
+      '@slip/offers':
+        specifier: workspace:*
+        version: link:../packages/offers
+      '@slip/paypal':
+        specifier: workspace:*
+        version: link:../packages/paypal
+      '@slip/steering':
+        specifier: workspace:*
+        version: link:../packages/steering
+      '@types/node':
+        specifier: 'catalog:'
+        version: 26.6.5
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vitest:
+        specifier: 'catalog:'
+        version: 5.0.3(@types/node@26.6.5)(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(tsx@4.23.15))
+
 packages:
 
   '@biomejs/biome@2.5.15':
