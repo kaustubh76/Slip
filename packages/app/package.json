@@ -1,0 +1,37 @@
+{
+  "name": "@slip/app",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Slip's use cases — checkout, holds, resolver, webhooks, mandates — written against ports only.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "development": "./src/index.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@slip/check": "workspace:*",
+    "@slip/domain": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@slip/db": "workspace:*",
+    "@slip/offers": "workspace:*",
+    "@slip/paypal": "workspace:*",
+    "@slip/steering": "workspace:*",
+    "@types/node": "catalog:",
+    "fast-check": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
