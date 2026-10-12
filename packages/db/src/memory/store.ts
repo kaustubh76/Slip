@@ -535,17 +535,24 @@ export function createMemoryStore(): Store {
           .map((r) => copy(r.mandate));
       },
 
-      async listPendingSetup(createdBefore, limit) {
+      async listPendingSetup(createdBefore, page) {
+        const byCreation = (
+          a: { createdAt: Date; id: string },
+          b: { createdAt: Date; id: string },
+        ) =>
+          a.createdAt.getTime() - b.createdAt.getTime() || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+        const { after } = page;
         return [...mandates.values()]
           .map((r) => r.mandate)
           .filter(
             (m) =>
               m.status === "PENDING" &&
               m.setupOrderId !== null &&
-              m.createdAt.getTime() < createdBefore.getTime(),
+              m.createdAt.getTime() < createdBefore.getTime() &&
+              (after === undefined || byCreation(m, after) > 0),
           )
-          .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime() || (a.id < b.id ? -1 : 1))
-          .slice(0, limit)
+          .sort(byCreation)
+          .slice(0, page.limit)
           .map((m) => copy(m));
       },
 

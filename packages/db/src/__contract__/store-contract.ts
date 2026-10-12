@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import {
   agentId,
   ConflictError,
+  type Cursor,
   DEFAULT_POLICY,
   HoldAlreadyDecidedError,
   HoldExpiredError,
@@ -236,13 +237,40 @@ export function describeStoreContract(label: string, make: () => Promise<Harness
           { vaultId: done.vaultId, paypalCustomerId: null },
           at(1),
         );
-        const ids = (await store.mandates.listPendingSetup(at(1), 1000)).map((m) => m.id);
+        const ids = (await store.mandates.listPendingSetup(at(1), { limit: 1000 })).map(
+          (m) => m.id,
+        );
         expect(ids).toContain(waiting.mandateId);
         expect(ids).not.toContain(noReference.mandateId);
         expect(ids).not.toContain(done.mandateId);
-        expect((await store.mandates.listPendingSetup(NOW, 1000)).map((m) => m.id)).not.toContain(
-          waiting.mandateId,
-        );
+        expect(
+          (await store.mandates.listPendingSetup(NOW, { limit: 1000 })).map((m) => m.id),
+        ).not.toContain(waiting.mandateId);
+      });
+
+      it("listPendingSetup pages by cursor: each waiting mandate once, ties broken by id", async () => {
+        const mine: string[] = [];
+        for (let i = 0; i < 5; i += 1) {
+          const w = await world(store, { activate: false });
+          await store.mandates.attachSetupOrder(w.mandateId, `SETUP-${randomUUID()}`, NOW);
+          mine.push(w.mandateId);
+        }
+        const seen: string[] = [];
+        let after: Cursor | undefined;
+        for (;;) {
+          const page = await store.mandates.listPendingSetup(at(1), {
+            limit: 2,
+            ...(after === undefined ? {} : { after }),
+          });
+          const last = page.at(-1);
+          if (last === undefined) {
+            break;
+          }
+          seen.push(...page.map((m) => m.id));
+          after = { createdAt: last.createdAt, id: last.id };
+        }
+        expect(new Set(seen).size).toBe(seen.length);
+        expect(seen.filter((id) => mine.includes(id))).toEqual([...mine].sort());
       });
 
       it("attaches the setup order once", async () => {
