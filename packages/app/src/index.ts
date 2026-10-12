@@ -1,4 +1,11 @@
 export {
+  checkOffers,
+  currentSnapshot,
+  recordInputFor,
+  type SnapshotOutcome,
+  type SnapshotSource,
+} from "./checkout/decision.js";
+export {
   authenticate,
   type CheckoutInput,
   CheckoutInputSchema,

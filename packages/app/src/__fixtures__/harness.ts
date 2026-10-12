@@ -8,9 +8,11 @@ import {
   type Logger,
   type MandateId,
   mandateId,
+  type Offer,
   type OwnerId,
   ownerId,
   type PolicyLimits,
+  type SelectedOption,
   type Store,
 } from "@slip/domain";
 import { ManualClock, NOW } from "@slip/domain/testing";
@@ -117,4 +119,19 @@ export async function seedAgent(
     now,
   });
   return { ownerId: owner, mandateId: mandate, agentId: agent, apiKey: key.key, vaultId };
+}
+
+/** Lists offers for a product in the fake catalogue. */
+export function market(
+  h: Harness,
+  productId: string,
+  offers: Offer[],
+  options: { title?: string; selectedOptions?: SelectedOption[] } = {},
+): void {
+  h.offers.setProduct({
+    productId,
+    offers,
+    ...(options.title === undefined ? {} : { title: options.title }),
+    ...(options.selectedOptions === undefined ? {} : { selectedOptions: options.selectedOptions }),
+  });
 }

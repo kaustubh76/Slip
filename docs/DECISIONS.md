@@ -227,3 +227,17 @@ Resolves the ambiguities the requirements sweep found in the spec and diagram:
 - The retry cap is at most 4 agent attempts per product per rolling hour (the first plus "3
   retries"); owner-approval follow-ups do not count. A capped call is refused and not recorded.
 - The agent is identified by its key, never by a field; any price it sends is dropped.
+
+## D32 · 2026-10-12 · Where the check's inputs come from, and what happens when they don't
+
+- A snapshot still fresh under the owner's policy is reused; otherwise Channel3 is asked, within 5
+  seconds, and the answer saved with its raw response.
+- A product Channel3 says does not exist becomes a zero-offer snapshot whose variant mirrors the
+  request, so the check reports "offer not found" (REJECTED) instead of holding. Any other failure
+  (down, out of credits, rate limited, timeout) falls back to the last snapshot, stale or none, and
+  R1 holds the purchase.
+- The steering classifier is asked only when the check needs it, within 5 seconds. A listing with
+  no text is not sent — it cannot instruct an agent. A timeout, error or refusal is NO_ANSWER,
+  which R4a holds. After a policy change the earlier answer is reused, not asked again.
+- HELD reserves money (AUTHORIZE) only when there is a USD price to reserve; otherwise the hold has
+  no order and approval pays in one step (D27).
