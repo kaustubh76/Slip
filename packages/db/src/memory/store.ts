@@ -396,6 +396,7 @@ export function createMemoryStore(): Store {
           createdAt: input.now,
           activatedAt: null,
           revokedAt: null,
+          vaultDeletedAt: null,
         };
         mandates.set(mandate.id, { mandate: copy(mandate), vaultId: null });
         policies.set(mandate.id, [copy(policy.data)]);
@@ -486,6 +487,44 @@ export function createMemoryStore(): Store {
       async vaultIdForCharge(id) {
         const record = mandates.get(id);
         return record?.mandate.status === "ACTIVE" ? record.vaultId : null;
+      },
+
+      async vaultIdForDeletion(id) {
+        const record = mandates.get(id);
+        return record?.mandate.status === "REVOKED" && record.mandate.vaultDeletedAt === null
+          ? record.vaultId
+          : null;
+      },
+
+      async markVaultDeleted(id, now) {
+        const record = mandateOrThrow(id);
+        if (record.mandate.vaultDeletedAt !== null) {
+          return { value: copy(record.mandate), result: "unchanged" };
+        }
+        if (record.mandate.status !== "REVOKED" || record.vaultId === null) {
+          throw new InvariantError(
+            `mandate ${id}: only a revoked mandate's vaulted method is deleted (status ${record.mandate.status})`,
+          );
+        }
+        record.mandate = { ...record.mandate, vaultDeletedAt: now };
+        return { value: copy(record.mandate), result: "applied" };
+      },
+
+      async listAwaitingVaultDeletion(limit) {
+        return [...mandates.values()]
+          .filter(
+            (r) =>
+              r.mandate.status === "REVOKED" &&
+              r.vaultId !== null &&
+              r.mandate.vaultDeletedAt === null,
+          )
+          .sort(
+            (a, b) =>
+              (a.mandate.revokedAt?.getTime() ?? 0) - (b.mandate.revokedAt?.getTime() ?? 0) ||
+              (a.mandate.id < b.mandate.id ? -1 : 1),
+          )
+          .slice(0, limit)
+          .map((r) => copy(r.mandate));
       },
 
       async currentPolicy(id) {

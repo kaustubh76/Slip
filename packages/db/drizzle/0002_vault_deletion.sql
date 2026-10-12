@@ -1,0 +1,2 @@
+ALTER TABLE "mandates" ADD COLUMN "vault_deleted_at" timestamp with time zone;--> statement-breakpoint
+ALTER TABLE "mandates" ADD CONSTRAINT "mandates_vault_deleted_after_revoke" CHECK ("mandates"."vault_deleted_at" is null or ("mandates"."status" = 'REVOKED' and "mandates"."vault_id_ciphertext" is not null));

@@ -66,9 +66,15 @@ export const mandates = pgTable(
     createdAt: ts("created_at").notNull(),
     activatedAt: ts("activated_at"),
     revokedAt: ts("revoked_at"),
+    /** When PayPal confirmed the vaulted method was deleted after a revoke; set once. */
+    vaultDeletedAt: ts("vault_deleted_at"),
   },
   (t) => [
     check("mandates_status_valid", sql`${t.status} in ('PENDING', 'ACTIVE', 'REVOKED')`),
+    check(
+      "mandates_vault_deleted_after_revoke",
+      sql`${t.vaultDeletedAt} is null or (${t.status} = 'REVOKED' and ${t.vaultIdCiphertext} is not null)`,
+    ),
     check(
       "mandates_vault_pair",
       sql`(${t.vaultIdCiphertext} is null) = (${t.vaultIdHmac} is null)`,

@@ -68,6 +68,7 @@ export function toMandate(row: Row<typeof mandates>): Mandate {
     createdAt: row.createdAt,
     activatedAt: row.activatedAt,
     revokedAt: row.revokedAt,
+    vaultDeletedAt: row.vaultDeletedAt,
   };
 }
 

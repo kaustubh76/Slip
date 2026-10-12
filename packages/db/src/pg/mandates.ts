@@ -10,7 +10,7 @@ import {
   type OwnerRepo,
   PolicySchema,
 } from "@slip/domain";
-import { and, desc, eq, isNull } from "drizzle-orm";
+import { and, asc, desc, eq, isNotNull, isNull } from "drizzle-orm";
 import type { Db } from "../client.js";
 import { Conflict } from "../codes.js";
 import type { VaultCipher } from "../crypto.js";
@@ -194,6 +194,61 @@ export function pgMandates(db: Db, cipher: VaultCipher): MandateRepo {
           return null;
         }
         return cipher.decrypt(row.vaultIdCiphertext, row.id);
+      }),
+
+    vaultIdForDeletion: (id) =>
+      guarded(async () => {
+        const [row] = await db.select().from(mandates).where(eq(mandates.id, id));
+        if (
+          row === undefined ||
+          row.status !== "REVOKED" ||
+          row.vaultIdCiphertext === null ||
+          row.vaultDeletedAt !== null
+        ) {
+          return null;
+        }
+        return cipher.decrypt(row.vaultIdCiphertext, row.id);
+      }),
+
+    markVaultDeleted: (id, now) =>
+      guarded(() =>
+        db.transaction(async (tx) => {
+          const row = await lockMandate(tx, id);
+          if (row.vaultDeletedAt !== null) {
+            return { value: toMandate(row), result: "unchanged" as const };
+          }
+          if (row.status !== "REVOKED" || row.vaultIdCiphertext === null) {
+            throw new InvariantError(
+              `mandate ${id}: only a revoked mandate's vaulted method is deleted (status ${row.status})`,
+            );
+          }
+          const [updated] = await tx
+            .update(mandates)
+            .set({ vaultDeletedAt: now })
+            .where(eq(mandates.id, id))
+            .returning();
+          return {
+            value: toMandate(updated as typeof mandates.$inferSelect),
+            result: "applied" as const,
+          };
+        }),
+      ),
+
+    listAwaitingVaultDeletion: (limit) =>
+      guarded(async () => {
+        const rows = await db
+          .select()
+          .from(mandates)
+          .where(
+            and(
+              eq(mandates.status, "REVOKED"),
+              isNotNull(mandates.vaultIdCiphertext),
+              isNull(mandates.vaultDeletedAt),
+            ),
+          )
+          .orderBy(asc(mandates.revokedAt), asc(mandates.id))
+          .limit(limit);
+        return rows.map(toMandate);
       }),
 
     currentPolicy: (id) =>

@@ -194,3 +194,12 @@ dedupe only saw recent ones, a second HELD attempt would place a second authoriz
 approving both would pay twice. `holds.listOpen(agent, product)` returns PENDING holds at any age.
 `holds.listPendingOnRevokedMandates` lets the resolver finish a revoke that stopped before
 declining its holds, so their authorizations are voided rather than left to expire.
+
+## D29 · 2026-10-12 · Deleting the PayPal token after a revoke is tracked until confirmed
+
+Revoking stops Slip at once (the store refuses every charge and approval), but the vaulted payment
+method also has to be deleted at PayPal. That call can fail, and once a mandate is REVOKED
+`vaultIdForCharge` returns nothing, so a failed deletion used to be lost. `vault_deleted_at` (set
+once, only on a REVOKED mandate that had a vault id) records PayPal's confirmation;
+`vaultIdForDeletion` releases the vault id for deletion only — never for a charge — until then,
+and `listAwaitingVaultDeletion` lets the resolver retry.

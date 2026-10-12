@@ -88,6 +88,15 @@ export interface MandateRepo {
   revoke(id: MandateId, now: Date): Promise<Transitioned<Mandate>>;
   /** The decrypted vault id, only while ACTIVE. The only way it leaves the store besides `record`. */
   vaultIdForCharge(id: MandateId): Promise<string | null>;
+  /**
+   * The decrypted vault id of a REVOKED mandate whose PayPal token is not yet confirmed deleted —
+   * for deleting it at PayPal, never for charging. Null otherwise.
+   */
+  vaultIdForDeletion(id: MandateId): Promise<string | null>;
+  /** Records PayPal's confirmation that the token is deleted. REVOKED only; a repeat is unchanged. */
+  markVaultDeleted(id: MandateId, now: Date): Promise<Transitioned<Mandate>>;
+  /** REVOKED mandates whose PayPal token still has to be deleted, oldest revoke first. */
+  listAwaitingVaultDeletion(limit: number): Promise<Mandate[]>;
   currentPolicy(id: MandateId): Promise<Policy>;
   policy(id: MandateId, version: PolicyVersion): Promise<Policy | null>;
   /** Appends version current+1 with the changes applied. Refused once REVOKED. */

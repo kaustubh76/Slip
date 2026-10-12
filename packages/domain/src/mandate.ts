@@ -33,6 +33,8 @@ export interface Mandate {
   createdAt: Date;
   activatedAt: Date | null;
   revokedAt: Date | null;
+  /** When PayPal confirmed the vaulted method was deleted after the revoke. */
+  vaultDeletedAt: Date | null;
 }
 
 /** The thresholds an owner can edit; the version is assigned by the store. */

@@ -189,6 +189,41 @@ export function describeStoreContract(label: string, make: () => Promise<Harness
         expect(late.value.status).toBe("REVOKED");
       });
 
+      it("after a revoke the vault id is available for deletion until PayPal confirms it", async () => {
+        const w = await world(store);
+        expect(await store.mandates.vaultIdForDeletion(w.mandateId)).toBeNull();
+        await expect(store.mandates.markVaultDeleted(w.mandateId, at(1))).rejects.toBeInstanceOf(
+          InvariantError,
+        );
+        await store.mandates.revoke(w.mandateId, at(2));
+        expect(await store.mandates.vaultIdForCharge(w.mandateId)).toBeNull();
+        expect(await store.mandates.vaultIdForDeletion(w.mandateId)).toBe(w.vaultId);
+        const awaiting = async () =>
+          (await store.mandates.listAwaitingVaultDeletion(1000)).map((m) => m.id);
+        expect(await awaiting()).toContain(w.mandateId);
+
+        const marked = await store.mandates.markVaultDeleted(w.mandateId, at(3));
+        expect(marked.result).toBe("applied");
+        expect(marked.value.vaultDeletedAt).toEqual(at(3));
+        expect(await store.mandates.vaultIdForDeletion(w.mandateId)).toBeNull();
+        expect(await awaiting()).not.toContain(w.mandateId);
+        const again = await store.mandates.markVaultDeleted(w.mandateId, at(4));
+        expect(again.result).toBe("unchanged");
+        expect(again.value.vaultDeletedAt).toEqual(at(3));
+      });
+
+      it("a mandate revoked before it was vaulted has nothing to delete", async () => {
+        const w = await world(store, { activate: false });
+        await store.mandates.revoke(w.mandateId, at(1));
+        expect(await store.mandates.vaultIdForDeletion(w.mandateId)).toBeNull();
+        expect(
+          (await store.mandates.listAwaitingVaultDeletion(1000)).map((m) => m.id),
+        ).not.toContain(w.mandateId);
+        await expect(store.mandates.markVaultDeleted(w.mandateId, at(2))).rejects.toBeInstanceOf(
+          InvariantError,
+        );
+      });
+
       it("attaches the setup order once", async () => {
         const w = await world(store, { activate: false });
         const order = `ORDER-SETUP-${randomUUID()}`;

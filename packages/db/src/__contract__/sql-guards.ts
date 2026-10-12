@@ -207,6 +207,23 @@ export function describeSqlGuards(label: string, make: () => Promise<SqlHarness>
       await refused(() => exec(`delete from mandates where id = '${w.mandateId}'`));
     });
 
+    it("mandates: the vault deletion time is set once, and only after a revoke", async () => {
+      const w = await world(store);
+      await refused(() =>
+        exec(`update mandates set vault_deleted_at = now() where id = '${w.mandateId}'`),
+      );
+      await store.mandates.revoke(w.mandateId, new Date());
+      await store.mandates.markVaultDeleted(w.mandateId, new Date());
+      await refused(() =>
+        exec(`update mandates set vault_deleted_at = null where id = '${w.mandateId}'`),
+      );
+      await refused(() =>
+        exec(
+          `update mandates set vault_deleted_at = now() + interval '1 day' where id = '${w.mandateId}'`,
+        ),
+      );
+    });
+
     it("holds: a decision is final", async () => {
       const w = await world(store);
       const attempt = await decided(store, w, markets.aboveCap());

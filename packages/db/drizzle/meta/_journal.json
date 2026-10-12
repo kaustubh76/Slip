@@ -15,6 +15,20 @@
       "when": 1791734034498,
       "tag": "0001_guards",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791743250313,
+      "tag": "0002_vault_deletion",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791743251011,
+      "tag": "0003_vault_deletion_guard",
+      "breakpoints": true
     }
   ]
 }
