@@ -18,9 +18,10 @@ export type RefusalReason =
   | "MANDATE_NOT_ACTIVE"
   | "INVALID_REQUEST"
   | "BUSY"
-  | "RETRY_LIMIT";
+  | "RETRY_LIMIT"
+  | "NOT_FOUND";
 
-/** The call is refused before any decision; nothing about it is recorded. */
+/** An agent's call is refused; nothing about it is recorded. */
 export interface Refusal {
   status: "refused";
   reason: RefusalReason;

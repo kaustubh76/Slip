@@ -77,7 +77,9 @@ export {
   sendOrder,
   sendVoid,
 } from "./payments.js";
+export { getReceipt, getReport, type ReceiptFound } from "./reads.js";
 export { type OfferSummary, percentOf, type ReceiptView, renderReceipt } from "./receipt-view.js";
+export { pctFromHundredths, type ReportView, renderReport } from "./report-view.js";
 export {
   RESOLVER_TASKS,
   type ResolverReport,
