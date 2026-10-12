@@ -204,3 +204,5 @@ export function testAttempt(spec: AttemptSpec): Attempt {
     createdAt: spec.createdAt ?? NOW,
   };
 }
+
+export { driveUntilSettled, ManualClock, SequentialIds } from "./clock.js";

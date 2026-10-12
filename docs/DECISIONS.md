@@ -203,3 +203,13 @@ method also has to be deleted at PayPal. That call can fail, and once a mandate 
 once, only on a REVOKED mandate that had a vault id) records PayPal's confirmation;
 `vaultIdForDeletion` releases the vault id for deletion only — never for a charge — until then,
 and `listAwaitingVaultDeletion` lets the resolver retry.
+
+## D30 · 2026-10-12 · External services are ports whose failures are results
+
+Channel3, PayPal and the steering classifier are interfaces in `@slip/domain/ports`; fakes now,
+real adapters in later increments. Every call takes an `AbortSignal`, and every expected failure is
+a result, not an exception: `unknown` means "may or may not have happened", and the caller keeps
+its write-ahead status and finishes with the same request id. A declined capture says nothing about
+the authorization, so the caller asks before voiding. Webhook verification takes the raw body and
+headers; interpretation is pure so stored events can be replayed. The clock can `sleep`, so
+deadlines run on injected time and tests need no fake timers (which stall database drivers).

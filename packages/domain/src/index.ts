@@ -139,6 +139,39 @@ export {
   policyWith,
 } from "./policy.js";
 export type {
+  ClassifierInput,
+  ClassifierVerdict,
+  SteeringClassifier,
+} from "./ports/classifier.js";
+export {
+  type FetchProductResult,
+  OFFERS_FAILURES,
+  type OffersFailure,
+  type OffersSource,
+  type ProductOffers,
+} from "./ports/offers.js";
+export {
+  AUTHORIZATION_STATUSES,
+  type AuthorizationResult,
+  type AuthorizationStatus,
+  type CaptureAuthorizationInput,
+  type CaptureResult,
+  type CompleteVaultSetupResult,
+  type CreateOrderInput,
+  type DeleteVaultResult,
+  type FindOrderInput,
+  type GatewayEvent,
+  type OrderLookupResult,
+  type OrderResult,
+  type PaymentGateway,
+  type StartVaultSetupInput,
+  type StartVaultSetupResult,
+  type VoidAuthorizationInput,
+  type VoidResult,
+  type WebhookRequest,
+} from "./ports/payments.js";
+export type { Clock, IdSource, LogFields, Logger } from "./ports/runtime.js";
+export type {
   AgentRepo,
   AttemptRepo,
   Cursor,
