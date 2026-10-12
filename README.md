@@ -29,8 +29,8 @@ packages/offers    in-memory Channel3 fake (done); Channel3 adapter     (needs C
 packages/paypal    in-memory PayPal fake (done); REST adapter          (needs PayPal sandbox)
 packages/steering  scripted classifier fake (done); Claude classifier  (needs Anthropic key)
 tests              end-to-end scenarios on the fakes and PGlite, and a reusable testkit (done)
-apps/mcp           MCP server: search, checkout, get_receipt, get_report         (next)
-apps/web           owner UI: mandate, receipts, holds, limits, report
+apps/web           owner UI: mandate, receipts, holds, limits, report           (next)
+apps/mcp           MCP server: search, checkout, get_receipt, get_report
 study/  bench/     market study and SlipBench
 ```
 
@@ -88,6 +88,6 @@ Every write that can move money is atomic, fenced by the checkout lease, refused
 is revoked, and guarded twice: by shared pure rules in code and by constraints and triggers in
 Postgres. The spec's §11 scenarios and the money paths run end to end on both stores.
 
-Next: the MCP server and the owner UI on top of `@slip/app`; the Channel3, PayPal and Claude
+Next: the owner UI on top of `@slip/app`, then the MCP server; the Channel3, PayPal and Claude
 adapters replace the fakes once API keys are available. See `docs/SPEC.md` §15 for dates and
 `docs/DECISIONS.md` (D1–D37) for every departure from the written spec.
