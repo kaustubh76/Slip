@@ -10,7 +10,7 @@ import {
   type OwnerRepo,
   PolicySchema,
 } from "@slip/domain";
-import { and, asc, desc, eq, isNotNull, isNull } from "drizzle-orm";
+import { and, asc, desc, eq, isNotNull, isNull, lt } from "drizzle-orm";
 import type { Db } from "../client.js";
 import { Conflict } from "../codes.js";
 import type { VaultCipher } from "../crypto.js";
@@ -247,6 +247,23 @@ export function pgMandates(db: Db, cipher: VaultCipher): MandateRepo {
             ),
           )
           .orderBy(asc(mandates.revokedAt), asc(mandates.id))
+          .limit(limit);
+        return rows.map(toMandate);
+      }),
+
+    listPendingSetup: (createdBefore, limit) =>
+      guarded(async () => {
+        const rows = await db
+          .select()
+          .from(mandates)
+          .where(
+            and(
+              eq(mandates.status, "PENDING"),
+              isNotNull(mandates.setupOrderId),
+              lt(mandates.createdAt, createdBefore),
+            ),
+          )
+          .orderBy(asc(mandates.createdAt), asc(mandates.id))
           .limit(limit);
         return rows.map(toMandate);
       }),

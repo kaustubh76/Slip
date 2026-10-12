@@ -97,6 +97,12 @@ export interface MandateRepo {
   markVaultDeleted(id: MandateId, now: Date): Promise<Transitioned<Mandate>>;
   /** REVOKED mandates whose PayPal token still has to be deleted, oldest revoke first. */
   listAwaitingVaultDeletion(limit: number): Promise<Mandate[]>;
+  /**
+   * PENDING mandates with a setup reference created before `createdBefore`, oldest first: the
+   * owner may have approved at PayPal without Slip hearing (no webhook announces a vault created
+   * from a setup token), so the resolver polls them.
+   */
+  listPendingSetup(createdBefore: Date, limit: number): Promise<Mandate[]>;
   currentPolicy(id: MandateId): Promise<Policy>;
   policy(id: MandateId, version: PolicyVersion): Promise<Policy | null>;
   /** Appends version current+1 with the changes applied. Refused once REVOKED. */

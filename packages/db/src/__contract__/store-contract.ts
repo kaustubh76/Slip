@@ -224,6 +224,26 @@ export function describeStoreContract(label: string, make: () => Promise<Harness
         );
       });
 
+      it("listPendingSetup finds mandates still waiting for PayPal setup", async () => {
+        const waiting = await world(store, { activate: false });
+        const noReference = await world(store, { activate: false });
+        const done = await world(store, { activate: false });
+        await store.mandates.attachSetupOrder(waiting.mandateId, `SETUP-${randomUUID()}`, NOW);
+        await store.mandates.attachSetupOrder(done.mandateId, `SETUP-${randomUUID()}`, NOW);
+        await store.mandates.activate(
+          done.mandateId,
+          { vaultId: done.vaultId, paypalCustomerId: null },
+          at(1),
+        );
+        const ids = (await store.mandates.listPendingSetup(at(1), 1000)).map((m) => m.id);
+        expect(ids).toContain(waiting.mandateId);
+        expect(ids).not.toContain(noReference.mandateId);
+        expect(ids).not.toContain(done.mandateId);
+        expect((await store.mandates.listPendingSetup(NOW, 1000)).map((m) => m.id)).not.toContain(
+          waiting.mandateId,
+        );
+      });
+
       it("attaches the setup order once", async () => {
         const w = await world(store, { activate: false });
         const order = `ORDER-SETUP-${randomUUID()}`;
