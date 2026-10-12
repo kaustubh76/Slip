@@ -65,6 +65,14 @@ const jsonRoundTrip = <T>(value: T): unknown => JSON.parse(JSON.stringify(value 
 
 const copy = <T>(value: T): T => structuredClone(value);
 
+/** Least recently changed first; the attempt id breaks ties, as in the Postgres store. */
+const byChange = (
+  a: { updatedAt: Date; attemptId: string },
+  b: { updatedAt: Date; attemptId: string },
+): number =>
+  a.updatedAt.getTime() - b.updatedAt.getTime() ||
+  (a.attemptId < b.attemptId ? -1 : a.attemptId > b.attemptId ? 1 : 0);
+
 interface MandateRecord {
   mandate: Mandate;
   vaultId: string | null;
@@ -755,12 +763,6 @@ export function createMemoryStore(): Store {
 
       async listStale(statuses, updatedBefore, page) {
         const { after } = page;
-        const byChange = (
-          a: { updatedAt: Date; attemptId: string },
-          b: { updatedAt: Date; attemptId: string },
-        ) =>
-          a.updatedAt.getTime() - b.updatedAt.getTime() ||
-          (a.attemptId < b.attemptId ? -1 : a.attemptId > b.attemptId ? 1 : 0);
         return [...payments.values()]
           .filter(
             (p) =>
@@ -770,6 +772,17 @@ export function createMemoryStore(): Store {
           )
           .sort(byChange)
           .slice(0, page.limit)
+          .map((p) => copy(p));
+      },
+
+      async listAuthorizedOnClosedHolds(limit) {
+        return [...payments.values()]
+          .filter((p) => {
+            const hold = holds.get(p.attemptId)?.status;
+            return p.status === "AUTHORIZED" && (hold === "DECLINED" || hold === "EXPIRED");
+          })
+          .sort(byChange)
+          .slice(0, limit)
           .map((p) => copy(p));
       },
 

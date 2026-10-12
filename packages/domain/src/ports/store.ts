@@ -217,6 +217,12 @@ export interface PaymentRepo {
     updatedBefore: Date,
     page: { limit: number; after?: StaleCursor },
   ): Promise<Payment[]>;
+  /**
+   * AUTHORIZED payments whose hold is already DECLINED or EXPIRED, least recently changed first:
+   * the hold closed while PayPal had not confirmed the authorization, so nothing voided it. Each
+   * one leaves the list once its void is written ahead (VOIDING).
+   */
+  listAuthorizedOnClosedHolds(limit: number): Promise<Payment[]>;
   events(attemptId: AttemptId): Promise<PaymentEvent[]>;
 }
 

@@ -163,6 +163,23 @@ export function pgPayments(db: Db): PaymentRepo {
         return withOperations(db, rows);
       }),
 
+    listAuthorizedOnClosedHolds: (limit) =>
+      guarded(async () => {
+        const rows = await db
+          .select({ payment: payments })
+          .from(payments)
+          .innerJoin(holds, eq(holds.attemptId, payments.attemptId))
+          .where(
+            and(eq(payments.status, "AUTHORIZED"), inArray(holds.status, ["DECLINED", "EXPIRED"])),
+          )
+          .orderBy(asc(payments.updatedAt), asc(payments.attemptId))
+          .limit(limit);
+        return withOperations(
+          db,
+          rows.map((row) => row.payment),
+        );
+      }),
+
     events: (attemptId) =>
       guarded(async () => {
         const rows = await db

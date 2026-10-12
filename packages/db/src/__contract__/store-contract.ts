@@ -845,6 +845,46 @@ export function describeStoreContract(label: string, make: () => Promise<Harness
         ).rejects.toBeInstanceOf(HoldExpiredError);
       });
 
+      it("an authorization confirmed after its hold closed is listed until its void is written", async () => {
+        const w = await world(store);
+        const declinedFirst = await heldWithAuthorization(w);
+        await store.holds.decline(declinedFirst.id, {
+          by: "owner",
+          now: at(2),
+          voidRequestId: newRequestId(),
+        });
+        const expiredFirst = await heldWithAuthorization(w, at(3));
+        await store.holds.expire(expiredFirst.id, { now: at(4), voidRequestId: newRequestId() });
+        const stillOpen = await heldWithAuthorization(w);
+        const declinedAfter = await heldWithAuthorization(w);
+        for (const attempt of [declinedFirst, expiredFirst, stillOpen, declinedAfter]) {
+          await authorize(store, attempt.id, at(5));
+        }
+        await store.holds.decline(declinedAfter.id, {
+          by: "owner",
+          now: at(6),
+          voidRequestId: newRequestId(),
+        });
+
+        const ours = new Set<string>([
+          declinedFirst.id,
+          expiredFirst.id,
+          stillOpen.id,
+          declinedAfter.id,
+        ]);
+        const listed = async () =>
+          (await store.payments.listAuthorizedOnClosedHolds(1000))
+            .map((p) => p.attemptId)
+            .filter((id) => ours.has(id));
+        expect((await listed()).sort()).toEqual([declinedFirst.id, expiredFirst.id].sort());
+
+        await store.payments.transition(declinedFirst.id, "VOIDING", {
+          operationRequestId: newRequestId(),
+          now: at(7),
+        });
+        expect(await listed()).toEqual([expiredFirst.id]);
+      });
+
       it("decline voids a confirmed authorization; the decision is final", async () => {
         const w = await world(store);
         const attempt = await heldWithAuthorization(w);
