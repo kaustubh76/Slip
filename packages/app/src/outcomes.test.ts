@@ -14,7 +14,9 @@ import { describe, expect, it } from "vitest";
 import {
   afterAuthorizationCheck,
   afterCapture,
+  afterLookup,
   afterOrder,
+  afterOrderRead,
   afterVoid,
   type Step,
 } from "./outcomes.js";
@@ -98,6 +100,49 @@ describe("afterOrder", () => {
     expect(
       afterOrder("CAPTURE", { kind: "authorized", orderId: "O", authorizationId: "A" }).kind,
     ).toBe("contradiction");
+  });
+});
+
+describe("afterOrderRead and afterLookup", () => {
+  it.each(PAYMENT_INTENTS)(
+    "every answer to reading a %s order is legal, a wait, or a contradiction",
+    (intent) => {
+      for (const result of ORDER_RESULTS) {
+        const step = afterOrderRead(intent, result);
+        expect(["move", "stay", "contradiction"]).toContain(step.kind);
+        expectLegal(intent, "UNKNOWN", step);
+      }
+    },
+  );
+
+  it("an order that cannot be read stays as it is, never UNKNOWN again", () => {
+    expect(afterOrderRead("CAPTURE", { kind: "unknown", reason: "RESOURCE_NOT_FOUND" })).toEqual({
+      kind: "stay",
+      why: "RESOURCE_NOT_FOUND",
+    });
+  });
+
+  it("a found order maps like the order call itself", () => {
+    const order: OrderResult = { kind: "captured", orderId: "O", captureId: "C" };
+    expect(afterLookup("CAPTURE", { kind: "found", order }, false)).toEqual(
+      afterOrder("CAPTURE", order),
+    );
+  });
+
+  it("'not found' fails the payment only once it may give up", () => {
+    expect(afterLookup("CAPTURE", { kind: "not-found" }, false).kind).toBe("stay");
+    const failed = afterLookup("CAPTURE", { kind: "not-found" }, true);
+    expect(failed).toMatchObject({
+      kind: "move",
+      to: "FAILED",
+      patch: { failureReason: "ORDER_NOT_FOUND" },
+    });
+    expectLegal("CAPTURE", "UNKNOWN", failed);
+    expectLegal("AUTHORIZE", "INITIATED", afterLookup("AUTHORIZE", { kind: "not-found" }, true));
+  });
+
+  it("an unanswered search never fails it, however late", () => {
+    expect(afterLookup("CAPTURE", { kind: "unknown", reason: "503" }, true).kind).toBe("stay");
   });
 });
 

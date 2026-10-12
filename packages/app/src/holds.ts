@@ -21,7 +21,7 @@ import {
 import { viewOf } from "./checkout/checkout.js";
 import { checkOffers, currentSnapshot } from "./checkout/decision.js";
 import type { AppDeps } from "./deps.js";
-import { sendCapture, sendOrder, sendVoid } from "./payments.js";
+import { orderDescription, sendCapture, sendOrder, sendVoid } from "./payments.js";
 import type { ReceiptView } from "./receipt-view.js";
 
 /**
@@ -165,7 +165,7 @@ function needsFollowUp(payment: Payment | null): boolean {
 }
 
 type Recheck =
-  | { ok: true; decision: Decision; amountCents: Cents; merchant: string; title: string }
+  | { ok: true; decision: Decision; amountCents: Cents; merchant: string; title: string | null }
   | { ok: false; refusal: HoldRefusal };
 
 /**
@@ -210,7 +210,7 @@ async function recheck(deps: AppDeps, held: Receipt): Promise<Recheck> {
     decision,
     amountCents: chosen.priceCents,
     merchant: chosen.domain,
-    title: snapshot?.title || a.productId,
+    title: snapshot?.title ?? null,
   };
 }
 
@@ -352,7 +352,7 @@ async function approveByFollowUp(
     if (child.payment !== null && vaultId !== null) {
       await sendOrder(deps, child.payment, {
         vaultId,
-        description: `Slip (approved): ${checked.title} from ${checked.merchant}`.slice(0, 127),
+        description: orderDescription(child, checked.title),
       });
     } else {
       deps.log.error("hold.no_vault_id", { attemptId: child.attempt.id });

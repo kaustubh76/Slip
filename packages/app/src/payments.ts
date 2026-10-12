@@ -2,6 +2,7 @@ import {
   IllegalTransitionError,
   type Payment,
   type PaymentOperationKind,
+  type Receipt,
   requestId,
 } from "@slip/domain";
 import { withDeadline } from "./deadline.js";
@@ -28,7 +29,8 @@ export function operation(payment: Payment, kind: PaymentOperationKind) {
   return op;
 }
 
-async function paypal<T>(
+/** One PayPal call within its deadline; a timeout or a thrown error is `unknown`. */
+export async function callPayPal<T>(
   deps: AppDeps,
   what: string,
   call: (signal: AbortSignal) => Promise<T>,
@@ -42,6 +44,14 @@ async function paypal<T>(
   }
 }
 
+/** What the payer sees on the order; built the same way for the first send and every re-send. */
+export function orderDescription(receipt: Receipt, title: string | null): string {
+  const { attempt } = receipt;
+  const prefix = attempt.origin === "OWNER_APPROVAL" ? "Slip (approved)" : "Slip";
+  const merchant = attempt.decision.checkResult.chosen?.domain ?? "";
+  return `${prefix}: ${title || attempt.productId} from ${merchant}`.slice(0, 127);
+}
+
 /** Creates (or re-sends, with the same request id) the order of an INITIATED/UNKNOWN payment. */
 export async function sendOrder(
   deps: AppDeps,
@@ -49,7 +59,7 @@ export async function sendOrder(
   input: { vaultId: string; description: string },
 ): Promise<Payment> {
   const op = operation(payment, "ORDER");
-  const result = await paypal(deps, "order", (signal) =>
+  const result = await callPayPal(deps, "order", (signal) =>
     deps.gateway.createOrder(
       {
         intent: payment.intent,
@@ -123,7 +133,7 @@ export async function applyStep(
         return payment;
       }
       const authorizationId = payment.authorizationId;
-      const result = await paypal(deps, "authorization lookup", (signal) =>
+      const result = await callPayPal(deps, "authorization lookup", (signal) =>
         deps.gateway.getAuthorization(authorizationId, signal),
       );
       return applyStep(deps, payment, afterAuthorizationCheck(payment.status, result), context);
@@ -143,7 +153,7 @@ export async function sendCapture(deps: AppDeps, payment: Payment): Promise<Paym
   }
   const authorizationId = payment.authorizationId;
   const op = operation(payment, "CAPTURE");
-  const result = await paypal(deps, "capture", (signal) =>
+  const result = await callPayPal(deps, "capture", (signal) =>
     deps.gateway.captureAuthorization(
       {
         authorizationId,
@@ -179,7 +189,7 @@ export async function sendVoid(deps: AppDeps, payment: Payment): Promise<Payment
   }
   const authorizationId = payment.authorizationId;
   const op = operation(payment, "VOID");
-  const result = await paypal(deps, "void", (signal) =>
+  const result = await callPayPal(deps, "void", (signal) =>
     deps.gateway.voidAuthorization({ authorizationId, requestId: op.requestId }, signal),
   );
   return applyStep(deps, payment, afterVoid(result), "void");

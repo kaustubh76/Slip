@@ -1,6 +1,7 @@
 import type {
   AuthorizationResult,
   CaptureResult,
+  OrderLookupResult,
   OrderResult,
   PaymentIntent,
   PaymentPatch,
@@ -89,6 +90,40 @@ export function afterOrder(intent: PaymentIntent, result: OrderResult): Step {
       return move("UNKNOWN", {}, { ...detail, reason: result.reason });
     case "unknown":
       return move("UNKNOWN", {}, { ...detail, reason: result.reason });
+  }
+}
+
+/** After reading an order PayPal already knows by id (a PENDING one, or one looked up before). */
+export function afterOrderRead(intent: PaymentIntent, result: OrderResult): Step {
+  // Not being able to read it says nothing about the payment.
+  return result.kind === "unknown"
+    ? { kind: "stay", why: result.reason }
+    : afterOrder(intent, result);
+}
+
+/**
+ * After searching PayPal's records for the order of an INITIATED/UNKNOWN payment. "Not found"
+ * fails it only once `canGiveUp` (long enough after the decision that the order would show); an
+ * unanswered search never does.
+ */
+export function afterLookup(
+  intent: PaymentIntent,
+  result: OrderLookupResult,
+  canGiveUp: boolean,
+): Step {
+  switch (result.kind) {
+    case "found":
+      return afterOrderRead(intent, result.order);
+    case "not-found":
+      return canGiveUp
+        ? move(
+            "FAILED",
+            { failureReason: "ORDER_NOT_FOUND" },
+            { source: "lookup", paypal: "not-found" },
+          )
+        : { kind: "stay", why: "no order found yet" };
+    case "unknown":
+      return { kind: "stay", why: result.reason };
   }
 }
 

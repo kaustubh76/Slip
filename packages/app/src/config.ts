@@ -39,6 +39,8 @@ export const AppConfigSchema = z
     /** Mandates waiting for PayPal setup longer than this are polled. */
     setupPollAfterMs: ms(5 * MINUTE),
     resolverBatchSize: z.number().int().positive().max(500).default(100),
+    /** Items the resolver works on at once; each may wait on a PayPal deadline. */
+    resolverConcurrency: z.number().int().positive().max(64).default(8),
     /** Where PayPal sends the owner back after approving or cancelling. */
     publicBaseUrl: z.url().default("http://localhost:3000"),
   })

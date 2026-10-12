@@ -1,0 +1,317 @@
+import {
+  type Payment,
+  type PaymentStatus,
+  type Receipt,
+  requestId,
+  type StaleCursor,
+  SYSTEM_DECIDER,
+} from "@slip/domain";
+import type { AppDeps } from "./deps.js";
+import { closeHold } from "./holds.js";
+import { afterLookup, afterOrderRead } from "./outcomes.js";
+import {
+  applyStep,
+  callPayPal,
+  operation,
+  orderDescription,
+  releaseAuthorization,
+  sendCapture,
+  sendOrder,
+  sendVoid,
+} from "./payments.js";
+import { deleteVaultToken } from "./vault.js";
+
+/**
+ * The resolver finishes what a request could not: PayPal calls that timed out, holds whose time
+ * ran out, revokes that stopped half-way. It runs on a schedule; every action is idempotent or a
+ * compare-and-set, so two runs that overlap cannot move money twice.
+ *
+ * Each item is handled on its own: one that throws is logged and counted, and the rest go on.
+ */
+
+export const RESOLVER_TASKS = [
+  "expireHolds",
+  "finishRevokes",
+  "deleteVaultTokens",
+  "orders",
+  "holdOperations",
+  "closedHolds",
+] as const;
+export type ResolverTask = (typeof RESOLVER_TASKS)[number];
+
+/** `settled`: nothing more to do. `waiting`: left for a later run. `failed`: threw. */
+export interface TaskCount {
+  settled: number;
+  waiting: number;
+  failed: number;
+}
+export type ResolverReport = Record<ResolverTask, TaskCount>;
+
+type Handled = "settled" | "waiting";
+
+/** Searching from a little before the decision, in case PayPal's clock runs behind ours. */
+const LOOKUP_SKEW_MS = 10 * 60_000;
+
+const ORDER_OPEN: readonly PaymentStatus[] = ["INITIATED", "UNKNOWN", "PENDING"];
+const OPERATION_OPEN: readonly PaymentStatus[] = ["CAPTURING", "VOIDING"];
+
+export async function runResolver(deps: AppDeps): Promise<ResolverReport> {
+  const started = deps.clock.now();
+  const report = Object.fromEntries(
+    RESOLVER_TASKS.map((task) => [task, { settled: 0, waiting: 0, failed: 0 }]),
+  ) as ResolverReport;
+  const run = new Run(deps, report);
+  const limit = deps.config.resolverBatchSize;
+
+  // Holds first: an expiry or a finished revoke closes a hold before its payment is looked at,
+  // so no order is re-sent for a hold that is already closed.
+  await run.drain(
+    "expireHolds",
+    () => deps.store.holds.listExpiring(deps.clock.now(), limit),
+    (hold) => hold.attemptId,
+    async (hold) => {
+      const expired = await deps.store.holds.expire(hold.attemptId, {
+        now: deps.clock.now(),
+        voidRequestId: requestId(deps.ids.uuid()),
+      });
+      if (expired.result === "applied") {
+        deps.log.info("hold.expired", { attemptId: hold.attemptId });
+      }
+      if (expired.result === "applied" && expired.payment?.status === "VOIDING") {
+        const voided = await sendVoid(deps, expired.payment);
+        return voided.status === "VOIDING" ? "waiting" : "settled";
+      }
+      return "settled";
+    },
+  );
+
+  await run.drain(
+    "finishRevokes",
+    () => deps.store.holds.listPendingOnRevokedMandates(limit),
+    (receipt) => receipt.attempt.id,
+    async (receipt) => {
+      const closed = await closeHold(deps, receipt, SYSTEM_DECIDER);
+      return closed.status === "done" && closed.receipt.payment?.status === "VOIDING"
+        ? "waiting"
+        : "settled";
+    },
+  );
+
+  await run.drain(
+    "deleteVaultTokens",
+    () => deps.store.mandates.listAwaitingVaultDeletion(limit),
+    (mandate) => mandate.id,
+    async (mandate) =>
+      (await deleteVaultToken(deps, mandate.id)) === "failed" ? "waiting" : "settled",
+  );
+
+  const quietSince = new Date(started.getTime() - deps.config.resolverMinAgeMs);
+  await run.pages("orders", ORDER_OPEN, quietSince, (payment) => resolveOrder(deps, payment));
+  await run.pages("holdOperations", OPERATION_OPEN, quietSince, (payment) =>
+    resolveHoldOperation(deps, payment),
+  );
+
+  // Last, so an authorization a lookup just confirmed for a closed hold is released this run.
+  await run.drain(
+    "closedHolds",
+    () => deps.store.payments.listAuthorizedOnClosedHolds(limit),
+    (payment) => payment.attemptId,
+    async (payment) => {
+      const released = await releaseAuthorization(
+        deps,
+        payment,
+        "hold closed before PayPal confirmed",
+      );
+      return released.status === "VOIDING" ? "waiting" : "settled";
+    },
+  );
+
+  deps.log.info("resolver.finished", {
+    ms: deps.clock.now().getTime() - started.getTime(),
+    ...Object.fromEntries(RESOLVER_TASKS.map((task) => [task, report[task]])),
+  });
+  return report;
+}
+
+class Run {
+  readonly #deps: AppDeps;
+  readonly #report: ResolverReport;
+
+  constructor(deps: AppDeps, report: ResolverReport) {
+    this.#deps = deps;
+    this.#report = report;
+  }
+
+  /**
+   * For lists an item leaves once handled: fetch, handle, fetch again while pages come back full.
+   * An item that stays (it failed, or must wait) is not handled twice in one run.
+   */
+  async drain<T>(
+    task: ResolverTask,
+    fetch: () => Promise<T[]>,
+    key: (item: T) => string,
+    handle: (item: T) => Promise<Handled>,
+  ): Promise<void> {
+    const seen = new Set<string>();
+    const limit = this.#deps.config.resolverBatchSize;
+    for (;;) {
+      const page = await fetch();
+      const fresh = page.filter((item) => !seen.has(key(item)));
+      if (fresh.length === 0) {
+        return;
+      }
+      for (const item of fresh) {
+        seen.add(key(item));
+      }
+      await this.#each(task, fresh, key, handle);
+      if (page.length < limit) {
+        return;
+      }
+    }
+  }
+
+  /** For payments that may have to wait: every page once, by cursor, so none hides another. */
+  async pages(
+    task: ResolverTask,
+    statuses: readonly PaymentStatus[],
+    updatedBefore: Date,
+    handle: (payment: Payment) => Promise<Handled>,
+  ): Promise<void> {
+    const limit = this.#deps.config.resolverBatchSize;
+    let after: StaleCursor | undefined;
+    for (;;) {
+      const page = await this.#deps.store.payments.listStale(statuses, updatedBefore, {
+        limit,
+        ...(after === undefined ? {} : { after }),
+      });
+      const last = page.at(-1);
+      if (last === undefined) {
+        return;
+      }
+      await this.#each(task, page, (payment) => payment.attemptId, handle);
+      if (page.length < limit) {
+        return;
+      }
+      after = { updatedAt: last.updatedAt, attemptId: last.attemptId };
+    }
+  }
+
+  /** Up to `resolverConcurrency` items at once; each one's failure is its own. */
+  async #each<T>(
+    task: ResolverTask,
+    items: T[],
+    key: (item: T) => string,
+    handle: (item: T) => Promise<Handled>,
+  ): Promise<void> {
+    const count = this.#report[task];
+    let next = 0;
+    const worker = async () => {
+      for (let item = items[next++]; item !== undefined; item = items[next++]) {
+        try {
+          count[await handle(item)] += 1;
+        } catch (error) {
+          count.failed += 1;
+          this.#deps.log.error("resolver.item_failed", {
+            task,
+            id: key(item),
+            error: String(error),
+          });
+        }
+      }
+    };
+    const workers = Math.min(this.#deps.config.resolverConcurrency, items.length);
+    await Promise.all(Array.from({ length: workers }, worker));
+  }
+}
+
+/**
+ * An order PayPal may or may not have. Known by id (PENDING): read it. Otherwise, soon after the
+ * decision, send it again with its request id — unless the hold closed or the mandate was
+ * revoked meanwhile, since that could start a payment nobody wants any more. Later, search
+ * PayPal's records once they have caught up, and fail it only on a definite "not found" a day on.
+ */
+async function resolveOrder(deps: AppDeps, payment: Payment): Promise<Handled> {
+  const receipt = await deps.store.attempts.get(payment.attemptId);
+  if (receipt === null) {
+    throw new Error(`payment ${payment.attemptId} has no attempt`);
+  }
+  const now = deps.clock.now();
+  const order = operation(payment, "ORDER");
+  const age = now.getTime() - order.createdAt.getTime();
+  const { config } = deps;
+
+  let after: Payment;
+  if (payment.paypalOrderId !== null) {
+    const orderId = payment.paypalOrderId;
+    const read = await callPayPal(deps, "order read", (signal) =>
+      deps.gateway.getOrder(orderId, signal),
+    );
+    after = await applyStep(deps, payment, afterOrderRead(payment.intent, read), "resolver");
+  } else if (age < config.orderResendWindowMs && !holdClosed(receipt)) {
+    const vaultId = await deps.store.mandates.vaultIdForCharge(receipt.attempt.mandateId);
+    if (vaultId === null) {
+      // Revoked since the decision: nothing new goes out. A lookup later finds what PayPal has.
+      return "waiting";
+    }
+    deps.log.info("resolver.order_resent", { attemptId: payment.attemptId });
+    after = await sendOrder(deps, payment, {
+      vaultId,
+      description: orderDescription(receipt, await titleOf(deps, receipt)),
+    });
+  } else if (age < config.reportingLagMs) {
+    return "waiting";
+  } else {
+    const found = await callPayPal(deps, "order lookup", (signal) =>
+      deps.gateway.findOrderByInvoice(
+        {
+          invoiceId: payment.attemptId,
+          amountCents: payment.amountCents,
+          from: new Date(order.createdAt.getTime() - LOOKUP_SKEW_MS),
+          to: now,
+        },
+        signal,
+      ),
+    );
+    if (found.kind === "unknown") {
+      deps.log.error("resolver.lookup_unanswered", {
+        attemptId: payment.attemptId,
+        reason: found.reason,
+      });
+    }
+    const step = afterLookup(payment.intent, found, age >= config.orderGiveUpMs);
+    after = await applyStep(deps, payment, step, "resolver lookup");
+  }
+  return ORDER_OPEN.includes(after.status) ? "waiting" : "settled";
+}
+
+/**
+ * A capture or void of a hold's authorization that did not finish. Soon after it was written,
+ * send it again with its request id; later, read the authorization and record what happened.
+ * A capture approved before a revoke still completes: the owner approved it while they could.
+ */
+async function resolveHoldOperation(deps: AppDeps, payment: Payment): Promise<Handled> {
+  const kind = payment.status === "CAPTURING" ? "CAPTURE" : "VOID";
+  const age = deps.clock.now().getTime() - operation(payment, kind).createdAt.getTime();
+  let after: Payment;
+  if (age < deps.config.operationResendWindowMs) {
+    after = kind === "CAPTURE" ? await sendCapture(deps, payment) : await sendVoid(deps, payment);
+  } else {
+    after = await applyStep(
+      deps,
+      payment,
+      { kind: "check-authorization", why: `${kind} unsettled after its re-send window` },
+      "resolver",
+    );
+  }
+  return OPERATION_OPEN.includes(after.status) ? "waiting" : "settled";
+}
+
+function holdClosed(receipt: Receipt): boolean {
+  const status = receipt.hold?.status;
+  return status === "DECLINED" || status === "EXPIRED";
+}
+
+async function titleOf(deps: AppDeps, receipt: Receipt): Promise<string | null> {
+  const id = receipt.attempt.decision.checkResult.snapshotId;
+  return id === null ? null : ((await deps.store.snapshots.get(id))?.title ?? null);
+}

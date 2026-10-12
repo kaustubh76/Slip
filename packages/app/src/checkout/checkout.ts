@@ -11,7 +11,7 @@ import {
   type RecordedAttempt,
 } from "@slip/domain";
 import type { AppDeps } from "../deps.js";
-import { sendOrder } from "../payments.js";
+import { orderDescription, sendOrder } from "../payments.js";
 import { type ReceiptView, renderReceipt } from "../receipt-view.js";
 import { checkOffers, currentSnapshot, recordInputFor } from "./decision.js";
 import {
@@ -176,13 +176,9 @@ async function pay(
     deps.log.error("checkout.no_vault_id", { attemptId: receipt.attempt.id });
     return receipt;
   }
-  const domain = receipt.attempt.decision.checkResult.chosen?.domain ?? "";
   await sendOrder(deps, receipt.payment, {
     vaultId,
-    description: `Slip: ${snapshot?.title || receipt.attempt.productId} from ${domain}`.slice(
-      0,
-      127,
-    ),
+    description: orderDescription(receipt, snapshot?.title ?? null),
   });
   return (await deps.store.attempts.get(receipt.attempt.id)) ?? receipt;
 }

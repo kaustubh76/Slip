@@ -258,3 +258,25 @@ Resolves the ambiguities the requirements sweep found in the spec and diagram:
 - Holds are scoped to their owner: someone else's hold, an attempt with no hold and a malformed id
   are all "not found". Declining is allowed after a revoke, since it releases money; approving is
   not.
+
+## D34 · 2026-10-12 · The resolver finishes what requests could not, in a fixed order
+
+Run on a schedule; every action is idempotent (same request id) or a compare-and-set, so overlapping
+runs cannot move money twice. Each item is handled and logged on its own. In order:
+
+1. **Holds past their 48 hours** expire; a confirmed authorization is voided.
+2. **Revokes that stopped half-way**: open holds are declined by `system` and voided; the PayPal
+   token is deleted, and a refused deletion is tried again on the next run (D29).
+3. **Orders** (INITIATED, UNKNOWN, PENDING, untouched for 2 minutes so a running checkout is left
+   alone). Known to PayPal by id: read it. Otherwise, within 30 minutes of the decision, send it
+   again with its request id — but not once the hold has closed or the mandate was revoked, since
+   that could start a payment nobody wants any more. Later, search PayPal's records once they have
+   caught up (3 hours); "not found" fails the payment only a day after the decision, and an
+   unanswered search never does (it is logged as an error).
+4. **Captures and voids** of a hold (CAPTURING, VOIDING): within 30 minutes, send again with the
+   request id; later, read the authorization. A capture approved before a revoke still completes.
+5. **Authorizations confirmed after their hold closed** are voided — last, so one a lookup has
+   just confirmed is released in the same run.
+
+Payments that must wait are paged by cursor, so a backlog never hides the payments behind it;
+lists an item leaves once handled are drained until a page has nothing new.

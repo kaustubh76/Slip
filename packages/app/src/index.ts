@@ -37,17 +37,29 @@ export { API_KEY_PREFIX, generateApiKey, hashApiKey, type IssuedKey } from "./ke
 export {
   afterAuthorizationCheck,
   afterCapture,
+  afterLookup,
   afterOrder,
+  afterOrderRead,
   afterVoid,
   type Step,
 } from "./outcomes.js";
 export {
   applyStep,
+  callPayPal,
   operation,
+  orderDescription,
   releaseAuthorization,
   sendCapture,
   sendOrder,
   sendVoid,
 } from "./payments.js";
 export { type OfferSummary, percentOf, type ReceiptView, renderReceipt } from "./receipt-view.js";
+export {
+  RESOLVER_TASKS,
+  type ResolverReport,
+  type ResolverTask,
+  runResolver,
+  type TaskCount,
+} from "./resolver.js";
 export { jsonLogger, randomIds, silentLogger, systemClock } from "./runtime.js";
+export { deleteVaultToken } from "./vault.js";
