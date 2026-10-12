@@ -1,6 +1,19 @@
+export {
+  authenticate,
+  type CheckoutInput,
+  CheckoutInputSchema,
+  type DedupeVerdict,
+  dedupe,
+  parseCheckoutRequest,
+  type Refusal,
+  type RefusalReason,
+  type ReplayReason,
+  refuse,
+} from "./checkout/gate.js";
 export { type AppConfig, type AppConfigInput, AppConfigSchema, appConfig } from "./config.js";
 export { type Deadlined, withDeadline } from "./deadline.js";
 export type { AppDeps } from "./deps.js";
+export { API_KEY_PREFIX, generateApiKey, hashApiKey, type IssuedKey } from "./keys.js";
 export {
   afterAuthorizationCheck,
   afterCapture,

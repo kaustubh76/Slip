@@ -213,3 +213,17 @@ its write-ahead status and finishes with the same request id. A declined capture
 the authorization, so the caller asks before voiding. Webhook verification takes the raw body and
 headers; interpretation is pure so stored events can be replayed. The clock can `sleep`, so
 deadlines run on injected time and tests need no fake timers (which stall database drivers).
+
+## D31 · 2026-10-12 · Checkout gatekeeping: what counts as a repeat
+
+Resolves the ambiguities the requirements sweep found in the spec and diagram:
+
+- A second call while another checkout holds the (agent, product) lease is refused as `BUSY`; the
+  agent may call again. Nothing is recorded.
+- Replayed, not repeated: a PAID attempt whose payment is CAPTURED or still in flight within 10
+  minutes (a FAILED payment does not block a retry); any open hold, at any age (D28); the same
+  offer — normalised URL and variant — REJECTED within 10 minutes **under the same policy
+  version**, so a loosened policy gets a fresh check.
+- The retry cap is at most 4 agent attempts per product per rolling hour (the first plus "3
+  retries"); owner-approval follow-ups do not count. A capped call is refused and not recorded.
+- The agent is identified by its key, never by a field; any price it sends is dropped.
