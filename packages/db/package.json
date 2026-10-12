@@ -16,6 +16,12 @@
       "development": "./src/memory/index.ts",
       "import": "./dist/memory/index.js",
       "default": "./dist/memory/index.js"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "development": "./src/testing.ts",
+      "import": "./dist/testing.js",
+      "default": "./dist/testing.js"
     }
   },
   "files": [
