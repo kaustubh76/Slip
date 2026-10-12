@@ -24,3 +24,22 @@ export function generateApiKey(): IssuedKey {
 export function hashApiKey(key: string): string {
   return createHash("sha256").update(key.trim(), "utf8").digest("hex");
 }
+
+/**
+ * A v4-shaped UUID derived from `seed`, the same on every call. Used as the PayPal-Request-Id of an
+ * operation several callers may each try once (the owner's return from PayPal, the resolver's
+ * poll), so PayPal sees one request however many of them get there.
+ */
+export function derivedUuid(seed: string): string {
+  const bytes = createHash("sha256").update(seed, "utf8").digest().subarray(0, 16);
+  bytes.writeUInt8((bytes.readUInt8(6) & 0x0f) | 0x40, 6);
+  bytes.writeUInt8((bytes.readUInt8(8) & 0x3f) | 0x80, 8);
+  const hex = bytes.toString("hex");
+  return [
+    hex.slice(0, 8),
+    hex.slice(8, 12),
+    hex.slice(12, 16),
+    hex.slice(16, 20),
+    hex.slice(20),
+  ].join("-");
+}

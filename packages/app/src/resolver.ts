@@ -1,4 +1,5 @@
 import {
+  type Cursor,
   type Payment,
   type PaymentStatus,
   type Receipt,
@@ -8,6 +9,7 @@ import {
 } from "@slip/domain";
 import type { AppDeps } from "./deps.js";
 import { closeHold } from "./holds.js";
+import { pollSetup } from "./mandates.js";
 import { afterLookup, afterOrderRead } from "./outcomes.js";
 import {
   applyStep,
@@ -23,7 +25,7 @@ import { deleteVaultToken } from "./vault.js";
 
 /**
  * The resolver finishes what a request could not: PayPal calls that timed out, holds whose time
- * ran out, revokes that stopped half-way. It runs on a schedule; every action is idempotent or a
+ * ran out, revokes that stopped half-way, setups the owner approved without coming back. It runs on a schedule; every action is idempotent or a
  * compare-and-set, so two runs that overlap cannot move money twice.
  *
  * Each item is handled on its own: one that throws is logged and counted, and the rest go on.
@@ -35,6 +37,7 @@ export const RESOLVER_TASKS = [
   "deleteVaultTokens",
   "orders",
   "holdOperations",
+  "setups",
   "closedHolds",
 ] as const;
 export type ResolverTask = (typeof RESOLVER_TASKS)[number];
@@ -48,6 +51,13 @@ export interface TaskCount {
 export type ResolverReport = Record<ResolverTask, TaskCount>;
 
 type Handled = "settled" | "waiting";
+type StalePage = { limit: number; after?: StaleCursor };
+
+const paymentCursor = (p: Payment): StaleCursor => ({
+  updatedAt: p.updatedAt,
+  attemptId: p.attemptId,
+});
+const paymentKey = (p: Payment): string => p.attemptId;
 
 /** Searching from a little before the decision, in case PayPal's clock runs behind ours. */
 const LOOKUP_SKEW_MS = 10 * 60_000;
@@ -106,9 +116,32 @@ export async function runResolver(deps: AppDeps): Promise<ResolverReport> {
   );
 
   const quietSince = new Date(started.getTime() - deps.config.resolverMinAgeMs);
-  await run.pages("orders", ORDER_OPEN, quietSince, (payment) => resolveOrder(deps, payment));
-  await run.pages("holdOperations", OPERATION_OPEN, quietSince, (payment) =>
-    resolveHoldOperation(deps, payment),
+  const stalePayments = (statuses: readonly PaymentStatus[]) => (page: StalePage) =>
+    deps.store.payments.listStale(statuses, quietSince, page);
+  await run.pages("orders", stalePayments(ORDER_OPEN), paymentCursor, paymentKey, (payment) =>
+    resolveOrder(deps, payment),
+  );
+  await run.pages(
+    "holdOperations",
+    stalePayments(OPERATION_OPEN),
+    paymentCursor,
+    paymentKey,
+    (payment) => resolveHoldOperation(deps, payment),
+  );
+
+  await run.pages(
+    "setups",
+    (page: { limit: number; after?: Cursor }) =>
+      deps.store.mandates.listPendingSetup(
+        new Date(started.getTime() - deps.config.setupPollAfterMs),
+        page,
+      ),
+    (mandate): Cursor => ({ createdAt: mandate.createdAt, id: mandate.id }),
+    (mandate) => mandate.id,
+    async (mandate) => {
+      const state = await pollSetup(deps, mandate);
+      return state === "active" || state === "revoked" ? "settled" : "waiting";
+    },
   );
 
   // Last, so an authorization a lookup just confirmed for a closed hold is released this run.
@@ -170,29 +203,27 @@ class Run {
     }
   }
 
-  /** For payments that may have to wait: every page once, by cursor, so none hides another. */
-  async pages(
+  /** For items that may have to wait: every page once, by cursor, so none hides another. */
+  async pages<T, C>(
     task: ResolverTask,
-    statuses: readonly PaymentStatus[],
-    updatedBefore: Date,
-    handle: (payment: Payment) => Promise<Handled>,
+    fetch: (page: { limit: number; after?: C }) => Promise<T[]>,
+    cursor: (last: T) => C,
+    key: (item: T) => string,
+    handle: (item: T) => Promise<Handled>,
   ): Promise<void> {
     const limit = this.#deps.config.resolverBatchSize;
-    let after: StaleCursor | undefined;
+    let after: C | undefined;
     for (;;) {
-      const page = await this.#deps.store.payments.listStale(statuses, updatedBefore, {
-        limit,
-        ...(after === undefined ? {} : { after }),
-      });
+      const page = await fetch(after === undefined ? { limit } : { limit, after });
       const last = page.at(-1);
       if (last === undefined) {
         return;
       }
-      await this.#each(task, page, (payment) => payment.attemptId, handle);
+      await this.#each(task, page, key, handle);
       if (page.length < limit) {
         return;
       }
-      after = { updatedAt: last.updatedAt, attemptId: last.attemptId };
+      after = cursor(last);
     }
   }
 

@@ -38,6 +38,8 @@ export const AppConfigSchema = z
     orderGiveUpMs: ms(24 * HOUR),
     /** Mandates waiting for PayPal setup longer than this are polled. */
     setupPollAfterMs: ms(5 * MINUTE),
+    /** A setup the owner never approved is given up (the mandate revoked) after this long. */
+    setupAbandonAfterMs: ms(72 * HOUR),
     resolverBatchSize: z.number().int().positive().max(500).default(100),
     /** Items the resolver works on at once; each may wait on a PayPal deadline. */
     resolverConcurrency: z.number().int().positive().max(64).default(8),
@@ -46,6 +48,9 @@ export const AppConfigSchema = z
   })
   .refine((c) => c.leaseTtlMs > c.offersTimeoutMs + c.classifierTimeoutMs + c.paypalTimeoutMs, {
     message: "leaseTtlMs must outlast the Channel3, classifier and PayPal deadlines together",
+  })
+  .refine((c) => c.setupAbandonAfterMs > c.setupPollAfterMs, {
+    message: "setupAbandonAfterMs must be longer than setupPollAfterMs",
   });
 
 export type AppConfig = z.infer<typeof AppConfigSchema>;

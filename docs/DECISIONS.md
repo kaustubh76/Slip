@@ -280,3 +280,15 @@ runs cannot move money twice. Each item is handled and logged on its own. In ord
 
 Payments that must wait are paged by cursor, so a backlog never hides the payments behind it;
 lists an item leaves once handled are drained until a page has nothing new.
+
+## D35 · 2026-10-12 · Mandate setup: one request to PayPal however it is finished
+
+- `startMandate` creates a PENDING mandate with the owner's limits (validated; unknown fields are
+  refused, not ignored) and asks PayPal for a setup link. If PayPal cannot start it, the new
+  mandate is revoked at once, so there is never a PENDING mandate without a setup to finish.
+- The owner's return from PayPal and the resolver's poll both ask PayPal for the saved method with
+  the same PayPal-Request-Id, derived from the mandate id, so PayPal sees one request.
+- `pending` (approved, vault id not issued yet) is left for a webhook or the next poll. Setups are
+  polled from 5 minutes old, by cursor; one PayPal still has nothing approved for after 3 days is
+  given up (revoked). PayPal is asked once more before giving up, so a late approval is kept.
+- A method PayPal saves after the owner revoked is deleted at PayPal and never stored.

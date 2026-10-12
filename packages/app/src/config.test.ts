@@ -23,6 +23,13 @@ describe("appConfig", () => {
     expect(() => appConfig({ leaseTtlMs: 26_000 })).not.toThrow();
   });
 
+  it("refuses giving up on a setup before it is ever polled", () => {
+    expect(() =>
+      appConfig({ setupPollAfterMs: 3_600_000, setupAbandonAfterMs: 3_600_000 }),
+    ).toThrow(/setupAbandonAfterMs/);
+    expect(appConfig().setupAbandonAfterMs).toBe(72 * 3_600_000);
+  });
+
   it("refuses nonsense", () => {
     expect(() => appConfig({ paypalTimeoutMs: 0 })).toThrow();
     expect(() => appConfig({ publicBaseUrl: "not a url" })).toThrow();

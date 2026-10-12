@@ -33,7 +33,27 @@ export {
   previewApproval,
   type Shown,
 } from "./holds.js";
-export { API_KEY_PREFIX, generateApiKey, hashApiKey, type IssuedKey } from "./keys.js";
+export {
+  API_KEY_PREFIX,
+  derivedUuid,
+  generateApiKey,
+  hashApiKey,
+  type IssuedKey,
+} from "./keys.js";
+export {
+  activateMandate,
+  completeMandateSetup,
+  finishSetup,
+  type OwnerRefusal,
+  type OwnerRefusalReason,
+  ownedMandate,
+  type PolicyLimitsInput,
+  PolicyLimitsInputSchema,
+  parseLimits,
+  pollSetup,
+  type SetupState,
+  startMandate,
+} from "./mandates.js";
 export {
   afterAuthorizationCheck,
   afterCapture,
