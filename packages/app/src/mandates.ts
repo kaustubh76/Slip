@@ -277,22 +277,43 @@ export async function revokeMandate(
   if (mandate === null) {
     return refuse("NOT_FOUND", "There is no such mandate.");
   }
-  const revoked = await deps.store.mandates.revoke(mandate.id, deps.clock.now());
-  if (revoked.result === "applied") {
-    deps.log.info("mandate.revoked", { mandateId: mandate.id });
-  }
-  let holdsDeclined = 0;
-  for (const held of await deps.store.holds.listPending(mandate.id)) {
-    const closed = await closeHold(deps, held, ownerId);
-    holdsDeclined += closed.status === "done" ? 1 : 0;
-  }
-  const vault = await deleteVaultToken(deps, mandate.id);
   return {
     status: "revoked",
-    mandate: (await deps.store.mandates.get(mandate.id)) ?? revoked.value,
-    holdsDeclined,
-    vault,
+    ...(await shutDown(deps, mandate.id, ownerId, { vaultGone: false })),
   };
+}
+
+/**
+ * The revoke itself, for the owner or for PayPal telling Slip the saved method is gone
+ * (`vaultGone`: nothing to delete there, only the confirmation to record).
+ */
+export async function shutDown(
+  deps: AppDeps,
+  id: Mandate["id"],
+  by: string,
+  options: { vaultGone: boolean },
+): Promise<{
+  mandate: Mandate;
+  holdsDeclined: number;
+  vault: "deleted" | "nothing-to-delete" | "failed";
+}> {
+  const revoked = await deps.store.mandates.revoke(id, deps.clock.now());
+  if (revoked.result === "applied") {
+    deps.log.info("mandate.revoked", { mandateId: id, by });
+  }
+  let holdsDeclined = 0;
+  for (const held of await deps.store.holds.listPending(id)) {
+    const closed = await closeHold(deps, held, by);
+    holdsDeclined += closed.status === "done" ? 1 : 0;
+  }
+  let vault: "deleted" | "nothing-to-delete" | "failed";
+  if (options.vaultGone) {
+    const marked = await deps.store.mandates.markVaultDeleted(id, deps.clock.now());
+    vault = marked.result === "applied" ? "deleted" : "nothing-to-delete";
+  } else {
+    vault = await deleteVaultToken(deps, id);
+  }
+  return { mandate: (await deps.store.mandates.get(id)) ?? revoked.value, holdsDeclined, vault };
 }
 
 /**

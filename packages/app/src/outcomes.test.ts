@@ -6,6 +6,8 @@ import {
   missingPaymentFields,
   type OrderResult,
   PAYMENT_INTENTS,
+  PAYMENT_STATUSES,
+  type Payment,
   type PaymentIntent,
   type PaymentStatus,
   type VoidResult,
@@ -18,6 +20,8 @@ import {
   afterOrder,
   afterOrderRead,
   afterVoid,
+  afterWebhook,
+  type PaymentWebhookEvent,
   type Step,
 } from "./outcomes.js";
 
@@ -196,5 +200,91 @@ describe("afterVoid", () => {
     const step = afterVoid(result);
     expect(step.kind === "move" ? `move:${step.to}` : step.kind).toBe(expected);
     expectLegal("AUTHORIZE", "VOIDING", step);
+  });
+});
+
+describe("afterWebhook", () => {
+  const EVENTS: PaymentWebhookEvent[] = [
+    { kind: "capture-completed", attemptId: "a", orderId: "O", captureId: "C" },
+    { kind: "capture-completed", attemptId: "a", orderId: null, captureId: "C" },
+    { kind: "capture-pending", attemptId: "a", orderId: "O", captureId: "C" },
+    { kind: "capture-declined", attemptId: "a", captureId: null, reason: "DECLINED" },
+    { kind: "authorization-created", attemptId: "a", orderId: "O", authorizationId: "A" },
+    { kind: "authorization-created", attemptId: "a", orderId: null, authorizationId: "A" },
+    { kind: "authorization-voided", attemptId: "a", authorizationId: "A" },
+  ];
+
+  /** A payment in `status` with the PayPal ids that status requires already set. */
+  function paymentIn(intent: PaymentIntent, status: PaymentStatus): Payment {
+    const known = status !== "INITIATED" && status !== "UNKNOWN";
+    return {
+      intent,
+      status,
+      paypalOrderId: known ? "O" : null,
+      authorizationId: intent === "AUTHORIZE" && known && status !== "PENDING" ? "A" : null,
+      captureId: status === "CAPTURED" ? "C" : null,
+      failureReason: status === "FAILED" ? "X" : null,
+    } as Payment;
+  }
+
+  it.each(PAYMENT_INTENTS)(
+    "every %s event in every status is a legal move with its ids, a wait, a check or a contradiction",
+    (intent) => {
+      for (const status of PAYMENT_STATUSES) {
+        const payment = paymentIn(intent, status);
+        for (const event of EVENTS) {
+          const step = afterWebhook(payment, event);
+          if (step.kind !== "move") {
+            continue;
+          }
+          const kind = classifyPaymentMove(intent, status, step.to);
+          if (kind === "applied") {
+            const fields = {
+              paypalOrderId: step.patch.paypalOrderId ?? payment.paypalOrderId,
+              authorizationId: step.patch.authorizationId ?? payment.authorizationId,
+              captureId: step.patch.captureId ?? payment.captureId,
+              failureReason: step.patch.failureReason ?? payment.failureReason,
+            };
+            expect(
+              missingPaymentFields(step.to, fields),
+              `${intent} ${status} ${event.kind}`,
+            ).toEqual([]);
+          }
+        }
+      }
+    },
+  );
+
+  it("an authorization reported before Slip knows the order waits for the lookup", () => {
+    const step = afterWebhook(paymentIn("AUTHORIZE", "UNKNOWN"), EVENTS[5] as PaymentWebhookEvent);
+    expect(step.kind).toBe("stay");
+    expect(
+      afterWebhook(paymentIn("AUTHORIZE", "UNKNOWN"), EVENTS[4] as PaymentWebhookEvent),
+    ).toMatchObject({
+      kind: "move",
+      to: "AUTHORIZED",
+      patch: { paypalOrderId: "O", authorizationId: "A" },
+    });
+  });
+
+  it("a declined capture of a hold asks about the authorization; of a one-step order it fails it", () => {
+    const declined = EVENTS[3] as PaymentWebhookEvent;
+    expect(afterWebhook(paymentIn("AUTHORIZE", "CAPTURING"), declined).kind).toBe(
+      "check-authorization",
+    );
+    expect(afterWebhook(paymentIn("CAPTURE", "PENDING"), declined)).toMatchObject({
+      to: "FAILED",
+      patch: { failureReason: "DECLINED" },
+    });
+    expect(afterWebhook(paymentIn("AUTHORIZE", "VOIDED"), declined).kind).toBe("stay");
+  });
+
+  it("a capture Slip never started is a contradiction; one-step payments have no authorization", () => {
+    expect(
+      afterWebhook(paymentIn("AUTHORIZE", "AUTHORIZED"), EVENTS[2] as PaymentWebhookEvent).kind,
+    ).toBe("contradiction");
+    expect(
+      afterWebhook(paymentIn("CAPTURE", "UNKNOWN"), EVENTS[4] as PaymentWebhookEvent).kind,
+    ).toBe("contradiction");
   });
 });

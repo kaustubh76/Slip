@@ -1,12 +1,15 @@
-import type {
-  AuthorizationResult,
-  CaptureResult,
-  OrderLookupResult,
-  OrderResult,
-  PaymentIntent,
-  PaymentPatch,
-  PaymentStatus,
-  VoidResult,
+import {
+  type AuthorizationResult,
+  type CaptureResult,
+  type GatewayEvent,
+  missingPaymentFields,
+  type OrderLookupResult,
+  type OrderResult,
+  type Payment,
+  type PaymentIntent,
+  type PaymentPatch,
+  type PaymentStatus,
+  type VoidResult,
 } from "@slip/domain";
 
 /**
@@ -195,4 +198,84 @@ export function afterVoid(result: VoidResult): Step {
     case "unknown":
       return { kind: "stay", why: result.reason };
   }
+}
+
+/** A webhook about one payment (it carries the attempt id PayPal echoes as `custom_id`). */
+export type PaymentWebhookEvent = Extract<GatewayEvent, { attemptId: string }>;
+
+/**
+ * After a verified webhook about one payment. PayPal delivers late, twice and out of order, so an
+ * event behind the payment's status is left to the state machine (stale, a no-op); one that needs
+ * a PayPal id Slip does not have yet waits for the resolver's lookup; one that cannot fit the
+ * payment at all is a contradiction for a human.
+ */
+export function afterWebhook(payment: Payment, event: PaymentWebhookEvent): Step {
+  const detail = { source: "webhook", paypal: event.kind };
+  const { intent, status } = payment;
+  const orderId =
+    "orderId" in event && event.orderId !== null ? { paypalOrderId: event.orderId } : {};
+  const late = (why: string): Step => ({ kind: "stay", why: `${why} while ${status}` });
+
+  let step: Step;
+  switch (event.kind) {
+    case "capture-completed":
+      step = move("CAPTURED", { captureId: event.captureId, ...orderId }, detail);
+      break;
+    case "capture-pending":
+      if (intent === "CAPTURE") {
+        step = move("PENDING", { captureId: event.captureId, ...orderId }, detail);
+      } else if (status === "CAPTURING") {
+        step = move("CAPTURING", { captureId: event.captureId }, detail);
+      } else {
+        step = settledAuthorization(status)
+          ? late("capture pending")
+          : { kind: "contradiction", why: `a capture Slip did not start, while ${status}` };
+      }
+      break;
+    case "capture-declined":
+      if (intent === "CAPTURE") {
+        step = move("FAILED", { failureReason: event.reason }, detail);
+      } else if (status === "CAPTURING") {
+        step = { kind: "check-authorization", why: `capture declined: ${event.reason}` };
+      } else {
+        step = late("capture declined");
+      }
+      break;
+    case "authorization-created":
+      step =
+        intent === "AUTHORIZE"
+          ? move("AUTHORIZED", { authorizationId: event.authorizationId, ...orderId }, detail)
+          : { kind: "contradiction", why: "a one-step payment reported an authorization" };
+      break;
+    case "authorization-voided":
+      step =
+        intent === "AUTHORIZE"
+          ? move("VOIDED", { authorizationId: event.authorizationId }, detail)
+          : { kind: "contradiction", why: "a one-step payment reported a voided authorization" };
+      break;
+  }
+
+  if (step.kind === "move") {
+    const fields = {
+      paypalOrderId: step.patch.paypalOrderId ?? payment.paypalOrderId,
+      authorizationId: step.patch.authorizationId ?? payment.authorizationId,
+      captureId: step.patch.captureId ?? payment.captureId,
+      failureReason: step.patch.failureReason ?? payment.failureReason,
+    };
+    const missing = missingPaymentFields(step.to, fields);
+    if (missing.length > 0) {
+      return {
+        kind: "stay",
+        why: `${step.to} needs ${missing.join(", ")}; the lookup will find it`,
+      };
+    }
+  }
+  return step;
+}
+
+/** Statuses in which a hold's authorization is already finished with. */
+function settledAuthorization(status: PaymentStatus): boolean {
+  return (
+    status === "CAPTURED" || status === "VOIDING" || status === "VOIDED" || status === "FAILED"
+  );
 }

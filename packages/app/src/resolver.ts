@@ -22,16 +22,19 @@ import {
   sendVoid,
 } from "./payments.js";
 import { deleteVaultToken } from "./vault.js";
+import { processWebhook } from "./webhooks.js";
 
 /**
  * The resolver finishes what a request could not: PayPal calls that timed out, holds whose time
- * ran out, revokes that stopped half-way, setups the owner approved without coming back. It runs on a schedule; every action is idempotent or a
+ * ran out, revokes that stopped half-way, setups the owner approved without coming back, webhooks
+ * that could not be applied when they arrived. It runs on a schedule; every action is idempotent or a
  * compare-and-set, so two runs that overlap cannot move money twice.
  *
  * Each item is handled on its own: one that throws is logged and counted, and the rest go on.
  */
 
 export const RESOLVER_TASKS = [
+  "webhooks",
   "expireHolds",
   "finishRevokes",
   "deleteVaultTokens",
@@ -73,7 +76,23 @@ export async function runResolver(deps: AppDeps): Promise<ResolverReport> {
   const run = new Run(deps, report);
   const limit = deps.config.resolverBatchSize;
 
-  // Holds first: an expiry or a finished revoke closes a hold before its payment is looked at,
+  // What PayPal already told us comes first, so nothing below asks it again needlessly. An event
+  // younger than the quiet period may still be in the hands of the request that received it.
+  const quietSince = new Date(started.getTime() - deps.config.resolverMinAgeMs);
+  await run.drain(
+    "webhooks",
+    async () =>
+      (await deps.store.webhooks.listUnprocessed(limit)).filter(
+        (event) => event.receivedAt.getTime() < quietSince.getTime(),
+      ),
+    (event) => event.id,
+    async (event) => {
+      await processWebhook(deps, event);
+      return "settled";
+    },
+  );
+
+  // Then holds: an expiry or a finished revoke closes a hold before its payment is looked at,
   // so no order is re-sent for a hold that is already closed.
   await run.drain(
     "expireHolds",
@@ -115,7 +134,6 @@ export async function runResolver(deps: AppDeps): Promise<ResolverReport> {
       (await deleteVaultToken(deps, mandate.id)) === "failed" ? "waiting" : "settled",
   );
 
-  const quietSince = new Date(started.getTime() - deps.config.resolverMinAgeMs);
   const stalePayments = (statuses: readonly PaymentStatus[]) => (page: StalePage) =>
     deps.store.payments.listStale(statuses, quietSince, page);
   await run.pages("orders", stalePayments(ORDER_OPEN), paymentCursor, paymentKey, (payment) =>

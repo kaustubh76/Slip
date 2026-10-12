@@ -55,6 +55,7 @@ export {
   refuseOwner,
   revokeMandate,
   type SetupState,
+  shutDown,
   startMandate,
   updateLimits,
 } from "./mandates.js";
@@ -65,6 +66,8 @@ export {
   afterOrder,
   afterOrderRead,
   afterVoid,
+  afterWebhook,
+  type PaymentWebhookEvent,
   type Step,
 } from "./outcomes.js";
 export {
@@ -89,3 +92,4 @@ export {
 } from "./resolver.js";
 export { jsonLogger, randomIds, silentLogger, systemClock } from "./runtime.js";
 export { deleteVaultToken } from "./vault.js";
+export { processWebhook, receiveWebhook, type WebhookOutcome } from "./webhooks.js";

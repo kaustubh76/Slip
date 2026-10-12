@@ -304,3 +304,20 @@ no-op that retries whatever is left.
 Agent keys are per agent: revoking one stops that agent at once and touches nothing else. A key is
 shown once when issued; lists show only its prefix, and no key is ever logged. A revoked mandate
 gets no new agents; limits change only as a new policy version, refused after a revoke.
+
+## D37 · 2026-10-12 · Webhooks are stored once, applied like any other report, and never stuck
+
+- A delivery is verified with PayPal first. A forged or unreadable one is rejected (400); one
+  PayPal could not verify in time asks for a retry (503). A verified event is stored once by its
+  id; a redelivery of a processed event is acknowledged and does nothing.
+- Payment events go through the same state machines as call results: a late or repeated event is
+  stale and changes nothing, one that needs a PayPal id Slip does not have yet waits for the
+  lookup, and one that cannot fit is logged as a contradiction. An event naming a payment Slip
+  never made is acknowledged and logged — `custom_id` is outside data until it matches.
+- An authorization confirmed after its hold closed is voided at once.
+- A saved method created for a setup activates its mandate. A saved method deleted at PayPal by
+  the owner is a revoke: Slip stops, releases open holds, and records the deletion.
+- An event Slip refuses on purpose (a conflict, an impossible move) is logged for a human and
+  marked processed, so it cannot block the events behind it. A failure that may pass (the database
+  dropped the connection) leaves it unprocessed; PayPal redelivers, and the resolver re-runs it
+  first, before it asks PayPal about anything, once it is two minutes old.
