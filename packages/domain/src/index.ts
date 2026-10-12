@@ -191,6 +191,7 @@ export type {
   RecordedAttempt,
   ReportRepo,
   SnapshotRepo,
+  StaleCursor,
   Store,
   Transitioned,
   WebhookEvent,

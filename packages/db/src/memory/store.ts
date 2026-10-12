@@ -753,17 +753,23 @@ export function createMemoryStore(): Store {
         return { value: copy(payments.get(attemptId) as Payment), result: plan.result };
       },
 
-      async listStale(statuses, updatedBefore, limit) {
+      async listStale(statuses, updatedBefore, page) {
+        const { after } = page;
+        const byChange = (
+          a: { updatedAt: Date; attemptId: string },
+          b: { updatedAt: Date; attemptId: string },
+        ) =>
+          a.updatedAt.getTime() - b.updatedAt.getTime() ||
+          (a.attemptId < b.attemptId ? -1 : a.attemptId > b.attemptId ? 1 : 0);
         return [...payments.values()]
           .filter(
-            (p) => statuses.includes(p.status) && p.updatedAt.getTime() < updatedBefore.getTime(),
+            (p) =>
+              statuses.includes(p.status) &&
+              p.updatedAt.getTime() < updatedBefore.getTime() &&
+              (after === undefined || byChange(p, after) > 0),
           )
-          .sort(
-            (a, b) =>
-              a.updatedAt.getTime() - b.updatedAt.getTime() ||
-              (a.attemptId < b.attemptId ? -1 : a.attemptId > b.attemptId ? 1 : 0),
-          )
-          .slice(0, limit)
+          .sort(byChange)
+          .slice(0, page.limit)
           .map((p) => copy(p));
       },
 

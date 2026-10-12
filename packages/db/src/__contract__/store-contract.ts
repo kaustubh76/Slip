@@ -14,6 +14,7 @@ import {
   NotFoundError,
   ownerId,
   PolicyChangedError,
+  type StaleCursor,
   type Store,
 } from "@slip/domain";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -731,7 +732,7 @@ export function describeStoreContract(label: string, make: () => Promise<Harness
         expect(await store.payments.get(newAttemptId())).toBeNull();
       });
 
-      it("listStale returns payments stuck in the asked statuses, oldest first", async () => {
+      it("listStale returns payments stuck in the asked statuses, least recently changed first", async () => {
         const w = await world(store);
         const stuck = await decided(store, w, { ...markets.paid(), now: at(-100) });
         const fresh = await decided(store, w, { ...markets.paid(), now: at(-1) });
@@ -741,12 +742,43 @@ export function describeStoreContract(label: string, make: () => Promise<Harness
         await record(store, done);
         await store.payments.transition(stuck.id, "UNKNOWN", { now: at(-90) });
         await capture(store, done.id, at(-150));
-        const stale = await store.payments.listStale(["INITIATED", "UNKNOWN"], at(-30), 1000);
+        const stale = await store.payments.listStale(["INITIATED", "UNKNOWN"], at(-30), {
+          limit: 1000,
+        });
         const ids = stale.map((p) => p.attemptId);
         expect(ids).toContain(stuck.id);
         expect(ids).not.toContain(fresh.id);
         expect(ids).not.toContain(done.id);
         expect(stale.find((p) => p.attemptId === stuck.id)?.operations[0]?.kind).toBe("ORDER");
+      });
+
+      it("listStale pages by cursor: each stuck payment once, in order, ties broken by id", async () => {
+        const w = await world(store);
+        const mine: { id: string; at: number }[] = [];
+        for (const minutes of [-300, -300, -300, -280, -260]) {
+          const attempt = await decided(store, w, { ...markets.paid(), now: at(minutes) });
+          await record(store, attempt);
+          mine.push({ id: attempt.id, at: minutes });
+        }
+        const seen: string[] = [];
+        let after: StaleCursor | undefined;
+        for (;;) {
+          const page = await store.payments.listStale(["INITIATED"], at(-30), {
+            limit: 2,
+            ...(after === undefined ? {} : { after }),
+          });
+          const last = page.at(-1);
+          if (last === undefined) {
+            break;
+          }
+          seen.push(...page.map((p) => p.attemptId));
+          after = { updatedAt: last.updatedAt, attemptId: last.attemptId };
+        }
+        expect(new Set(seen).size).toBe(seen.length);
+        const expected = [...mine]
+          .sort((a, b) => a.at - b.at || (a.id < b.id ? -1 : 1))
+          .map((m) => m.id);
+        expect(seen.filter((id) => expected.includes(id))).toEqual(expected);
       });
     });
 

@@ -187,6 +187,12 @@ export interface PaymentTransitionInput {
   now: Date;
 }
 
+/** Where a page of `listStale` ended: the last payment's `updatedAt` and attempt id. */
+export interface StaleCursor {
+  updatedAt: Date;
+  attemptId: AttemptId;
+}
+
 export interface PaymentRepo {
   get(attemptId: AttemptId): Promise<Payment | null>;
   findByRequestId(requestId: RequestId): Promise<Payment | null>;
@@ -201,11 +207,15 @@ export interface PaymentRepo {
     to: PaymentStatus,
     input: PaymentTransitionInput,
   ): Promise<Transitioned<Payment>>;
-  /** For the resolver: payments in these statuses with no change since `updatedBefore`. */
+  /**
+   * For the resolver: payments in these statuses with no change since `updatedBefore`, least
+   * recently changed first. The next page starts `after` the last payment of this one, so payments
+   * the resolver must leave waiting never hide the ones behind them.
+   */
   listStale(
     statuses: readonly PaymentStatus[],
     updatedBefore: Date,
-    limit: number,
+    page: { limit: number; after?: StaleCursor },
   ): Promise<Payment[]>;
   events(attemptId: AttemptId): Promise<PaymentEvent[]>;
 }

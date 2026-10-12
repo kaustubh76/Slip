@@ -9,7 +9,7 @@ import {
   planHoldDecision,
   planPaymentTransition,
 } from "@slip/domain";
-import { and, asc, desc, eq, inArray, lt, lte } from "drizzle-orm";
+import { and, asc, desc, eq, gt, inArray, lt, lte, or } from "drizzle-orm";
 import type { Db } from "../client.js";
 import type { VaultCipher } from "../crypto.js";
 import {
@@ -24,6 +24,28 @@ import { recordInTransaction } from "./attempts.js";
 import { guarded } from "./errors.js";
 import { loadPayment, loadReceipts, requirePayment } from "./receipts.js";
 import { toAttempt, toHold, toPayment, toPaymentEvent } from "./rows.js";
+
+/** Payment rows with their operations, in the rows' order. */
+async function withOperations(db: Db, rows: (typeof payments.$inferSelect)[]) {
+  if (rows.length === 0) {
+    return [];
+  }
+  const ops = await db
+    .select()
+    .from(paymentOperations)
+    .where(
+      inArray(
+        paymentOperations.attemptId,
+        rows.map((row) => row.attemptId),
+      ),
+    );
+  return rows.map((row) =>
+    toPayment(
+      row,
+      ops.filter((op) => op.attemptId === row.attemptId),
+    ),
+  );
+}
 
 /** Refuses unless the attempt's mandate is ACTIVE; holds a share lock on the mandate row. */
 async function assertMandateActive(tx: Db, attemptId: string): Promise<void> {
@@ -112,37 +134,33 @@ export function pgPayments(db: Db): PaymentRepo {
         }),
       ),
 
-    listStale: (statuses, updatedBefore, limit) =>
+    listStale: (statuses, updatedBefore, page) =>
       guarded(async () => {
         if (statuses.length === 0) {
           return [];
         }
+        const { after } = page;
         const rows = await db
           .select()
           .from(payments)
           .where(
-            and(inArray(payments.status, [...statuses]), lt(payments.updatedAt, updatedBefore)),
+            and(
+              inArray(payments.status, [...statuses]),
+              lt(payments.updatedAt, updatedBefore),
+              after === undefined
+                ? undefined
+                : or(
+                    gt(payments.updatedAt, after.updatedAt),
+                    and(
+                      eq(payments.updatedAt, after.updatedAt),
+                      gt(payments.attemptId, after.attemptId),
+                    ),
+                  ),
+            ),
           )
           .orderBy(asc(payments.updatedAt), asc(payments.attemptId))
-          .limit(limit);
-        if (rows.length === 0) {
-          return [];
-        }
-        const ops = await db
-          .select()
-          .from(paymentOperations)
-          .where(
-            inArray(
-              paymentOperations.attemptId,
-              rows.map((row) => row.attemptId),
-            ),
-          );
-        return rows.map((row) =>
-          toPayment(
-            row,
-            ops.filter((op) => op.attemptId === row.attemptId),
-          ),
-        );
+          .limit(page.limit);
+        return withOperations(db, rows);
       }),
 
     events: (attemptId) =>
