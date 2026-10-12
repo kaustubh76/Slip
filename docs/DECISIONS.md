@@ -241,3 +241,20 @@ Resolves the ambiguities the requirements sweep found in the spec and diagram:
   which R4a holds. After a policy change the earlier answer is reused, not asked again.
 - HELD reserves money (AUTHORIZE) only when there is a USD price to reserve; otherwise the hold has
   no order and approval pays in one step (D27).
+
+## D33 · 2026-10-12 · An owner approves an amount, and overrides holds, not rejections
+
+- The owner sees what approving charges (`previewApproval`) and approves that amount
+  (`expectedAmountCents`). A reserved hold charges exactly what was reserved. A hold with nothing
+  reserved is checked again on current prices; if the price is not the one shown, approval is
+  refused with the new amount (`PRICE_CHANGED`) and nothing is written.
+- The re-check may hold again (over the cap, too few offers, no classifier answer) — the owner's
+  approval covers that. It may not reject (overpaid, steered, offer gone): approval is refused, and
+  there must be a fresh US-dollar price, or it is `PRICES_UNAVAILABLE`.
+- The follow-up keeps the re-check's findings behind `OWNER_APPROVED` in `ruleCodes`, so the
+  receipt says both who decided and what the check saw.
+- The re-check and the follow-up run under the (agent, product) checkout lease; a running agent
+  checkout makes approval `BUSY`.
+- Holds are scoped to their owner: someone else's hold, an attempt with no hold and a malformed id
+  are all "not found". Declining is allowed after a revoke, since it releases money; approving is
+  not.

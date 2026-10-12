@@ -21,6 +21,18 @@ export {
 export { type AppConfig, type AppConfigInput, AppConfigSchema, appConfig } from "./config.js";
 export { type Deadlined, withDeadline } from "./deadline.js";
 export type { AppDeps } from "./deps.js";
+export {
+  type ApprovalPreview,
+  approveHold,
+  closeHold,
+  declineHold,
+  type HoldDecided,
+  type HoldRefusal,
+  type HoldRefusalReason,
+  type HoldResult,
+  previewApproval,
+  type Shown,
+} from "./holds.js";
 export { API_KEY_PREFIX, generateApiKey, hashApiKey, type IssuedKey } from "./keys.js";
 export {
   afterAuthorizationCheck,
@@ -33,6 +45,7 @@ export {
   applyStep,
   operation,
   releaseAuthorization,
+  sendCapture,
   sendOrder,
   sendVoid,
 } from "./payments.js";

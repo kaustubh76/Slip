@@ -6,7 +6,13 @@ import {
 } from "@slip/domain";
 import { withDeadline } from "./deadline.js";
 import type { AppDeps } from "./deps.js";
-import { afterAuthorizationCheck, afterOrder, afterVoid, type Step } from "./outcomes.js";
+import {
+  afterAuthorizationCheck,
+  afterCapture,
+  afterOrder,
+  afterVoid,
+  type Step,
+} from "./outcomes.js";
 
 /**
  * Talking to PayPal about one payment, shared by checkout, holds, the resolver and webhooks. Every
@@ -125,6 +131,31 @@ export async function applyStep(
     case "void":
       return releaseAuthorization(deps, payment, context);
   }
+}
+
+/**
+ * Captures, in full and once, the authorization of a CAPTURING payment with its CAPTURE request id
+ * (also a re-send). A declined capture leads to asking whether the authorization is still alive.
+ */
+export async function sendCapture(deps: AppDeps, payment: Payment): Promise<Payment> {
+  if (payment.authorizationId === null) {
+    throw new Error(`payment ${payment.attemptId} has no authorization to capture`);
+  }
+  const authorizationId = payment.authorizationId;
+  const op = operation(payment, "CAPTURE");
+  const result = await paypal(deps, "capture", (signal) =>
+    deps.gateway.captureAuthorization(
+      {
+        authorizationId,
+        amountCents: payment.amountCents,
+        requestId: op.requestId,
+        invoiceId: payment.attemptId,
+        finalCapture: true,
+      },
+      signal,
+    ),
+  );
+  return applyStep(deps, payment, afterCapture(result), "capture");
 }
 
 /** Moves a payment holding a live authorization to VOIDING (new request id) and voids it. */
