@@ -172,6 +172,43 @@ describe.each<StoreKind>(["memory", "pglite"])("money paths on the %s store", (k
     expect(w.gateway.calls.filter((c) => c.method === "createOrder")).toEqual([]);
   });
 
+  it("two tabs approving one reserved hold at once capture it once", async () => {
+    const held = await buy("held");
+    const approve = () =>
+      approveHold(w.deps, agent.ownerId, held, { expectedAmountCents: 25_000 as Cents });
+    const results = await w.settle(Promise.all([approve(), approve()]));
+    expect(results.map((r) => r.status)).toEqual(["done", "done"]);
+    expect(w.gateway.callsTo("captureAuthorization")).toHaveLength(1);
+    expect(await statusOf(held)).toBe("CAPTURED");
+  });
+
+  it("two tabs approving one hold with nothing reserved pay once; the other is told to look again", async () => {
+    const chosen = offer({ price: 250 });
+    w.offers.goDown();
+    const held = await w.settle(
+      runCheckout(w.deps, agent.apiKey, {
+        productId: "twice",
+        chosenOfferUrl: chosen.url,
+        reason: "",
+      }),
+    );
+    const id = held.status === "decided" ? held.receipt.attempt.id : "";
+    w.offers.comeBack();
+    market(w, "twice", [offer({ price: 249 }), chosen]);
+    const approve = () =>
+      approveHold(w.deps, agent.ownerId, id, { expectedAmountCents: 25_000 as Cents });
+    const results = await w.settle(Promise.all([approve(), approve()]));
+    // One pays; the other either sees it done or is told the item is busy — never a second order.
+    expect(results.filter((r) => r.status === "done")).not.toHaveLength(0);
+    for (const r of results) {
+      if (r.status === "refused") {
+        expect(["BUSY", "ALREADY_DECIDED"]).toContain(r.reason);
+      }
+    }
+    expect(w.gateway.callsTo("createOrder")).toHaveLength(1);
+    expect(await w.store.attempts.findChild(id as AttemptId)).not.toBeNull();
+  });
+
   it("an approved hold whose capture PayPal declined is released and never paid another way", async () => {
     const held = await buy("held");
     w.gateway.nextCapture("decline");
