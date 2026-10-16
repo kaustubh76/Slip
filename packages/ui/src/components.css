@@ -450,6 +450,45 @@
     animation: slip-reveal var(--slip-motion-reveal) steps(14, end);
   }
 
+  /* ---------- fill-in-the-blank form ---------- */
+
+  .slip-fields {
+    display: grid;
+    gap: 12px;
+    margin-block: 12px;
+  }
+
+  .slip-field {
+    display: grid;
+    grid-template-columns: minmax(12ch, 22ch) auto;
+    align-items: baseline;
+    gap: 2px 12px;
+  }
+
+  .slip-field-label {
+    font-family: var(--slip-font-sans);
+    font-size: 15px;
+    line-height: 24px;
+  }
+
+  .slip-field .slip-caption {
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+
+  .slip-stack {
+    display: grid;
+    gap: 8px;
+    justify-items: start;
+  }
+
+  /* A key, shown once: wide enough to select in one go. */
+  .slip-key {
+    overflow-wrap: anywhere;
+    user-select: all;
+    margin: 4px 0;
+  }
+
   /* ---------- the owner's decision on a slip ---------- */
 
   .slip-decision {

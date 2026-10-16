@@ -92,6 +92,9 @@ importers:
       '@slip/app':
         specifier: workspace:*
         version: link:../../packages/app
+      '@slip/check':
+        specifier: workspace:*
+        version: link:../../packages/check
       '@slip/db':
         specifier: workspace:*
         version: link:../../packages/db

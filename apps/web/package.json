@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@slip/app": "workspace:*",
+    "@slip/check": "workspace:*",
     "@slip/db": "workspace:*",
     "@slip/domain": "workspace:*",
     "@slip/offers": "workspace:*",
