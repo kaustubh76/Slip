@@ -16,6 +16,7 @@ import {
   NotFoundError,
   ownerId,
   PolicyChangedError,
+  policyVersion,
   type StaleCursor,
   type Store,
   stampToken,
@@ -226,6 +227,38 @@ export function describeStoreContract(label: string, make: () => Promise<Harness
         await expect(store.mandates.markVaultDeleted(w.mandateId, at(2))).rejects.toBeInstanceOf(
           InvariantError,
         );
+      });
+
+      it("an edit based on a version that has moved is refused, and nothing is written", async () => {
+        const w = await world(store);
+        const first = await store.mandates.updatePolicy(
+          w.mandateId,
+          { orderCapCents: 30_000 as never },
+          at(1),
+          { basedOnVersion: policyVersion(1) },
+        );
+        expect(first.version).toBe(2);
+        // A second page still showing version 1 cannot overwrite version 2.
+        await expect(
+          store.mandates.updatePolicy(w.mandateId, { orderCapCents: 1_000 as never }, at(2), {
+            basedOnVersion: policyVersion(1),
+          }),
+        ).rejects.toBeInstanceOf(PolicyChangedError);
+        const current = await store.mandates.currentPolicy(w.mandateId);
+        expect(current).toMatchObject({ version: 2, orderCapCents: 30_000 });
+        // Based on what is actually in force, it goes through.
+        const third = await store.mandates.updatePolicy(
+          w.mandateId,
+          { orderCapCents: 1_000 as never },
+          at(3),
+          { basedOnVersion: policyVersion(2) },
+        );
+        expect(third.version).toBe(3);
+        // With no version given, the last writer still wins, as every other caller expects.
+        expect(
+          (await store.mandates.updatePolicy(w.mandateId, { orderCapCents: 2_000 as never }, at(4)))
+            .version,
+        ).toBe(4);
       });
 
       it("listPendingSetup finds mandates still waiting for PayPal setup", async () => {

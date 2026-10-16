@@ -8,8 +8,10 @@ import {
   type Owner,
   type OwnerId,
   type Policy,
+  PolicyChangedError,
   type PolicyLimits,
   PolicySchema,
+  policyVersion,
   requestId,
   SYSTEM_DECIDER,
   ownerId as toOwnerId,
@@ -37,6 +39,7 @@ export type OwnerRefusalReason =
   | "EMAIL_IN_USE"
   | "INVALID_LIMITS"
   | "INVALID_NAME"
+  | "STALE_LIMITS"
   | "PAYPAL_UNAVAILABLE"
   | "SETUP_FAILED"
   | "REVOKED";
@@ -364,6 +367,8 @@ export async function updateLimits(
   ownerId: OwnerId,
   id: string,
   changes: unknown,
+  /** The version the owner was looking at; the change is refused if it has moved since. */
+  options: { basedOnVersion?: number } = {},
 ): Promise<{ status: "updated"; policy: Policy } | OwnerRefusal> {
   const mandate = await ownedMandate(deps, ownerId, id);
   if (mandate === null) {
@@ -377,12 +382,24 @@ export async function updateLimits(
     return { status: "updated", policy: await deps.store.mandates.currentPolicy(mandate.id) };
   }
   try {
-    const policy = await deps.store.mandates.updatePolicy(mandate.id, limits, deps.clock.now());
+    const basedOn = options.basedOnVersion;
+    const policy = await deps.store.mandates.updatePolicy(
+      mandate.id,
+      limits,
+      deps.clock.now(),
+      basedOn === undefined ? {} : { basedOnVersion: policyVersion(basedOn) },
+    );
     deps.log.info("mandate.limits_updated", { mandateId: mandate.id, version: policy.version });
     return { status: "updated", policy };
   } catch (error) {
     if (error instanceof MandateNotActiveError) {
       return refuse("REVOKED", "This mandate was revoked; its limits can no longer change.");
+    }
+    if (error instanceof PolicyChangedError) {
+      return refuse(
+        "STALE_LIMITS",
+        "These limits changed somewhere else since you opened this page. Reload it to see the limits in force, then change them again.",
+      );
     }
     throw error;
   }

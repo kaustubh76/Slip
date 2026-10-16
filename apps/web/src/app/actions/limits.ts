@@ -16,6 +16,7 @@ export interface LimitsInput {
   snapshotMaxAgeMinutes: number;
 }
 
+/** The version the page was showing, so a stale tab cannot overwrite a newer one. */
 export type LimitsResult =
   | { status: "updated"; version: number }
   | { status: "refused"; reason: string; message: string }
@@ -25,16 +26,25 @@ const hundredths = (percent: number) => Math.round(percent * 100);
 const cents = (dollars: number) => Math.round(dollars * 100);
 
 /** A new version of the limits. Past decisions keep the version they were checked under. */
-export async function saveLimits(input: LimitsInput): Promise<LimitsResult> {
+export async function saveLimits(
+  input: LimitsInput,
+  basedOnVersion: number,
+): Promise<LimitsResult> {
   const { ownerId, mandateId, deps } = await requireOwner();
   try {
-    const result = await updateLimits(deps, ownerId, mandateId, {
-      maxOverpayPctHundredths: hundredths(input.maxOverpayPct),
-      maxOverpayAbsCents: cents(input.maxOverpayDollars),
-      flagPctHundredths: hundredths(input.flagPct),
-      orderCapCents: cents(input.orderCapDollars),
-      snapshotMaxAgeMs: Math.round(input.snapshotMaxAgeMinutes * 60_000),
-    });
+    const result = await updateLimits(
+      deps,
+      ownerId,
+      mandateId,
+      {
+        maxOverpayPctHundredths: hundredths(input.maxOverpayPct),
+        maxOverpayAbsCents: cents(input.maxOverpayDollars),
+        flagPctHundredths: hundredths(input.flagPct),
+        orderCapCents: cents(input.orderCapDollars),
+        snapshotMaxAgeMs: Math.round(input.snapshotMaxAgeMinutes * 60_000),
+      },
+      { basedOnVersion },
+    );
     revalidatePath("/limits");
     revalidatePath("/receipts");
     if (result.status === "refused") {

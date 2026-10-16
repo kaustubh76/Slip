@@ -156,8 +156,17 @@ export interface MandateRepo {
   ): Promise<Mandate[]>;
   currentPolicy(id: MandateId): Promise<Policy>;
   policy(id: MandateId, version: PolicyVersion): Promise<Policy | null>;
-  /** Appends version current+1 with the changes applied. Refused once REVOKED. */
-  updatePolicy(id: MandateId, changes: Partial<PolicyLimits>, now: Date): Promise<Policy>;
+  /**
+   * Appends version current+1 with the changes applied. Refused once REVOKED. With
+   * `basedOnVersion`, refused unless that is still the current version (`PolicyChangedError`), so
+   * an owner editing in two places cannot silently overwrite the version they never saw.
+   */
+  updatePolicy(
+    id: MandateId,
+    changes: Partial<PolicyLimits>,
+    now: Date,
+    options?: { basedOnVersion?: PolicyVersion },
+  ): Promise<Policy>;
 }
 
 export interface AgentRepo {

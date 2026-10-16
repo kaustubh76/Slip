@@ -45,7 +45,7 @@ export function LimitsForm({ version, initial }: { version: number; initial: Lim
         event.preventDefault();
         setBusy(true);
         setResult(null);
-        void saveLimits(values).then((answer) => {
+        void saveLimits(values, version).then((answer) => {
           setBusy(false);
           setResult(answer);
           if (answer.status === "updated") {

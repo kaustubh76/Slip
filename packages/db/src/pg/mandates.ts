@@ -8,6 +8,7 @@ import {
   type MandateRepo,
   NotFoundError,
   type OwnerRepo,
+  PolicyChangedError,
   PolicySchema,
 } from "@slip/domain";
 import { and, asc, desc, eq, gt, isNotNull, isNull, lt, or } from "drizzle-orm";
@@ -293,9 +294,11 @@ export function pgMandates(db: Db, cipher: VaultCipher): MandateRepo {
         return row === undefined ? null : toPolicy(row);
       }),
 
-    updatePolicy: (id, changes, now) =>
+    updatePolicy: (id, changes, now, options) =>
       guarded(() =>
         db.transaction(async (tx) => {
+          // The mandate row is locked first, so two edits are serialised and the loser reads the
+          // winner's version rather than overwriting it.
           const mandate = await lockMandate(tx, id);
           if (mandate.status === "REVOKED") {
             throw new MandateNotActiveError(id, mandate.status);
@@ -303,6 +306,10 @@ export function pgMandates(db: Db, cipher: VaultCipher): MandateRepo {
           const current = await latestPolicy(tx, id);
           if (current === undefined) {
             throw new InvariantError(`mandate ${id} has no policy`);
+          }
+          const basedOn = options?.basedOnVersion;
+          if (basedOn !== undefined && current.version !== basedOn) {
+            throw new PolicyChangedError(basedOn, current.version);
           }
           const next = PolicySchema.safeParse({
             ...toPolicy(current),

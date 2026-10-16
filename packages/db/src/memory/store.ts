@@ -609,7 +609,7 @@ export function createMemoryStore(): Store {
         return policy === undefined ? null : copy(policy);
       },
 
-      async updatePolicy(id, changes) {
+      async updatePolicy(id, changes, _now, options) {
         const record = mandateOrThrow(id);
         if (record.mandate.status === "REVOKED") {
           throw new MandateNotActiveError(id, record.mandate.status);
@@ -617,6 +617,10 @@ export function createMemoryStore(): Store {
         const current = latestPolicy(id);
         if (current === undefined) {
           throw new InvariantError(`mandate ${id} has no policy`);
+        }
+        const basedOn = options?.basedOnVersion;
+        if (basedOn !== undefined && current.version !== basedOn) {
+          throw new PolicyChangedError(basedOn, current.version);
         }
         const next = PolicySchema.safeParse({
           ...current,
