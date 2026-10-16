@@ -73,6 +73,11 @@ export const ReceiptViewSchema = z.object({
   verdict: z.string(),
   /** Where the prices came from and what they leave out. */
   footer: z.string(),
+  /**
+   * Why the agent said it chose this offer — its own words, quoted on the receipt and labelled as
+   * untrusted, because no rule reads it (D4).
+   */
+  agentReason: z.string(),
   chosen: OfferSummarySchema.nullable(),
   best: OfferSummarySchema.nullable(),
   gap: z.object({ cents: z.number().int(), amount: z.string(), percent: z.string() }).nullable(),

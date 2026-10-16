@@ -60,9 +60,12 @@ export function Roll(props: {
   onRevealNew?: () => void;
   hasOlder?: boolean;
   onOlder?: () => void;
+  /** Where the older page is, for a server-rendered roll with no handlers. */
+  olderHref?: string;
   /** Receipt ids that just printed, to animate. */
   fresh?: ReadonlySet<string>;
 }) {
+  const Link = props.Link ?? PlainLink;
   const newAbove = props.newAbove ?? 0;
   return (
     <section aria-label="Receipts">
@@ -92,9 +95,15 @@ export function Roll(props: {
       )}
       {props.hasOlder ? (
         <p>
-          <button type="button" className="slip-button" onClick={props.onOlder}>
-            Older receipts →
-          </button>
+          {props.olderHref === undefined ? (
+            <button type="button" className="slip-button" onClick={props.onOlder}>
+              Older receipts →
+            </button>
+          ) : (
+            <Link href={props.olderHref} className="slip-button">
+              Older receipts →
+            </Link>
+          )}
         </p>
       ) : null}
     </section>

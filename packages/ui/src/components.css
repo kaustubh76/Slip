@@ -450,6 +450,28 @@
     animation: slip-reveal var(--slip-motion-reveal) steps(14, end);
   }
 
+  /* ---------- behind the receipt ---------- */
+
+  .slip-rules,
+  .slip-timeline {
+    list-style: none;
+    margin: 4px 0 12px;
+    padding: 0;
+  }
+
+  .slip-timeline {
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--slip-ink-faint);
+  }
+
+  .slip-quote {
+    margin: 4px 0 4px 2px;
+    border-inline-start: 1px solid var(--slip-edge);
+    padding-inline-start: 10px;
+    color: var(--slip-ink-faint);
+  }
+
   /* ---------- dialogs are slips too ---------- */
 
   .slip-dialog {

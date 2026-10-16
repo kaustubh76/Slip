@@ -106,6 +106,7 @@ export function renderReceipt(receipt: Receipt, options: RenderOptions = {}): Re
     opening,
     verdict: decided,
     footer: foot,
+    agentReason: attempt.reason,
     chosen,
     best,
     gap,
