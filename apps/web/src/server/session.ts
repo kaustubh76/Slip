@@ -158,10 +158,16 @@ export function deriveSessionKey(env: Env = process.env): Buffer {
   return deriveKey(master, KEY_PURPOSES.ownerSession);
 }
 
-let cached: Buffer | undefined;
+/**
+ * One signing key for the whole process. It hangs off `globalThis` rather than a module variable
+ * because the server is bundled more than once — pages and route handlers end up in separate
+ * graphs — and a module-level key would make each of them sign differently. A demo would then
+ * accept its own cookie on a page and reject it at an endpoint.
+ */
+const KEY = Symbol.for("slip.web.sessionKey");
+const holder = globalThis as typeof globalThis & { [KEY]?: Buffer };
 
-/** The signing key, derived once per process, so every request in it signs the same way. */
 export function sessionKey(env: Env = process.env): Buffer {
-  cached ??= deriveSessionKey(env);
-  return cached;
+  holder[KEY] ??= deriveSessionKey(env);
+  return holder[KEY];
 }

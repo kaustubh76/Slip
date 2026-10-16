@@ -143,9 +143,13 @@ describe("the signing key", () => {
     expect(deriveSessionKey({ SLIP_DEMO: "1" })).not.toEqual(demo);
   });
 
-  it("is derived once per process", () => {
+  it("is derived once for the whole process, not once per bundle", () => {
     const key = randomBytes(32).toString("base64");
     const first = sessionKey({ SLIP_ENCRYPTION_KEY: key });
     expect(sessionKey({ SLIP_ENCRYPTION_KEY: randomBytes(32).toString("base64") })).toBe(first);
+    // It is shared through globalThis, so a page and an endpoint in separate bundles — each with
+    // its own copy of this module — still sign and verify the same way.
+    const shared = (globalThis as Record<symbol, unknown>)[Symbol.for("slip.web.sessionKey")];
+    expect(shared).toBe(first);
   });
 });

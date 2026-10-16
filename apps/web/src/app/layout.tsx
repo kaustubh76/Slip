@@ -6,8 +6,10 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { cookies } from "next/headers";
 import type { ReactNode } from "react";
+import { LiveUpdates } from "../components/LiveUpdates";
 import { Tabs } from "../components/Tabs";
 import { ThemeToggle } from "../components/ThemeToggle";
+import { stampTokenFor } from "../server/live";
 import { currentOwner } from "../server/owner";
 
 const sans = IBM_Plex_Sans({
@@ -32,8 +34,13 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const theme = parseTheme((await cookies()).get(THEME_COOKIE)?.value);
   const owner = await currentOwner();
-  const waiting =
-    owner === null ? null : await pendingHolds(owner.deps, owner.ownerId, owner.mandateId);
+  const [waiting, stamp] =
+    owner === null
+      ? [null, null]
+      : await Promise.all([
+          pendingHolds(owner.deps, owner.ownerId, owner.mandateId),
+          stampTokenFor(owner.deps, owner.mandateId),
+        ]);
   return (
     <html
       lang="en"
@@ -43,7 +50,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       <body className="slip-page">
         <header className="slip-masthead">
           <Tabs {...(waiting === null ? {} : { holds: waiting.length })} />
-          <ThemeToggle initial={theme} />
+          <div className="slip-masthead-right">
+            {stamp === null ? null : <LiveUpdates initialToken={stamp} />}
+            <ThemeToggle initial={theme} />
+          </div>
         </header>
         <p className="slip-band">
           <span>

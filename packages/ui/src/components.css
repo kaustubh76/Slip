@@ -298,6 +298,18 @@
     border-block-end: 1px solid var(--slip-ink);
   }
 
+  .slip-masthead-right {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+  }
+
+  .slip-live {
+    padding: 0 0 12px;
+    margin: 0;
+    white-space: nowrap;
+  }
+
   .slip-theme {
     border: 0;
     margin: 0;
