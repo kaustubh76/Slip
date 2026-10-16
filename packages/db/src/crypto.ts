@@ -11,9 +11,59 @@ import { InvariantError } from "@slip/domain";
 const VERSION = "v1";
 const IV_BYTES = 12;
 const TAG_BYTES = 16;
+const MASTER_BYTES = 32;
+const DERIVED_BYTES = 32;
 
-function deriveKey(master: Buffer, purpose: string): Buffer {
-  return Buffer.from(hkdfSync("sha256", master, Buffer.from("slip"), Buffer.from(purpose), 32));
+/**
+ * Never change this salt, and never change a purpose string below: both go into the key, so a
+ * changed byte silently derives a different key and every vault id already stored stops
+ * decrypting. A new use gets a new purpose; a key that must be rotated gets a new `-v2` purpose.
+ */
+const SALT = Buffer.from("slip");
+
+/** Every key Slip derives from the one master key, one per use. */
+export const KEY_PURPOSES = {
+  /** AES-256-GCM over a PayPal vault id, bound to its mandate. */
+  vaultEncryption: "vault-id-encryption-v1",
+  /** HMAC over a vault id, so a webhook can find its mandate without decrypting every row. */
+  vaultBlindIndex: "vault-id-blind-index-v1",
+  /** HMAC over the owner's session cookie. */
+  ownerSession: "owner-session-v1",
+} as const;
+export type KeyPurpose = (typeof KEY_PURPOSES)[keyof typeof KEY_PURPOSES];
+
+function assertMasterKey(master: Buffer): Buffer {
+  if (master.length !== MASTER_BYTES) {
+    throw new InvariantError(
+      `SLIP_ENCRYPTION_KEY must be ${MASTER_BYTES} bytes, got ${master.length}`,
+    );
+  }
+  return master;
+}
+
+/**
+ * One key per purpose (HKDF-SHA256), all from the single master key `SLIP_ENCRYPTION_KEY`. Keys
+ * for different purposes are independent: learning one says nothing about the others, so the
+ * cookie signature cannot be used against a stored vault id or the other way round.
+ */
+export function deriveKey(master: Buffer, purpose: KeyPurpose): Buffer {
+  return Buffer.from(
+    hkdfSync("sha256", assertMasterKey(master), SALT, Buffer.from(purpose), DERIVED_BYTES),
+  );
+}
+
+/** The master key from base64 (or base64url), as produced by `openssl rand -base64 32`. */
+export function masterKeyFromBase64(key: string): Buffer {
+  return assertMasterKey(Buffer.from(key.trim(), "base64"));
+}
+
+/** The master key from `SLIP_ENCRYPTION_KEY`; refuses to start without it. */
+export function masterKeyFromEnv(env: NodeJS.ProcessEnv = process.env): Buffer {
+  const key = env["SLIP_ENCRYPTION_KEY"];
+  if (key === undefined || key.trim() === "") {
+    throw new InvariantError("SLIP_ENCRYPTION_KEY is not set");
+  }
+  return masterKeyFromBase64(key);
 }
 
 /**
@@ -27,37 +77,31 @@ function deriveKey(master: Buffer, purpose: string): Buffer {
  * - `blindIndex` is an HMAC of the vault id, so a VAULT.PAYMENT-TOKEN webhook can find its
  *   mandate without decrypting every row.
  *
- * Both keys are derived (HKDF-SHA256) from one 32-byte master key, `SLIP_ENCRYPTION_KEY`.
+ * Both keys come from `deriveKey`, so they are independent of each other and of every other key
+ * Slip derives from the same master (`SLIP_ENCRYPTION_KEY`).
  */
 export class VaultCipher {
   readonly #encryptionKey: Buffer;
   readonly #indexKey: Buffer;
 
   private constructor(master: Buffer) {
-    if (master.length !== 32) {
-      throw new InvariantError(`SLIP_ENCRYPTION_KEY must be 32 bytes, got ${master.length}`);
-    }
-    this.#encryptionKey = deriveKey(master, "vault-id-encryption-v1");
-    this.#indexKey = deriveKey(master, "vault-id-blind-index-v1");
+    this.#encryptionKey = deriveKey(master, KEY_PURPOSES.vaultEncryption);
+    this.#indexKey = deriveKey(master, KEY_PURPOSES.vaultBlindIndex);
   }
 
   /** From a base64 (or base64url) 32-byte key, as produced by `openssl rand -base64 32`. */
   static fromBase64Key(key: string): VaultCipher {
-    return new VaultCipher(Buffer.from(key.trim(), "base64"));
+    return new VaultCipher(masterKeyFromBase64(key));
   }
 
   /** From `SLIP_ENCRYPTION_KEY`; refuses to start without it. */
   static fromEnv(env: NodeJS.ProcessEnv = process.env): VaultCipher {
-    const key = env["SLIP_ENCRYPTION_KEY"];
-    if (key === undefined || key.trim() === "") {
-      throw new InvariantError("SLIP_ENCRYPTION_KEY is not set");
-    }
-    return VaultCipher.fromBase64Key(key);
+    return new VaultCipher(masterKeyFromEnv(env));
   }
 
   /** A throwaway key, for tests and local PGlite databases. */
   static random(): VaultCipher {
-    return new VaultCipher(randomBytes(32));
+    return new VaultCipher(randomBytes(MASTER_BYTES));
   }
 
   encrypt(vaultId: string, mandateId: string): string {

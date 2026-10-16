@@ -1,7 +1,13 @@
 import { randomBytes } from "node:crypto";
 import { InvariantError } from "@slip/domain";
 import { describe, expect, it } from "vitest";
-import { VaultCipher } from "./crypto.js";
+import {
+  deriveKey,
+  KEY_PURPOSES,
+  masterKeyFromBase64,
+  masterKeyFromEnv,
+  VaultCipher,
+} from "./crypto.js";
 
 const KEY = randomBytes(32).toString("base64");
 
@@ -47,5 +53,56 @@ describe("VaultCipher", () => {
     );
     expect(() => VaultCipher.fromEnv({})).toThrow(InvariantError);
     expect(() => VaultCipher.fromEnv({ SLIP_ENCRYPTION_KEY: KEY })).not.toThrow();
+  });
+});
+
+describe("deriveKey", () => {
+  const master = Buffer.alloc(32, 7);
+
+  /**
+   * Known answers for a fixed master key, computed from the formula Slip has always used
+   * (HKDF-SHA256, salt "slip", the purpose as info, 32 bytes). If one of these changes, every
+   * vault id already stored stops decrypting and every blind index stops matching, so a failure
+   * here means the salt, a purpose string or the length moved — not that the test is stale.
+   */
+  it.each([
+    [
+      KEY_PURPOSES.vaultEncryption,
+      "63fc4113ffe6eb2acd23f6bb64d63b3e4a66d2ba79746715667c9d0aa737e35a",
+    ],
+    [
+      KEY_PURPOSES.vaultBlindIndex,
+      "86af3129c1835980015304b4faaa50346d3419cdff002097c4141891a84f35cd",
+    ],
+    [KEY_PURPOSES.ownerSession, "0df4eb4eea742935b5b5649d9a56ec2f3f0e041f6d322a7e11f5469e06c4353f"],
+  ])("%s derives the key it always has", (purpose, expected) => {
+    expect(deriveKey(master, purpose).toString("hex")).toBe(expected);
+  });
+
+  it("gives every purpose its own independent 32-byte key", () => {
+    const purposes = Object.values(KEY_PURPOSES);
+    expect(new Set(purposes).size).toBe(purposes.length);
+    const keys = purposes.map((purpose) => deriveKey(master, purpose).toString("hex"));
+    expect(new Set(keys).size).toBe(keys.length);
+    for (const key of keys) {
+      expect(key).toHaveLength(64);
+    }
+  });
+
+  it("is the same for one master key and different for another", () => {
+    const purpose = KEY_PURPOSES.ownerSession;
+    expect(deriveKey(master, purpose)).toEqual(deriveKey(Buffer.alloc(32, 7), purpose));
+    expect(deriveKey(master, purpose)).not.toEqual(deriveKey(randomBytes(32), purpose));
+  });
+
+  it("refuses a master key that is not 32 bytes", () => {
+    expect(() => deriveKey(Buffer.alloc(16), KEY_PURPOSES.ownerSession)).toThrow(InvariantError);
+    expect(() => masterKeyFromBase64(randomBytes(31).toString("base64"))).toThrow(InvariantError);
+  });
+
+  it("reads the master key from the environment, or refuses to start", () => {
+    expect(masterKeyFromEnv({ SLIP_ENCRYPTION_KEY: KEY })).toEqual(masterKeyFromBase64(KEY));
+    expect(() => masterKeyFromEnv({})).toThrow(InvariantError);
+    expect(() => masterKeyFromEnv({ SLIP_ENCRYPTION_KEY: "  " })).toThrow(InvariantError);
   });
 });

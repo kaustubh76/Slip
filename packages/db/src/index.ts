@@ -8,7 +8,14 @@ export {
   type Schema,
 } from "./client.js";
 export { Conflict, type ConflictCode, MAX_PAGE_SIZE, UNIQUE_CONSTRAINT_CODES } from "./codes.js";
-export { VaultCipher } from "./crypto.js";
+export {
+  deriveKey,
+  KEY_PURPOSES,
+  type KeyPurpose,
+  masterKeyFromBase64,
+  masterKeyFromEnv,
+  VaultCipher,
+} from "./crypto.js";
 export { translateDbError } from "./pg/errors.js";
 export { createPgStore } from "./pg/store.js";
 export * as schema from "./schema.js";
