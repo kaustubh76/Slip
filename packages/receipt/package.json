@@ -26,6 +26,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@slip/check": "workspace:*",
     "@slip/domain": "workspace:*",
     "zod": "catalog:"
   },

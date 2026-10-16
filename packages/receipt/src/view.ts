@@ -9,6 +9,7 @@ import {
   type Receipt,
   SYSTEM_DECIDER,
 } from "@slip/domain";
+import { measureModel } from "./measure.js";
 import { gapPercent } from "./percent.js";
 import type { OfferSummary, ReceiptView } from "./schema.js";
 import { footer, openingLines, ruleSentence, verdict } from "./sentences.js";
@@ -43,7 +44,10 @@ export interface RenderOptions {
   policy?: Policy;
   /** For an approved hold with no reservation: the owner-approval attempt that paid for it. */
   child?: Receipt | null;
-  /** The snapshot the attempt was checked against; names the listed variant on a mismatch. */
+  /**
+   * The snapshot the attempt was checked against: names the listed variant on a mismatch, and
+   * puts the other comparable offers on the gap scale.
+   */
   snapshot?: OfferSnapshot | null;
 }
 
@@ -105,6 +109,7 @@ export function renderReceipt(receipt: Receipt, options: RenderOptions = {}): Re
     chosen,
     best,
     gap,
+    measure: measureModel(receipt, options.policy, options.snapshot ?? null),
     paymentStatus: payment?.status ?? "NONE",
     charged: payment?.status === "CAPTURED",
     state,

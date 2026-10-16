@@ -209,6 +209,9 @@ importers:
 
   packages/receipt:
     dependencies:
+      '@slip/check':
+        specifier: workspace:*
+        version: link:../check
       '@slip/domain':
         specifier: workspace:*
         version: link:../domain

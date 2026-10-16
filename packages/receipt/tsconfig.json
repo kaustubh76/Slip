@@ -8,5 +8,5 @@
   },
   "include": ["src"],
   "exclude": ["src/**/*.test.ts", "src/**/__fixtures__/**", "src/**/__contract__/**"],
-  "references": [{ "path": "../domain" }]
+  "references": [{ "path": "../domain" }, { "path": "../check" }]
 }

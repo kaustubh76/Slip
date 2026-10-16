@@ -1,7 +1,10 @@
 export { shortNo, utcDateTime, utcDayTime, utcTime } from "./format.js";
+export { MEASURE_WIDTH, measureModel } from "./measure.js";
 export { gapPercent, percentFromHundredths } from "./percent.js";
 export {
   APPROVAL_HINTS,
+  type Measure,
+  MeasureSchema,
   type OfferSummary,
   OfferSummarySchema,
   type ReceiptView,

@@ -30,6 +30,28 @@ export const StateLineSchema = z.object({
   charged: z.boolean(),
 });
 
+const MarkSchema = z.object({ cents: z.number().int(), x: z.number().int(), label: z.string() });
+
+/** The gap scale (see `measureModel`): integer positions on a 0–1000 scale. */
+export const MeasureSchema = z.object({
+  width: z.literal(1000),
+  /** The lowest listed price: the left end of the line. */
+  low: MarkSchema,
+  /** How far "within your limits" reaches. */
+  limit: MarkSchema,
+  /** The agent's choice. */
+  chosen: MarkSchema,
+  /** The owner's order cap, when it decided or tripped. */
+  cap: MarkSchema.nullable(),
+  /** Other comparable offers, when the snapshot is known. */
+  ticks: z.array(z.object({ cents: z.number().int(), x: z.number().int() })),
+  /** "+$3.00 past your limit", or null when the choice is within the limits. */
+  pastLimit: z.string().nullable(),
+  /** The scale in words; the drawing itself is decoration. */
+  caption: z.string(),
+});
+export type Measure = z.infer<typeof MeasureSchema>;
+
 /**
  * For a hold still waiting for its owner: how approving would work (`capture`, `pay`,
  * `not-ready`, `spent`, see `approvalPath`); `none` otherwise. A hint for drawing the slip only —
@@ -54,6 +76,8 @@ export const ReceiptViewSchema = z.object({
   chosen: OfferSummarySchema.nullable(),
   best: OfferSummarySchema.nullable(),
   gap: z.object({ cents: z.number().int(), amount: z.string(), percent: z.string() }).nullable(),
+  /** The gap scale, or null when the check did not compare prices. */
+  measure: MeasureSchema.nullable(),
   /** This attempt's own payment; `NONE` when it has no PayPal order. */
   paymentStatus: z.enum(PAYMENT_STATUSES),
   /** True only when this attempt's own payment moved money (it is CAPTURED). */
