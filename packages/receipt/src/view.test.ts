@@ -19,16 +19,25 @@ describe("renderReceipt", () => {
     });
     const view = renderReceipt({ attempt, payment: null, hold: null }, { policy: DEFAULT_POLICY });
     expect(view.lines).toEqual([
-      "Your agent tried to pay $58.99 at store-a.example.",
-      "The same item was listed at $47.99 at store-b.example.",
+      "Your agent tried to pay $58.99 at Store A.",
+      "The same item was listed at $47.99 at Store B.",
       "Overpaid by $11.00 (23%).",
-      "store-a.example pays your agent's platform up to 8% commission; store-b.example pays up to 2%.",
-      "The price was more than 5% and $8.00 above the lowest listed price.",
+      "Store A pays your agent's platform up to 8% commission; Store B pays up to 2%.",
       "Payment rejected. Nothing was charged.",
       "Listed item prices from Channel3 at 14:02 UTC. Shipping and tax are not included.",
     ]);
-    expect(view).toMatchObject({ outcome: "REJECTED", charged: false, paymentStatus: "NONE" });
+    expect(view.reasons[0]).toBe(
+      "The price was more than 5% and $8.00 above the lowest listed price.",
+    );
+    expect(view).toMatchObject({
+      outcome: "REJECTED",
+      charged: false,
+      paymentStatus: "NONE",
+      verdict: "Payment rejected. Nothing was charged.",
+      footer: "Listed item prices from Channel3 at 14:02 UTC. Shipping and tax are not included.",
+    });
     expect(view.gap).toEqual({ cents: 1100, amount: "$11.00", percent: "23%" });
+    expect(view.chosen?.store).toBe("Store A");
   });
 
   it("a paid purchase at the lowest price", () => {
@@ -38,17 +47,17 @@ describe("renderReceipt", () => {
     });
     const view = renderReceipt({ attempt, payment: payment(attempt, "CAPTURED"), hold: null });
     expect(view.lines).toEqual([
-      "Your agent tried to pay $47.99 at store-b.example.",
-      "That is the lowest listed price for this item.",
-      "The price is within your limits.",
-      "Paid $47.99 at store-b.example.",
+      "Your agent tried to pay $47.99 at Store B.",
+      "That was the lowest listed item price.",
+      "Within your limits.",
+      "Paid $47.99 at Store B.",
       "Listed item prices from Channel3 at 14:02 UTC. Shipping and tax are not included.",
     ]);
     expect(view.charged).toBe(true);
     expect(view.paypal).toEqual({ orderId: "ORDER-1", authorizationId: null, captureId: "CAP-1" });
   });
 
-  it("a hold above the order limit, with the money reserved", () => {
+  it("a hold above the order cap, with the money reserved", () => {
     const attempt = testAttempt({
       decision: testDecision({
         ruleCode: "R6_ABOVE_ORDER_CAP",
@@ -60,10 +69,14 @@ describe("renderReceipt", () => {
       { attempt, payment: payment(attempt, "AUTHORIZED"), hold: hold(attempt) },
       { policy: DEFAULT_POLICY },
     );
-    expect(view.lines).toContain("The order is above your $200.00 order limit.");
-    expect(view.lines).toContain(
+    expect(view.lines).toEqual([
+      "Your agent tried to pay $250.00 at Store A.",
+      "The same item was listed at $249.00 at Store B.",
+      "That is $1.00 (0.4%) more than the lowest listed price.",
+      "$250.00 is above your $200.00 order cap. Held for you.",
       "$250.00 is reserved, not charged, until you decide (by 13 Oct 14:02 UTC).",
-    );
+      "Listed item prices from Channel3 at 14:02 UTC. Shipping and tax are not included.",
+    ]);
     expect(view.charged).toBe(false);
     expect(view.state).toMatchObject({ word: "AUTHORIZED", charged: false, inFlight: false });
   });
@@ -89,23 +102,26 @@ describe("renderReceipt", () => {
       hold: hold(attempt),
     });
     expect(view.lines).toEqual([
-      "Slip could not get current prices for this item, so it held the purchase for you.",
+      "No fresh listed item prices were available. Held for you.",
       "Nothing is reserved. Approving checks again at current listed prices and pays in one step.",
-      "Slip had no current listed prices for this item.",
+      "No listed item prices from Channel3 at 14:02 UTC.",
     ]);
   });
 
-  it("a failed payment says nothing was charged", () => {
+  it("a failed payment says nothing was charged, and never 'Paid'", () => {
     const attempt = testAttempt({ decision: testDecision({ ruleCode: "R7_WITHIN_LIMITS" }) });
     const view = renderReceipt({ attempt, payment: payment(attempt, "FAILED"), hold: null });
+    expect(view.verdict).toBe("Within your limits.");
     expect(view.lines).toContain(
       "PayPal declined the payment (INSTRUMENT_DECLINED). Nothing was charged.",
     );
+    expect(view.lines.join(" ")).not.toMatch(/\bPaid\b/);
     expect(view.charged).toBe(false);
   });
 
-  it("never uses trading jargon, whatever the rule or payment state", () => {
-    const banned = /basis points|\bbps\b|slippage|\bTCA\b|best execution|landed cost/i;
+  it("never uses trading jargon or a savings claim, whatever the rule or payment state", () => {
+    const banned =
+      /basis points|\bbps\b|slippage|\bTCA\b|best execution|landed cost|savings|\bsaved\b/i;
     const statuses: PaymentStatus[] = [
       "INITIATED",
       "UNKNOWN",
@@ -132,7 +148,7 @@ describe("renderReceipt", () => {
             { attempt, payment: payment(attempt, status), hold: h },
             { policy: DEFAULT_POLICY },
           );
-          for (const line of [...view.lines, ...view.reasons]) {
+          for (const line of [...view.lines, ...view.reasons, view.state.text]) {
             expect(line).not.toMatch(banned);
           }
         }

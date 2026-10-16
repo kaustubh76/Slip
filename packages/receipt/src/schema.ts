@@ -12,6 +12,8 @@ const isoTime = z.iso.datetime();
 
 export const OfferSummarySchema = z.object({
   domain: z.string(),
+  /** How the store is named in sentences: "Store A", or the domain without `www.`. */
+  store: z.string(),
   url: z.string(),
   priceCents: z.number().int(),
   price: z.string(),
@@ -39,10 +41,16 @@ export const ReceiptViewSchema = z.object({
   receiptId: z.string(),
   outcome: OutcomeSchema,
   ruleCode: RuleCodeSchema,
-  /** One plain sentence per rule that tripped, deciding rule first. */
+  /** One plain sentence per rule that tripped, deciding rule first (the rules behind it). */
   reasons: z.array(z.string()),
-  /** The whole receipt, in reading order. */
+  /** The whole five-second receipt, in reading order: opening, verdict, state line, footer. */
   lines: z.array(z.string()),
+  /** What the agent picked against the lowest listed price. */
+  opening: z.array(z.string()),
+  /** The decision, by the rule that decided it. */
+  verdict: z.string(),
+  /** Where the prices came from and what they leave out. */
+  footer: z.string(),
   chosen: OfferSummarySchema.nullable(),
   best: OfferSummarySchema.nullable(),
   gap: z.object({ cents: z.number().int(), amount: z.string(), percent: z.string() }).nullable(),

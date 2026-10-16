@@ -29,8 +29,9 @@ export type CheckoutResult =
   | Refusal;
 
 /**
- * Renders a receipt with the policy version it was decided under and, for an approved hold, the
- * owner-approval attempt that paid for it (looked up unless the caller already has it).
+ * Renders a receipt with the policy version it was decided under, for an approved hold the
+ * owner-approval attempt that paid for it (looked up unless the caller already has it), and for a
+ * variant mismatch the snapshot that names the listed variant.
  */
 export async function viewOf(
   deps: AppDeps,
@@ -47,7 +48,13 @@ export async function viewOf(
       : receipt.hold?.status === "APPROVED"
         ? await deps.store.attempts.findChild(receipt.attempt.id)
         : null;
-  return renderReceipt(receipt, { ...(policy === null ? {} : { policy }), child });
+  // Only a variant mismatch quotes the snapshot (to name the listed variant).
+  const { ruleCode, checkResult } = receipt.attempt.decision;
+  const snapshot =
+    ruleCode === "VARIANT_MISMATCH" && checkResult.snapshotId !== null
+      ? await deps.store.snapshots.get(checkResult.snapshotId)
+      : null;
+  return renderReceipt(receipt, { ...(policy === null ? {} : { policy }), child, snapshot });
 }
 
 /**
