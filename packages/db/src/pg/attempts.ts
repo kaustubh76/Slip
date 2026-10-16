@@ -78,7 +78,8 @@ export function pgSnapshots(db: Db): SnapshotRepo {
   };
 }
 
-function checkPage(page: PageRequest): void {
+/** One place for the page-size rule, shared by every keyset query in the Postgres store. */
+export function checkPage(page: { limit: number }): void {
   if (!Number.isInteger(page.limit) || page.limit < 1 || page.limit > MAX_PAGE_SIZE) {
     throw new InvariantError(`page limit must be 1..${MAX_PAGE_SIZE}, got ${page.limit}`);
   }

@@ -54,9 +54,10 @@ export interface PageRequest {
   before?: Cursor;
 }
 
-export interface Page<T> {
+/** A page and where it ended; `C` is the cursor that continues it. */
+export interface Page<T, C = Cursor> {
   items: T[];
-  next: Cursor | null;
+  next: C | null;
 }
 
 export interface OwnerRepo {
@@ -230,6 +231,12 @@ export interface PaymentRepo {
   events(attemptId: AttemptId): Promise<PaymentEvent[]>;
 }
 
+/** Where a page of decided holds ended. */
+export interface DecidedCursor {
+  decidedAt: Date;
+  attemptId: AttemptId;
+}
+
 export interface HoldDecision {
   hold: Hold;
   payment: Payment | null;
@@ -259,6 +266,15 @@ export interface HoldRepo {
     input: { now: Date; voidRequestId: RequestId },
   ): Promise<HoldDecision>;
   listPending(mandateId: MandateId): Promise<Receipt[]>;
+  /**
+   * Holds this mandate has finished with — approved, declined or expired — most recently decided
+   * first, paged by cursor. `decidedAt` is set exactly when a hold leaves PENDING (the database
+   * ties the two together), so it is what "decided" means here.
+   */
+  listDecided(
+    mandateId: MandateId,
+    page: { limit: number; after?: DecidedCursor },
+  ): Promise<Page<Receipt, DecidedCursor>>;
   /**
    * PENDING holds for this agent and product at any age, newest first. Checkout dedupe uses it:
    * a hold older than the dedupe window must still stop a second authorization.

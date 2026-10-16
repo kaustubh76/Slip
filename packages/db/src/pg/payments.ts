@@ -9,7 +9,7 @@ import {
   planHoldDecision,
   planPaymentTransition,
 } from "@slip/domain";
-import { and, asc, desc, eq, gt, inArray, lt, lte, or } from "drizzle-orm";
+import { and, asc, desc, eq, gt, inArray, isNotNull, lt, lte, or, sql } from "drizzle-orm";
 import type { Db } from "../client.js";
 import type { VaultCipher } from "../crypto.js";
 import {
@@ -20,7 +20,7 @@ import {
   paymentOperations,
   payments,
 } from "../schema.js";
-import { recordInTransaction } from "./attempts.js";
+import { checkPage, recordInTransaction } from "./attempts.js";
 import { guarded } from "./errors.js";
 import { loadPayment, loadReceipts, requirePayment } from "./receipts.js";
 import { toAttempt, toHold, toPayment, toPaymentEvent } from "./rows.js";
@@ -271,6 +271,40 @@ export function pgHolds(db: Db, cipher: VaultCipher): HoldRepo {
           db,
           rows.map((row) => row.attempt),
         );
+      }),
+
+    listDecided: (mandateId, page) =>
+      guarded(async () => {
+        checkPage(page);
+        const { after } = page;
+        const rows = await db
+          .select({ attempt: attempts })
+          .from(holds)
+          .innerJoin(attempts, eq(attempts.id, holds.attemptId))
+          .where(
+            and(
+              eq(attempts.mandateId, mandateId),
+              // A hold has a decision time exactly when it is no longer PENDING (holds_decided_fields).
+              isNotNull(holds.decidedAt),
+              after === undefined
+                ? undefined
+                : sql`(${holds.decidedAt}, ${holds.attemptId}) < (${after.decidedAt.toISOString()}::timestamptz, ${after.attemptId}::uuid)`,
+            ),
+          )
+          .orderBy(desc(holds.decidedAt), desc(holds.attemptId))
+          .limit(page.limit + 1);
+        const items = await loadReceipts(
+          db,
+          rows.slice(0, page.limit).map((row) => row.attempt),
+        );
+        const last = items.at(-1);
+        return {
+          items,
+          next:
+            rows.length > page.limit && last?.hold?.decidedAt != null
+              ? { decidedAt: last.hold.decidedAt, attemptId: last.attempt.id }
+              : null,
+        };
       }),
 
     listOpen: (agentId, productId) =>

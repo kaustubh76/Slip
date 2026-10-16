@@ -151,10 +151,15 @@ export function createMemoryStore(): Store {
     b.attempt.createdAt.getTime() - a.attempt.createdAt.getTime() ||
     (b.attempt.id < a.attempt.id ? -1 : b.attempt.id > a.attempt.id ? 1 : 0);
 
-  const pageOf = (filter: (r: AttemptRecord) => boolean, request: PageRequest): Page<Receipt> => {
-    if (!Number.isInteger(request.limit) || request.limit < 1 || request.limit > MAX_PAGE_SIZE) {
-      throw new InvariantError(`page limit must be 1..${MAX_PAGE_SIZE}, got ${request.limit}`);
+  /** One place for the page-size rule, as in the Postgres store. */
+  const checkLimit = (limit: number): void => {
+    if (!Number.isInteger(limit) || limit < 1 || limit > MAX_PAGE_SIZE) {
+      throw new InvariantError(`page limit must be 1..${MAX_PAGE_SIZE}, got ${limit}`);
     }
+  };
+
+  const pageOf = (filter: (r: AttemptRecord) => boolean, request: PageRequest): Page<Receipt> => {
+    checkLimit(request.limit);
     const before = request.before;
     const rows = [...attempts.values()]
       .filter(filter)
@@ -841,6 +846,40 @@ export function createMemoryStore(): Store {
               a.createdAt.getTime() - b.createdAt.getTime() || (a.attemptId < b.attemptId ? -1 : 1),
           )
           .map((h) => receiptOf(attempts.get(h.attemptId) as AttemptRecord));
+      },
+
+      async listDecided(mandateId, page) {
+        checkLimit(page.limit);
+        const { after } = page;
+        const decided = [...holds.values()]
+          .filter(
+            (h) =>
+              h.decidedAt !== null && attempts.get(h.attemptId)?.attempt.mandateId === mandateId,
+          )
+          .map((h) => ({ hold: h, decidedAt: h.decidedAt as Date }))
+          .sort(
+            (a, b) =>
+              b.decidedAt.getTime() - a.decidedAt.getTime() ||
+              (a.hold.attemptId < b.hold.attemptId ? 1 : -1),
+          )
+          .filter(
+            (h) =>
+              after === undefined ||
+              h.decidedAt.getTime() < after.decidedAt.getTime() ||
+              (h.decidedAt.getTime() === after.decidedAt.getTime() &&
+                h.hold.attemptId < after.attemptId),
+          );
+        const items = decided
+          .slice(0, page.limit)
+          .map((h) => receiptOf(attempts.get(h.hold.attemptId) as AttemptRecord));
+        const last = items.at(-1);
+        return {
+          items,
+          next:
+            decided.length > page.limit && last?.hold?.decidedAt != null
+              ? { decidedAt: last.hold.decidedAt, attemptId: last.attempt.id }
+              : null,
+        };
       },
 
       async listOpen(agentId, productId) {

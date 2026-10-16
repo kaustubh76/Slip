@@ -4,6 +4,7 @@ import {
   ConflictError,
   type Cursor,
   DEFAULT_POLICY,
+  type DecidedCursor,
   HoldAlreadyDecidedError,
   HoldExpiredError,
   HoldNotReadyError,
@@ -871,6 +872,65 @@ export function describeStoreContract(label: string, make: () => Promise<Harness
             captureRequestId: newRequestId(),
           }),
         ).rejects.toBeInstanceOf(HoldExpiredError);
+      });
+
+      it("listDecided returns finished holds, newest decision first, and pages by cursor", async () => {
+        const w = await world(store);
+        const decided: { id: string; at: number }[] = [];
+        // Three decided at the same instant (ties), then two later, plus one left waiting.
+        for (const minutes of [5, 5, 5, 20, 40]) {
+          const attempt = await heldWithAuthorization(w, at(minutes + 60));
+          await authorize(store, attempt.id, at(1));
+          await store.holds.decline(attempt.id, {
+            by: "owner",
+            now: at(minutes),
+            voidRequestId: newRequestId(),
+          });
+          decided.push({ id: attempt.id, at: minutes });
+        }
+        const waiting = await heldWithAuthorization(w);
+
+        const seen: string[] = [];
+        let after: DecidedCursor | undefined;
+        for (;;) {
+          const page = await store.holds.listDecided(w.mandateId, {
+            limit: 2,
+            ...(after === undefined ? {} : { after }),
+          });
+          seen.push(...page.items.map((r) => r.attempt.id));
+          if (page.next === null) {
+            break;
+          }
+          after = page.next;
+        }
+        // Every decided hold once, newest decision first; never the one still waiting.
+        expect(new Set(seen).size).toBe(seen.length);
+        expect(seen).toHaveLength(decided.length);
+        expect(seen).not.toContain(waiting.id);
+        const order = seen.map((id) => decided.find((d) => d.id === id)?.at);
+        expect(order).toEqual([...order].sort((a, b) => (b ?? 0) - (a ?? 0)));
+        // The receipts come back whole, with their decided hold.
+        const first = await store.holds.listDecided(w.mandateId, { limit: 1 });
+        expect(first.items[0]?.hold).toMatchObject({ status: "DECLINED", decidedBy: "owner" });
+        expect(first.items[0]?.payment?.status).toBe("VOIDING");
+      });
+
+      it("listDecided sees only this mandate's holds, and refuses a silly page size", async () => {
+        const mine = await world(store);
+        const theirs = await world(store);
+        const ours = await heldWithAuthorization(mine);
+        await store.holds.expire(ours.id, { now: at(120), voidRequestId: newRequestId() });
+        const attempt = await decided(store, theirs, markets.aboveCap());
+        await record(store, attempt, { holdExpiresAt: at(60) });
+        await store.holds.expire(attempt.id, { now: at(120), voidRequestId: newRequestId() });
+        expect(
+          (await store.holds.listDecided(mine.mandateId, { limit: 50 })).items.map(
+            (r) => r.attempt.id,
+          ),
+        ).toEqual([ours.id]);
+        await expect(store.holds.listDecided(mine.mandateId, { limit: 0 })).rejects.toBeInstanceOf(
+          InvariantError,
+        );
       });
 
       it("an authorization confirmed after its hold closed is listed until its void is written", async () => {

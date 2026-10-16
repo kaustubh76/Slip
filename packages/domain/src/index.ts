@@ -177,6 +177,7 @@ export type {
   AgentRepo,
   AttemptRepo,
   Cursor,
+  DecidedCursor,
   HoldDecision,
   HoldRepo,
   LeaseKey,
