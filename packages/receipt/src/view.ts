@@ -1,69 +1,24 @@
 import {
-  type AttemptId,
-  type Cents,
+  approvalPath,
   formatPct,
   formatUsd,
   type Hold,
   type Offer,
-  type Outcome,
-  type PaymentStatus,
   type Policy,
-  type PolicyVersion,
   type Receipt,
   type RuleCode,
-  type SnapshotId,
+  SYSTEM_DECIDER,
 } from "@slip/domain";
 import { utcTime } from "./format.js";
 import { gapPercent } from "./percent.js";
-import { type StateLine, stateLine } from "./state.js";
+import type { OfferSummary, ReceiptView } from "./schema.js";
+import { stateLine } from "./state.js";
 
 /**
  * The receipt as people read it — the owner in five seconds, the agent as structured fields.
  * Every number is filled in here from the stored record, never by a language model, and the words
  * stay plain: dollars and percent, "listed item price", no trading jargon.
  */
-
-export interface OfferSummary {
-  domain: string;
-  url: string;
-  priceCents: Cents;
-  price: string;
-  /** "8%" when the store's commission is known and above zero. */
-  commission: string | null;
-}
-
-export interface ReceiptView {
-  receiptId: AttemptId;
-  outcome: Outcome;
-  ruleCode: RuleCode;
-  /** One plain sentence per rule that tripped, deciding rule first. */
-  reasons: string[];
-  /** The whole receipt, in reading order. */
-  lines: string[];
-  chosen: OfferSummary | null;
-  best: OfferSummary | null;
-  gap: { cents: Cents; amount: string; percent: string } | null;
-  /** This attempt's own payment; `NONE` when it has no PayPal order. */
-  paymentStatus: PaymentStatus;
-  /** True only when this attempt's own payment moved money (it is CAPTURED). */
-  charged: boolean;
-  /**
-   * Where the money stands, in one line decided from the payment, the hold and any follow-up
-   * together. `state.charged` is true when money moved for this purchase, including through the
-   * owner-approval attempt that paid for a hold.
-   */
-  state: StateLine;
-  paypal: {
-    orderId: string | null;
-    authorizationId: string | null;
-    captureId: string | null;
-  } | null;
-  hold: { status: Hold["status"]; expiresAt: Date } | null;
-  policyVersion: PolicyVersion;
-  snapshotId: SnapshotId | null;
-  pricesAt: Date | null;
-  createdAt: Date;
-}
 
 function summary(offer: Offer | null): OfferSummary | null {
   if (offer === null || offer.priceCents === null) {
@@ -130,14 +85,15 @@ export function renderReceipt(receipt: Receipt, options: RenderOptions = {}): Re
   const result = decision.checkResult;
   const chosen = summary(result.chosen);
   const best = summary(result.best);
+  const bestCents = result.best?.priceCents ?? null;
   const gap =
-    result.gapAbsCents !== null && best !== null && result.gapAbsCents > 0
+    result.gapAbsCents !== null && bestCents !== null && result.gapAbsCents > 0
       ? {
           cents: result.gapAbsCents,
           amount: formatUsd(result.gapAbsCents),
           percent: gapPercent(
             result.gapAbsCents,
-            best.priceCents,
+            bestCents,
             decision.ruleCode === "R4_OVERPAID" && options.policy !== undefined
               ? { above: options.policy.maxOverpayPctHundredths }
               : {},
@@ -201,10 +157,22 @@ export function renderReceipt(receipt: Receipt, options: RenderOptions = {}): Re
             authorizationId: payment.authorizationId,
             captureId: payment.captureId,
           },
-    hold: hold === null ? null : { status: hold.status, expiresAt: hold.expiresAt },
+    hold: hold === null ? null : holdView(hold),
+    approval: hold?.status === "PENDING" ? approvalPath(payment) : "none",
     policyVersion: result.policyVersion,
     snapshotId: result.snapshotId,
-    pricesAt: result.snapshotFetchedAt,
-    createdAt: attempt.createdAt,
+    pricesAt: result.snapshotFetchedAt?.toISOString() ?? null,
+    createdAt: attempt.createdAt.toISOString(),
+  };
+}
+
+/** Who decided is "owner" or "system"; the owner's id itself stays out of the view. */
+function holdView(hold: Hold): NonNullable<ReceiptView["hold"]> {
+  return {
+    status: hold.status,
+    expiresAt: hold.expiresAt.toISOString(),
+    decidedAt: hold.decidedAt?.toISOString() ?? null,
+    decidedBy:
+      hold.decidedBy === null ? null : hold.decidedBy === SYSTEM_DECIDER ? "system" : "owner",
   };
 }

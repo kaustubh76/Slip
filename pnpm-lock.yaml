@@ -212,6 +212,9 @@ importers:
       '@slip/domain':
         specifier: workspace:*
         version: link:../domain
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.5
     devDependencies:
       '@types/node':
         specifier: 'catalog:'

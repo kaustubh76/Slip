@@ -1,54 +1,8 @@
-import {
-  type Attempt,
-  type Cents,
-  DEFAULT_POLICY,
-  type Hold,
-  type Payment,
-  type PaymentStatus,
-  RULE_CODES,
-  requestId,
-} from "@slip/domain";
-import {
-  minutesFromNow,
-  NOW,
-  offer,
-  testAttempt,
-  testDecision,
-  testUuid,
-} from "@slip/domain/testing";
+import { DEFAULT_POLICY, type PaymentStatus, RULE_CODES } from "@slip/domain";
+import { offer, testAttempt, testDecision } from "@slip/domain/testing";
 import { describe, expect, it } from "vitest";
+import { hold, payment } from "./__fixtures__/receipts.js";
 import { renderReceipt } from "./view.js";
-
-function payment(attempt: Attempt, status: PaymentStatus): Payment {
-  const price = attempt.decision.checkResult.chosen?.priceCents ?? (1 as Cents);
-  return {
-    attemptId: attempt.id,
-    agentId: attempt.agentId,
-    productId: attempt.productId,
-    intent: attempt.decision.outcome === "HELD" ? "AUTHORIZE" : "CAPTURE",
-    status,
-    amountCents: price,
-    currency: "USD",
-    paypalOrderId: "ORDER-1",
-    authorizationId: status === "AUTHORIZED" ? "AUTH-1" : null,
-    captureId: status === "CAPTURED" ? "CAP-1" : null,
-    failureReason: status === "FAILED" ? "INSTRUMENT_DECLINED" : null,
-    operations: [{ kind: "ORDER", requestId: requestId(testUuid()), createdAt: NOW }],
-    createdAt: NOW,
-    updatedAt: NOW,
-  };
-}
-
-function hold(attempt: Attempt, status: Hold["status"] = "PENDING"): Hold {
-  return {
-    attemptId: attempt.id,
-    status,
-    createdAt: NOW,
-    expiresAt: minutesFromNow(48 * 60),
-    decidedAt: status === "PENDING" ? null : NOW,
-    decidedBy: status === "PENDING" ? null : "owner",
-  };
-}
 
 const storeA = (price: number, rate = 0) => offer({ price, domain: "store-a.example", rate });
 const storeB = (price: number, rate = 0) => offer({ price, domain: "store-b.example", rate });
