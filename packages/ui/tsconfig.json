@@ -15,5 +15,5 @@
     "src/**/__fixtures__/**",
     "src/test-setup.ts"
   ],
-  "references": [{ "path": "../receipt" }]
+  "references": [{ "path": "../domain" }, { "path": "../receipt" }]
 }

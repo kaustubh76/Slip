@@ -337,6 +337,32 @@
     border-block-end: 1px dotted var(--slip-ink-ghost);
   }
 
+  /* ---------- the "Waiting for you" tray ---------- */
+
+  .slip-tray {
+    background: var(--slip-paper);
+    border-block: 1px solid var(--slip-ink);
+    padding: 8px 16px;
+  }
+
+  .slip-tray-head {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .slip-tray-head h2,
+  .slip-tray-head p {
+    margin: 0;
+  }
+
+  .slip-tray-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    padding: 8px 0;
+    border-block-end: 1px dotted var(--slip-ink-ghost);
+  }
+
   /* ---------- the roll ---------- */
 
   .slip-roll {
@@ -394,6 +420,23 @@
     box-shadow: 0 2px 0 -1px var(--slip-edge);
     padding: 24px;
     max-inline-size: min(var(--slip-slip-max), calc(100vw - 32px));
+  }
+
+  .slip-dialog-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-block-start: 20px;
+  }
+
+  /* The owner's hand on a slip: a refusal, a decision, a note. */
+  .slip-note {
+    font-family: var(--slip-font-sans);
+    font-size: 15px;
+    line-height: 22px;
+    border-inline-start: 2px solid var(--slip-pen);
+    padding-inline-start: 10px;
+    margin: 12px 0 0;
   }
 
   .slip-dialog::backdrop {

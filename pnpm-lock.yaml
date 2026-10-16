@@ -268,13 +268,13 @@ importers:
 
   packages/ui:
     dependencies:
+      '@slip/domain':
+        specifier: workspace:*
+        version: link:../domain
       '@slip/receipt':
         specifier: workspace:*
         version: link:../receipt
     devDependencies:
-      '@slip/domain':
-        specifier: workspace:*
-        version: link:../domain
       '@testing-library/dom':
         specifier: 'catalog:'
         version: 10.4.2
