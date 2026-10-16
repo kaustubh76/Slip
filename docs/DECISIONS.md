@@ -373,3 +373,19 @@ packages such as PGlite external. One graph means one copy: a duplicate email th
 `registerOwner` came back as the typed `EMAIL_IN_USE` refusal under `next start`. The config still
 lists the server packages together, so a bundler that honours the list keeps them together too.
 The web server code reads result unions only and never does its own `instanceof` on domain errors.
+
+## D43 · 2026-10-16 · The owner is identified by a signed cookie, not by a URL
+
+Every owner query is scoped by the owner id (`packages/app/src/owner/queries.ts`), so the id has to
+come from something the browser cannot edit. A session cookie carries the owner id, the mandate
+being read and an expiry, signed with HMAC-SHA256 under a key derived for that one purpose
+(`owner-session-v1`), so the signature cannot be confused with the key that protects vault ids.
+Nothing in it is secret — those ids are in the URLs too — so it is signed rather than encrypted.
+
+The payload is fixed fields in a fixed order (`v1.<owner>.<mandate>.<exp>`, UUIDs and digits, none
+of which can contain the separator), which leaves no room for a canonicalisation trick, and the
+signature is compared in constant time. The cookie is HttpOnly and `SameSite=Lax`, so the owner
+returns from PayPal still signed in, and in production it carries the `__Host-` prefix, which the
+browser accepts only over HTTPS from the root path. An expired cookie is refused however well it is
+signed. A demo without `SLIP_ENCRYPTION_KEY` signs with a per-process key: its sessions end with
+the process, and anywhere else a missing key stops the server from starting.

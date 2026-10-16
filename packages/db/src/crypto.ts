@@ -52,13 +52,19 @@ export function deriveKey(master: Buffer, purpose: KeyPurpose): Buffer {
   );
 }
 
+/**
+ * Just the variables, as every runtime has them: `process.env` fits, and so does a plain object
+ * in a test or an edge runtime that types `NODE_ENV` more strictly.
+ */
+export type Env = Readonly<Record<string, string | undefined>>;
+
 /** The master key from base64 (or base64url), as produced by `openssl rand -base64 32`. */
 export function masterKeyFromBase64(key: string): Buffer {
   return assertMasterKey(Buffer.from(key.trim(), "base64"));
 }
 
 /** The master key from `SLIP_ENCRYPTION_KEY`; refuses to start without it. */
-export function masterKeyFromEnv(env: NodeJS.ProcessEnv = process.env): Buffer {
+export function masterKeyFromEnv(env: Env = process.env): Buffer {
   const key = env["SLIP_ENCRYPTION_KEY"];
   if (key === undefined || key.trim() === "") {
     throw new InvariantError("SLIP_ENCRYPTION_KEY is not set");
@@ -95,7 +101,7 @@ export class VaultCipher {
   }
 
   /** From `SLIP_ENCRYPTION_KEY`; refuses to start without it. */
-  static fromEnv(env: NodeJS.ProcessEnv = process.env): VaultCipher {
+  static fromEnv(env: Env = process.env): VaultCipher {
     return new VaultCipher(masterKeyFromEnv(env));
   }
 

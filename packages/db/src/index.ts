@@ -10,6 +10,7 @@ export {
 export { Conflict, type ConflictCode, MAX_PAGE_SIZE, UNIQUE_CONSTRAINT_CODES } from "./codes.js";
 export {
   deriveKey,
+  type Env,
   KEY_PURPOSES,
   type KeyPurpose,
   masterKeyFromBase64,
