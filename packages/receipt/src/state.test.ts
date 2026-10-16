@@ -41,19 +41,17 @@ describe("stateLine — every combination keeps its promises", () => {
     for (const status of STATUSES) {
       for (const captureTried of [false, true]) {
         for (const h of HOLDS) {
-          for (const by of ["owner-1", SYSTEM_DECIDER]) {
-            for (const childStatus of [null, ...STATUSES]) {
-              const receipt: Receipt = {
-                attempt,
-                payment: status === null ? null : payment(attempt, status, { captureTried }),
-                hold: h === null ? null : hold(attempt, h, by),
-              };
-              const child =
-                h === "APPROVED" && childStatus !== null ? followUp(attempt, childStatus) : null;
+          // Who decided matters only for a declined hold; a follow-up only for an approved one.
+          for (const by of h === "DECLINED" ? ["owner-1", SYSTEM_DECIDER] : ["owner-1"]) {
+            for (const childStatus of h === "APPROVED" ? [null, ...STATUSES] : [null]) {
               cases.push({
                 name: `${attempt.decision.outcome} ${status} capture:${captureTried} hold:${h} by:${by} child:${childStatus}`,
-                receipt,
-                child,
+                receipt: {
+                  attempt,
+                  payment: status === null ? null : payment(attempt, status, { captureTried }),
+                  hold: h === null ? null : hold(attempt, h, by),
+                },
+                child: childStatus === null ? null : followUp(attempt, childStatus),
               });
             }
           }
@@ -63,29 +61,41 @@ describe("stateLine — every combination keeps its promises", () => {
   }
 
   it(`holds for all ${cases.length} combinations of payment, hold and follow-up`, () => {
+    // One pass collecting what is wrong: thousands of separate assertions are too slow for a
+    // full parallel run.
+    const wrong: string[] = [];
     for (const c of cases) {
       const line = stateLine(c.receipt, { store: "store-k.example", child: c.child });
-      const where = `${c.name}: "${line.text}"`;
+      const fail = (rule: string) => wrong.push(`${c.name}: ${rule} — "${line.text}"`);
+      const captured = line.word === "CAPTURED";
       // Money moved if and only if the line says CAPTURED, and only then does it say "Paid".
-      expect(line.charged, where).toBe(line.word === "CAPTURED");
-      if (line.word === "CAPTURED") {
-        expect(line.text, where).toMatch(/Paid /);
-        expect(line.text, where).not.toMatch(/[Nn]othing (was|is) charged/);
-      } else {
-        expect(line.text, where).not.toMatch(/\bPaid /);
+      if (line.charged !== captured) {
+        fail("charged must match CAPTURED");
+      }
+      if (captured && !/Paid /.test(line.text)) {
+        fail("a capture must say Paid");
+      }
+      if (captured && /[Nn]othing (was|is) charged/.test(line.text)) {
+        fail("a capture cannot say nothing was charged");
+      }
+      if (!captured && /\bPaid /.test(line.text)) {
+        fail("only a capture says Paid");
       }
       // A closed hold never invites a decision.
       const closed = c.receipt.hold?.status === "DECLINED" || c.receipt.hold?.status === "EXPIRED";
-      if (closed) {
-        expect(line.text, where).not.toMatch(/until you decide|Approving checks again/);
+      if (closed && /until you decide|Approving checks again/.test(line.text)) {
+        fail("a closed hold invites no decision");
       }
       // In flight means PayPal still has work to do: never on a final word.
-      if (line.word === "CAPTURED" || line.word === "VOIDED" || line.word === "FAILED") {
-        expect(line.inFlight, where).toBe(false);
+      if ((captured || line.word === "VOIDED" || line.word === "FAILED") && line.inFlight) {
+        fail("a final status is not in flight");
       }
-      expect(line.text.length, where).toBeGreaterThan(0);
+      if (line.text.length === 0) {
+        fail("every line says something");
+      }
     }
-  });
+    expect(wrong).toEqual([]);
+  }, 30_000);
 });
 
 describe("stateLine — the lines owners read", () => {

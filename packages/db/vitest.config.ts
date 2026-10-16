@@ -7,7 +7,8 @@ export default defineConfig({
     name: "db",
     include: ["src/**/*.test.ts"],
     // PGlite boots a WASM Postgres per test file; real Postgres creates a database per file.
+    // Booting takes seconds alone, far longer while every project starts at once in `pnpm test`.
     testTimeout: 30_000,
-    hookTimeout: 60_000,
+    hookTimeout: 120_000,
   },
 });
