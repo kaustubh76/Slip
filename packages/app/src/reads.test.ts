@@ -80,7 +80,12 @@ describe("getReceipt", () => {
     const read = await getReceipt(h.deps, seeded.apiKey, id);
     expect(read).toMatchObject({
       status: "found",
-      view: { outcome: "HELD", hold: { status: "APPROVED" } },
+      view: {
+        outcome: "HELD",
+        hold: { status: "APPROVED" },
+        // Money moved for this purchase, through the attempt that paid for the hold.
+        state: { word: "CAPTURED", charged: true },
+      },
       followUp: { view: { outcome: "PAID", ruleCode: "OWNER_APPROVED", charged: true } },
     });
   });

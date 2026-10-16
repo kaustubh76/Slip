@@ -107,9 +107,11 @@ describe("renderReceipt", () => {
       { policy: DEFAULT_POLICY },
     );
     expect(view.lines).toContain("The order is above your $200.00 order limit.");
-    expect(view.lines).toContain("Held for your approval until 2026-10-13 14:02 UTC.");
-    expect(view.lines).toContain("$250.00 is reserved on your PayPal account until you decide.");
+    expect(view.lines).toContain(
+      "$250.00 is reserved, not charged, until you decide (by 13 Oct 14:02 UTC).",
+    );
     expect(view.charged).toBe(false);
+    expect(view.state).toMatchObject({ word: "AUTHORIZED", charged: false, inFlight: false });
   });
 
   it("a hold with no prices says so, and that nothing was reserved", () => {
@@ -134,8 +136,7 @@ describe("renderReceipt", () => {
     });
     expect(view.lines).toEqual([
       "Slip could not get current prices for this item, so it held the purchase for you.",
-      "Held for your approval until 2026-10-13 14:02 UTC.",
-      "Nothing has been charged or reserved.",
+      "Nothing is reserved. Approving checks again at current listed prices and pays in one step.",
       "Slip had no current listed prices for this item.",
     ]);
   });
@@ -144,7 +145,7 @@ describe("renderReceipt", () => {
     const attempt = testAttempt({ decision: testDecision({ ruleCode: "R7_WITHIN_LIMITS" }) });
     const view = renderReceipt({ attempt, payment: payment(attempt, "FAILED"), hold: null });
     expect(view.lines).toContain(
-      "PayPal did not complete the payment (INSTRUMENT_DECLINED). Nothing was charged.",
+      "PayPal declined the payment (INSTRUMENT_DECLINED). Nothing was charged.",
     );
     expect(view.charged).toBe(false);
   });

@@ -445,7 +445,7 @@ async function decided(deps: AppDeps, held: Receipt): Promise<HoldDecided> {
   return {
     status: "done",
     receipt,
-    view: await viewOf(deps, receipt),
+    view: await viewOf(deps, receipt, { child }),
     followUp: child === null ? null : { receipt: child, view: await viewOf(deps, child) },
   };
 }

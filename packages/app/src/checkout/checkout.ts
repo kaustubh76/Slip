@@ -28,13 +28,26 @@ export type CheckoutResult =
   | { status: "replayed"; reason: ReplayReason; receipt: Receipt; view: ReceiptView }
   | Refusal;
 
-/** Renders a receipt with the policy version it was decided under. */
-export async function viewOf(deps: AppDeps, receipt: Receipt): Promise<ReceiptView> {
+/**
+ * Renders a receipt with the policy version it was decided under and, for an approved hold, the
+ * owner-approval attempt that paid for it (looked up unless the caller already has it).
+ */
+export async function viewOf(
+  deps: AppDeps,
+  receipt: Receipt,
+  known: { child?: Receipt | null } = {},
+): Promise<ReceiptView> {
   const policy = await deps.store.mandates.policy(
     receipt.attempt.mandateId,
     receipt.attempt.decision.checkResult.policyVersion,
   );
-  return renderReceipt(receipt, policy === null ? {} : { policy });
+  const child =
+    known.child !== undefined
+      ? known.child
+      : receipt.hold?.status === "APPROVED"
+        ? await deps.store.attempts.findChild(receipt.attempt.id)
+        : null;
+  return renderReceipt(receipt, { ...(policy === null ? {} : { policy }), child });
 }
 
 /**

@@ -6,7 +6,6 @@ import {
   type Hold,
   type Offer,
   type Outcome,
-  type Payment,
   type PaymentStatus,
   type Policy,
   type PolicyVersion,
@@ -14,6 +13,8 @@ import {
   type RuleCode,
   type SnapshotId,
 } from "@slip/domain";
+import { utcTime } from "./format.js";
+import { type StateLine, stateLine } from "./state.js";
 
 /**
  * The receipt as people read it — the owner in five seconds, the agent as structured fields.
@@ -41,9 +42,16 @@ export interface ReceiptView {
   chosen: OfferSummary | null;
   best: OfferSummary | null;
   gap: { cents: Cents; amount: string; percent: string } | null;
+  /** This attempt's own payment; `NONE` when it has no PayPal order. */
   paymentStatus: PaymentStatus;
-  /** True only when money actually moved (the payment is CAPTURED). */
+  /** True only when this attempt's own payment moved money (it is CAPTURED). */
   charged: boolean;
+  /**
+   * Where the money stands, in one line decided from the payment, the hold and any follow-up
+   * together. `state.charged` is true when money moved for this purchase, including through the
+   * owner-approval attempt that paid for a hold.
+   */
+  state: StateLine;
   paypal: {
     orderId: string | null;
     authorizationId: string | null;
@@ -86,14 +94,6 @@ function summary(offer: Offer | null): OfferSummary | null {
   };
 }
 
-function utcTime(date: Date): string {
-  return `${date.toISOString().slice(11, 16)} UTC`;
-}
-
-function utcDateTime(date: Date): string {
-  return `${date.toISOString().slice(0, 10)} ${utcTime(date)}`;
-}
-
 /** Why each rule tripped, in words; `policy` (when known) adds the owner's own numbers. */
 function reasonFor(code: RuleCode, policy: Policy | undefined): string {
   switch (code) {
@@ -130,56 +130,14 @@ function reasonFor(code: RuleCode, policy: Policy | undefined): string {
   }
 }
 
-function paymentLine(
-  payment: Payment | null,
-  chosen: OfferSummary | null,
-  outcome: Outcome,
-): string | null {
-  if (payment === null) {
-    return outcome === "PAID" ? "Payment is being prepared." : null;
-  }
-  const where = chosen === null ? "" : ` at ${chosen.domain}`;
-  const amount = formatUsd(payment.amountCents);
-  switch (payment.status) {
-    case "CAPTURED":
-      return `Paid ${amount}${where}.`;
-    case "INITIATED":
-    case "UNKNOWN":
-    case "PENDING":
-      return payment.intent === "CAPTURE"
-        ? "The payment is being confirmed with PayPal. Nothing is final yet."
-        : "The reservation is being confirmed with PayPal.";
-    case "AUTHORIZED":
-      return `${amount} is reserved on your PayPal account until you decide.`;
-    case "CAPTURING":
-      return `Collecting the ${amount} you approved.`;
-    case "VOIDING":
-    case "VOIDED":
-      return "The reservation was released. Nothing was charged.";
-    case "FAILED":
-      return `PayPal did not complete the payment (${payment.failureReason ?? "no reason given"}). Nothing was charged.`;
-    case "NONE":
-      return null;
-  }
+export interface RenderOptions {
+  /** The policy at the version the attempt was checked under; adds the owner's own numbers. */
+  policy?: Policy;
+  /** For an approved hold with no reservation: the owner-approval attempt that paid for it. */
+  child?: Receipt | null;
 }
 
-function holdLine(hold: Hold | null): string | null {
-  if (hold === null) {
-    return null;
-  }
-  switch (hold.status) {
-    case "PENDING":
-      return `Held for your approval until ${utcDateTime(hold.expiresAt)}.`;
-    case "APPROVED":
-      return "You approved this purchase.";
-    case "DECLINED":
-      return "You declined this purchase.";
-    case "EXPIRED":
-      return "No decision was made in time, so the hold was released.";
-  }
-}
-
-export function renderReceipt(receipt: Receipt, options: { policy?: Policy } = {}): ReceiptView {
+export function renderReceipt(receipt: Receipt, options: RenderOptions = {}): ReceiptView {
   const { attempt, payment, hold } = receipt;
   const { decision } = attempt;
   const result = decision.checkResult;
@@ -217,19 +175,12 @@ export function renderReceipt(receipt: Receipt, options: { policy?: Policy } = {
     );
   }
   lines.push(...reasons);
+  const state = stateLine(receipt, { store: chosen?.domain ?? null, child: options.child ?? null });
   if (decision.outcome === "REJECTED") {
+    // The verdict already says what happened to the money.
     lines.push("Payment rejected. Nothing was charged.");
-  }
-  const holdText = holdLine(hold);
-  if (holdText !== null && !lines.includes(holdText)) {
-    lines.push(holdText);
-  }
-  const paymentText = paymentLine(payment, chosen, decision.outcome);
-  if (paymentText !== null) {
-    lines.push(paymentText);
-  }
-  if (decision.outcome === "HELD" && payment === null && hold?.status === "PENDING") {
-    lines.push("Nothing has been charged or reserved.");
+  } else {
+    lines.push(state.text);
   }
   lines.push(
     result.snapshotFetchedAt === null
@@ -248,6 +199,7 @@ export function renderReceipt(receipt: Receipt, options: { policy?: Policy } = {
     gap,
     paymentStatus: payment?.status ?? "NONE",
     charged: payment?.status === "CAPTURED",
+    state,
     paypal:
       payment === null
         ? null

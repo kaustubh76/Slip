@@ -52,7 +52,7 @@ export async function getReceipt(
   return {
     status: "found",
     receipt,
-    view: await viewOf(deps, receipt),
+    view: await viewOf(deps, receipt, { child }),
     followUp: child === null ? null : { receipt: child, view: await viewOf(deps, child) },
   };
 }
