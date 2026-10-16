@@ -18,6 +18,7 @@ import {
   PolicyChangedError,
   type StaleCursor,
   type Store,
+  stampToken,
 } from "@slip/domain";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { Conflict } from "../codes.js";
@@ -808,6 +809,121 @@ export function describeStoreContract(label: string, make: () => Promise<Harness
           .sort((a, b) => a.at - b.at || (a.id < b.id ? -1 : 1))
           .map((m) => m.id);
         expect(seen.filter((id) => expected.includes(id))).toEqual(expected);
+      });
+    });
+
+    describe("the change stamp", () => {
+      /** Every write that matters moves it; nothing else does. */
+      it("moves for each kind of write, and not for a no-op", async () => {
+        const w = await world(store, { activate: false });
+        const moves: string[] = [];
+        let last = stampToken(await store.live.stamp(w.mandateId));
+        const after = async (what: string, write: () => Promise<unknown>) => {
+          await write();
+          const now = stampToken(await store.live.stamp(w.mandateId));
+          if (now !== last) {
+            moves.push(what);
+          }
+          last = now;
+        };
+        const unmoved = async (what: string, write: () => Promise<unknown>) => {
+          await write();
+          const now = stampToken(await store.live.stamp(w.mandateId));
+          expect(now, what).toBe(last);
+        };
+
+        await after("mandate activated", () =>
+          store.mandates.activate(w.mandateId, { vaultId: w.vaultId, paypalCustomerId: null }, NOW),
+        );
+        await after("agent created", () =>
+          store.agents.create({
+            id: agentId(randomUUID()),
+            mandateId: w.mandateId,
+            name: "second",
+            apiKeyHash: `hash-${randomUUID()}`,
+            apiKeyPrefix: "slip_te",
+            now: at(1),
+          }),
+        );
+        const held = await decided(store, w, markets.aboveCap());
+        await after("attempt recorded", () => record(store, held, { holdExpiresAt: at(60) }));
+        await after("payment moved", () => authorize(store, held.id, at(2)));
+        await after("hold decided", () =>
+          store.holds.decline(held.id, { by: "owner", now: at(3), voidRequestId: newRequestId() }),
+        );
+        // A report of a status the payment has already passed writes nothing.
+        await unmoved("stale payment report", () =>
+          store.payments.transition(held.id, "AUTHORIZED", { now: at(4) }),
+        );
+        // Reading does not count as happening.
+        await unmoved("reads", async () => {
+          await store.attempts.get(held.id);
+          await store.holds.listPending(w.mandateId);
+        });
+        await after("payment voided", () =>
+          store.payments.transition(held.id, "VOIDED", { now: at(5) }),
+        );
+        // After the attempt, because an attempt checked under one version cannot be recorded
+        // against another (the store refuses it, PolicyChangedError).
+        await after("limits changed", () =>
+          store.mandates.updatePolicy(w.mandateId, { orderCapCents: 30_000 as never }, at(6)),
+        );
+        await after("agent revoked", () => store.agents.revoke(w.agentId, at(6)));
+        await after("mandate revoked", () => store.mandates.revoke(w.mandateId, at(7)));
+        await after("vault deletion confirmed", () =>
+          store.mandates.markVaultDeleted(w.mandateId, at(8)),
+        );
+
+        expect(moves).toEqual([
+          "mandate activated",
+          "agent created",
+          "attempt recorded",
+          "payment moved",
+          "hold decided",
+          "payment voided",
+          "limits changed",
+          "agent revoked",
+          "mandate revoked",
+          "vault deletion confirmed",
+        ]);
+      });
+
+      it("a move that only records a PayPal id still moves it", async () => {
+        const w = await world(store);
+        const attempt = await decided(store, w, markets.paid());
+        await record(store, attempt);
+        const before = stampToken(await store.live.stamp(w.mandateId));
+        // Same status, but PayPal's order id is now known: no event is written, so the ids are
+        // what notices.
+        await store.payments.transition(attempt.id, "INITIATED", {
+          patch: { paypalOrderId: `ORDER-${attempt.id}` },
+          now: at(1),
+        });
+        expect(stampToken(await store.live.stamp(w.mandateId))).not.toBe(before);
+      });
+
+      it("only grows, and only for its own mandate", async () => {
+        const mine = await world(store);
+        const theirs = await world(store);
+        const before = await store.live.stamp(mine.mandateId);
+        const attempt = await decided(store, theirs, markets.paid());
+        await record(store, attempt);
+        await capture(store, attempt.id, at(1));
+        expect(await store.live.stamp(mine.mandateId)).toEqual(before);
+
+        const ours = await decided(store, mine, markets.paid());
+        await record(store, ours);
+        await capture(store, ours.id, at(1));
+        const now = await store.live.stamp(mine.mandateId);
+        for (const key of Object.keys(now) as (keyof typeof now)[]) {
+          expect(now[key], key).toBeGreaterThanOrEqual(before[key]);
+        }
+        expect(now.attempts).toBe(before.attempts + 1);
+      });
+
+      it("an unknown mandate has a stamp of its own, all zeros but comparable", async () => {
+        const stamp = await store.live.stamp(mandateId(randomUUID()));
+        expect(stampToken(stamp)).toBe("0.0.0.0.0.0.0.0.0");
       });
     });
 

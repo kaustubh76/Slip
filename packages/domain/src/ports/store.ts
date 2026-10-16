@@ -26,6 +26,7 @@ import type { TransitionResult } from "../state-machine.js";
  */
 export interface Store {
   owners: OwnerRepo;
+  live: LiveRepo;
   mandates: MandateRepo;
   agents: AgentRepo;
   snapshots: SnapshotRepo;
@@ -58,6 +59,51 @@ export interface PageRequest {
 export interface Page<T, C = Cursor> {
   items: T[];
   next: C | null;
+}
+
+/**
+ * How much has happened under one mandate. Every field only ever grows, because the database says
+ * so: attempts, payment events and policy versions are append-only, a hold is decided once, PayPal
+ * ids are set once, and a mandate's status moves one way. So two readings can be compared without
+ * knowing what changed — if any number differs, something did — and nothing can be missed, which a
+ * "latest id" would risk when two writes commit out of order.
+ */
+export interface ChangeStamp {
+  attempts: number;
+  paymentEvents: number;
+  /** PayPal order, authorization and capture ids recorded; some moves set one without an event. */
+  paypalIds: number;
+  decidedHolds: number;
+  policyVersion: number;
+  /** 0 awaiting PayPal, 1 in force, 2 revoked. */
+  mandateStep: number;
+  /** 1 once PayPal has confirmed the saved method is gone. */
+  vaultDeleted: number;
+  agents: number;
+  revokedAgents: number;
+}
+
+/** The stamp as one short string, for an `ETag`, a poll or an event id. */
+export function stampToken(stamp: ChangeStamp): string {
+  return [
+    stamp.attempts,
+    stamp.paymentEvents,
+    stamp.paypalIds,
+    stamp.decidedHolds,
+    stamp.policyVersion,
+    stamp.mandateStep,
+    stamp.vaultDeleted,
+    stamp.agents,
+    stamp.revokedAgents,
+  ].join(".");
+}
+
+export interface LiveRepo {
+  /**
+   * One reading for this mandate. Cheap enough to ask for every second: the owner's pages poll it
+   * and only re-read what they show when it has moved.
+   */
+  stamp(mandateId: MandateId): Promise<ChangeStamp>;
 }
 
 export interface OwnerRepo {

@@ -13,7 +13,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { DatabaseHandle } from "../client.js";
 import { VaultCipher } from "../crypto.js";
 import { translateDbError } from "../pg/errors.js";
-import { attemptValues } from "../pg/rows.js";
+import { attemptValues, rowsOf } from "../pg/rows.js";
 import { createPgStore } from "../pg/store.js";
 import * as schema from "../schema.js";
 import { capture, decided, markets, record, world } from "./fixtures.js";
@@ -21,13 +21,6 @@ import { capture, decided, markets, record, world } from "./fixtures.js";
 export interface SqlHarness {
   handle: DatabaseHandle;
   close(): Promise<void>;
-}
-
-function rowsOf(result: unknown): Record<string, unknown>[] {
-  if (Array.isArray(result)) {
-    return result as Record<string, unknown>[];
-  }
-  return ((result as { rows?: unknown[] }).rows ?? []) as Record<string, unknown>[];
 }
 
 /**

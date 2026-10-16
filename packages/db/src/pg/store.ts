@@ -2,6 +2,7 @@ import type { Store } from "@slip/domain";
 import type { Db } from "../client.js";
 import type { VaultCipher } from "../crypto.js";
 import { pgAttempts, pgSnapshots } from "./attempts.js";
+import { pgLive } from "./live.js";
 import { pgAgents, pgMandates, pgOwners } from "./mandates.js";
 import { pgLeases, pgReports, pgWebhooks } from "./misc.js";
 import { pgHolds, pgPayments } from "./payments.js";
@@ -10,6 +11,7 @@ import { pgHolds, pgPayments } from "./payments.js";
 export function createPgStore(db: Db, cipher: VaultCipher): Store {
   return {
     owners: pgOwners(db),
+    live: pgLive(db),
     mandates: pgMandates(db, cipher),
     agents: pgAgents(db),
     snapshots: pgSnapshots(db),

@@ -31,6 +31,17 @@ import {
   SelectedOptionSchema,
 } from "@slip/domain";
 import { z } from "zod";
+/**
+ * The rows of a raw statement. postgres.js answers with an array, PGlite with `{ rows }`; both
+ * drivers run the same SQL, so the difference is normalised in one place.
+ */
+export function rowsOf<T = Record<string, unknown>>(result: unknown): T[] {
+  if (Array.isArray(result)) {
+    return result as T[];
+  }
+  return ((result as { rows?: unknown[] }).rows ?? []) as T[];
+}
+
 import type {
   agents,
   attempts,

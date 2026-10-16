@@ -389,3 +389,22 @@ returns from PayPal still signed in, and in production it carries the `__Host-` 
 browser accepts only over HTTPS from the root path. An expired cookie is refused however well it is
 signed. A demo without `SLIP_ENCRYPTION_KEY` signs with a per-process key: its sessions end with
 the process, and anywhere else a missing key stops the server from starting.
+
+## D44 · 2026-10-16 · Live updates compare a change stamp, not an event log
+
+The owner's pages must show a receipt the moment an agent's purchase is decided, without polling
+every list on every tick. `Store.live.stamp(mandateId)` answers with counters for one mandate:
+attempts, payment events, PayPal ids recorded, decided holds, the policy version, the mandate's
+step and vault deletion, agents created and revoked. The pages ask for it about once a second and
+re-read only what they show when a number has moved.
+
+Every counter only grows, because the database already guarantees it: attempts, payment events and
+policy versions are append-only, a hold is decided once, PayPal ids are set once, and a mandate's
+status moves one way. So two readings can be compared without knowing what changed, and nothing
+can be missed — which a "latest id" would risk, since two writes can commit out of order and the
+newer id may appear first. PayPal ids are counted because a move that only fills in an id writes
+no event, and the owner should still see it.
+
+It needs no migration: one statement with a counting subquery per table, each over an indexed
+column. The alternative, an append-only activity log read with an xmin horizon, stays the path for
+scale and is not needed at one mandate per owner.

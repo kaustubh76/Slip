@@ -176,12 +176,14 @@ export type { Clock, IdSource, LogFields, Logger } from "./ports/runtime.js";
 export type {
   AgentRepo,
   AttemptRepo,
+  ChangeStamp,
   Cursor,
   DecidedCursor,
   HoldDecision,
   HoldRepo,
   LeaseKey,
   LeaseRepo,
+  LiveRepo,
   MandateRepo,
   NewHold,
   NewPayment,
@@ -200,6 +202,7 @@ export type {
   WebhookEvent,
   WebhookRepo,
 } from "./ports/store.js";
+export { stampToken } from "./ports/store.js";
 export type { Receipt } from "./receipt.js";
 export {
   assertDirectRecord,

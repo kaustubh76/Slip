@@ -369,6 +369,41 @@ export function createMemoryStore(): Store {
   // ---------- repositories ----------
 
   return {
+    /** The same counting as the Postgres store, over the maps above (see `ChangeStamp`). */
+    live: {
+      async stamp(mandateId) {
+        const mine = [...attempts.values()].filter((r) => r.attempt.mandateId === mandateId);
+        const ids = mine.reduce((total, record) => {
+          const payment = payments.get(record.attempt.id);
+          if (payment === undefined) {
+            return total;
+          }
+          return (
+            total +
+            (payment.paypalOrderId === null ? 0 : 1) +
+            (payment.authorizationId === null ? 0 : 1) +
+            (payment.captureId === null ? 0 : 1)
+          );
+        }, 0);
+        const mandate = mandates.get(mandateId)?.mandate;
+        const ours = [...agents.values()].filter((a) => a.agent.mandateId === mandateId);
+        return {
+          attempts: mine.length,
+          paymentEvents: mine.reduce(
+            (total, record) => total + (events.get(record.attempt.id)?.length ?? 0),
+            0,
+          ),
+          paypalIds: ids,
+          decidedHolds: mine.filter((r) => holds.get(r.attempt.id)?.decidedAt != null).length,
+          policyVersion: latestPolicy(mandateId)?.version ?? 0,
+          mandateStep: mandate?.status === "ACTIVE" ? 1 : mandate?.status === "REVOKED" ? 2 : 0,
+          vaultDeleted: mandate?.vaultDeletedAt == null ? 0 : 1,
+          agents: ours.length,
+          revokedAgents: ours.filter((a) => a.agent.revokedAt !== null).length,
+        };
+      },
+    },
+
     owners: {
       async create(input) {
         if (owners.has(input.id)) {
