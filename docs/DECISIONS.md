@@ -360,3 +360,16 @@ approved palette's ghost ink at 2.88:1 on the desk in Original, so that ink is n
 
 The server renders `data-slip-theme` from the owner's saved cookie, and without one the stylesheet
 follows the system's colour scheme, so the first paint is right and no script runs before it.
+
+## D42 · 2026-10-16 · The web app's server holds one copy of each workspace package
+
+The application tells refusals apart with `instanceof` on domain errors (`HoldAlreadyDecidedError`,
+`ConflictError`, …). If the web server loaded `@slip/app` with one copy of `@slip/domain` and
+`@slip/db` with another, every typed refusal on approve, decline or revoke would become a server
+error. The spike behind the web shell measured what Next.js 16 (Turbopack) does: it bundles
+workspace packages — their real paths are outside node_modules, so `serverExternalPackages` does
+not apply to them — into one server graph that every route shares, and keeps real node_modules
+packages such as PGlite external. One graph means one copy: a duplicate email through
+`registerOwner` came back as the typed `EMAIL_IN_USE` refusal under `next start`. The config still
+lists the server packages together, so a bundler that honours the list keeps them together too.
+The web server code reads result unions only and never does its own `instanceof` on domain errors.

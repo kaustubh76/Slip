@@ -11,7 +11,9 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "clean": "rm -rf packages/*/dist apps/*/dist",
+    "web:build": "tsc -b && pnpm --filter @slip/web build",
+    "web:dev": "tsc -b && (tsc -b -w --preserveWatchOutput & pnpm --filter @slip/web dev)",
+    "clean": "rm -rf packages/*/dist apps/*/dist apps/*/.next",
     "typecheck": "tsc -b && pnpm -r --workspace-concurrency=1 exec tsc -p tsconfig.test.json",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",

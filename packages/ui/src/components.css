@@ -288,13 +288,53 @@
     outline-offset: 2px;
   }
 
-  /* ---------- index tabs and the disclosure band ---------- */
+  /* ---------- masthead, index tabs and the disclosure band ---------- */
 
+  .slip-masthead {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    border-block-end: 1px solid var(--slip-ink);
+  }
+
+  .slip-theme {
+    border: 0;
+    margin: 0;
+    min-inline-size: 0;
+    font-family: var(--slip-font-mono);
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--slip-ink-faint);
+    padding: 0 16px 12px;
+    white-space: nowrap;
+  }
+
+  .slip-theme-option {
+    background: transparent;
+    border: 0;
+    padding: 4px;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .slip-theme-option[aria-pressed="true"] {
+    color: var(--slip-ink);
+    text-decoration: none;
+  }
+
+  .slip-main {
+    padding: 24px 16px 48px;
+    display: grid;
+    gap: 24px;
+    justify-items: start;
+  }
+
+  /* The rule under the tabs is the masthead's; the open tab covers it. */
   .slip-tabs {
     display: flex;
     gap: 4px;
     align-items: flex-end;
-    border-block-end: 1px solid var(--slip-ink);
     padding: 12px 16px 0;
     overflow-x: auto;
   }

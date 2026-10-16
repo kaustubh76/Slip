@@ -4,6 +4,12 @@ dist/
 coverage/
 .vitest/
 
+# Next.js build output and generated types; Playwright reports
+.next/
+next-env.d.ts
+playwright-report/
+test-results/
+
 .env
 .env.*
 !.env.example

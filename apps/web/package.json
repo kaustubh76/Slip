@@ -1,0 +1,29 @@
+{
+  "name": "@slip/web",
+  "version": "0.0.1",
+  "private": true,
+  "description": "The owner's web app: receipts, holds, limits, agents and the kill switch, on Next.js.",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@slip/app": "workspace:*",
+    "@slip/db": "workspace:*",
+    "@slip/domain": "workspace:*",
+    "@slip/receipt": "workspace:*",
+    "@slip/ui": "workspace:*",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "server-only": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
+  }
+}

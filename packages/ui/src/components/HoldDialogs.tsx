@@ -1,3 +1,5 @@
+"use client";
+
 import { type Cents, formatUsd } from "@slip/domain";
 import { ConfirmDialog } from "./ConfirmDialog.js";
 
