@@ -7,7 +7,13 @@ import {
   IllegalTransitionError,
   InvariantError,
 } from "./errors.js";
-import { HOLD_TRANSITIONS, type Hold, type HoldStatus, SYSTEM_DECIDER } from "./hold.js";
+import {
+  approvalPath,
+  HOLD_TRANSITIONS,
+  type Hold,
+  type HoldStatus,
+  SYSTEM_DECIDER,
+} from "./hold.js";
 import type { RequestId } from "./ids.js";
 import {
   applyPaymentPatch,
@@ -344,23 +350,19 @@ export function planApprovalWithFollowUp(
     throw new HoldExpiredError(hold.attemptId);
   }
 
-  if (parentPayment !== null) {
-    const captureTried = parentPayment.operations.some((op) => op.kind === "CAPTURE");
-    const deadBeforeCapture =
-      (parentPayment.status === "FAILED" || parentPayment.status === "VOIDED") && !captureTried;
-    if (!deadBeforeCapture) {
-      if (parentPayment.status === "AUTHORIZED") {
-        throw new InvariantError(
-          `hold ${hold.attemptId} has a live authorization; approve it by capturing (holds.approve)`,
-        );
-      }
-      if (["INITIATED", "UNKNOWN", "PENDING"].includes(parentPayment.status)) {
-        throw new HoldNotReadyError(hold.attemptId, parentPayment.status);
-      }
+  switch (approvalPath(parentPayment)) {
+    case "pay":
+      break;
+    case "capture":
       throw new InvariantError(
-        `hold ${hold.attemptId}: a capture was already attempted (payment ${parentPayment.status}); no follow-up`,
+        `hold ${hold.attemptId} has a live authorization; approve it by capturing (holds.approve)`,
       );
-    }
+    case "not-ready":
+      throw new HoldNotReadyError(hold.attemptId, parentPayment?.status ?? "NONE");
+    case "spent":
+      throw new InvariantError(
+        `hold ${hold.attemptId}: a capture was already attempted (payment ${parentPayment?.status}); no follow-up`,
+      );
   }
 
   const fail = (rule: string): never => {

@@ -1,4 +1,5 @@
 import {
+  approvalPath,
   attemptId,
   type Cents,
   type CheckoutRequest,
@@ -126,10 +127,15 @@ async function approvable(
     return refuse("MANDATE_NOT_ACTIVE", "This mandate is revoked, so nothing can be paid.");
   }
   const { payment } = receipt;
-  if (payment?.status === "AUTHORIZED") {
-    return { kind: "capture", receipt, payment };
+  switch (approvalPath(payment)) {
+    case "capture":
+      return payment === null ? NOT_READY() : { kind: "capture", receipt, payment };
+    case "pay":
+      return { kind: "pay", receipt };
+    case "not-ready":
+    case "spent":
+      return NOT_READY();
   }
-  return needsFollowUp(payment) ? { kind: "pay", receipt } : NOT_READY();
 }
 
 async function ownedReceipt(
@@ -153,15 +159,6 @@ async function ownedReceipt(
   return mandate?.ownerId === ownerId
     ? { receipt, mandateActive: mandate.status === "ACTIVE" }
     : null;
-}
-
-/** No authorization was placed, or PayPal failed or voided it before any capture (D27). */
-function needsFollowUp(payment: Payment | null): boolean {
-  return (
-    payment === null ||
-    ((payment.status === "FAILED" || payment.status === "VOIDED") &&
-      !payment.operations.some((op) => op.kind === "CAPTURE"))
-  );
 }
 
 type Recheck =

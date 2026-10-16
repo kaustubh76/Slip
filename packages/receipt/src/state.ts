@@ -1,4 +1,5 @@
 import {
+  approvalPath,
   type Cents,
   formatUsd,
   type Hold,
@@ -63,7 +64,6 @@ function line(word: PaymentStatus, text: string, inFlight: boolean = MOVING.has(
 
 const at = (store: string | null) => (store === null ? "" : ` at ${store}`);
 const why = (payment: Payment) => payment.failureReason ?? "no reason given";
-const captureTried = (payment: Payment) => payment.operations.some((op) => op.kind === "CAPTURE");
 
 /** A status that cannot occur with this hold and intent still gets an honest line. */
 function plain(payment: Payment, amount: string): StateLine {
@@ -142,14 +142,14 @@ function awaiting(payment: Payment | null, amount: string, hold: Hold): StateLin
         `${amount} is reserved, not charged, until you decide (by ${utcDayTime(hold.expiresAt)}).`,
       );
     case "FAILED":
-      return captureTried(payment)
+      return approvalPath(payment) === "spent"
         ? plain(payment, amount)
         : line(
             "FAILED",
             `PayPal could not reserve the money (${why(payment)}). Nothing is charged. ${RECHECK}`,
           );
     case "VOIDED":
-      return captureTried(payment)
+      return approvalPath(payment) === "spent"
         ? plain(payment, amount)
         : line("VOIDED", `PayPal released the reservation. Nothing is charged. ${RECHECK}`);
     default:
@@ -165,10 +165,7 @@ function approved(
   ctx: StateContext,
 ): StateLine {
   const by = `You approved at ${utcTime(hold.decidedAt ?? hold.createdAt)}`;
-  const followUp =
-    payment === null ||
-    ((payment.status === "FAILED" || payment.status === "VOIDED") && !captureTried(payment));
-  if (!followUp) {
+  if (payment !== null && approvalPath(payment) !== "pay") {
     switch (payment.status) {
       case "CAPTURING":
         return line("CAPTURING", `${by}. Collecting ${amount}.`);

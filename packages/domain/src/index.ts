@@ -38,6 +38,8 @@ export {
   SlipError,
 } from "./errors.js";
 export {
+  type ApprovalPath,
+  approvalPath,
   DEFAULT_HOLD_TTL_MS,
   HOLD_STATUSES,
   HOLD_TRANSITIONS,
