@@ -7,19 +7,19 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "development": "./src/index.ts",
+      "@slip/source": "./src/index.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
     "./memory": {
       "types": "./dist/memory/index.d.ts",
-      "development": "./src/memory/index.ts",
+      "@slip/source": "./src/memory/index.ts",
       "import": "./dist/memory/index.js",
       "default": "./dist/memory/index.js"
     },
     "./testing": {
       "types": "./dist/testing.d.ts",
-      "development": "./src/testing.ts",
+      "@slip/source": "./src/testing.ts",
       "import": "./dist/testing.js",
       "default": "./dist/testing.js"
     }
@@ -32,7 +32,7 @@
     "build": "tsc -b",
     "test": "vitest run",
     "generate": "drizzle-kit generate",
-    "migrate": "tsx --conditions=development src/bin/migrate.ts"
+    "migrate": "tsx --conditions=@slip/source src/bin/migrate.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "catalog:",

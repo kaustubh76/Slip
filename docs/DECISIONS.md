@@ -321,3 +321,13 @@ gets no new agents; limits change only as a new policy version, refused after a 
   marked processed, so it cannot block the events behind it. A failure that may pass (the database
   dropped the connection) leaves it unprocessed; PayPal redelivers, and the resolver re-runs it
   first, before it asks PayPal about anything, once it is two minutes old.
+
+## D38 · 2026-10-16 · Workspace sources are exported under a private `@slip/source` condition
+
+Packages exported their TypeScript sources under `development`. Next.js's bundler resolves that
+condition in `next dev` but cannot follow the sources' `./x.js` imports to `./x.ts`
+(vercel/next.js#82945), so the web app could not import any workspace package. The sources now
+sit under `@slip/source`, which only our own tools ask for: Vitest (`vitest.shared.ts`), the
+type-check of tests (`customConditions` in each `tsconfig.test.json`) and `tsx` (the migrate
+script). Next.js and anything else gets the built `dist`, so the web app runs `tsc -b` first (and
+`tsc -b -w` beside `next dev`).

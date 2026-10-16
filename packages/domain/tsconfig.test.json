@@ -3,7 +3,7 @@
   "compilerOptions": {
     "noEmit": true,
     "rootDir": "src",
-    "customConditions": ["development"]
+    "customConditions": ["@slip/source"]
   },
   "include": ["src"]
 }

@@ -7,7 +7,7 @@
   "exports": {
     "./fake": {
       "types": "./dist/fake.d.ts",
-      "development": "./src/fake.ts",
+      "@slip/source": "./src/fake.ts",
       "import": "./dist/fake.js",
       "default": "./dist/fake.js"
     }
