@@ -3,6 +3,7 @@ import { ReceiptSlip } from "@slip/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BehindTheReceipt } from "../../../components/BehindTheReceipt";
+import { HoldDecision } from "../../../components/HoldDecision";
 import { requireOwner } from "../../../server/owner";
 
 export const dynamic = "force-dynamic";
@@ -26,7 +27,14 @@ export default async function Receipt({ params }: { params: Promise<{ id: string
         view={detail.view}
         agentName={detail.agent.name}
         behind={<BehindTheReceipt detail={detail} />}
-      />
+      >
+        {detail.view.hold?.status === "PENDING" ? (
+          <HoldDecision
+            receiptId={detail.view.receiptId}
+            reservedCents={detail.view.reservedCents}
+          />
+        ) : null}
+      </ReceiptSlip>
     </>
   );
 }

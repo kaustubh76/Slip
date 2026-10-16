@@ -1,5 +1,6 @@
 import "@slip/ui/tokens.css";
 import "@slip/ui/components.css";
+import { pendingHolds } from "@slip/app";
 import { parseTheme, THEME_COOKIE } from "@slip/ui";
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
@@ -7,6 +8,7 @@ import { cookies } from "next/headers";
 import type { ReactNode } from "react";
 import { Tabs } from "../components/Tabs";
 import { ThemeToggle } from "../components/ThemeToggle";
+import { currentOwner } from "../server/owner";
 
 const sans = IBM_Plex_Sans({
   subsets: ["latin"],
@@ -29,6 +31,9 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const theme = parseTheme((await cookies()).get(THEME_COOKIE)?.value);
+  const owner = await currentOwner();
+  const waiting =
+    owner === null ? null : await pendingHolds(owner.deps, owner.ownerId, owner.mandateId);
   return (
     <html
       lang="en"
@@ -37,7 +42,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     >
       <body className="slip-page">
         <header className="slip-masthead">
-          <Tabs />
+          <Tabs {...(waiting === null ? {} : { holds: waiting.length })} />
           <ThemeToggle initial={theme} />
         </header>
         <p className="slip-band">

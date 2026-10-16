@@ -450,6 +450,14 @@
     animation: slip-reveal var(--slip-motion-reveal) steps(14, end);
   }
 
+  /* ---------- the owner's decision on a slip ---------- */
+
+  .slip-decision {
+    border-block-start: 1px dotted var(--slip-ink-ghost);
+    margin-block-start: 16px;
+    padding-block-start: 12px;
+  }
+
   /* ---------- behind the receipt ---------- */
 
   .slip-rules,
@@ -489,6 +497,11 @@
     flex-wrap: wrap;
     gap: 12px;
     margin-block-start: 20px;
+  }
+
+  /* The same row of buttons sits closer to its heading on a slip than in a dialog. */
+  .slip-decision > .slip-dialog-actions {
+    margin-block-start: 8px;
   }
 
   /* The owner's hand on a slip: a refusal, a decision, a note. */

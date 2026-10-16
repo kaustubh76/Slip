@@ -1,4 +1,4 @@
-import { type AppDeps, appConfig, randomIds, silentLogger } from "@slip/app";
+import { type AppDeps, appConfig, previewApproval, randomIds, silentLogger } from "@slip/app";
 import { createMemoryStore } from "@slip/db/memory";
 import type { AttemptId, MandateId, OwnerId } from "@slip/domain";
 import { ManualClock, NOW } from "@slip/domain/testing";
@@ -79,6 +79,26 @@ describe("seedDemoOwner", () => {
         { outcome: "HELD", rule: "R1_STALE_SNAPSHOT", payment: "NONE", hold: "PENDING" },
       ]),
     );
+  });
+
+  it("both holds can actually be decided: one captures, one pays after a re-check", async () => {
+    const page = await deps.store.attempts.listByMandate(owner.mandateId as MandateId, {
+      limit: 50,
+    });
+    const held = page.items.filter((r) => r.hold?.status === "PENDING");
+    expect(held).toHaveLength(2);
+    const previews = await Promise.all(
+      held.map(async (r) => previewApproval(deps, owner.ownerId as OwnerId, r.attempt.id)),
+    );
+    expect(previews.map((p) => (p.status === "preview" ? p.kind : p.reason)).sort()).toEqual([
+      // Money is reserved: approving captures it.
+      "capture",
+      // Nothing reserved: approving checks today's prices and pays in one step.
+      "pay",
+    ]);
+    expect(previews.find((p) => p.status === "preview" && p.kind === "pay")).toMatchObject({
+      amountCents: 31_000,
+    });
   });
 
   it("charged once, reserved once, and left nothing else at PayPal", async () => {

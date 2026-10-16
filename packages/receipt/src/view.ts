@@ -113,6 +113,7 @@ export function renderReceipt(receipt: Receipt, options: RenderOptions = {}): Re
     measure: measureModel(receipt, options.policy, options.snapshot ?? null),
     paymentStatus: payment?.status ?? "NONE",
     charged: payment?.status === "CAPTURED",
+    reservedCents: payment?.status === "AUTHORIZED" ? payment.amountCents : null,
     state,
     paypal:
       payment === null

@@ -87,6 +87,8 @@ export const ReceiptViewSchema = z.object({
   paymentStatus: z.enum(PAYMENT_STATUSES),
   /** True only when this attempt's own payment moved money (it is CAPTURED). */
   charged: z.boolean(),
+  /** What PayPal is holding for this purchase right now, or null when it holds nothing. */
+  reservedCents: z.number().int().nullable(),
   /**
    * Where the money stands, in one line decided from the payment, the hold and any follow-up
    * together. `state.charged` is true when money moved for this purchase, including through the

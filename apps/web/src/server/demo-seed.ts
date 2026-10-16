@@ -107,8 +107,16 @@ async function shop(deps: AppDeps, fakes: Fakes, apiKey: string): Promise<void> 
   await buy("trail-shoe", pricier, "Top pick badge");
   // Above the owner's $200 cap → held, with the money reserved.
   await buy("headphones", headphones, "best reviews");
-  // Channel3 down → held with no PayPal order; approving re-checks and pays in one step.
+  // Channel3 down → held with no PayPal order; approving re-checks and pays in one step. The
+  // catalogue is stocked first and Channel3 comes back afterwards, which is the state that makes
+  // approval possible: the item is listed again, so the re-check can price it.
+  const desk = offer(310, "store-d.example");
+  fakes.offers.setProduct({
+    productId: "standing-desk",
+    title: "Standing desk",
+    offers: [desk, offer(316, "store-e.example")],
+  });
   fakes.offers.goDown();
-  await buy("standing-desk", offer(310, "store-d.example"), "only one I could find");
+  await buy("standing-desk", desk, "only one I could find");
   fakes.offers.comeBack();
 }

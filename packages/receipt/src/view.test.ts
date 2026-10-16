@@ -40,6 +40,17 @@ describe("renderReceipt", () => {
     expect(view.chosen?.store).toBe("Store A");
   });
 
+  it("only a live reservation reports held money", () => {
+    const attempt = testAttempt({
+      decision: testDecision({ ruleCode: "R6_ABOVE_ORDER_CAP", chosen: storeA(250) }),
+    });
+    for (const status of ["CAPTURED", "VOIDED", "CAPTURING", "FAILED"] as const) {
+      const view = renderReceipt({ attempt, payment: payment(attempt, status), hold: null });
+      expect(view.reservedCents, status).toBeNull();
+    }
+    expect(renderReceipt({ attempt, payment: null, hold: null }).reservedCents).toBeNull();
+  });
+
   it("a paid purchase at the lowest price", () => {
     const cheapest = storeB(47.99);
     const attempt = testAttempt({
@@ -78,6 +89,7 @@ describe("renderReceipt", () => {
       "Listed item prices from Channel3 at 14:02 UTC. Shipping and tax are not included.",
     ]);
     expect(view.charged).toBe(false);
+    expect(view.reservedCents).toBe(25_000);
     expect(view.state).toMatchObject({ word: "AUTHORIZED", charged: false, inFlight: false });
   });
 
