@@ -24,6 +24,9 @@
     },
     {
       "path": "packages/app"
+    },
+    {
+      "path": "packages/ui"
     }
   ]
 }

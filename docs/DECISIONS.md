@@ -348,3 +348,15 @@ owner's limit, the printed figure is never at or below that limit: decimals are 
 is strictly above ("5.001%", not "5%" next to "more than 5%"). The report card's medians follow
 the same rule. The owner's own limits and a store's commission rate are not computed, so they
 print exactly as set.
+
+## D41 · 2026-10-16 · The theme is a token contract, checked by tests
+
+The owner UI ("Till Roll") has two themes, Original and Carbon, defined once as `--slip-*` custom
+properties in `@slip/ui/tokens.css`. Every other stylesheet uses only those variables: a design-lint
+test rejects colour literals, gradients (except one fenced perforation mask), blurred shadows,
+radii above 4px and any font but IBM Plex Sans and Mono. A second test checks every text colour
+against the paper and the desk in both themes (WCAG AA, 4.5:1; 3:1 for rules). It caught the
+approved palette's ghost ink at 2.88:1 on the desk in Original, so that ink is now `#898376`.
+
+The server renders `data-slip-theme` from the owner's saved cookie, and without one the stylesheet
+follows the system's colour scheme, so the first paint is right and no script runs before it.

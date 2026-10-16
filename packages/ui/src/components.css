@@ -1,0 +1,515 @@
+/*
+ * Slip "Till Roll" stationery. Every colour, font, radius and timing comes from tokens.css; a
+ * design-lint test rejects colour literals, gradients (except the one perforation), blurred
+ * shadows, radii above 4px and any other font here.
+ *
+ * Slips and dialogs are square; controls 2px; stamps 4px. A sheet is a 1px edge plus a second
+ * line beneath (paper lying flat). No textures, no icons: marks are text in the mono face.
+ */
+
+@layer slip.components {
+  /* ---------- page and type ---------- */
+
+  .slip-page {
+    background: var(--slip-desk);
+    color: var(--slip-ink);
+    font-family: var(--slip-font-sans);
+    font-size: 15px;
+    line-height: 24px;
+    font-variant-numeric: tabular-nums slashed-zero;
+    min-block-size: 100dvh;
+    margin: 0;
+  }
+
+  .slip-title {
+    font-family: var(--slip-font-sans);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 28px;
+    margin: 0;
+  }
+
+  /* The five-second sentence: proportional, large, amounts in 600. */
+  .slip-sentence {
+    font-family: var(--slip-font-sans);
+    font-size: 19px;
+    line-height: 28px;
+    margin: 0;
+  }
+
+  .slip-sentence + .slip-sentence {
+    margin-block-start: 2px;
+  }
+
+  .slip-amount {
+    font-weight: 600;
+  }
+
+  /* What the machine printed: ids, times, meta. */
+  .slip-mono {
+    font-family: var(--slip-font-mono);
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .slip-meta {
+    font-family: var(--slip-font-mono);
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--slip-ink-faint);
+  }
+
+  .slip-prose {
+    max-inline-size: 68ch;
+    color: var(--slip-ink);
+  }
+
+  .slip-caption {
+    color: var(--slip-ink-faint);
+    font-size: 13px;
+    line-height: 20px;
+  }
+
+  /* ---------- the sheet ---------- */
+
+  .slip-sheet {
+    background: var(--slip-paper);
+    color: var(--slip-ink);
+    border: 1px solid var(--slip-edge);
+    box-shadow: 0 2px 0 -1px var(--slip-edge);
+    max-inline-size: var(--slip-slip-max);
+    padding: 20px 24px 24px;
+    border-radius: 0;
+  }
+
+  /* perforation:start — the one allowed gradient: a mask that bites the top edge of a slip. */
+  .slip-sheet[data-perforated] {
+    -webkit-mask:
+      radial-gradient(circle at 50% 0, transparent 2.5px, #000 3px) 0 0 / 7px 100% repeat-x;
+    mask: radial-gradient(circle at 50% 0, transparent 2.5px, #000 3px) 0 0 / 7px 100% repeat-x;
+    padding-block-start: 26px;
+  }
+  /* perforation:end */
+
+  .slip-rule {
+    border: 0;
+    border-block-start: 1px dotted var(--slip-ink-ghost);
+    margin: 16px 0;
+  }
+
+  /* Between the five-second receipt and what is behind it. */
+  .slip-tear {
+    border: 0;
+    border-block-start: 1px dashed var(--slip-ink-ghost);
+    margin: 20px -24px;
+  }
+
+  /* ---------- dotted leaders: <dl class="slip-leaders"><div><dt/><dd/></div></dl> ---------- */
+
+  .slip-leaders {
+    margin: 0;
+    font-family: var(--slip-font-mono);
+    font-size: 12px;
+    line-height: 20px;
+  }
+
+  .slip-leaders > div {
+    display: flex;
+    align-items: baseline;
+  }
+
+  .slip-leaders dt {
+    display: flex;
+    flex: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--slip-ink-faint);
+  }
+
+  .slip-leaders dt::after {
+    content: "";
+    flex: 1;
+    min-inline-size: 2ch;
+    margin: 0 1ch;
+    border-block-end: 1px dotted var(--slip-ink-ghost);
+    translate: 0 -4px;
+  }
+
+  .slip-leaders dd {
+    margin: 0;
+    text-align: end;
+    color: var(--slip-ink);
+  }
+
+  /* ---------- stamps: shape and word, never colour alone ---------- */
+
+  .slip-stamp {
+    display: inline-block;
+    font-family: var(--slip-font-sans);
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 14px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: var(--slip-radius-stamp);
+    border: 2px solid currentColor;
+    background: transparent;
+    white-space: nowrap;
+  }
+
+  .slip-stamp[data-outcome="PAID"] {
+    color: var(--slip-stamp-paid);
+    border-style: solid;
+  }
+
+  .slip-stamp[data-outcome="REJECTED"] {
+    color: var(--slip-stamp-rejected);
+    border-style: double;
+    border-width: 4px;
+    padding: 1px 6px;
+  }
+
+  .slip-stamp[data-outcome="HELD"] {
+    color: var(--slip-stamp-held);
+    border-style: dashed;
+  }
+
+  .slip-stamp[data-outcome="VOID"] {
+    color: var(--slip-stamp-void);
+    border-style: solid;
+  }
+
+  .slip-stamp[data-size="large"] {
+    font-size: 20px;
+    line-height: 24px;
+    padding: 6px 14px;
+  }
+
+  .slip-stamp[data-size="large"][data-outcome="REJECTED"] {
+    padding: 4px 12px;
+  }
+
+  /* Only the receipt detail tilts its stamp; rows never do. */
+  .slip-stamp[data-rotated] {
+    rotate: -3deg;
+  }
+
+  .slip-stamp[data-pressed] {
+    animation: slip-press var(--slip-motion-stamp) ease-out;
+  }
+
+  /* ---------- status lines: glyph, word, plain words ---------- */
+
+  .slip-status {
+    font-family: var(--slip-font-mono);
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--slip-ink);
+  }
+
+  .slip-status-word {
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    animation: slip-fade var(--slip-motion-press) ease-out;
+  }
+
+  .slip-status[data-in-flight] .slip-status-text {
+    color: var(--slip-ink-faint);
+  }
+
+  /* The owner's own hand: decisions, notes, links. */
+  .slip-pen {
+    color: var(--slip-pen);
+  }
+
+  /* ---------- controls ---------- */
+
+  .slip-button {
+    font-family: var(--slip-font-sans);
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 20px;
+    color: var(--slip-pen);
+    background: var(--slip-paper);
+    border: 1px solid var(--slip-pen);
+    border-radius: var(--slip-radius-control);
+    min-block-size: var(--slip-target);
+    padding: 0 16px;
+    cursor: pointer;
+  }
+
+  .slip-button[data-variant="ink"] {
+    color: var(--slip-paper);
+    background: var(--slip-pen);
+  }
+
+  .slip-button:disabled,
+  .slip-button[aria-busy="true"] {
+    color: var(--slip-ink-faint);
+    border-color: var(--slip-ink-faint);
+    background: var(--slip-paper);
+    cursor: progress;
+  }
+
+  .slip-button:disabled:not([aria-busy="true"]) {
+    cursor: not-allowed;
+  }
+
+  .slip-link {
+    color: var(--slip-pen);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* Fill-in-the-blank: no box, a line to write on, in the owner's pen. */
+  .slip-blank {
+    font-family: var(--slip-font-mono);
+    font-size: 15px;
+    line-height: 24px;
+    color: var(--slip-pen);
+    background: transparent;
+    border: 0;
+    border-block-end: 1px solid var(--slip-ink-faint);
+    border-radius: 0;
+    padding: 2px 4px;
+    min-block-size: var(--slip-target);
+    inline-size: 10ch;
+  }
+
+  .slip-blank[aria-invalid="true"] {
+    border-block-end-color: var(--slip-stamp-rejected);
+  }
+
+  :where(.slip-button, .slip-link, .slip-blank, .slip-tab, .slip-pill, .slip-row):focus-visible {
+    outline: 2px solid var(--slip-pen);
+    outline-offset: 2px;
+  }
+
+  /* ---------- index tabs and the disclosure band ---------- */
+
+  .slip-tabs {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+    border-block-end: 1px solid var(--slip-ink);
+    padding: 12px 16px 0;
+    overflow-x: auto;
+  }
+
+  .slip-tab {
+    font-family: var(--slip-font-sans);
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 20px;
+    color: var(--slip-ink-faint);
+    text-decoration: none;
+    padding: 10px 14px 8px;
+    min-block-size: var(--slip-target);
+    border: 1px solid var(--slip-edge);
+    border-block-end: 0;
+    border-radius: var(--slip-radius-control) var(--slip-radius-control) 0 0;
+    background: var(--slip-desk);
+    white-space: nowrap;
+  }
+
+  /* The open folder: the active tab's bottom rule is cut. */
+  .slip-tab[aria-current="page"] {
+    color: var(--slip-ink);
+    background: var(--slip-paper);
+    border-color: var(--slip-ink);
+    margin-block-end: -1px;
+    padding-block-end: 9px;
+  }
+
+  .slip-band {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 16px;
+    font-family: var(--slip-font-mono);
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--slip-ink-faint);
+    padding: 8px 16px;
+    border-block-end: 1px dotted var(--slip-ink-ghost);
+  }
+
+  /* ---------- the roll ---------- */
+
+  .slip-roll {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .slip-row {
+    display: grid;
+    grid-template-columns: 6ch 1fr auto;
+    gap: 4px 16px;
+    padding: 12px 0;
+    border-block-end: 1px dotted var(--slip-ink-ghost);
+  }
+
+  /* A held receipt sits offset in the roll until it is decided. */
+  .slip-row[data-cocked] {
+    margin-inline-start: 2ch;
+  }
+
+  .slip-pill {
+    font-family: var(--slip-font-sans);
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--slip-paper);
+    background: var(--slip-pen);
+    border: 0;
+    border-radius: var(--slip-radius-control);
+    padding: 4px 12px;
+    min-block-size: 32px;
+    cursor: pointer;
+  }
+
+  /* A slip printing: the row opens, the print head reveals it top-down, the stamp presses. */
+  .slip-print {
+    display: grid;
+    grid-template-rows: 1fr;
+    animation: slip-open var(--slip-motion-print) ease-out;
+  }
+
+  .slip-print > * {
+    overflow: hidden;
+    animation: slip-reveal var(--slip-motion-reveal) steps(14, end);
+  }
+
+  /* ---------- dialogs are slips too ---------- */
+
+  .slip-dialog {
+    background: var(--slip-paper);
+    color: var(--slip-ink);
+    border: 1px solid var(--slip-edge);
+    border-radius: 0;
+    box-shadow: 0 2px 0 -1px var(--slip-edge);
+    padding: 24px;
+    max-inline-size: min(var(--slip-slip-max), calc(100vw - 32px));
+  }
+
+  .slip-dialog::backdrop {
+    background: var(--slip-desk);
+    opacity: 0.85;
+  }
+
+  /* ---------- the gap scale ---------- */
+
+  .slip-scale {
+    display: block;
+    inline-size: 100%;
+    block-size: 40px;
+    shape-rendering: crispEdges;
+    overflow: visible;
+  }
+
+  .slip-scale-band {
+    stroke: var(--slip-ink);
+    stroke-width: 3;
+  }
+
+  .slip-scale-beyond {
+    stroke: var(--slip-ink-ghost);
+    stroke-width: 1;
+    stroke-dasharray: 2 4;
+  }
+
+  .slip-scale-tick {
+    stroke: var(--slip-ink-faint);
+    stroke-width: 1;
+  }
+
+  .slip-scale-cap {
+    stroke: var(--slip-stamp-held);
+    stroke-width: 1;
+    stroke-dasharray: 3 2;
+  }
+
+  .slip-scale-chosen {
+    fill: none;
+    stroke: var(--slip-ink);
+    stroke-width: 2;
+  }
+
+  /* ---------- utilities ---------- */
+
+  .slip-sr {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* ---------- motion (durations are 0 under reduced motion, see tokens) ---------- */
+
+  @keyframes slip-open {
+    from {
+      grid-template-rows: 0fr;
+    }
+  }
+
+  @keyframes slip-reveal {
+    from {
+      clip-path: inset(0 0 100% 0);
+    }
+  }
+
+  @keyframes slip-press {
+    from {
+      scale: 1.12;
+    }
+  }
+
+  @keyframes slip-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  /* Without motion, a new row carries a pen-blue rule for three seconds instead. */
+  @keyframes slip-mark {
+    from {
+      box-shadow: inset 2px 0 0 0 var(--slip-pen);
+    }
+    to {
+      box-shadow: inset 2px 0 0 0 var(--slip-pen);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slip-print {
+      animation: slip-mark 3s steps(1, end);
+    }
+  }
+
+  /* ---------- narrow screens ---------- */
+
+  @media (max-width: 640px) {
+    .slip-sentence {
+      font-size: 17px;
+      line-height: 26px;
+    }
+
+    .slip-sheet {
+      padding: 16px;
+    }
+
+    .slip-tear {
+      margin-inline: -16px;
+    }
+
+    .slip-row {
+      grid-template-columns: 1fr auto;
+    }
+  }
+}

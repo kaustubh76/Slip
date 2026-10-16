@@ -1,0 +1,106 @@
+/*
+ * Slip "Till Roll" theme tokens: the only place colours, fonts, radii and timings are written
+ * down. Every other stylesheet uses these variables (a test enforces it), and another test checks
+ * that every text colour reads against the paper in both themes (WCAG AA).
+ *
+ * Three inks on one paper: black for what Slip printed, stamp colours only for verdicts,
+ * pen-blue for anything the owner's own hand did.
+ *
+ * Themes: Original (light) and Carbon (dark). `[data-slip-theme]` on <html> wins; without it the
+ * system preference decides. `[data-slip-contrast="more"]` or `prefers-contrast: more` turns faint
+ * ink into full ink and hairlines into visible rules.
+ */
+
+@layer slip.tokens {
+  :root,
+  [data-slip-theme="original"] {
+    color-scheme: light;
+    --slip-desk: #ece8df;
+    --slip-paper: #fbf9f4;
+    --slip-edge: #d9d3c6;
+    --slip-ink: #1a1814;
+    --slip-ink-faint: #5c574d;
+    --slip-ink-ghost: #898376;
+    --slip-pen: #1f3f8f;
+    --slip-stamp-paid: #1f6b3a;
+    --slip-stamp-paid-wash: #ddefe2;
+    --slip-stamp-rejected: #b42318;
+    --slip-stamp-rejected-wash: #f6dbd7;
+    --slip-stamp-held: #8a5a00;
+    --slip-stamp-held-wash: #f3e6c8;
+    --slip-stamp-void: #5c574d;
+  }
+
+  [data-slip-theme="carbon"] {
+    color-scheme: dark;
+    --slip-desk: #141311;
+    --slip-paper: #1e1c19;
+    --slip-edge: #3a362f;
+    --slip-ink: #ede8dd;
+    --slip-ink-faint: #b3ac9e;
+    --slip-ink-ghost: #6e6859;
+    --slip-pen: #8fb0ff;
+    --slip-stamp-paid: #5fc381;
+    --slip-stamp-paid-wash: #1b2e22;
+    --slip-stamp-rejected: #f0776b;
+    --slip-stamp-rejected-wash: #3a1f1b;
+    --slip-stamp-held: #e3b04b;
+    --slip-stamp-held-wash: #3a2e14;
+    --slip-stamp-void: #b3ac9e;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-slip-theme]) {
+      color-scheme: dark;
+      --slip-desk: #141311;
+      --slip-paper: #1e1c19;
+      --slip-edge: #3a362f;
+      --slip-ink: #ede8dd;
+      --slip-ink-faint: #b3ac9e;
+      --slip-ink-ghost: #6e6859;
+      --slip-pen: #8fb0ff;
+      --slip-stamp-paid: #5fc381;
+      --slip-stamp-paid-wash: #1b2e22;
+      --slip-stamp-rejected: #f0776b;
+      --slip-stamp-rejected-wash: #3a1f1b;
+      --slip-stamp-held: #e3b04b;
+      --slip-stamp-held-wash: #3a2e14;
+      --slip-stamp-void: #b3ac9e;
+    }
+  }
+
+  :root {
+    /* `next/font` (or an embedding page) sets --slip-plex-*; the names follow as fallbacks. */
+    --slip-font-sans: var(--slip-plex-sans, "IBM Plex Sans", sans-serif);
+    --slip-font-mono: var(--slip-plex-mono, "IBM Plex Mono", monospace);
+    --slip-radius-control: 2px;
+    --slip-radius-stamp: 4px;
+    --slip-motion-print: 360ms;
+    --slip-motion-reveal: 420ms;
+    --slip-motion-stamp: 160ms;
+    --slip-motion-press: 120ms;
+    --slip-slip-max: 36rem;
+    --slip-target: 44px;
+  }
+
+  [data-slip-contrast="more"] {
+    --slip-ink-faint: var(--slip-ink);
+    --slip-edge: var(--slip-ink-ghost);
+  }
+
+  @media (prefers-contrast: more) {
+    :root {
+      --slip-ink-faint: var(--slip-ink);
+      --slip-edge: var(--slip-ink-ghost);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --slip-motion-print: 0ms;
+      --slip-motion-reveal: 0ms;
+      --slip-motion-stamp: 0ms;
+      --slip-motion-press: 0ms;
+    }
+  }
+}
