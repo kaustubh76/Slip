@@ -14,6 +14,7 @@ import {
   type SnapshotId,
 } from "@slip/domain";
 import { utcTime } from "./format.js";
+import { gapPercent } from "./percent.js";
 import { type StateLine, stateLine } from "./state.js";
 
 /**
@@ -62,20 +63,6 @@ export interface ReceiptView {
   snapshotId: SnapshotId | null;
   pricesAt: Date | null;
   createdAt: Date;
-}
-
-/**
- * Percent with one decimal, rounded half-up from exact cents (integer arithmetic, so 12.25 % shows
- * as "12.3%"); whole numbers drop the decimal ("15%").
- */
-export function percentOf(part: Cents, base: Cents): string {
-  if (base <= 0) {
-    throw new Error("base must be positive");
-  }
-  const tenths = Math.floor((2 * part * 1_000 + base) / (2 * base));
-  const whole = Math.floor(tenths / 10);
-  const rest = tenths % 10;
-  return rest === 0 ? `${whole}%` : `${whole}.${rest}%`;
 }
 
 function summary(offer: Offer | null): OfferSummary | null {
@@ -148,7 +135,13 @@ export function renderReceipt(receipt: Receipt, options: RenderOptions = {}): Re
       ? {
           cents: result.gapAbsCents,
           amount: formatUsd(result.gapAbsCents),
-          percent: percentOf(result.gapAbsCents, best.priceCents),
+          percent: gapPercent(
+            result.gapAbsCents,
+            best.priceCents,
+            decision.ruleCode === "R4_OVERPAID" && options.policy !== undefined
+              ? { above: options.policy.maxOverpayPctHundredths }
+              : {},
+          ),
         }
       : null;
   const reasons = result.ruleCodes.map((code) => reasonFor(code, options.policy));

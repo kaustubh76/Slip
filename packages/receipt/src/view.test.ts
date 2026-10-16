@@ -17,7 +17,7 @@ import {
   testUuid,
 } from "@slip/domain/testing";
 import { describe, expect, it } from "vitest";
-import { percentOf, renderReceipt } from "./view.js";
+import { renderReceipt } from "./view.js";
 
 function payment(attempt: Attempt, status: PaymentStatus): Payment {
   const price = attempt.decision.checkResult.chosen?.priceCents ?? (1 as Cents);
@@ -67,14 +67,14 @@ describe("renderReceipt", () => {
     expect(view.lines).toEqual([
       "Your agent tried to pay $58.99 at store-a.example.",
       "The same item was listed at $47.99 at store-b.example.",
-      "Overpaid by $11.00 (22.9%).",
+      "Overpaid by $11.00 (23%).",
       "store-a.example pays your agent's platform up to 8% commission; store-b.example pays up to 2%.",
       "The price was more than 5% and $8.00 above the lowest listed price.",
       "Payment rejected. Nothing was charged.",
       "Listed item prices from Channel3 at 14:02 UTC. Shipping and tax are not included.",
     ]);
     expect(view).toMatchObject({ outcome: "REJECTED", charged: false, paymentStatus: "NONE" });
-    expect(view.gap).toEqual({ cents: 1100, amount: "$11.00", percent: "22.9%" });
+    expect(view.gap).toEqual({ cents: 1100, amount: "$11.00", percent: "23%" });
   });
 
   it("a paid purchase at the lowest price", () => {
@@ -184,18 +184,5 @@ describe("renderReceipt", () => {
         }
       }
     }
-  });
-});
-
-describe("percentOf", () => {
-  it.each([
-    [1225, 10_000, "12.3%"], // half-up at x.x5
-    [1224, 10_000, "12.2%"],
-    [1500, 10_000, "15%"],
-    [1100, 4799, "22.9%"],
-    [5, 10_000, "0.1%"],
-    [4, 10_000, "0%"],
-  ])("%s of %s is %s", (part, base, expected) => {
-    expect(percentOf(part as Cents, base as Cents)).toBe(expected);
   });
 });

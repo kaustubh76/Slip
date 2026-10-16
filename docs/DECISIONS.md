@@ -338,3 +338,13 @@ The plain-language receipt moved from `@slip/app` to `@slip/receipt`, a pure pac
 only on the domain. The application (checkout, holds, the agent's reads), the MCP server and the
 owner UI all render receipts through it, so the words an agent receives and the words the owner
 reads can never drift apart. `@slip/app` re-exports it unchanged.
+
+## D40 · 2026-10-16 · Percentages: one decimal below 10 %, whole above, never under a limit
+
+Gaps are computed from exact cents and rounded half-up: one decimal below 10 %, a whole number
+from 10 % up, a trailing ".0" dropped — "$11.00 over $47.99" reads "23%", not "22.9%", which is
+easier to take in at a glance and no less honest. When the receipt says a gap was above the
+owner's limit, the printed figure is never at or below that limit: decimals are added until it
+is strictly above ("5.001%", not "5%" next to "more than 5%"). The report card's medians follow
+the same rule. The owner's own limits and a store's commission rate are not computed, so they
+print exactly as set.

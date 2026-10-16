@@ -1,4 +1,4 @@
-export { type OfferSummary, percentOf, type ReceiptView, renderReceipt } from "@slip/receipt";
+export { type OfferSummary, type ReceiptView, renderReceipt } from "@slip/receipt";
 export { issueAgentKey, listAgents, revokeAgentKey } from "./agents.js";
 export { type CheckoutResult, runCheckout, viewOf } from "./checkout/checkout.js";
 export {
@@ -82,7 +82,7 @@ export {
   sendVoid,
 } from "./payments.js";
 export { getReceipt, getReport, type ReceiptFound } from "./reads.js";
-export { pctFromHundredths, type ReportView, renderReport } from "./report-view.js";
+export { type ReportView, renderReport } from "./report-view.js";
 export {
   RESOLVER_TASKS,
   type ResolverReport,

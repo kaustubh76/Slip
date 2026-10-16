@@ -1,20 +1,13 @@
 import { type AgentReport, formatUsd } from "@slip/domain";
+import { percentFromHundredths } from "@slip/receipt";
 
 /**
  * The report card in plain words, for the agent (and its developer) to read. Numbers come from
- * the stored attempts; percentages show one decimal, rounded half-up.
+ * the stored attempts; percentages follow the receipt's rule (`percentFromHundredths`).
  */
 export interface ReportView {
   report: AgentReport;
   lines: string[];
-}
-
-/** Hundredths of a percent → one decimal, half-up: 1_234 → "12.3%", 1_250 → "12.5%", 500 → "5%". */
-export function pctFromHundredths(value: number): string {
-  const tenths = Math.floor((value + 5) / 10);
-  const whole = Math.floor(tenths / 10);
-  const rest = tenths % 10;
-  return rest === 0 ? `${whole}%` : `${whole}.${rest}%`;
 }
 
 const times = (n: number, one: string, many: string = `${one}s`) => `${n} ${n === 1 ? one : many}`;
@@ -36,10 +29,10 @@ export function renderReport(report: AgentReport): ReportView {
     const worstUsd = r.worstGapAbsCents;
     lines.push(
       `${times(r.notCheapest, "chosen offer was", "chosen offers were")} not the cheapest comparable one` +
-        (median === null ? "." : `: typically ${pctFromHundredths(median)} more`) +
+        (median === null ? "." : `: typically ${percentFromHundredths(median)} more`) +
         (worst === null || worstUsd === null
           ? ""
-          : `, at most ${pctFromHundredths(worst)} or ${formatUsd(worstUsd)} more.`),
+          : `, at most ${percentFromHundredths(worst)} or ${formatUsd(worstUsd)} more.`),
     );
   }
   if (r.steered > 0) {

@@ -1,7 +1,7 @@
 import { type AgentReport, agentId, type Cents } from "@slip/domain";
 import { testUuid } from "@slip/domain/testing";
 import { describe, expect, it } from "vitest";
-import { pctFromHundredths, renderReport } from "./report-view.js";
+import { renderReport } from "./report-view.js";
 
 const empty: AgentReport = {
   agentId: agentId(testUuid()),
@@ -70,18 +70,5 @@ describe("renderReport", () => {
     for (const line of view.lines) {
       expect(line).not.toMatch(/basis points|\bbps\b|slippage|\bTCA\b|best execution|landed cost/i);
     }
-  });
-});
-
-describe("pctFromHundredths", () => {
-  it.each([
-    [1_245, "12.5%"],
-    [1_244, "12.4%"],
-    [500, "5%"],
-    [5, "0.1%"],
-    [4, "0%"],
-    [0, "0%"],
-  ])("%i hundredths → %s", (value, shown) => {
-    expect(pctFromHundredths(value)).toBe(shown);
   });
 });
