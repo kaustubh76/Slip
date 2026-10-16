@@ -16,6 +16,9 @@
       "@slip/source": "./src/schema.ts",
       "import": "./dist/schema.js",
       "default": "./dist/schema.js"
+    },
+    "./testing": {
+      "@slip/source": "./src/__fixtures__/receipts.ts"
     }
   },
   "files": [

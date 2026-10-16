@@ -401,7 +401,59 @@
     opacity: 0.85;
   }
 
+  /* ---------- the receipt slip ---------- */
+
+  .slip-receipt-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2px 16px;
+  }
+
+  .slip-receipt-head h2,
+  .slip-receipt-head p {
+    margin: 0;
+  }
+
+  .slip-receipt-body {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-block-end: 16px;
+  }
+
+  .slip-receipt-words {
+    flex: 1;
+  }
+
   /* ---------- the gap scale ---------- */
+
+  .slip-scale-figure {
+    margin: 8px 0 12px;
+  }
+
+  .slip-scale-labels {
+    position: relative;
+    block-size: 20px;
+    font-family: var(--slip-font-mono);
+    font-size: 12px;
+    line-height: 20px;
+    color: var(--slip-ink-faint);
+  }
+
+  .slip-scale-labels > span {
+    position: absolute;
+    translate: -50% 0;
+    white-space: nowrap;
+  }
+
+  .slip-scale-labels > span:first-child {
+    translate: 0 0;
+  }
+
+  .slip-scale-labels > span:last-child {
+    translate: -100% 0;
+  }
 
   .slip-scale {
     display: block;
@@ -409,6 +461,10 @@
     block-size: 40px;
     shape-rendering: crispEdges;
     overflow: visible;
+  }
+
+  .slip-scale line {
+    vector-effect: non-scaling-stroke;
   }
 
   .slip-scale-band {
