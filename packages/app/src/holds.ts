@@ -18,11 +18,11 @@ import {
   type RuleCode,
   requestId,
 } from "@slip/domain";
+import type { ReceiptView } from "@slip/receipt";
 import { viewOf } from "./checkout/checkout.js";
 import { checkOffers, currentSnapshot } from "./checkout/decision.js";
 import type { AppDeps } from "./deps.js";
 import { orderDescription, sendCapture, sendOrder, sendVoid } from "./payments.js";
-import type { ReceiptView } from "./receipt-view.js";
 
 /**
  * The owner's side of a HELD attempt: see what approving would charge, approve, or decline. Every

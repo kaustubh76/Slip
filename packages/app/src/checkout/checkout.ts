@@ -10,9 +10,9 @@ import {
   type Receipt,
   type RecordedAttempt,
 } from "@slip/domain";
+import { type ReceiptView, renderReceipt } from "@slip/receipt";
 import type { AppDeps } from "../deps.js";
 import { orderDescription, sendOrder } from "../payments.js";
-import { type ReceiptView, renderReceipt } from "../receipt-view.js";
 import { checkOffers, currentSnapshot, recordInputFor } from "./decision.js";
 import {
   authenticate,

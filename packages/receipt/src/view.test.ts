@@ -17,7 +17,7 @@ import {
   testUuid,
 } from "@slip/domain/testing";
 import { describe, expect, it } from "vitest";
-import { percentOf, renderReceipt } from "./receipt-view.js";
+import { percentOf, renderReceipt } from "./view.js";
 
 function payment(attempt: Attempt, status: PaymentStatus): Payment {
   const price = attempt.decision.checkResult.chosen?.priceCents ?? (1 as Cents);

@@ -22,6 +22,7 @@
   "dependencies": {
     "@slip/check": "workspace:*",
     "@slip/domain": "workspace:*",
+    "@slip/receipt": "workspace:*",
     "zod": "catalog:"
   },
   "devDependencies": {

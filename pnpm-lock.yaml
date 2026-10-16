@@ -68,6 +68,9 @@ importers:
       '@slip/domain':
         specifier: workspace:*
         version: link:../domain
+      '@slip/receipt':
+        specifier: workspace:*
+        version: link:../receipt
       zod:
         specifier: 'catalog:'
         version: 4.6.5
@@ -189,6 +192,22 @@ importers:
         version: 5.0.3(@types/node@26.6.5)(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(tsx@4.23.15))
 
   packages/paypal:
+    dependencies:
+      '@slip/domain':
+        specifier: workspace:*
+        version: link:../domain
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 26.6.5
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vitest:
+        specifier: 'catalog:'
+        version: 5.0.3(@types/node@26.6.5)(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(tsx@4.23.15))
+
+  packages/receipt:
     dependencies:
       '@slip/domain':
         specifier: workspace:*

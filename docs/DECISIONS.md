@@ -331,3 +331,10 @@ sit under `@slip/source`, which only our own tools ask for: Vitest (`vitest.shar
 type-check of tests (`customConditions` in each `tsconfig.test.json`) and `tsx` (the migrate
 script). Next.js and anything else gets the built `dist`, so the web app runs `tsc -b` first (and
 `tsc -b -w` beside `next dev`).
+
+## D39 · 2026-10-16 · One receipt renderer, in its own package
+
+The plain-language receipt moved from `@slip/app` to `@slip/receipt`, a pure package that depends
+only on the domain. The application (checkout, holds, the agent's reads), the MCP server and the
+owner UI all render receipts through it, so the words an agent receives and the words the owner
+reads can never drift apart. `@slip/app` re-exports it unchanged.
