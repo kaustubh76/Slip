@@ -21,6 +21,15 @@ describe("Stamp", () => {
   });
 });
 
+describe("Stamp labels", () => {
+  it("says what it marks: an outcome by default, something else when told", () => {
+    const { rerender } = render(<Stamp kind="VOID" label="CANCELLED" />);
+    expect(screen.getByRole("img", { name: "Outcome: cancelled" })).toBeDefined();
+    rerender(<Stamp kind="VOID" label="IN FORCE" describedAs="This permission is in force" />);
+    expect(screen.getByRole("img", { name: "This permission is in force" })).toBeDefined();
+  });
+});
+
 describe("StatusLine", () => {
   it("announces a line PayPal is still working on, and not a settled one", () => {
     const { container, rerender } = render(<StatusLine state={heldView("CAPTURING").state} />);

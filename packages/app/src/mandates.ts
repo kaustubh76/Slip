@@ -11,6 +11,7 @@ import {
   type PolicyLimits,
   PolicySchema,
   requestId,
+  SYSTEM_DECIDER,
   ownerId as toOwnerId,
 } from "@slip/domain";
 import { z } from "zod";
@@ -338,7 +339,10 @@ export async function shutDown(
   }
   let holdsDeclined = 0;
   for (const held of await deps.store.holds.listPending(id)) {
-    const closed = await closeHold(deps, held, by);
+    // Released by Slip as a consequence of the revoke, not decided purchase by purchase: a
+    // receipt must not tell the owner they declined something they were never shown. Who
+    // revoked is recorded above.
+    const closed = await closeHold(deps, held, SYSTEM_DECIDER);
     holdsDeclined += closed.status === "done" ? 1 : 0;
   }
   let vault: "deleted" | "nothing-to-delete" | "failed";

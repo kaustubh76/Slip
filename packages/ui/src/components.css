@@ -497,6 +497,17 @@
     padding-block-start: 12px;
   }
 
+  /* ---------- the tear-off at the foot of a slip ---------- */
+
+  .slip-tear-off ul {
+    margin: 8px 0;
+    padding-inline-start: 20px;
+  }
+
+  .slip-tear-off li {
+    margin-block-end: 4px;
+  }
+
   /* ---------- behind the receipt ---------- */
 
   .slip-rules,

@@ -246,7 +246,8 @@ describe("revokeMandate — the kill switch", () => {
     });
     expect(await h.store.holds.get(id as never)).toMatchObject({
       status: "DECLINED",
-      decidedBy: seeded.ownerId,
+      // Slip released it because the permission was cancelled; the owner never saw this purchase.
+      decidedBy: "system",
     });
     expect((await h.store.payments.get(id as never))?.status).toBe("VOIDED");
     expect(h.gateway.hasVault(seeded.vaultId)).toBe(false);

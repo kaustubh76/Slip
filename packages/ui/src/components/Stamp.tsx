@@ -13,8 +13,14 @@ export function Stamp(props: {
   rotated?: boolean;
   /** Presses once as it appears (a slip just printed). */
   pressed?: boolean;
+  /**
+   * What it is read out as. The default says it is an outcome; a stamp that marks something else
+   * — a mandate in force, a revoked key — says what that is instead.
+   */
+  describedAs?: string;
 }) {
   const label = props.label ?? props.kind;
+  const described = props.describedAs ?? `Outcome: ${label.toLowerCase()}`;
   return (
     <span
       className="slip-stamp"
@@ -23,7 +29,7 @@ export function Stamp(props: {
       data-rotated={props.rotated ? "" : undefined}
       data-pressed={props.pressed ? "" : undefined}
       role="img"
-      aria-label={`Outcome: ${label.toLowerCase()}`}
+      aria-label={described}
     >
       {label}
     </span>
