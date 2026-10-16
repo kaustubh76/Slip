@@ -98,9 +98,18 @@ importers:
       '@slip/domain':
         specifier: workspace:*
         version: link:../../packages/domain
+      '@slip/offers':
+        specifier: workspace:*
+        version: link:../../packages/offers
+      '@slip/paypal':
+        specifier: workspace:*
+        version: link:../../packages/paypal
       '@slip/receipt':
         specifier: workspace:*
         version: link:../../packages/receipt
+      '@slip/steering':
+        specifier: workspace:*
+        version: link:../../packages/steering
       '@slip/ui':
         specifier: workspace:*
         version: link:../../packages/ui

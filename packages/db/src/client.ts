@@ -1,3 +1,4 @@
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { PgDatabase, PgQueryResultHKT } from "drizzle-orm/pg-core";
 import * as schema from "./schema.js";
@@ -17,8 +18,13 @@ export interface DatabaseHandle {
   close(): Promise<void>;
 }
 
-/** `packages/db/drizzle`, resolved the same way from `src/` and from `dist/`. */
-export const MIGRATIONS_FOLDER = fileURLToPath(new URL("../drizzle", import.meta.url));
+/**
+ * `packages/db/drizzle`, resolved the same way from `src/` and from `dist/`. Joined from the
+ * module's own directory rather than written as `new URL("../drizzle", import.meta.url)`, which a
+ * bundler reads as a static asset reference and then fails to resolve (the web app bundles this
+ * package, D42).
+ */
+export const MIGRATIONS_FOLDER = join(dirname(fileURLToPath(import.meta.url)), "..", "drizzle");
 
 export interface OpenOptions {
   /** Pool size for postgres.js. Default 10. */

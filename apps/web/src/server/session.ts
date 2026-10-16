@@ -80,8 +80,20 @@ export interface CookieSpec {
   maxAge: number;
 }
 
-/** True in production, where the browser is expected to be on HTTPS. */
+/**
+ * Whether the browser will be on HTTPS, which decides `Secure` and the `__Host-` prefix. It
+ * follows `SLIP_BASE_URL` — the address Slip tells PayPal to send the owner back to, so it is the
+ * one place that already knows the scheme. A production build with no base URL set assumes HTTPS:
+ * a cookie that then fails to arrive is a loud error, where a silently insecure one would not be.
+ */
 export function secureCookies(env: Env = process.env): boolean {
+  const base = env["SLIP_BASE_URL"]?.trim() ?? "";
+  if (base.startsWith("https://")) {
+    return true;
+  }
+  if (base.startsWith("http://")) {
+    return false;
+  }
   return env["NODE_ENV"] === "production";
 }
 

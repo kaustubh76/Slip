@@ -1,6 +1,9 @@
-import { Roll } from "@slip/ui";
+import { redirect } from "next/navigation";
+import { currentOwner } from "../server/owner";
 
-/** Until the owner signs in, the roll is blank paper. */
-export default function Home() {
-  return <Roll entries={[]} hrefFor={(entry) => `/receipts/${entry.view.receiptId}`} />;
+export const dynamic = "force-dynamic";
+
+/** Straight to the roll when signed in; otherwise to the door. */
+export default async function Home() {
+  redirect((await currentOwner()) === null ? "/sign-in" : "/receipts");
 }

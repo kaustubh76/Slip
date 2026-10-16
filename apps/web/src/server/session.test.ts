@@ -11,7 +11,7 @@ import {
   sessionKey,
   signSession,
   verifySession,
-} from "./session.js";
+} from "./session";
 
 const KEY = randomBytes(32);
 const OTHER_KEY = randomBytes(32);
@@ -81,7 +81,7 @@ describe("the session token", () => {
 describe("the session cookie", () => {
   it("is HttpOnly, Lax and lasts as long as the session", () => {
     const mine = session();
-    const cookie = sessionCookie(mine, KEY, NOW, { NODE_ENV: "development" });
+    const cookie = sessionCookie(mine, KEY, NOW, { SLIP_BASE_URL: "http://localhost:3000" });
     expect(cookie).toMatchObject({
       name: "slip-session",
       httpOnly: true,
@@ -93,12 +93,22 @@ describe("the session cookie", () => {
     expect(verifySession(cookie.value, KEY, NOW)).toEqual(mine);
   });
 
-  it("in production it is Secure and host-locked", () => {
-    const cookie = sessionCookie(session(), KEY, NOW, { NODE_ENV: "production" });
+  it("on HTTPS it is Secure and host-locked", () => {
+    const cookie = sessionCookie(session(), KEY, NOW, { SLIP_BASE_URL: "https://slip.example" });
     expect(cookie.name).toBe("__Host-slip-session");
     expect(cookie.secure).toBe(true);
     // The browser only accepts the prefix from the root path with no domain of its own.
     expect(cookie.path).toBe("/");
+  });
+
+  it("follows the address PayPal returns to, so a local server over http still works", () => {
+    // `next start` sets NODE_ENV=production; a demo on http would never receive a Secure cookie.
+    const local = { NODE_ENV: "production", SLIP_BASE_URL: "http://localhost:3000" } as const;
+    expect(sessionCookieName(local)).toBe("slip-session");
+    expect(sessionCookie(session(), KEY, NOW, local).secure).toBe(false);
+    // Deployed with no base URL set, it assumes HTTPS rather than quietly dropping Secure.
+    expect(sessionCookieName({ NODE_ENV: "production" })).toBe("__Host-slip-session");
+    expect(sessionCookieName({})).toBe("slip-session");
   });
 
   it("never asks the browser to keep an expired session", () => {
@@ -107,7 +117,7 @@ describe("the session cookie", () => {
   });
 
   it("signing out clears the same cookie", () => {
-    const env = { NODE_ENV: "production" };
+    const env = { SLIP_BASE_URL: "https://slip.example" };
     const cleared = clearedSessionCookie(env);
     expect(cleared.name).toBe(sessionCookieName(env));
     expect(cleared).toMatchObject({ value: "", maxAge: 0, httpOnly: true });
