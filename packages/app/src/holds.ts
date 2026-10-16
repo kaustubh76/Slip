@@ -20,10 +20,10 @@ import {
   requestId,
 } from "@slip/domain";
 import type { ReceiptView } from "@slip/receipt";
-import { viewOf } from "./checkout/checkout.js";
 import { checkOffers, currentSnapshot } from "./checkout/decision.js";
 import type { AppDeps } from "./deps.js";
 import { orderDescription, sendCapture, sendOrder, sendVoid } from "./payments.js";
+import { viewOf } from "./views.js";
 
 /**
  * The owner's side of a HELD attempt: see what approving would charge, approve, or decline. Every
@@ -138,7 +138,8 @@ async function approvable(
   }
 }
 
-async function ownedReceipt(
+/** The receipt, only if its mandate belongs to this owner; anything else (or a malformed id) is null. */
+export async function ownedReceipt(
   deps: AppDeps,
   ownerId: OwnerId,
   id: string,

@@ -10,9 +10,10 @@ import {
   type Receipt,
   type RecordedAttempt,
 } from "@slip/domain";
-import { type ReceiptView, renderReceipt } from "@slip/receipt";
+import type { ReceiptView } from "@slip/receipt";
 import type { AppDeps } from "../deps.js";
 import { orderDescription, sendOrder } from "../payments.js";
+import { viewOf } from "../views.js";
 import { checkOffers, currentSnapshot, recordInputFor } from "./decision.js";
 import {
   authenticate,
@@ -27,35 +28,6 @@ export type CheckoutResult =
   | { status: "decided"; receipt: Receipt; view: ReceiptView }
   | { status: "replayed"; reason: ReplayReason; receipt: Receipt; view: ReceiptView }
   | Refusal;
-
-/**
- * Renders a receipt with the policy version it was decided under, for an approved hold the
- * owner-approval attempt that paid for it (looked up unless the caller already has it), and for a
- * variant mismatch the snapshot that names the listed variant.
- */
-export async function viewOf(
-  deps: AppDeps,
-  receipt: Receipt,
-  known: { child?: Receipt | null } = {},
-): Promise<ReceiptView> {
-  const policy = await deps.store.mandates.policy(
-    receipt.attempt.mandateId,
-    receipt.attempt.decision.checkResult.policyVersion,
-  );
-  const child =
-    known.child !== undefined
-      ? known.child
-      : receipt.hold?.status === "APPROVED"
-        ? await deps.store.attempts.findChild(receipt.attempt.id)
-        : null;
-  // Only a variant mismatch quotes the snapshot (to name the listed variant).
-  const { ruleCode, checkResult } = receipt.attempt.decision;
-  const snapshot =
-    ruleCode === "VARIANT_MISMATCH" && checkResult.snapshotId !== null
-      ? await deps.store.snapshots.get(checkResult.snapshotId)
-      : null;
-  return renderReceipt(receipt, { ...(policy === null ? {} : { policy }), child, snapshot });
-}
 
 /**
  * The `checkout` call: an agent asks to pay for an offer and Slip decides — pay, reject, or hold

@@ -69,7 +69,12 @@ export async function listAgents(
   return { status: "listed", agents: await deps.store.agents.listByMandate(owned.id) };
 }
 
-async function ownedAgent(deps: AppDeps, ownerId: OwnerId, id: string): Promise<Agent | null> {
+/** The agent, only if its mandate belongs to this owner; anything else (or a malformed id) is null. */
+export async function ownedAgent(
+  deps: AppDeps,
+  ownerId: OwnerId,
+  id: string,
+): Promise<Agent | null> {
   let agent: Agent | null;
   try {
     agent = await deps.store.agents.get(agentId(id));

@@ -1,10 +1,10 @@
 import { type Agent, attemptId, InvalidIdError, type Receipt } from "@slip/domain";
-import { viewOf } from "./checkout/checkout.js";
 import { type Refusal, refuse } from "./checkout/gate.js";
 import type { AppDeps } from "./deps.js";
 import type { Shown } from "./holds.js";
 import { hashApiKey } from "./keys.js";
 import { type ReportView, renderReport } from "./report-view.js";
+import { viewOf } from "./views.js";
 
 /**
  * What an agent may read: its own receipts and its report card. Any unrevoked key will do — the

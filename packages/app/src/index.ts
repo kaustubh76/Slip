@@ -1,6 +1,6 @@
 export { type OfferSummary, type ReceiptView, renderReceipt } from "@slip/receipt";
-export { issueAgentKey, listAgents, revokeAgentKey } from "./agents.js";
-export { type CheckoutResult, runCheckout, viewOf } from "./checkout/checkout.js";
+export { issueAgentKey, listAgents, ownedAgent, revokeAgentKey } from "./agents.js";
+export { type CheckoutResult, runCheckout } from "./checkout/checkout.js";
 export {
   checkOffers,
   currentSnapshot,
@@ -32,6 +32,7 @@ export {
   type HoldRefusal,
   type HoldRefusalReason,
   type HoldResult,
+  ownedReceipt,
   previewApproval,
   type Shown,
 } from "./holds.js";
@@ -54,6 +55,7 @@ export {
   parseLimits,
   pollSetup,
   refuseOwner,
+  registerOwner,
   revokeMandate,
   type SetupState,
   shutDown,
@@ -71,6 +73,24 @@ export {
   type PaymentWebhookEvent,
   type Step,
 } from "./outcomes.js";
+export {
+  type AgentCard,
+  type AgentName,
+  agentCard,
+  agentCards,
+  DEFAULT_PAGE_SIZE,
+  decodeCursor,
+  encodeCursor,
+  listReceipts,
+  type MandateSummary,
+  mandateSummary,
+  pendingHolds,
+  policyVersions,
+  type ReceiptDetail,
+  type ReceiptPage,
+  type ReceiptRow,
+  receiptDetail,
+} from "./owner/queries.js";
 export {
   applyStep,
   callPayPal,
@@ -92,4 +112,5 @@ export {
 } from "./resolver.js";
 export { jsonLogger, randomIds, silentLogger, systemClock } from "./runtime.js";
 export { deleteVaultToken } from "./vault.js";
+export { createViewer, type Viewer, viewOf } from "./views.js";
 export { processWebhook, receiveWebhook, type WebhookOutcome } from "./webhooks.js";

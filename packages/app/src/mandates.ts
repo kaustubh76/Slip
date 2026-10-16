@@ -5,13 +5,15 @@ import {
   type Mandate,
   MandateNotActiveError,
   mandateId,
+  type Owner,
   type OwnerId,
   type Policy,
   type PolicyLimits,
   PolicySchema,
   requestId,
+  ownerId as toOwnerId,
 } from "@slip/domain";
-import type { z } from "zod";
+import { z } from "zod";
 import type { AppDeps } from "./deps.js";
 import { closeHold } from "./holds.js";
 import { derivedUuid } from "./keys.js";
@@ -30,6 +32,8 @@ import { deleteVaultToken } from "./vault.js";
 
 export type OwnerRefusalReason =
   | "NOT_FOUND"
+  | "INVALID_EMAIL"
+  | "EMAIL_IN_USE"
   | "INVALID_LIMITS"
   | "INVALID_NAME"
   | "PAYPAL_UNAVAILABLE"
@@ -84,6 +88,37 @@ export async function ownedMandate(
     throw error;
   }
   return mandate?.ownerId === ownerId ? mandate : null;
+}
+
+const EmailSchema = z.email().max(254);
+
+/**
+ * A new owner. The web layer authenticates people; this only records them. The email is optional
+ * (a demo owner has none), trimmed and lower-cased, and belongs to one owner only.
+ */
+export async function registerOwner(
+  deps: AppDeps,
+  input: { email: string | null },
+): Promise<{ status: "registered"; owner: Owner } | OwnerRefusal> {
+  const raw = input.email?.trim().toLowerCase() ?? "";
+  const email = raw === "" ? null : raw;
+  if (email !== null && !EmailSchema.safeParse(email).success) {
+    return refuse("INVALID_EMAIL", "That does not look like an email address.");
+  }
+  try {
+    const owner = await deps.store.owners.create({
+      id: toOwnerId(deps.ids.uuid()),
+      email,
+      now: deps.clock.now(),
+    });
+    deps.log.info("owner.registered", { ownerId: owner.id });
+    return { status: "registered", owner };
+  } catch (error) {
+    if (error instanceof ConflictError && error.code === "EMAIL_IN_USE") {
+      return refuse("EMAIL_IN_USE", "An owner with this email already exists.");
+    }
+    throw error;
+  }
 }
 
 /** Where PayPal sends the owner back, under the public base URL. */
