@@ -99,3 +99,25 @@ test("the bench says neither study has run, and prints no figures", async ({ pag
   // No measured-looking number until a study has produced one.
   expect(await page.getByRole("main").textContent()).not.toMatch(/\d%/);
 });
+
+test("another desk's receipt reads as not found, the same as no receipt at all", async ({
+  page,
+  browser,
+}) => {
+  await openDesk(page);
+  const mine = (await (await page.request.get("/api/v1/receipts")).json()) as {
+    rows: { view: { receiptId: string } }[];
+  };
+  const id = mine.rows[0]?.view.receiptId ?? "";
+  expect(id).not.toBe("");
+  const other = await browser.newContext();
+  const stranger = await other.newPage();
+  await openDesk(stranger);
+  for (const path of [`/receipts/${id}`, "/receipts/0190a1b2-0000-7000-8000-000000000000"]) {
+    const response = await stranger.goto(path);
+    expect(response?.status(), path).toBe(404);
+    await expect(stranger.getByText("Nothing is printed at this address.")).toBeVisible();
+  }
+  expect((await stranger.request.get(`/api/v1/receipts/${id}`)).status()).toBe(404);
+  await other.close();
+});
