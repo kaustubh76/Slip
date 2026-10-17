@@ -504,6 +504,28 @@
 
   /* ---------- the snapshot's offers, behind the receipt ---------- */
 
+  /* The shortcuts sheet: keys on the left, kept on one line; what they do wraps. */
+  .slip-keys {
+    inline-size: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .slip-keys th,
+  .slip-keys td {
+    text-align: start;
+    vertical-align: top;
+    padding: 6px 12px 6px 0;
+    border-block-end: 1px solid var(--slip-edge);
+  }
+
+  .slip-keys th {
+    font-weight: 400;
+    white-space: nowrap;
+    color: var(--slip-ink-faint);
+  }
+
   .slip-offers {
     inline-size: 100%;
     border-collapse: collapse;
@@ -682,6 +704,33 @@
     box-shadow: 0 2px 0 -1px var(--slip-edge);
     padding: 24px;
     max-inline-size: min(var(--slip-slip-max), calc(100vw - 32px));
+    /* A dialog opened from a nowrap strip (the masthead) must still wrap its text. */
+    white-space: normal;
+  }
+
+  /* A key on the shortcuts sheet. */
+  .slip-dialog kbd {
+    font-family: var(--slip-font-mono);
+    font-size: 13px;
+    padding: 0 5px;
+    border: 1px solid var(--slip-edge);
+    border-radius: var(--slip-radius-control);
+  }
+
+  /* A labelled checkbox: the box in the owner's pen. */
+  .slip-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-block-start: 16px;
+    min-block-size: var(--slip-target);
+  }
+
+  .slip-check > input {
+    inline-size: 18px;
+    block-size: 18px;
+    margin: 0;
+    accent-color: var(--slip-pen);
   }
 
   .slip-dialog-actions {

@@ -33,5 +33,23 @@ for (const theme of ["original", "carbon"] as const) {
         `${path} (${theme})`,
       ).toEqual([]);
     }
+    // The page in more contrast, with the shortcuts sheet open.
+    await page.goto("/receipts");
+    const contrast = page.getByRole("button", { name: "More contrast" });
+    await expect(async () => {
+      await contrast.click();
+      await expect(page.locator("html")).toHaveAttribute("data-slip-contrast", "more", {
+        timeout: 1_000,
+      });
+    }).toPass();
+    await page.getByRole("button", { name: "Keys" }).click();
+    await expect(page.getByRole("dialog", { name: "Shortcuts" })).toBeVisible();
+    const results = await new AxeBuilder({ page }).analyze();
+    expect(
+      results.violations
+        .filter((v) => v.impact === "serious" || v.impact === "critical")
+        .map((v) => v.id),
+      `shortcuts sheet, more contrast (${theme})`,
+    ).toEqual([]);
   });
 }

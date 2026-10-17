@@ -44,6 +44,9 @@ Two themes: **Original** (light) and **Carbon** (dark). `data-slip-theme="origin
 `slip-theme` cookie, so the server renders the right theme on the first paint.
 `data-slip-contrast="more"` (or `prefers-contrast: more`) turns faint ink to full ink.
 
+The masthead has a **More contrast** switch that sets the attribute and remembers it in the
+`slip-contrast` cookie.
+
 Use `components.css` with the tokens, or restyle the kit by overriding the variables. Both files
 use cascade layers (`slip.tokens`, `slip.components`), so a host's own styles win without
 `!important`.
@@ -61,6 +64,25 @@ Slip roots carry data attributes a host can style or select on:
 
 Components that link take a `Link` prop (`LinkLike`), so a host passes its router's link.
 Without one they render a plain `<a>`.
+
+### Keyboard
+
+`useShortcuts(enabled, onAction)` turns keys into actions. The host decides what each action does
+and keeps the on/off switch, because single-key shortcuts must be possible to turn off (WCAG
+2.1.4). Keys are ignored while the owner types in a field, while a dialog is open, or when a
+modifier is held.
+
+| Keys | Action |
+|---|---|
+| `j` `k` | next or previous receipt or hold |
+| `a` `d` | open the approve or decline dialog for the hold in focus; the confirm still needs a press |
+| `/` | focus the roll's agent filter |
+| `g` then `r` `h` `l` `a` `b` `m` | go to Receipts, Holds, Limits, Agents, Bench, Mandate |
+| `t` | switch theme |
+| `?` | the help sheet, with the on/off switch |
+
+In `apps/web`, **Keys** in the masthead opens the same sheet. Turning the shortcuts off is
+remembered in that browser.
 
 ## The data layer
 
@@ -178,4 +200,5 @@ says it is simulated.
 - `pnpm web:e2e` runs Playwright against the built app in demo mode. It covers the four seeded
   outcomes, the five-second receipt, approve and decline, live arrival, the demo console and the
   agent script, a price change, two tabs approving one hold, the kill switch during a checkout,
-  another desk's receipt, and axe on every page in both themes.
+  another desk's receipt, the keyboard and contrast switches, and axe on every page in both
+  themes (and on the shortcuts sheet in more contrast).

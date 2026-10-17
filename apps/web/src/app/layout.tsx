@@ -1,10 +1,12 @@
 import "@slip/ui/tokens.css";
 import "@slip/ui/components.css";
-import { parseTheme, THEME_COOKIE } from "@slip/ui";
+import { CONTRAST_COOKIE, parseContrast, parseTheme, THEME_COOKIE } from "@slip/ui";
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { cookies } from "next/headers";
 import type { ReactNode } from "react";
+import { ContrastToggle } from "../components/ContrastToggle";
+import { Shortcuts } from "../components/Shortcuts";
 import { SlipRoot } from "../components/SlipRoot";
 import { Tabs } from "../components/Tabs";
 import { ThemeToggle } from "../components/ThemeToggle";
@@ -34,13 +36,16 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  const theme = parseTheme((await cookies()).get(THEME_COOKIE)?.value);
+  const jar = await cookies();
+  const theme = parseTheme(jar.get(THEME_COOKIE)?.value);
+  const moreContrast = parseContrast(jar.get(CONTRAST_COOKIE)?.value);
   const signedIn = (await currentOwner()) !== null;
   return (
     <html
       lang="en"
       className={`${sans.variable} ${mono.variable}`}
       {...(theme === null ? {} : { "data-slip-theme": theme })}
+      {...(moreContrast ? { "data-slip-contrast": "more" } : {})}
     >
       <body className="slip-page">
         <SlipRoot>
@@ -48,6 +53,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             <Tabs signedIn={signedIn} demo={isDemo()} />
             <div className="slip-masthead-right">
               <ThemeToggle initial={theme} />
+              <ContrastToggle initial={moreContrast} />
+              {signedIn ? <Shortcuts /> : null}
               {signedIn ? (
                 <form action={signOut}>
                   <button type="submit" className="slip-link slip-meta">

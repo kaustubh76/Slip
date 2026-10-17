@@ -71,6 +71,20 @@ export {
   useReport,
 } from "./data/reads.js";
 export {
+  CHORD_MS,
+  createShortcutResolver,
+  isTyping,
+  SHORTCUTS,
+  type ShortcutAction,
+  type ShortcutHelp,
+  type ShortcutPage,
+  useShortcuts,
+} from "./shortcuts.js";
+export {
+  CONTRAST_ATTRIBUTE,
+  CONTRAST_COOKIE,
+  contrastCookie,
+  parseContrast,
   parseTheme,
   SLIP_THEMES,
   type SlipTheme,

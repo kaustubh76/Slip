@@ -19,6 +19,20 @@ export function parseTheme(value: string | null | undefined): SlipTheme | null {
   return value === "original" || value === "carbon" ? value : null;
 }
 
+/** The cookie and attribute for "more contrast": faint ink becomes full ink, in either theme. */
+export const CONTRAST_COOKIE = "slip-contrast";
+export const CONTRAST_ATTRIBUTE = "data-slip-contrast";
+
+/** True when the stored choice is "more". */
+export function parseContrast(value: string | null | undefined): boolean {
+  return value === "more";
+}
+
+/** The cookie that saves the contrast choice for a year; "normal" clears the preference. */
+export function contrastCookie(more: boolean): string {
+  return `${CONTRAST_COOKIE}=${more ? "more" : "normal"}; Path=/; Max-Age=31536000; SameSite=Lax`;
+}
+
 /** The cookie that saves `theme` for a year, on every path. */
 export function themeCookie(theme: SlipTheme): string {
   return `${THEME_COOKIE}=${theme}; Path=/; Max-Age=31536000; SameSite=Lax`;

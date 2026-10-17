@@ -64,6 +64,7 @@ export function HoldDecision({
               type="button"
               className="slip-button"
               data-variant="ink"
+              data-slip-action="approve"
               onClick={() => {
                 show("approve");
                 void decision.loadPreview();
@@ -71,7 +72,12 @@ export function HoldDecision({
             >
               Approve…
             </button>
-            <button type="button" className="slip-button" onClick={() => show("decline")}>
+            <button
+              type="button"
+              className="slip-button"
+              data-slip-action="decline"
+              onClick={() => show("decline")}
+            >
               Decline…
             </button>
           </div>

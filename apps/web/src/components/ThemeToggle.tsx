@@ -1,7 +1,18 @@
 "use client";
 
 import { SLIP_THEMES, type SlipTheme, THEME_ATTRIBUTE, themeCookie } from "@slip/ui";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+/** Dispatched on `document` by the `t` shortcut: switch to the other theme. */
+export const THEME_SWITCH_EVENT = "slip:switch-theme";
+
+/** The theme on show: the stored choice, or the system's when there is none. */
+function shown(theme: SlipTheme | null): SlipTheme {
+  if (theme !== null) {
+    return theme;
+  }
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "carbon" : "original";
+}
 
 /** Original | Carbon. Applies at once and is remembered in a cookie the server reads. */
 export function ThemeToggle({ initial }: { initial: SlipTheme | null }) {
@@ -12,6 +23,13 @@ export function ThemeToggle({ initial }: { initial: SlipTheme | null }) {
     document.cookie = themeCookie(next);
     setTheme(next);
   };
+  const current = useRef(theme);
+  current.current = theme;
+  useEffect(() => {
+    const flip = () => choose(shown(current.current) === "carbon" ? "original" : "carbon");
+    document.addEventListener(THEME_SWITCH_EVENT, flip);
+    return () => document.removeEventListener(THEME_SWITCH_EVENT, flip);
+  }, []);
   return (
     <fieldset className="slip-theme">
       <legend className="slip-sr">Theme</legend>
