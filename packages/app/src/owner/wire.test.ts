@@ -101,7 +101,8 @@ describe.each(["memory", "pglite"] as const)("owner reads over the wire (%s stor
     if (second.status === "issued") {
       await revokeAgentKey(h.deps, seeded.ownerId, second.agent.id);
     }
-  });
+    // Migrating a PGlite template takes far longer while every project boots one in `pnpm test`.
+  }, 120_000);
 
   afterAll(async () => {
     await close();
