@@ -4,6 +4,7 @@ import {
   appConfig,
   jsonLogger,
   randomIds,
+  runResolver,
   silentLogger,
   systemClock,
 } from "@slip/app";
@@ -19,6 +20,7 @@ import type { DemoFakes } from "./demo/desk";
 import { type DemoDesk, DeskLimiter } from "./demo/desks";
 import { DemoOffers } from "./demo/offers";
 import { DemoPayPal } from "./demo/paypal";
+import { DEMO_TIMING, demoConfig, demoLatencyMs, every } from "./demo/timing";
 
 /**
  * Where the application is assembled: one `AppDeps` per server process, built once and reused by
@@ -67,8 +69,10 @@ export async function fakes(): Promise<Fakes> {
 async function build(): Promise<Runtime> {
   const env = process.env;
   const clock = systemClock;
+  const demo = isDemo(env);
   const store = await openStore(env);
   const config = appConfig({
+    ...(demo ? demoConfig() : {}),
     ...(env["SLIP_BASE_URL"] ? { publicBaseUrl: env["SLIP_BASE_URL"] } : {}),
     pricesSource: SIMULATED_SERVICES ? "simulated" : "channel3",
   });
@@ -81,7 +85,7 @@ async function build(): Promise<Runtime> {
       inner: new FakePaymentGateway({ clock }),
       store,
       clock,
-      latencyMs: 0,
+      latencyMs: demo ? demoLatencyMs(env["SLIP_DEMO_LATENCY_MS"]) : 0,
       publicBaseUrl: config.publicBaseUrl,
     }),
     classifier,
@@ -101,6 +105,16 @@ async function build(): Promise<Runtime> {
     perAddress: 10,
     windowMs: 10 * 60_000,
   });
+  if (demo && env["NODE_ENV"] !== "test") {
+    // A demo has no scheduler, so it finishes its own loose ends: unknown payments, holds left by a
+    // revoke, expiries, setups to poll. Started here, inside the one runtime every server bundle
+    // shares, so it runs once per process whichever bundle builds the runtime first.
+    every(
+      DEMO_TIMING.resolverEveryMs,
+      () => runResolver(deps),
+      (error) => deps.log.error("demo.resolver_failed", { error: String(error) }),
+    );
+  }
   return { deps, fakes, demo: { desks: new Map(), limiter } };
 }
 

@@ -440,3 +440,17 @@ mandate for a per-visitor call log, and points approval links at Slip's own simu
 page. `DemoOffers` takes an outage per product, and every visitor's products carry ids of their
 own (`trail-shoe--<mandate>`), so prices and outages never cross desks. Desks are never freed, so
 sign-ins are capped per process and per address.
+
+## D47 · 2026-10-17 · A demo paces its PayPal calls and runs its own resolver
+
+The stand-in PayPal answered instantly, so the states Slip writes before each call — INITIATED,
+CAPTURING, VOIDING — were never on screen: the page polls about once a second and shares each
+change stamp for 900 ms. In demo mode every order, capture and void now takes 2 s
+(`SLIP_DEMO_LATENCY_MS`), PayPal's deadline is 4 s instead of 15 so a forced timeout settles in
+seconds, and the resolver leaves a payment alone for 5 s, longer than that deadline, so it never
+re-sends a call still in flight.
+
+A demo has no scheduler, so the runtime runs `runResolver` itself, 5 s after each run ends (never
+two at once). It starts inside the shared runtime rather than in `instrumentation.ts`, which would
+be one more server bundle with its own copies of the packages; the runtime is built once per
+process whichever bundle asks first.
