@@ -30,7 +30,7 @@ export interface Desk {
   fakes: DemoFakes;
   ownerId: OwnerId;
   mandateId: string;
-  /** This process's record of the desks it opened, with each desk's agent key. */
+  /** The console's agent on each desk, by mandate; created on first use. */
   desks: Map<string, DemoDesk>;
 }
 
@@ -38,13 +38,21 @@ export type ConsoleAnswer =
   | { status: "done"; message: string; receiptId: string | null }
   | { status: "refused"; message: string };
 
-/** The desk's agent key: the one its seed made, or — for a permission started later — a new one. */
+export const CONSOLE_AGENT = "shopper-2";
+
+/**
+ * The key of the console's own agent on this desk, issued on first use. Shopping as the seeded
+ * shopper-1 would only replay the seed's decisions (Slip repeats a recent one rather than check
+ * the same purchase twice); an agent of its own gets a fresh check on each errand's first run.
+ */
 async function agentKey(desk: Desk): Promise<string | null> {
   const known = desk.desks.get(desk.mandateId);
   if (known !== undefined) {
     return known.apiKey;
   }
-  const issued = await issueAgentKey(desk.deps, desk.ownerId, desk.mandateId, { name: "console" });
+  const issued = await issueAgentKey(desk.deps, desk.ownerId, desk.mandateId, {
+    name: CONSOLE_AGENT,
+  });
   if (issued.status !== "issued") {
     return null;
   }

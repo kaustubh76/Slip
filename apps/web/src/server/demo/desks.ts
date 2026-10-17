@@ -40,7 +40,11 @@ export class DeskLimiter {
   }
 }
 
-/** A demo desk's agent, kept server-side so the console can shop as it. */
+/**
+ * The demo console's own agent on one desk, kept server-side so the console can shop as it. Not
+ * the seeded shopper-1: Slip replays a decision it made minutes ago for the same agent and product,
+ * so a console shopping as shopper-1 would only repeat the seed's receipts.
+ */
 export interface DemoDesk {
   agentId: string;
   apiKey: string;

@@ -24,7 +24,6 @@ export async function signInToDemo(): Promise<void> {
     redirect(`/sign-in?refused=${admitted}`);
   }
   const owner = await seedDemoOwner(deps, fakes);
-  demo.desks.set(owner.mandateId, { agentId: owner.agentId, apiKey: owner.apiKey });
   await startSession(owner.ownerId, owner.mandateId);
   redirect("/receipts");
 }

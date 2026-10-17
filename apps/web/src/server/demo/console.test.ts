@@ -8,19 +8,29 @@ import { seedDemoOwner } from "./seed";
 
 async function deskOf(world: ReturnType<typeof demoWorld>): Promise<Desk> {
   const owner = await seedDemoOwner(world.deps, world.fakes);
-  const desks = new Map<string, DemoDesk>([
-    [owner.mandateId, { agentId: owner.agentId, apiKey: owner.apiKey }],
-  ]);
   return {
     deps: world.deps,
     fakes: world.fakes,
     ownerId: owner.ownerId as OwnerId,
     mandateId: owner.mandateId,
-    desks,
+    desks: new Map<string, DemoDesk>(),
   };
 }
 
 describe("the demo console", () => {
+  it("shops as an agent of its own, so an errand the seed ran is checked afresh, once", async () => {
+    const world = demoWorld();
+    const desk = await deskOf(world);
+    const first = await consoleErrand(desk, "top-pick", "answers");
+    expect(first.status === "done" && first.message).toMatch(
+      /^REJECTED by R4_OVERPAID, .*no order\.$/,
+    );
+    const again = await consoleErrand(desk, "top-pick", "answers");
+    expect(again.status === "done" && again.message).toContain("a repeat");
+    const agents = await world.deps.store.agents.listByMandate(desk.mandateId as never);
+    expect(agents.map((a) => a.name).sort()).toEqual(["shopper-1", "shopper-2"]);
+  });
+
   it("runs an errand as the desk's own agent and says what Slip decided", async () => {
     const world = demoWorld();
     const desk = await deskOf(world);
