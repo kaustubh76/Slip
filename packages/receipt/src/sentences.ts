@@ -10,6 +10,7 @@ import {
 } from "@slip/domain";
 import { shortNo, utcTime } from "./format.js";
 import type { OfferSummary } from "./schema.js";
+import { storeName } from "./store-name.js";
 
 /**
  * Every sentence the owner reads, filled in from the stored record. Rules are code and so are
@@ -27,11 +28,19 @@ export function openingLines(input: {
   gap: { amount: string; percent: string } | null;
   ruleCode: RuleCode;
   conflict: boolean;
+  /** The offer the agent asked for, by its address: names the store when no price was known. */
+  chosenUrl: string;
 }): string[] {
   const { chosen, best, gap } = input;
   const lines: string[] = [];
   if (chosen !== null) {
     lines.push(`Your agent tried to pay ${chosen.price} at ${chosen.store}.`);
+  } else {
+    // No price for the chosen offer (no listing, not found, or unreadable): still say where.
+    const store = storeOfUrl(input.chosenUrl);
+    lines.push(
+      store === null ? "Your agent tried to pay." : `Your agent tried to pay at ${store}.`,
+    );
   }
   if (best !== null) {
     if (chosen === null) {
@@ -175,5 +184,15 @@ export function ruleSentence(code: RuleCode, policy: Policy | undefined): string
       return "The price is within your limits.";
     case "OWNER_APPROVED":
       return "You approved this purchase.";
+  }
+}
+
+/** "Store D" for https://store-d.example/p/…, or null for an address that is not one. */
+function storeOfUrl(url: string): string | null {
+  try {
+    const host = new URL(url).hostname;
+    return host === "" ? null : storeName(host);
+  } catch {
+    return null;
   }
 }

@@ -84,6 +84,7 @@ export function renderReceipt(receipt: Receipt, options: RenderOptions = {}): Re
     gap,
     ruleCode: decision.ruleCode,
     conflict: result.conflict,
+    chosenUrl: attempt.chosenOfferUrl,
   });
   const decided = verdict({
     attempt,

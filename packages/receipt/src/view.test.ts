@@ -129,7 +129,7 @@ describe("renderReceipt", () => {
     expect(view.state).toMatchObject({ word: "AUTHORIZED", charged: false, inFlight: false });
   });
 
-  it("a hold with no prices says so, and that nothing was reserved", () => {
+  it("a hold with no prices says where the agent tried to pay, and that nothing was reserved", () => {
     const attempt = testAttempt({
       decision: testDecision({
         ruleCode: "R1_STALE_SNAPSHOT",
@@ -137,6 +137,7 @@ describe("renderReceipt", () => {
         best: null,
         snapshotId: null,
       }),
+      chosenOfferUrl: "https://store-d.example/p/standing-desk",
     });
     const view = renderReceipt({
       attempt: {
@@ -150,6 +151,7 @@ describe("renderReceipt", () => {
       hold: hold(attempt),
     });
     expect(view.lines).toEqual([
+      "Your agent tried to pay at Store D.",
       "No fresh listed item prices were available. Held for you.",
       "Nothing is reserved. Approving checks again at current listed prices and pays in one step.",
       "No listed item prices from Channel3 at 14:02 UTC.",
