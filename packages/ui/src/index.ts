@@ -9,6 +9,7 @@ export {
 export { HoldsTray } from "./components/HoldsTray.js";
 export { Leaders } from "./components/Leaders.js";
 export { type LinkLike, PlainLink } from "./components/Link.js";
+export { LiveBadge } from "./components/LiveBadge.js";
 export { ReceiptSlip, stampOf } from "./components/ReceiptSlip.js";
 export { ReportCard, type ReportCardData } from "./components/ReportCard.js";
 export { Roll, type RollEntry, RollRow } from "./components/Roll.js";
@@ -46,6 +47,15 @@ export {
   useUpdateLimits,
 } from "./data/commands-hooks.js";
 export { slipKeys } from "./data/keys.js";
+export {
+  type LiveMode,
+  type LiveState,
+  movedCounters,
+  refreshFor,
+  STAMP_COUNTERS,
+  type StampCounter,
+  useLive,
+} from "./data/live.js";
 export { type SlipEvent, SlipHydrate, SlipProvider, useSlip } from "./data/provider.js";
 export { createSlipQueryClient } from "./data/query-client.js";
 export {

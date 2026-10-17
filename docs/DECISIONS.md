@@ -465,3 +465,16 @@ at a time however often it is clicked. A call whose answer is lost is `unknown` 
 checking" — and the hook reads the receipt again every second, for up to 30 s, until the outcome
 shows; it is never sent a second time on its own, because the first may have moved the money. An
 issued agent key lives only in the hook's state, never in the query cache, a URL or a log.
+
+## D49 · 2026-10-17 · The page refreshes what a moved counter affects, and nothing else
+
+The kit's `useLive` reads the change stamp (D44) about once a second, compares its counters by
+name, and invalidates exactly the queries each moved counter can affect: a new attempt refreshes
+the roll, the tray, the mandate summary and the report cards; a payment event or a new PayPal id
+refreshes receipts and the tray; a new limits version refreshes the limits and the summary. It
+never writes into the cache, so the page always shows what the server returned. Changes are
+batched (250 ms after the last, 1 s at most) and invalidated without cancelling reads already
+under way, so a burst cannot starve a multi-page refetch. The last token is recorded before the
+refresh; the server reads the stamp before a page's data and hands it over as the starting token,
+so a change in between is caught on the first look. Polling rests while the tab is hidden, stops
+when signed out, and reports "offline" until Slip answers again.
