@@ -23,6 +23,7 @@ export {
   SlipClientError,
   type SlipClientErrorKind,
 } from "./data/client.js";
+export { useClock } from "./data/clock.js";
 export {
   type DecisionAnswer,
   type IssueKeyAnswer,
@@ -39,6 +40,17 @@ export {
 export { slipKeys } from "./data/keys.js";
 export { type SlipEvent, SlipHydrate, SlipProvider, useSlip } from "./data/provider.js";
 export { createSlipQueryClient } from "./data/query-client.js";
+export {
+  LIVE_PAGES,
+  type ReceiptsState,
+  useAgents,
+  useHolds,
+  useMandate,
+  usePolicies,
+  useReceipt,
+  useReceipts,
+  useReport,
+} from "./data/reads.js";
 export {
   parseTheme,
   SLIP_THEMES,
