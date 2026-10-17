@@ -57,3 +57,31 @@ jobs:
         run: pnpm exec vitest run --project db
         env:
           SLIP_TEST_DATABASE_URL: postgres://slip:slip@localhost:5432/postgres
+
+  web:
+    name: Web build and browser flows
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # `next build` type-checks through the project's own TypeScript 7 compiler.
+      - run: pnpm web:build
+      - name: Chromium for Playwright
+        run: pnpm --filter @slip/web exec playwright install --with-deps chromium
+      # Demo mode against the built app: in-memory store and the stand-ins, no keys needed.
+      - run: pnpm web:e2e
+        env:
+          CI: "true"
+      - name: Keep the traces of a failed run
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-traces
+          path: apps/web/test-results/
+          retention-days: 7
