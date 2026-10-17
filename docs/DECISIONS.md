@@ -408,3 +408,19 @@ no event, and the owner should still see it.
 It needs no migration: one statement with a counting subquery per table, each over an indexed
 column. The alternative, an append-only activity log read with an xmin horizon, stays the path for
 scale and is not needed at one mandate per owner.
+
+## D45 · 2026-10-17 · Typed errors are recognised across bundled copies (amends D42)
+
+D42 is wrong about one thing: Next.js puts pages and route handlers in separate server graphs, and
+each graph carries its own copy of the workspace packages (`SlipError` appears in both the route
+chunk and the page chunk of a build). The runtime they share hangs off `globalThis`, so its store
+throws the error classes of whichever graph built it first, and the other graph's `instanceof`
+missed them: a second tab approving a decided hold could see "Checking with PayPal…" instead of
+"Already approved", and a checkout race could surface as a server error.
+
+Every Slip error class now declares its own `kind` (an explicit string, because a minifier may
+rename classes); each error records the kinds of its class chain under the `Symbol.for`
+key `slip.error.kinds`, shared by every copy; and `SlipError`'s `Symbol.hasInstance` checks that
+record. `instanceof` therefore means "is this kind of Slip error", whichever copy made it. A class
+that forgets its own `kind` falls back to the ordinary prototype check rather than answering for
+its parent, and a test loads the module twice and checks every class both ways.
