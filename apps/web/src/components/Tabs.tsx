@@ -29,7 +29,12 @@ export function Tabs({ signedIn, demo = false }: { signedIn: boolean; demo?: boo
             key={href}
             href={href}
             className="slip-tab"
-            aria-current={path === href || path.startsWith(`${href}/`) ? "page" : undefined}
+            aria-current={
+              // The simulated PayPal page lives under /demo but is not the console.
+              path === href || (href !== "/demo" && path.startsWith(`${href}/`))
+                ? "page"
+                : undefined
+            }
           >
             {label}
             {href === "/holds" && holds !== undefined && holds > 0 ? ` ${holds}` : ""}
