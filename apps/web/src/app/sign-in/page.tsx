@@ -5,10 +5,16 @@ import { signInToDemo } from "../actions/session";
 
 export const dynamic = "force-dynamic";
 
-export default async function SignIn() {
+const REFUSALS: Record<string, string> = {
+  full: "This demo server has opened as many desks as it can hold. Restart it, or try again later.",
+  slow: "That is a lot of desks from one place in a few minutes. Wait a little, then open another.",
+};
+
+export default async function SignIn(props: { searchParams: Promise<{ refused?: string }> }) {
   if ((await currentOwner()) !== null) {
     redirect("/receipts");
   }
+  const refused = REFUSALS[(await props.searchParams).refused ?? ""];
   return (
     <article className="slip-sheet" data-perforated="">
       <p className="slip-meta">Slip</p>
@@ -26,6 +32,11 @@ export default async function SignIn() {
           <button type="submit" className="slip-button" data-variant="ink">
             Open a demo desk →
           </button>
+          {refused === undefined ? null : (
+            <p className="slip-note slip-pen" role="status">
+              {refused}
+            </p>
+          )}
         </form>
       ) : (
         <p className="slip-note slip-pen">

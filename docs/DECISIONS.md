@@ -424,3 +424,19 @@ key `slip.error.kinds`, shared by every copy; and `SlipError`'s `Symbol.hasInsta
 record. `instanceof` therefore means "is this kind of Slip error", whichever copy made it. A class
 that forgets its own `kind` falls back to the ordinary prototype check rather than answering for
 its parent, and a test loads the module twice and checks every class both ways.
+
+## D46 · 2026-10-17 · The demo's stand-ins are kept per visitor
+
+A demo process serves every visitor from one fake PayPal and one fake catalogue. The fake PayPal
+keeps a single queue of scripted outcomes, and the fake catalogue goes down for everyone at once,
+so one visitor's "make the next payment time out" or "Channel3 is down" reached whoever paid
+next; the seed itself flipped the global outage around an `await`, so two visitors signing in
+together could get each other's holds.
+
+The web runtime wraps both. `DemoPayPal` holds forced outcomes per mandate and hands one to the
+fake in the same synchronous step as that mandate's own call (the fake reads its queue before its
+first `await`), drops any the purchase did not use, maps every order, capture and void to its
+mandate for a per-visitor call log, and points approval links at Slip's own simulated approval
+page. `DemoOffers` takes an outage per product, and every visitor's products carry ids of their
+own (`trail-shoe--<mandate>`), so prices and outages never cross desks. Desks are never freed, so
+sign-ins are capped per process and per address.

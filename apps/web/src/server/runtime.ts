@@ -14,6 +14,11 @@ import { FakeOffersSource } from "@slip/offers/fake";
 import { FakePaymentGateway } from "@slip/paypal/fake";
 import { FakeSteeringClassifier } from "@slip/steering/fake";
 import { isDemo } from "./demo";
+import { INJECTION_PHRASE } from "./demo/catalogue";
+import type { DemoFakes } from "./demo/desk";
+import { type DemoDesk, DeskLimiter } from "./demo/desks";
+import { DemoOffers } from "./demo/offers";
+import { DemoPayPal } from "./demo/paypal";
 
 /**
  * Where the application is assembled: one `AppDeps` per server process, built once and reused by
@@ -21,8 +26,9 @@ import { isDemo } from "./demo";
  * instance hangs off `globalThis` rather than a module variable.
  *
  * Channel3, PayPal and the steering classifier are still the in-memory fakes (Increments 1, 3 and
- * 5 bring the real adapters). That is why `fakes` is exposed: the demo seed and the demo controls
- * need to stock a catalogue and approve a PayPal setup, which only a fake can do.
+ * 5 bring the real adapters), wrapped so many visitors can share one process: outcomes, outages and
+ * call logs are kept per desk (`DemoPayPal`, `DemoOffers`). That is why `fakes` is exposed: the
+ * demo seed and console stock a catalogue and approve a PayPal setup, which only a fake can do.
  */
 
 /**
@@ -31,15 +37,15 @@ import { isDemo } from "./demo";
  */
 export const SIMULATED_SERVICES = true;
 
-export interface Fakes {
-  offers: FakeOffersSource;
-  gateway: FakePaymentGateway;
+export interface Fakes extends DemoFakes {
   classifier: FakeSteeringClassifier;
 }
 
 export interface Runtime {
   deps: AppDeps;
   fakes: Fakes;
+  /** Demo desks opened by this process, by mandate, and the limits on opening more. */
+  demo: { desks: Map<string, DemoDesk>; limiter: DeskLimiter };
 }
 
 const KEY = Symbol.for("slip.web.runtime");
@@ -61,25 +67,46 @@ export async function fakes(): Promise<Fakes> {
 async function build(): Promise<Runtime> {
   const env = process.env;
   const clock = systemClock;
+  const store = await openStore(env);
+  const config = appConfig({
+    ...(env["SLIP_BASE_URL"] ? { publicBaseUrl: env["SLIP_BASE_URL"] } : {}),
+    pricesSource: SIMULATED_SERVICES ? "simulated" : "channel3",
+  });
+  const classifier = new FakeSteeringClassifier();
+  // The demo's steered listing carries this note; the stand-in classifier calls it instruction-like.
+  classifier.flagWhenListingIncludes(INJECTION_PHRASE);
   const fakes: Fakes = {
-    offers: new FakeOffersSource(),
-    gateway: new FakePaymentGateway({ clock }),
-    classifier: new FakeSteeringClassifier(),
+    offers: new DemoOffers(new FakeOffersSource()),
+    gateway: new DemoPayPal({
+      inner: new FakePaymentGateway({ clock }),
+      store,
+      clock,
+      latencyMs: 0,
+      publicBaseUrl: config.publicBaseUrl,
+    }),
+    classifier,
   };
   const deps: AppDeps = {
-    store: await openStore(env),
+    store,
     offers: fakes.offers,
     gateway: fakes.gateway,
     classifier: fakes.classifier,
     clock,
     ids: randomIds,
     log: env["NODE_ENV"] === "test" ? silentLogger : jsonLogger,
-    config: appConfig({
-      ...(env["SLIP_BASE_URL"] ? { publicBaseUrl: env["SLIP_BASE_URL"] } : {}),
-      pricesSource: SIMULATED_SERVICES ? "simulated" : "channel3",
-    }),
+    config,
   };
-  return { deps, fakes };
+  const limiter = new DeskLimiter({
+    maxDesks: positiveInt(env["SLIP_DEMO_MAX_DESKS"], 500),
+    perAddress: 10,
+    windowMs: 10 * 60_000,
+  });
+  return { deps, fakes, demo: { desks: new Map(), limiter } };
+}
+
+function positiveInt(value: string | undefined, fallback: number): number {
+  const n = Number(value);
+  return Number.isInteger(n) && n > 0 ? n : fallback;
 }
 
 /**

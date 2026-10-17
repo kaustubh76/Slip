@@ -1,40 +1,44 @@
-import { type AppDeps, appConfig, previewApproval, randomIds, silentLogger } from "@slip/app";
-import { createMemoryStore } from "@slip/db/memory";
+import { type AppDeps, previewApproval } from "@slip/app";
 import type { AttemptId, MandateId, OwnerId } from "@slip/domain";
-import { ManualClock, NOW } from "@slip/domain/testing";
-import { FakeOffersSource } from "@slip/offers/fake";
-import { FakePaymentGateway } from "@slip/paypal/fake";
-import { FakeSteeringClassifier } from "@slip/steering/fake";
 import { beforeAll, describe, expect, it } from "vitest";
-import { type DemoOwner, seedDemoOwner } from "./demo-seed";
-import type { Fakes } from "./runtime";
+import { demoWorld } from "./__fixtures__/world";
+import { productIdFor } from "./catalogue";
+import type { DemoFakes } from "./desk";
+import { type DemoOwner, seedDemoOwner } from "./seed";
 
 /**
  * The demo desk is built out of the real use cases, so this test is also a check that the mandate
  * flow and checkout still hang together from outside the application package.
  */
+
+const outcomesOf = async (deps: AppDeps, mandateId: string) =>
+  (await deps.store.attempts.listByMandate(mandateId as MandateId, { limit: 50 })).items.map(
+    (r) => ({
+      outcome: r.attempt.decision.outcome,
+      rule: r.attempt.decision.ruleCode,
+      payment: r.payment?.status ?? "NONE",
+      hold: r.hold?.status ?? null,
+    }),
+  );
+
+const FOUR = [
+  // Cheapest: paid in one step.
+  { outcome: "PAID", rule: "R7_WITHIN_LIMITS", payment: "CAPTURED", hold: null },
+  // $11 over, and the pricier store pays more commission: refused, no PayPal order.
+  { outcome: "REJECTED", rule: "R4_OVERPAID", payment: "NONE", hold: null },
+  // Above the owner's cap: money reserved, waiting for them.
+  { outcome: "HELD", rule: "R6_ABOVE_ORDER_CAP", payment: "AUTHORIZED", hold: "PENDING" },
+  // Channel3 down: held with nothing reserved, the case approval pays in one step.
+  { outcome: "HELD", rule: "R1_STALE_SNAPSHOT", payment: "NONE", hold: "PENDING" },
+];
+
 describe("seedDemoOwner", () => {
   let deps: AppDeps;
-  let fakes: Fakes;
+  let fakes: DemoFakes;
   let owner: DemoOwner;
 
   beforeAll(async () => {
-    const clock = new ManualClock(NOW);
-    fakes = {
-      offers: new FakeOffersSource(),
-      gateway: new FakePaymentGateway({ clock }),
-      classifier: new FakeSteeringClassifier(),
-    };
-    deps = {
-      store: createMemoryStore(),
-      offers: fakes.offers,
-      gateway: fakes.gateway,
-      classifier: fakes.classifier,
-      clock,
-      ids: randomIds,
-      log: silentLogger,
-      config: appConfig(),
-    };
+    ({ deps, fakes } = demoWorld());
     owner = await seedDemoOwner(deps, fakes);
   });
 
@@ -56,29 +60,17 @@ describe("seedDemoOwner", () => {
     expect(JSON.stringify(agents)).not.toContain(owner.apiKey);
   });
 
-  it("the agent has already tried four purchases, one of each kind", async () => {
+  it("the agent has already tried four purchases, one of each kind, on its own products", async () => {
+    expect(await outcomesOf(deps, owner.mandateId)).toEqual(expect.arrayContaining(FOUR));
+    expect(await outcomesOf(deps, owner.mandateId)).toHaveLength(4);
     const page = await deps.store.attempts.listByMandate(owner.mandateId as MandateId, {
       limit: 50,
     });
-    const outcomes = page.items.map((r) => ({
-      outcome: r.attempt.decision.outcome,
-      rule: r.attempt.decision.ruleCode,
-      payment: r.payment?.status ?? "NONE",
-      hold: r.hold?.status ?? null,
-    }));
-    expect(outcomes).toHaveLength(4);
-    expect(outcomes).toEqual(
-      expect.arrayContaining([
-        // Cheapest: paid in one step.
-        { outcome: "PAID", rule: "R7_WITHIN_LIMITS", payment: "CAPTURED", hold: null },
-        // $11 over and the pricier store pays more commission: refused, no PayPal order.
-        { outcome: "REJECTED", rule: "R4_OVERPAID", payment: "NONE", hold: null },
-        // Above the owner's cap: money reserved, waiting for them.
-        { outcome: "HELD", rule: "R6_ABOVE_ORDER_CAP", payment: "AUTHORIZED", hold: "PENDING" },
-        // Channel3 down: held with nothing reserved, the case approval pays in one step.
-        { outcome: "HELD", rule: "R1_STALE_SNAPSHOT", payment: "NONE", hold: "PENDING" },
-      ]),
-    );
+    for (const r of page.items) {
+      expect(r.attempt.productId.endsWith(`--${owner.mandateId.slice(0, 8)}`)).toBe(true);
+    }
+    // The outage was this desk's alone, and it is over.
+    expect(fakes.offers.isDown(productIdFor("standing-desk", owner.mandateId))).toBe(false);
   });
 
   it("both holds can actually be decided: one captures, one pays after a re-check", async () => {
@@ -102,7 +94,11 @@ describe("seedDemoOwner", () => {
   });
 
   it("charged once, reserved once, and left nothing else at PayPal", async () => {
-    const orders = fakes.gateway.orders();
+    const orders = fakes.gateway
+      .orders()
+      .filter((o) =>
+        fakes.gateway.callsFor(owner.mandateId).some((c) => c.attemptId === o.invoiceId),
+      );
     expect(orders.filter((o) => o.intent === "CAPTURE")).toHaveLength(1);
     expect(orders.filter((o) => o.intent === "AUTHORIZE")).toHaveLength(1);
     expect(fakes.gateway.callsTo("captureAuthorization")).toEqual([]);
@@ -123,5 +119,21 @@ describe("seedDemoOwner", () => {
     expect(theirs.items.filter((r) => mine.has(r.attempt.id))).toEqual([]);
     const otherOwner = await deps.store.mandates.get(second.mandateId as MandateId);
     expect(otherOwner?.ownerId).not.toBe(owner.ownerId as OwnerId);
+  });
+});
+
+describe("two visitors signing in at once", () => {
+  it("each desk gets exactly its own four purchases: no outage or outcome leaks across", async () => {
+    const { deps, fakes } = demoWorld();
+    const desks = await Promise.all([
+      seedDemoOwner(deps, fakes),
+      seedDemoOwner(deps, fakes),
+      seedDemoOwner(deps, fakes),
+    ]);
+    for (const desk of desks) {
+      const outcomes = await outcomesOf(deps, desk.mandateId);
+      expect(outcomes).toHaveLength(4);
+      expect(outcomes).toEqual(expect.arrayContaining(FOUR));
+    }
   });
 });
