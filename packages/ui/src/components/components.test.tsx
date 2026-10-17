@@ -7,6 +7,7 @@ import {
   rejectedView,
   releasedView,
 } from "../__fixtures__/views.js";
+import { placeLabels } from "./GapScale.js";
 import { Leaders } from "./Leaders.js";
 import { ReceiptSlip } from "./ReceiptSlip.js";
 import { Stamp } from "./Stamp.js";
@@ -95,6 +96,24 @@ describe("ReceiptSlip", () => {
     expect(container.querySelector("figcaption")?.textContent).toContain(
       "Within your limits up to $55.99.",
     );
+  });
+
+  it("prints each price under the scale once, and the order cap above it", () => {
+    const { container } = render(<ReceiptSlip view={heldView()} />);
+    const [top, bottom] = container.querySelectorAll(".slip-scale-labels");
+    expect(top?.textContent).toBe("order cap $200.00");
+    // The choice is the lowest price: one label, not two printed over each other.
+    const under = [...(bottom?.querySelectorAll("span") ?? [])].map((s) => s.textContent);
+    expect(under.filter((t) => t === "$239.00")).toHaveLength(1);
+  });
+
+  it("drops a label that would overlap one already placed, keeping the agent's choice", () => {
+    const placed = placeLabels([
+      { key: "chosen", x: 700, text: "$56.50" },
+      { key: "low", x: 0, text: "$47.99" },
+      { key: "limit", x: 650, text: "$55.99" },
+    ]);
+    expect(placed.map((l) => l.key)).toEqual(["low", "chosen"]);
   });
 
   it("a paid purchase at the lowest price has no offer link and says it was paid", () => {
