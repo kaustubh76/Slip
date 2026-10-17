@@ -1,4 +1,5 @@
 import type { RuleCode } from "@slip/domain";
+import { useId } from "react";
 import { type LinkLike, PlainLink } from "./Link.js";
 import type { RollEntry } from "./Roll.js";
 import { clockTime } from "./text.js";
@@ -24,10 +25,12 @@ export function HoldsTray(props: {
 }) {
   const Link = props.Link ?? PlainLink;
   const n = props.entries.length;
+  // Unique per tray, so two trays on one page (a host embedding the kit) never share a label.
+  const title = useId();
   return (
-    <section className="slip-tray" aria-labelledby="slip-tray-title">
+    <section className="slip-tray" aria-labelledby={title}>
       <header className="slip-tray-head">
-        <h2 id="slip-tray-title" className="slip-meta">
+        <h2 id={title} className="slip-meta">
           Waiting for you
         </h2>
         <p className="slip-meta">
