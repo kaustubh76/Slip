@@ -130,6 +130,25 @@ export class DemoPayPal implements PaymentGateway {
     this.#inner.settle(orderId, outcome);
   }
 
+  /**
+   * PayPal finishes what it left pending for this mandate: every capture or authorization still
+   * PENDING completes. Slip hears of it the way it would in production — the resolver reads the
+   * order — not from here. Returns how many were settled.
+   */
+  async settlePending(mandateId: string): Promise<number> {
+    let settled = 0;
+    for (const order of this.#inner.orders()) {
+      const pending =
+        order.capture?.status === "PENDING" ||
+        (order.capture === null && order.authorization?.status === "PENDING");
+      if (pending && (await this.#mandateOf(order.invoiceId)) === mandateId) {
+        this.#inner.settle(order.id, "completed");
+        settled += 1;
+      }
+    }
+    return settled;
+  }
+
   /** The fake's orders behind one attempt. */
   ordersFor(invoiceId: string): FakeOrder[] {
     return this.#inner.ordersFor(invoiceId);

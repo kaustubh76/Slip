@@ -14,7 +14,7 @@ const TABS = [
 ] as const;
 
 /** The index tabs; the open one has its bottom rule cut, like a folder. Holds counts live. */
-export function Tabs({ signedIn }: { signedIn: boolean }) {
+export function Tabs({ signedIn, demo = false }: { signedIn: boolean; demo?: boolean }) {
   const path = usePathname();
   const waiting = useHolds({ enabled: signedIn });
   const holds = waiting.data?.pending.length;
@@ -23,17 +23,19 @@ export function Tabs({ signedIn }: { signedIn: boolean }) {
       <span className="slip-title" aria-hidden="true">
         Slip
       </span>
-      {TABS.map(([href, label]) => (
-        <Link
-          key={href}
-          href={href}
-          className="slip-tab"
-          aria-current={path === href || path.startsWith(`${href}/`) ? "page" : undefined}
-        >
-          {label}
-          {href === "/holds" && holds !== undefined && holds > 0 ? ` ${holds}` : ""}
-        </Link>
-      ))}
+      {[...TABS, ...(demo && signedIn ? ([["/demo", "Demo"]] as const) : [])].map(
+        ([href, label]) => (
+          <Link
+            key={href}
+            href={href}
+            className="slip-tab"
+            aria-current={path === href || path.startsWith(`${href}/`) ? "page" : undefined}
+          >
+            {label}
+            {href === "/holds" && holds !== undefined && holds > 0 ? ` ${holds}` : ""}
+          </Link>
+        ),
+      )}
     </nav>
   );
 }

@@ -20,6 +20,9 @@ import { type DemoFakes, runErrand, stockDesk } from "./desk";
  * each other's outage or prices.
  */
 
+/** How long a demo desk trusts a listing before asking the (stand-in) Channel3 again. */
+export const DEMO_PRICES_FRESH_MS = 60_000;
+
 export interface DemoOwner {
   ownerId: string;
   mandateId: string;
@@ -35,7 +38,11 @@ export async function seedDemoOwner(deps: AppDeps, fakes: DemoFakes): Promise<De
   }
   const ownerId = owner.owner.id;
 
-  const started = await startMandate(deps, ownerId, {});
+  // Prices are fresh for a minute rather than ten, so a price changed from the demo console is
+  // seen by the next check within the demo's attention span (approving a hold re-checks it).
+  const started = await startMandate(deps, ownerId, {
+    limits: { snapshotMaxAgeMs: DEMO_PRICES_FRESH_MS },
+  });
   if (started.status !== "started") {
     throw new Error(`demo mandate: ${started.message}`);
   }

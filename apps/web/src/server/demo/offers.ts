@@ -1,5 +1,5 @@
 import "server-only";
-import type { FetchProductResult, OffersSource } from "@slip/domain";
+import type { Cents, FetchProductResult, OffersSource } from "@slip/domain";
 import type { FakeOffersSource, FakeProduct } from "@slip/offers/fake";
 
 /**
@@ -26,6 +26,21 @@ export class DemoOffers implements OffersSource {
   product(productId: string): FakeProduct | undefined {
     const product = this.#products.get(productId);
     return product === undefined ? undefined : structuredClone(product);
+  }
+
+  /**
+   * Moves one offer's listed price by `deltaCents` (never below one cent), as a store repricing
+   * would. Returns the new price, or null when there is no such offer.
+   */
+  reprice(productId: string, url: string, deltaCents: number): Cents | null {
+    const product = this.#products.get(productId);
+    const offer = product?.offers.find((o) => o.url === url);
+    if (product === undefined || offer === undefined || offer.priceCents === null) {
+      return null;
+    }
+    offer.priceCents = Math.max(1, offer.priceCents + deltaCents) as Cents;
+    this.setProduct(product);
+    return offer.priceCents;
   }
 
   /** This product's listing cannot be fetched until it comes back. */

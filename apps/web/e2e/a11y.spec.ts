@@ -19,6 +19,7 @@ for (const theme of ["original", "carbon"] as const) {
       "/limits",
       "/agents",
       "/mandate",
+      "/demo",
     ]) {
       await page.goto(path);
       await expect(page.locator("main")).toBeVisible();

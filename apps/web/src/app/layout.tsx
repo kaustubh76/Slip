@@ -8,6 +8,7 @@ import type { ReactNode } from "react";
 import { SlipRoot } from "../components/SlipRoot";
 import { Tabs } from "../components/Tabs";
 import { ThemeToggle } from "../components/ThemeToggle";
+import { isDemo } from "../server/demo";
 import { disclosure } from "../server/disclosure";
 import { currentOwner } from "../server/owner";
 import { SIMULATED_SERVICES } from "../server/runtime";
@@ -44,7 +45,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       <body className="slip-page">
         <SlipRoot>
           <header className="slip-masthead">
-            <Tabs signedIn={signedIn} />
+            <Tabs signedIn={signedIn} demo={isDemo()} />
             <div className="slip-masthead-right">
               <ThemeToggle initial={theme} />
               {signedIn ? (
