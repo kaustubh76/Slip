@@ -54,7 +54,6 @@ describe("createSlipClient", () => {
     expect((await client.holds()).pending).toHaveLength(1);
     expect(await client.stamp()).toBe("1.0.0.0.0.1.0.1.0");
     expect(calls[0]).toBe("/api/v1/receipts?before=abc&agent=agent-1&limit=5");
-    expect(client.liveUrl).toBe("/api/v1/live");
   });
 
   it("says what kind of failure it was", async () => {
@@ -88,14 +87,14 @@ describe("SlipProvider", () => {
   it("hands its client to the hooks below it, and refuses hooks without it", () => {
     const client = createSlipClient({ fetch: fakeFetch({}).fetch, commands });
     function Probe() {
-      return <p>{useSlip().client.liveUrl}</p>;
+      return <p>{useSlip().client === client ? "the client" : "another"}</p>;
     }
     render(
       <SlipProvider client={client}>
         <Probe />
       </SlipProvider>,
     );
-    expect(screen.getByText("/api/v1/live")).toBeDefined();
+    expect(screen.getByText("the client")).toBeDefined();
     expect(() => render(<Probe />)).toThrow(/SlipProvider/);
   });
 });

@@ -33,7 +33,6 @@ function stampClient(answers: Array<string | Error>): SlipClient & { reads: numb
       }
       return answer ?? "";
     },
-    liveUrl: "/api/v1/live",
     commands: {} as SlipCommands,
   };
   return client;

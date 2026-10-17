@@ -50,8 +50,6 @@ export interface SlipClient {
   mandate(signal?: AbortSignal): Promise<MandateSummary>;
   /** How much has happened under the mandate, as one short token (see the change stamp). */
   stamp(signal?: AbortSignal): Promise<string>;
-  /** Where server-sent change events are published. */
-  readonly liveUrl: string;
   readonly commands: SlipCommands;
 }
 
@@ -130,7 +128,6 @@ export function createSlipClient(options: {
     policies: async (signal) => (await get("/api/v1/policies", PoliciesSchema, signal)).versions,
     mandate: (signal) => get("/api/v1/mandate", MandateSummarySchema, signal),
     stamp: async (signal) => (await get("/api/v1/stamp", StampSchema, signal)).token,
-    liveUrl: `${base}/api/v1/live`,
     commands: safeCommands(options.commands),
   };
 }

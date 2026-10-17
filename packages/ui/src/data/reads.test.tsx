@@ -41,7 +41,6 @@ function listClient(rows: ReceiptRow[], size: number): SlipClient {
     policies: unused,
     mandate: unused,
     stamp: unused,
-    liveUrl: "/api/v1/live",
     commands: {} as SlipCommands,
   };
 }

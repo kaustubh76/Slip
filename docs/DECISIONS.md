@@ -478,3 +478,14 @@ under way, so a burst cannot starve a multi-page refetch. The last token is reco
 refresh; the server reads the stamp before a page's data and hands it over as the starting token,
 so a change in between is caught on the first look. Polling rests while the tab is hidden, stops
 when signed out, and reports "offline" until Slip answers again.
+
+## D50 · 2026-10-17 · Live updates stay on the stamp poll; no server-sent events for now
+
+The UI plan put server-sent events on top of the stamp poll. They are not built: the poll (D49)
+already prints a new receipt within about a second; each owner has one mandate, so a reading is
+one cheap counting statement; and the demo runs as one long-lived process. Events would add held
+connections, a planned close and reconnect every minute where serverless functions are capped,
+and EventSource's own rules (a non-200 closes it for good, a planned close fires `error`), all to
+save under a second. The client's unused `liveUrl` is removed rather than left pointing at a
+route that does not exist. If many owners or tighter latency need it, events can carry the same
+stamp, and `useLive` would refresh exactly as it does now.
