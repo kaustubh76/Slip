@@ -60,6 +60,7 @@ export { type SlipEvent, SlipHydrate, SlipProvider, useSlip } from "./data/provi
 export { createSlipQueryClient } from "./data/query-client.js";
 export {
   LIVE_PAGES,
+  type QueryOptions,
   type ReceiptsState,
   useAgents,
   useHolds,

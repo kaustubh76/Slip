@@ -14,6 +14,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { slipKeys } from "./keys.js";
 import { useSlip } from "./provider.js";
 
+/** `enabled: false` holds a query back (signed out, say) without unmounting the component. */
+export interface QueryOptions {
+  enabled?: boolean;
+}
+
 /** How many pages the roll keeps live; older ones are reached through the URL. */
 export const LIVE_PAGES = 3;
 /** How long a receipt that just printed is marked fresh (the print and the stamp press). */
@@ -166,26 +171,29 @@ export function useReceipts(
   };
 }
 
-export function useReceipt(id: string) {
+export function useReceipt(id: string, options: QueryOptions = {}) {
   const { client } = useSlip();
   return useQuery<ReceiptDetail, Error>({
     queryKey: slipKeys.receipt(id),
+    enabled: options.enabled ?? true,
     queryFn: ({ signal }) => client.receipt(id, signal),
   });
 }
 
-export function useHolds() {
+export function useHolds(options: QueryOptions = {}) {
   const { client } = useSlip();
   return useQuery<Holds, Error>({
     queryKey: slipKeys.holds,
+    enabled: options.enabled ?? true,
     queryFn: ({ signal }) => client.holds(signal),
   });
 }
 
-export function useAgents() {
+export function useAgents(options: QueryOptions = {}) {
   const { client } = useSlip();
   return useQuery<AgentCard[], Error>({
     queryKey: slipKeys.agents,
+    enabled: options.enabled ?? true,
     queryFn: ({ signal }) => client.agents(signal),
   });
 }
@@ -196,18 +204,20 @@ export function useReport(agentId: string): AgentCard | null {
   return agents.data?.find((card) => card.agent.id === agentId) ?? null;
 }
 
-export function usePolicies() {
+export function usePolicies(options: QueryOptions = {}) {
   const { client } = useSlip();
   return useQuery<PolicyView[], Error>({
     queryKey: slipKeys.policies,
+    enabled: options.enabled ?? true,
     queryFn: ({ signal }) => client.policies(signal),
   });
 }
 
-export function useMandate() {
+export function useMandate(options: QueryOptions = {}) {
   const { client } = useSlip();
   return useQuery<MandateSummary, Error>({
     queryKey: slipKeys.mandate,
+    enabled: options.enabled ?? true,
     queryFn: ({ signal }) => client.mandate(signal),
   });
 }

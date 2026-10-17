@@ -1,47 +1,26 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { type RevokeMandateAnswer, useRevokeMandate } from "@slip/ui";
 import { useState } from "react";
-import { type RevokeMandateResult, revokeTheMandate } from "../app/actions/mandate";
-import { answerOf } from "./answer";
+
+type Revoked = Extract<RevokeMandateAnswer, { status: "revoked" }>;
 
 /**
  * The tear-off strip at the foot of the permission slip. The consequences are printed before the
  * control, the word has to be typed, and what it actually released is reported afterwards —
  * including a PayPal deletion that did not go through, which the resolver keeps retrying.
  */
-export function KillSwitch({ pendingHolds }: { pendingHolds: number }) {
-  const router = useRouter();
+export function KillSwitch({
+  pendingHolds,
+  onRevoked,
+}: {
+  pendingHolds: number;
+  /** The page keeps the summary on screen after the permission flips to cancelled. */
+  onRevoked: (result: Revoked) => void;
+}) {
   const [typed, setTyped] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [result, setResult] = useState<RevokeMandateResult | null>(null);
-
-  if (result?.status === "revoked") {
-    return (
-      <section className="slip-tear-off" aria-label="Cancel this permission">
-        <p className="slip-meta">Cancelled</p>
-        <p className="slip-sentence">Slip will not pay for anything else under this permission.</p>
-        <ul className="slip-prose">
-          <li>Every checkout from now on is refused.</li>
-          <li>
-            {result.holdsDeclined === 0
-              ? "There was nothing waiting to release."
-              : `${result.holdsDeclined} ${result.holdsDeclined === 1 ? "hold was" : "holds were"} released; nothing was charged.`}
-          </li>
-          <li>
-            {result.vault === "deleted"
-              ? "Your saved payment method was deleted at PayPal."
-              : result.vault === "nothing-to-delete"
-                ? "There was no saved payment method left to delete."
-                : "PayPal has not confirmed deleting the saved method yet; Slip keeps asking until it does."}
-          </li>
-        </ul>
-        <button type="button" className="slip-button" onClick={() => router.refresh()}>
-          Done
-        </button>
-      </section>
-    );
-  }
+  const { revoke, status, answer: result } = useRevokeMandate();
+  const busy = status === "busy";
 
   return (
     <section className="slip-tear-off" aria-label="Cancel this permission">
@@ -76,24 +55,48 @@ export function KillSwitch({ pendingHolds }: { pendingHolds: number }) {
           disabled={busy || typed.trim().toUpperCase() !== "REVOKE"}
           aria-busy={busy}
           onClick={() => {
-            setBusy(true);
-            void answerOf(revokeTheMandate(typed)).then((answer) => {
-              setBusy(false);
-              setResult(answer);
-              router.refresh();
+            void revoke(typed).then((answer) => {
+              if (answer?.status === "revoked") {
+                onRevoked(answer);
+              }
             });
           }}
         >
           {busy ? "Tearing the slip…" : "Tear the slip"}
         </button>
       </div>
-      {result === null ? null : (
+      {result === null || result.status === "revoked" ? null : (
         <p className="slip-note slip-pen" role="status">
           {result.status === "unknown"
-            ? "Slip could not tell whether that went through. Reload the page to see where the permission stands."
+            ? "Slip could not tell whether that went through. It is checking; this slip shows where the permission stands as soon as it knows."
             : result.message}
         </p>
       )}
+    </section>
+  );
+}
+
+/** What the kill switch actually released, kept on the slip after it flips to cancelled. */
+export function RevokeSummary({ result }: { result: Revoked }) {
+  return (
+    <section className="slip-tear-off" aria-label="What cancelling released">
+      <p className="slip-meta">Cancelled</p>
+      <p className="slip-sentence">Slip will not pay for anything else under this permission.</p>
+      <ul className="slip-prose">
+        <li>Every checkout from now on is refused.</li>
+        <li>
+          {result.holdsDeclined === 0
+            ? "There was nothing waiting to release."
+            : `${result.holdsDeclined} ${result.holdsDeclined === 1 ? "hold was" : "holds were"} released; nothing was charged.`}
+        </li>
+        <li>
+          {result.vault === "deleted"
+            ? "Your saved payment method was deleted at PayPal."
+            : result.vault === "nothing-to-delete"
+              ? "There was no saved payment method left to delete."
+              : "PayPal has not confirmed deleting the saved method yet; Slip keeps asking until it does."}
+        </li>
+      </ul>
     </section>
   );
 }

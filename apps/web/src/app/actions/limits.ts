@@ -1,7 +1,6 @@
 "use server";
 
 import { updateLimits } from "@slip/app";
-import { revalidatePath } from "next/cache";
 import {
   invalidRequest,
   type LimitsInput,
@@ -47,8 +46,6 @@ export async function saveLimits(
       },
       { basedOnVersion },
     );
-    revalidatePath("/limits");
-    revalidatePath("/receipts");
     if (result.status === "refused") {
       return { status: "refused", reason: result.reason, message: result.message };
     }

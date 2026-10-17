@@ -1,7 +1,6 @@
 "use server";
 
 import { issueAgentKey, revokeAgentKey } from "@slip/app";
-import { revalidatePath } from "next/cache";
 import { AgentIdSchema, AgentNameSchema, invalidRequest } from "../../server/action-input";
 import { requireOwner } from "../../server/owner";
 
@@ -26,7 +25,6 @@ export async function issueKey(name: string): Promise<IssueResult> {
   }
   try {
     const result = await issueAgentKey(deps, ownerId, mandateId, { name });
-    revalidatePath("/agents");
     return result.status === "refused"
       ? { status: "refused", reason: result.reason, message: result.message }
       : { status: "issued", name: result.agent.name, apiKey: result.apiKey };
@@ -44,7 +42,6 @@ export async function revokeKey(agentId: string): Promise<RevokeResult> {
   }
   try {
     const result = await revokeAgentKey(deps, ownerId, agentId);
-    revalidatePath("/agents");
     return result.status === "refused"
       ? { status: "refused", reason: result.reason, message: result.message }
       : { status: "revoked" };

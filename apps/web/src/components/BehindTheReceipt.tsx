@@ -1,12 +1,12 @@
-import type { ReceiptDetail } from "@slip/app";
-import { type ReceiptView, shortNo } from "@slip/receipt";
+import { type OfferRow, type ReceiptDetail, type ReceiptView, shortNo } from "@slip/receipt";
 import { Leaders } from "@slip/ui";
 import Link from "next/link";
 
 /**
  * Everything behind the five-second receipt, below the tear line: which rules tripped and in what
- * order, the policy version it was decided under, what PayPal was told and answered, the agent's
- * own words (quoted, and labelled as something Slip does not act on), and the payment's moves.
+ * order, the policy version it was decided under, every offer the snapshot listed and why each one
+ * was or was not compared, what PayPal was told and answered, the agent's own words (quoted, and
+ * labelled as something Slip does not act on), and the payment's moves.
  */
 export function BehindTheReceipt({ detail }: { detail: ReceiptDetail }) {
   const { view } = detail;
@@ -32,6 +32,9 @@ export function BehindTheReceipt({ detail }: { detail: ReceiptDetail }) {
             : ([["Prices", `Channel3 snapshot ${shortNo(view.snapshotId)}`]] as const)),
         ]}
       />
+      {detail.offers.length === 0 ? null : (
+        <OffersTable offers={detail.offers} simulated={view.simulated} />
+      )}
       <h4 className="slip-meta">Rules that tripped</h4>
       <ol className="slip-rules">
         {view.reasons.map((reason, i) => (
@@ -88,4 +91,57 @@ export function BehindTheReceipt({ detail }: { detail: ReceiptDetail }) {
 
 function paymentSummary(view: ReceiptView): string {
   return view.paymentStatus === "NONE" ? "no PayPal order" : view.paymentStatus;
+}
+
+/** Every offer the snapshot listed: the lowest, the chosen, and why any was left out. */
+function OffersTable({ offers, simulated }: { offers: OfferRow[]; simulated: boolean }) {
+  return (
+    <>
+      <h4 className="slip-meta">Offers Slip compared</h4>
+      <table className="slip-offers">
+        <thead>
+          <tr>
+            <th scope="col">Store</th>
+            <th scope="col">Listed price</th>
+            <th scope="col">Commission</th>
+            <th scope="col">Compared</th>
+          </tr>
+        </thead>
+        <tbody>
+          {offers.map((offer, i) => (
+            <tr
+              // A listing can appear twice; the position keeps the rows apart.
+              key={`${offer.domain}-${i}`}
+              data-best={offer.best ? "" : undefined}
+              data-chosen={offer.chosen ? "" : undefined}
+            >
+              <th scope="row">
+                {offer.link === null || simulated ? (
+                  offer.store
+                ) : (
+                  <a
+                    className="slip-link"
+                    href={offer.link}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    {offer.store}
+                  </a>
+                )}
+                {offer.best ? <span className="slip-offer-role"> LOWEST</span> : null}
+                {offer.chosen ? <span className="slip-offer-role"> CHOSEN</span> : null}
+              </th>
+              <td className="slip-mono">{offer.price ?? "—"}</td>
+              <td>{offer.commission === null ? "—" : `up to ${offer.commission}`}</td>
+              <td>{offer.compared ? "yes" : `no: ${offer.notCompared ?? "left out"}`}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="slip-caption">
+        Listed item prices only; shipping and tax are not included.
+        {simulated ? " These stores and prices are made up for the demo." : ""}
+      </p>
+    </>
+  );
 }

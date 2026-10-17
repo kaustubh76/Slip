@@ -1,131 +1,122 @@
 "use client";
 
-import { ApproveDialog, DeclineDialog } from "@slip/ui";
-import { useRouter } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
-import { approve, decline, previewHoldApproval } from "../app/actions/holds";
-import type { DecisionResult, PreviewResult, Refused } from "../server/hold-results";
-import { answerOf } from "./answer";
-
-/** While an answer is unknown, the page is read again this often, for this long. */
-const REREAD_EVERY_MS = 1_000;
-const REREAD_FOR_MS = 30_000;
+import type { ReceiptView } from "@slip/receipt";
+import { ApproveDialog, DeclineDialog, type RefusalView, useHoldDecision } from "@slip/ui";
+import { useEffect, useRef, useState } from "react";
 
 type Open = "approve" | "decline" | null;
-type Status = "idle" | "busy" | "unknown";
 
 /**
  * The owner's two decisions on one hold. Nothing is assumed about what the server will say: the
  * amount comes from a preview the server computed, the confirmation sends that amount back, and
- * what is drawn afterwards is what the server returned. A decision whose answer was lost says so
- * and re-reads the receipt; it is never reported as a failure, and never sent again on its own.
+ * what is drawn afterwards is what the server returned (D48). If the hold is decided somewhere
+ * else while a dialog is open — another tab, a revoke, the 48 hours running out — the dialog says
+ * so instead of vanishing; `onOpenChange` lets a list keep the hold on screen meanwhile.
  */
 export function HoldDecision({
-  receiptId,
-  reservedCents,
+  view,
+  onOpenChange,
 }: {
-  receiptId: string;
-  /** What PayPal is holding, from the receipt, so declining can name it. */
-  reservedCents: number | null;
+  view: ReceiptView;
+  onOpenChange?: (open: boolean) => void;
 }) {
-  const router = useRouter();
+  const decision = useHoldDecision(view.receiptId);
   const [open, setOpen] = useState<Open>(null);
-  const [preview, setPreview] = useState<PreviewResult | null>(null);
-  const [refusal, setRefusal] = useState<Refused | null>(null);
-  const [status, setStatus] = useState<Status>("idle");
-  const [, start] = useTransition();
+  const pending = view.hold?.status === "PENDING";
+  // Held in a ref: a parent's callback changes every render and must not re-run the effect below.
+  const notify = useRef(onOpenChange);
+  notify.current = onOpenChange;
 
-  // An answer that never arrived: read the receipt again until the decision shows (the hold leaves
-  // PENDING and this component with it) — never send the decision a second time.
-  useEffect(() => {
-    if (status !== "unknown") {
-      return;
-    }
-    const every = setInterval(() => start(() => router.refresh()), REREAD_EVERY_MS);
-    const enough = setTimeout(() => clearInterval(every), REREAD_FOR_MS);
-    return () => {
-      clearInterval(every);
-      clearTimeout(enough);
-    };
-  }, [status, router]);
-
+  const show = (next: Open) => {
+    setOpen(next);
+    notify.current?.(next !== null);
+  };
   const close = () => {
-    setOpen(null);
-    setPreview(null);
-    setRefusal(null);
-    setStatus("idle");
-    start(() => router.refresh());
+    decision.reset();
+    show(null);
   };
 
-  const settle = (result: DecisionResult) => {
-    if (result.status === "done") {
-      close();
-      return;
+  // The server said it is done: the dialog has nothing left to ask.
+  useEffect(() => {
+    if (decision.decided !== null) {
+      setOpen(null);
+      notify.current?.(false);
     }
-    setStatus(result.status === "unknown" ? "unknown" : "idle");
-    setRefusal(result.status === "refused" ? result : null);
-    if (result.status === "unknown" || result.reason === "ALREADY_DECIDED") {
-      start(() => router.refresh());
-    }
-  };
+  }, [decision.decided]);
 
-  const openApprove = () => {
-    setOpen("approve");
-    setPreview(null);
-    setRefusal(null);
-    setStatus("idle");
-    void answerOf(previewHoldApproval(receiptId)).then((result) => {
-      setPreview(result.status === "preview" ? result : null);
-      setRefusal(result.status === "refused" ? result : null);
-      setStatus(result.status === "unknown" ? "unknown" : "idle");
-    });
-  };
+  if (!pending && open === null) {
+    return null;
+  }
+  const elsewhere =
+    !pending &&
+    decision.decided === null &&
+    decision.status === "idle" &&
+    decision.refusal === null;
+  const refusal: RefusalView | null = elsewhere ? alreadyDecided(view) : decision.refusal;
 
   return (
     <div className="slip-decision">
-      <p className="slip-meta">Your decision</p>
-      <div className="slip-dialog-actions">
-        <button type="button" className="slip-button" data-variant="ink" onClick={openApprove}>
-          Approve…
-        </button>
-        <button
-          type="button"
-          className="slip-button"
-          onClick={() => {
-            setOpen("decline");
-            setRefusal(null);
-            setStatus("idle");
-          }}
-        >
-          Decline…
-        </button>
-      </div>
-      <p className="slip-caption">
-        Approving takes the money from your PayPal and completes the purchase. Declining releases
-        it; nothing is charged. No decision within 48 hours releases it on its own.
-      </p>
+      {pending ? (
+        <>
+          <p className="slip-meta">Your decision</p>
+          <div className="slip-dialog-actions">
+            <button
+              type="button"
+              className="slip-button"
+              data-variant="ink"
+              onClick={() => {
+                show("approve");
+                void decision.loadPreview();
+              }}
+            >
+              Approve…
+            </button>
+            <button type="button" className="slip-button" onClick={() => show("decline")}>
+              Decline…
+            </button>
+          </div>
+          <p className="slip-caption">
+            Approving takes the money from your PayPal and completes the purchase. Declining
+            releases it; nothing is charged. No decision within 48 hours releases it on its own.
+          </p>
+        </>
+      ) : null}
       <ApproveDialog
         open={open === "approve"}
-        preview={preview?.status === "preview" ? preview : null}
+        preview={decision.preview}
         refusal={refusal}
-        status={status}
-        onApprove={(amountCents) => {
-          setStatus("busy");
-          void answerOf(approve(receiptId, amountCents)).then(settle);
-        }}
+        status={decision.status}
+        onApprove={(amountCents) => void decision.approve(amountCents)}
         onClose={close}
       />
       <DeclineDialog
         open={open === "decline"}
-        reservedCents={reservedCents}
-        status={status}
+        reservedCents={view.reservedCents}
+        status={decision.status}
         refusal={refusal}
-        onDecline={() => {
-          setStatus("busy");
-          void answerOf(decline(receiptId)).then(settle);
-        }}
+        onDecline={() => void decision.decline()}
         onClose={close}
       />
     </div>
   );
+}
+
+const DECIDED_WORD = { APPROVED: "approved", DECLINED: "declined", EXPIRED: "released" } as const;
+
+/** "Already approved by you at 14:05 UTC." */
+export function alreadyDecided(view: ReceiptView): RefusalView {
+  const hold = view.hold;
+  const word = hold === null || hold.status === "PENDING" ? "decided" : DECIDED_WORD[hold.status];
+  const who =
+    hold?.status === "EXPIRED"
+      ? "after 48 hours"
+      : hold?.decidedBy === "system"
+        ? "by Slip"
+        : "by you";
+  const at =
+    hold?.decidedAt === null || hold === null ? "" : ` at ${hold.decidedAt.slice(11, 16)} UTC`;
+  return {
+    reason: "ALREADY_DECIDED",
+    message: `This hold was already ${word} ${who}${at}.`,
+  };
 }

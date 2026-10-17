@@ -51,9 +51,6 @@ export async function revokeTheMandate(typed: string): Promise<RevokeMandateResu
   }
   try {
     const result = await revokeMandate(deps, ownerId, mandateId);
-    revalidatePath("/mandate");
-    revalidatePath("/receipts");
-    revalidatePath("/holds");
     return result.status === "refused"
       ? { status: "refused", reason: result.reason, message: result.message }
       : { status: "revoked", holdsDeclined: result.holdsDeclined, vault: result.vault };

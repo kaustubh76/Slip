@@ -264,6 +264,14 @@
     text-underline-offset: 3px;
   }
 
+  /* A command that reads as a link (sign out): none of the browser's button chrome. */
+  button.slip-link {
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+
   /* Fill-in-the-blank: no box, a line to write on, in the owner's pen. */
   .slip-blank {
     font-family: var(--slip-font-mono);
@@ -448,6 +456,114 @@
     padding: 4px 12px;
     min-block-size: 32px;
     cursor: pointer;
+    /* Stays in view at the top while the owner reads further down the roll. */
+    position: sticky;
+    inset-block-start: 8px;
+    z-index: 1;
+  }
+
+  /* ---------- a page's header line: title, filter, and how live it is ---------- */
+
+  .slip-roll-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 12px;
+    margin-block: 8px;
+  }
+
+  .slip-roll-head > .slip-live {
+    margin-inline-start: auto;
+  }
+
+  .slip-select {
+    font-family: var(--slip-font-mono);
+    font-size: 13px;
+    color: var(--slip-ink);
+    background: transparent;
+    border: 0;
+    border-block-end: 1px solid var(--slip-ink-faint);
+    border-radius: 0;
+    padding-block: 2px;
+    min-block-size: 32px;
+  }
+
+  .slip-select:focus-visible {
+    outline: 2px solid var(--slip-pen);
+    outline-offset: 2px;
+  }
+
+  /* ---------- the snapshot's offers, behind the receipt ---------- */
+
+  .slip-offers {
+    inline-size: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    line-height: 20px;
+    margin-block: 4px 8px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .slip-offers th,
+  .slip-offers td {
+    text-align: start;
+    vertical-align: top;
+    padding-block: 4px;
+    padding-inline: 0 8px;
+    border-block-end: 1px solid var(--slip-edge);
+  }
+
+  .slip-offers thead th {
+    font-family: var(--slip-font-mono);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--slip-ink-faint);
+  }
+
+  .slip-offers tbody th {
+    font-weight: 600;
+  }
+
+  .slip-offer-role {
+    font-family: var(--slip-font-mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: var(--slip-ink-faint);
+  }
+
+  /* Narrow screens: each offer becomes a small slip of its own; the header stays for readers. */
+  @media (max-width: 480px) {
+    .slip-offers thead {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+
+    .slip-offers tr {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0 8px;
+      padding-block: 6px;
+      border-block-end: 1px solid var(--slip-edge);
+    }
+
+    .slip-offers th,
+    .slip-offers td {
+      border: 0;
+      padding: 0;
+    }
+
+    .slip-offers td:nth-child(3),
+    .slip-offers td:nth-child(4) {
+      grid-column: 1 / -1;
+      font-size: 13px;
+      color: var(--slip-ink-faint);
+    }
   }
 
   /* A slip printing: the row opens, the print head reveals it top-down, the stamp presses. */

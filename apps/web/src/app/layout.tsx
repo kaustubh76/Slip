@@ -1,18 +1,17 @@
 import "@slip/ui/tokens.css";
 import "@slip/ui/components.css";
-import { pendingHolds } from "@slip/app";
 import { parseTheme, THEME_COOKIE } from "@slip/ui";
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { cookies } from "next/headers";
 import type { ReactNode } from "react";
-import { LiveUpdates } from "../components/LiveUpdates";
+import { SlipRoot } from "../components/SlipRoot";
 import { Tabs } from "../components/Tabs";
 import { ThemeToggle } from "../components/ThemeToggle";
 import { disclosure } from "../server/disclosure";
-import { stampTokenFor } from "../server/live";
 import { currentOwner } from "../server/owner";
 import { SIMULATED_SERVICES } from "../server/runtime";
+import { signOut } from "./actions/session";
 
 const sans = IBM_Plex_Sans({
   subsets: ["latin"],
@@ -35,14 +34,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const theme = parseTheme((await cookies()).get(THEME_COOKIE)?.value);
-  const owner = await currentOwner();
-  const [waiting, stamp] =
-    owner === null
-      ? [null, null]
-      : await Promise.all([
-          pendingHolds(owner.deps, owner.ownerId, owner.mandateId),
-          stampTokenFor(owner.deps, owner.mandateId),
-        ]);
+  const signedIn = (await currentOwner()) !== null;
   return (
     <html
       lang="en"
@@ -50,17 +42,25 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       {...(theme === null ? {} : { "data-slip-theme": theme })}
     >
       <body className="slip-page">
-        <header className="slip-masthead">
-          <Tabs {...(waiting === null ? {} : { holds: waiting.length })} />
-          <div className="slip-masthead-right">
-            {stamp === null ? null : <LiveUpdates initialToken={stamp} />}
-            <ThemeToggle initial={theme} />
-          </div>
-        </header>
-        <p className="slip-band">
-          <span>{disclosure(SIMULATED_SERVICES)}</span>
-        </p>
-        <main className="slip-main">{children}</main>
+        <SlipRoot>
+          <header className="slip-masthead">
+            <Tabs signedIn={signedIn} />
+            <div className="slip-masthead-right">
+              <ThemeToggle initial={theme} />
+              {signedIn ? (
+                <form action={signOut}>
+                  <button type="submit" className="slip-link slip-meta">
+                    Sign out
+                  </button>
+                </form>
+              ) : null}
+            </div>
+          </header>
+          <p className="slip-band">
+            <span>{disclosure(SIMULATED_SERVICES)}</span>
+          </p>
+          <main className="slip-main">{children}</main>
+        </SlipRoot>
       </body>
     </html>
   );

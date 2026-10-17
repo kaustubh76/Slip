@@ -1,21 +1,22 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import type { Policy } from "@slip/domain";
+import { type LimitsInput, useUpdateLimits } from "@slip/ui";
 import { useState } from "react";
-import { type LimitsInput, type LimitsResult, saveLimits } from "../app/actions/limits";
-import { answerOf } from "./answer";
+import { workedExample } from "../lib/limits-example";
 
 /**
  * The limits, as blanks on a numbered form. Each one says which decision it makes, in the owner's
- * own units — percent and dollars, not hundredths and cents. Saving issues the next version;
- * what the new limits do to a worked purchase is printed by the server, from the rules
- * themselves, when the page re-reads.
+ * own units — percent and dollars, not hundredths and cents. As the owner types, a worked purchase
+ * says what the new limits would do to it, decided by the rules themselves. Saving issues the
+ * next version, based on the version this form was showing, so a tab left open cannot overwrite a
+ * newer one.
  */
 export function LimitsForm({ version, initial }: { version: number; initial: LimitsInput }) {
-  const router = useRouter();
   const [values, setValues] = useState(initial);
-  const [result, setResult] = useState<LimitsResult | null>(null);
-  const [busy, setBusy] = useState(false);
+  const { save, status, answer: result } = useUpdateLimits();
+  const busy = status === "busy";
+  const example = exampleFor(values);
   const changed = (Object.keys(initial) as (keyof LimitsInput)[]).some(
     (key) => values[key] !== initial[key],
   );
@@ -44,15 +45,7 @@ export function LimitsForm({ version, initial }: { version: number; initial: Lim
     <form
       onSubmit={(event) => {
         event.preventDefault();
-        setBusy(true);
-        setResult(null);
-        void answerOf(saveLimits(values, version)).then((answer) => {
-          setBusy(false);
-          setResult(answer);
-          if (answer.status === "updated") {
-            router.refresh();
-          }
-        });
+        void save(values, version);
       }}
     >
       <div className="slip-fields">
@@ -87,6 +80,15 @@ export function LimitsForm({ version, initial }: { version: number; initial: Lim
           "1",
         )}
       </div>
+      {example === null || !changed ? null : (
+        <p
+          className="slip-sentence slip-pen"
+          data-slip-outcome={example.outcome}
+          aria-live="polite"
+        >
+          {example.sentence}
+        </p>
+      )}
       <div className="slip-dialog-actions">
         <button
           type="submit"
@@ -108,10 +110,26 @@ export function LimitsForm({ version, initial }: { version: number; initial: Lim
           {result.status === "updated"
             ? `Version ${result.version} is in force. Decisions already made keep the version they were checked under.`
             : result.status === "unknown"
-              ? "Slip could not tell whether that saved. Reload the page to see which version is in force."
+              ? "Slip could not tell whether that saved. It is checking; the version in force shows above as soon as it knows."
               : result.message}
         </p>
       )}
     </form>
   );
+}
+
+/** What these typed limits would do to the worked purchase; null while a blank is not a number. */
+function exampleFor(values: LimitsInput): ReturnType<typeof workedExample> | null {
+  const numbers = Object.values(values);
+  if (numbers.some((n) => !Number.isFinite(n) || n < 0)) {
+    return null;
+  }
+  return workedExample({
+    version: 1,
+    maxOverpayPctHundredths: Math.round(values.maxOverpayPct * 100),
+    maxOverpayAbsCents: Math.round(values.maxOverpayDollars * 100),
+    flagPctHundredths: Math.round(values.flagPct * 100),
+    orderCapCents: Math.round(values.orderCapDollars * 100),
+    snapshotMaxAgeMs: Math.round(values.snapshotMaxAgeMinutes * 60_000),
+  } as Policy);
 }

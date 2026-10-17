@@ -2,7 +2,6 @@
 
 import { approveHold, declineHold, previewApproval } from "@slip/app";
 import { cents } from "@slip/domain";
-import { revalidatePath } from "next/cache";
 import { AmountCentsSchema, invalidRequest, ReceiptIdSchema } from "../../server/action-input";
 import {
   type DecisionResult,
@@ -44,11 +43,9 @@ export async function approve(id: string, expectedAmountCents: number): Promise<
     const result = await approveHold(deps, ownerId, id, {
       expectedAmountCents: cents(amount.data),
     });
-    revalidate(id);
     return decisionResult(result);
   } catch (error) {
     deps.log.error("web.approve_failed", { attemptId: id, error: String(error) });
-    revalidate(id);
     return { status: "unknown" };
   }
 }
@@ -60,18 +57,9 @@ export async function decline(id: string): Promise<DecisionResult> {
   }
   try {
     const result = await declineHold(deps, ownerId, id);
-    revalidate(id);
     return decisionResult(result);
   } catch (error) {
     deps.log.error("web.decline_failed", { attemptId: id, error: String(error) });
-    revalidate(id);
     return { status: "unknown" };
   }
-}
-
-/** Re-read on the server too, so the roll and the tray agree with the dialog. */
-function revalidate(id: string): void {
-  revalidatePath("/receipts");
-  revalidatePath(`/receipts/${id}`);
-  revalidatePath("/holds");
 }

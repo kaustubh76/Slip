@@ -1,9 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useAgentKeys } from "@slip/ui";
 import { useState } from "react";
-import { type IssueResult, issueKey, revokeKey } from "../app/actions/agents";
-import { answerOf } from "./answer";
 
 /**
  * Issuing and revoking agent keys. A new key is shown once, here, and held only in this
@@ -11,10 +9,10 @@ import { answerOf } from "./answer";
  * into a URL, a log or the query cache.
  */
 export function IssueAgentKey() {
-  const router = useRouter();
+  const keys = useAgentKeys();
   const [name, setName] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [result, setResult] = useState<IssueResult | null>(null);
+  const busy = keys.issueStatus === "busy";
+  const result = keys.issueAnswer;
 
   if (result?.status === "issued") {
     return (
@@ -28,9 +26,8 @@ export function IssueAgentKey() {
           type="button"
           className="slip-button"
           onClick={() => {
-            setResult(null);
+            keys.dismiss();
             setName("");
-            router.refresh();
           }}
         >
           Done
@@ -43,14 +40,7 @@ export function IssueAgentKey() {
     <form
       onSubmit={(event) => {
         event.preventDefault();
-        setBusy(true);
-        void answerOf(issueKey(name)).then((answer) => {
-          setBusy(false);
-          setResult(answer);
-          if (answer.status === "issued") {
-            router.refresh();
-          }
-        });
+        void keys.issue(name);
       }}
     >
       <div className="slip-field">
@@ -80,7 +70,7 @@ export function IssueAgentKey() {
       {result === null ? null : (
         <p className="slip-note slip-pen" role="status">
           {result.status === "unknown"
-            ? "Slip could not tell whether that key was issued. Reload the page to see."
+            ? "Slip could not tell whether that key was issued. If it was, it appears above; a key that was issued cannot be shown again, so revoke it and issue another."
             : result.message}
         </p>
       )}
@@ -89,9 +79,15 @@ export function IssueAgentKey() {
 }
 
 export function RevokeAgentKey({ agentId, name }: { agentId: string; name: string }) {
-  const router = useRouter();
-  const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const keys = useAgentKeys();
+  const busy = keys.revokeStatus === "busy";
+  const answer = keys.revokeAnswer;
+  const message =
+    answer === null || answer.status === "revoked"
+      ? null
+      : answer.status === "unknown"
+        ? "Slip could not tell whether that key was revoked. It is checking; the card updates when it knows."
+        : answer.message;
   return (
     <>
       <button
@@ -99,20 +95,7 @@ export function RevokeAgentKey({ agentId, name }: { agentId: string; name: strin
         className="slip-button"
         disabled={busy}
         aria-busy={busy}
-        onClick={() => {
-          setBusy(true);
-          void answerOf(revokeKey(agentId)).then((answer) => {
-            setBusy(false);
-            setMessage(
-              answer.status === "revoked"
-                ? null
-                : answer.status === "unknown"
-                  ? "Slip could not tell whether that key was revoked. Reload the page to see."
-                  : answer.message,
-            );
-            router.refresh();
-          });
-        }}
+        onClick={() => void keys.revoke(agentId)}
       >
         {busy ? `Revoking ${name}'s key…` : `Revoke ${name}'s key`}
       </button>

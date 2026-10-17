@@ -1,5 +1,6 @@
 "use client";
 
+import { useHolds } from "@slip/ui";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -12,9 +13,11 @@ const TABS = [
   ["/mandate", "Mandate"],
 ] as const;
 
-/** The index tabs; the open one has its bottom rule cut, like a folder. */
-export function Tabs({ holds }: { holds?: number }) {
+/** The index tabs; the open one has its bottom rule cut, like a folder. Holds counts live. */
+export function Tabs({ signedIn }: { signedIn: boolean }) {
   const path = usePathname();
+  const waiting = useHolds({ enabled: signedIn });
+  const holds = waiting.data?.pending.length;
   return (
     <nav className="slip-tabs" aria-label="Sections">
       <span className="slip-title" aria-hidden="true">

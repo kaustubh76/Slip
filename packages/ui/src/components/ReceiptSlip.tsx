@@ -30,6 +30,8 @@ export function ReceiptSlip(props: {
   fresh?: boolean;
   children?: ReactNode;
   behind?: ReactNode;
+  /** The page is about this receipt: announce every change to where the money stands. */
+  announce?: boolean;
 }) {
   const { view } = props;
   const stamp = stampOf(view);
@@ -83,7 +85,7 @@ export function ReceiptSlip(props: {
           </a>
         </p>
       )}
-      <StatusLine state={view.state} />
+      <StatusLine state={view.state} announce={props.announce === true} />
       {props.children}
       {props.behind === undefined ? null : (
         <>
