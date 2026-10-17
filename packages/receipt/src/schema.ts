@@ -1,4 +1,10 @@
-import { HOLD_STATUSES, OutcomeSchema, PAYMENT_STATUSES, RuleCodeSchema } from "@slip/domain";
+import {
+  HOLD_STATUSES,
+  MANDATE_STATUSES,
+  OutcomeSchema,
+  PAYMENT_STATUSES,
+  RuleCodeSchema,
+} from "@slip/domain";
 import { z } from "zod";
 
 /**
@@ -123,3 +129,137 @@ export const ReceiptViewSchema = z.object({
   createdAt: isoTime,
 });
 export type ReceiptView = z.infer<typeof ReceiptViewSchema>;
+
+// ---------- the owner's pages ----------
+//
+// What the owner's read API returns, page by page. The application's owner queries produce exactly
+// these shapes (a test parses every query result with them), and a client checks what it receives.
+
+export const AgentNameSchema = z.object({ id: z.string(), name: z.string() });
+
+/** A receipt as one row of the roll or the tray: its view and the agent that made it. */
+export const ReceiptRowSchema = z.object({ view: ReceiptViewSchema, agent: AgentNameSchema });
+export type ReceiptRow = z.infer<typeof ReceiptRowSchema>;
+
+/** One page of the roll, newest first. `next` is an opaque cursor for older receipts. */
+export const ReceiptPageSchema = z.object({
+  rows: z.array(ReceiptRowSchema),
+  next: z.string().nullable(),
+});
+export type ReceiptPage = z.infer<typeof ReceiptPageSchema>;
+
+/** Why an offer in the snapshot took no part in the price comparison. */
+export const NOT_COMPARED = [
+  "out of stock",
+  "used",
+  "condition not stated",
+  "price unknown",
+  "other currency",
+  "listed twice",
+  "prices too old",
+] as const;
+
+/** One offer the snapshot listed, for the table behind the receipt. */
+export const OfferRowSchema = z.object({
+  store: z.string(),
+  domain: z.string(),
+  /** Only an http(s) address; anything else is not offered as a link. */
+  link: z.string().nullable(),
+  price: z.string().nullable(),
+  priceCents: z.number().int().nullable(),
+  currency: z.string(),
+  inStock: z.boolean(),
+  condition: z.enum(["new", "used", "not stated"]),
+  /** "8%" when the store's commission is known and above zero. */
+  commission: z.string().nullable(),
+  /** BEST: the lowest comparable price. CHOSEN: the agent's pick. */
+  best: z.boolean(),
+  chosen: z.boolean(),
+  compared: z.boolean(),
+  notCompared: z.enum(NOT_COMPARED).nullable(),
+});
+export type OfferRow = z.infer<typeof OfferRowSchema>;
+
+export const TimelineRowSchema = z.object({
+  at: isoTime,
+  from: z.enum(PAYMENT_STATUSES),
+  to: z.enum(PAYMENT_STATUSES),
+});
+
+/** One receipt with everything behind it. */
+export const ReceiptDetailSchema = ReceiptRowSchema.extend({
+  /** For an owner-approval attempt: the hold it paid for. */
+  parent: ReceiptViewSchema.nullable(),
+  /** For an approved hold with no reservation: the attempt that paid for it. */
+  followUp: ReceiptViewSchema.nullable(),
+  /** The payment's status changes, oldest first. */
+  timeline: z.array(TimelineRowSchema),
+  /** Every offer the snapshot listed, in its order; empty when there was no snapshot. */
+  offers: z.array(OfferRowSchema),
+});
+export type ReceiptDetail = z.infer<typeof ReceiptDetailSchema>;
+
+/** The in-tray: holds waiting (soonest to expire first) and the most recently decided. */
+export const HoldsSchema = z.object({
+  pending: z.array(ReceiptRowSchema),
+  decided: z.array(ReceiptRowSchema),
+});
+export type Holds = z.infer<typeof HoldsSchema>;
+
+const count = z.number().int().min(0);
+
+export const AgentReportSchema = z.object({
+  agentId: z.string(),
+  attempted: count,
+  paid: count,
+  rejected: count,
+  held: count,
+  captured: count,
+  notCheapest: count,
+  medianGapPctHundredths: count.nullable(),
+  worstGapPctHundredths: count.nullable(),
+  worstGapAbsCents: count.nullable(),
+  steered: count,
+  conflicts: count,
+});
+
+export const AgentCardSchema = z.object({
+  agent: z.object({
+    id: z.string(),
+    name: z.string(),
+    /** The first characters of the key, so the owner can recognise it. Never the key. */
+    apiKeyPrefix: z.string(),
+    createdAt: isoTime,
+    revokedAt: isoTime.nullable(),
+  }),
+  report: z.object({ report: AgentReportSchema, lines: z.array(z.string()) }),
+});
+export type AgentCard = z.infer<typeof AgentCardSchema>;
+
+/** One version of the owner's limits, as plain numbers (cents, hundredths of a percent, ms). */
+export const PolicyViewSchema = z.object({
+  version: z.number().int().min(1),
+  maxOverpayPctHundredths: count,
+  maxOverpayAbsCents: count,
+  flagPctHundredths: count,
+  orderCapCents: count,
+  snapshotMaxAgeMs: count,
+});
+export type PolicyView = z.infer<typeof PolicyViewSchema>;
+
+export const MandateSummarySchema = z.object({
+  id: z.string(),
+  status: z.enum(MANDATE_STATUSES),
+  /** PENDING with a PayPal setup started: the owner still has to approve at PayPal. */
+  awaitingPayPal: z.boolean(),
+  hasSavedMethod: z.boolean(),
+  createdAt: isoTime,
+  activatedAt: isoTime.nullable(),
+  revokedAt: isoTime.nullable(),
+  /** When PayPal confirmed the saved method was deleted after a revoke. */
+  savedMethodDeletedAt: isoTime.nullable(),
+  policyVersion: z.number().int().min(1),
+  pendingHolds: count,
+  agents: count,
+});
+export type MandateSummary = z.infer<typeof MandateSummarySchema>;
