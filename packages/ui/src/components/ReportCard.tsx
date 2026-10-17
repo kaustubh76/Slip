@@ -1,20 +1,11 @@
-import { type AgentReport, type Cents, formatUsd } from "@slip/domain";
-import { percentFromHundredths } from "@slip/receipt";
+import { type Cents, formatUsd } from "@slip/domain";
+import { type AgentCard, percentFromHundredths } from "@slip/receipt";
 import { Leaders } from "./Leaders.js";
 import { Stamp } from "./Stamp.js";
 import { printedAt } from "./text.js";
 
-/** An agent and its report card, as the server sends them. */
-export interface ReportCardData {
-  agent: {
-    id: string;
-    name: string;
-    apiKeyPrefix: string;
-    createdAt: string;
-    revokedAt: string | null;
-  };
-  report: { report: AgentReport; lines: string[] };
-}
+/** An agent and its report card, as the server sends them (`AgentCardSchema`). */
+export type ReportCardData = AgentCard;
 
 const pct = (hundredths: number | null) =>
   hundredths === null ? "—" : `${percentFromHundredths(hundredths)}`;

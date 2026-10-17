@@ -9,12 +9,20 @@ import {
   policyVersion,
   type Receipt,
 } from "@slip/domain";
-import type { ReceiptView } from "@slip/receipt";
+import {
+  type AgentCard,
+  type Holds,
+  type MandateSummary,
+  offerRows,
+  type ReceiptDetail,
+  type ReceiptPage,
+  type ReceiptRow,
+} from "@slip/receipt";
 import { ownedAgent } from "../agents.js";
 import type { AppDeps } from "../deps.js";
 import { ownedReceipt } from "../holds.js";
 import { ownedMandate } from "../mandates.js";
-import { type ReportView, renderReport } from "../report-view.js";
+import { renderReport } from "../report-view.js";
 import { createViewer } from "../views.js";
 
 /**
@@ -22,23 +30,11 @@ import { createViewer } from "../views.js";
  * scoped once, here: a mandate, receipt or agent that is not theirs — or an id that is not even
  * well formed — is `null`, exactly like one that does not exist. Results are plain JSON
  * (receipt views, ISO times), ready to send to a browser; no domain record leaves this module.
+ * The shapes are the wire schemas in `@slip/receipt/schema`; a test parses every result with them.
  */
 
-export interface AgentName {
-  id: string;
-  name: string;
-}
-
-export interface ReceiptRow {
-  view: ReceiptView;
-  agent: AgentName;
-}
-
-export interface ReceiptPage {
-  rows: ReceiptRow[];
-  /** Opaque; pass it back as `before` for the next (older) page. Null on the last page. */
-  next: string | null;
-}
+export type { AgentCard, Holds, MandateSummary, ReceiptDetail, ReceiptPage, ReceiptRow };
+export type AgentName = ReceiptRow["agent"];
 
 export const DEFAULT_PAGE_SIZE = 25;
 const MAX_PAGE_SIZE = 100;
@@ -94,15 +90,6 @@ export async function listReceipts(
   };
 }
 
-export interface ReceiptDetail extends ReceiptRow {
-  /** For an owner-approval attempt: the hold it paid for. */
-  parent: ReceiptView | null;
-  /** For an approved hold with no reservation: the attempt that paid for it. */
-  followUp: ReceiptView | null;
-  /** The payment's status changes, oldest first. */
-  timeline: { at: string; from: string; to: string }[];
-}
-
 /** One receipt with everything behind it: the snapshot's other offers, parent or follow-up. */
 export async function receiptDetail(
   deps: AppDeps,
@@ -130,6 +117,7 @@ export async function receiptDetail(
     parent: parent === null ? null : await view(parent),
     followUp: child === null ? null : await view(child),
     timeline: events.map((e) => ({ at: e.at.toISOString(), from: e.fromStatus, to: e.toStatus })),
+    offers: offerRows(snapshot, attempt.decision.checkResult),
   };
 }
 
@@ -155,16 +143,25 @@ export async function pendingHolds(
   return rowsOf(deps, byExpiry, names);
 }
 
-export interface AgentCard {
-  agent: {
-    id: string;
-    name: string;
-    /** The first characters of the key, so the owner can recognise it. Never the key. */
-    apiKeyPrefix: string;
-    createdAt: string;
-    revokedAt: string | null;
-  };
-  report: ReportView;
+/** How many decided holds the in-tray shows under the pending ones. */
+export const DECIDED_SHOWN = 20;
+
+/** The in-tray: holds waiting (soonest to expire first) and the most recently decided. */
+export async function ownerHolds(
+  deps: AppDeps,
+  ownerId: OwnerId,
+  mandate: string,
+): Promise<Holds | null> {
+  const owned = await ownedMandate(deps, ownerId, mandate);
+  if (owned === null) {
+    return null;
+  }
+  const [pending, decided, names] = await Promise.all([
+    pendingHolds(deps, ownerId, mandate),
+    deps.store.holds.listDecided(owned.id, { limit: DECIDED_SHOWN }),
+    agentNames(deps, owned),
+  ]);
+  return { pending: pending ?? [], decided: await rowsOf(deps, decided.items, names) };
 }
 
 /** The mandate's agents, each with its report card, oldest first. */
@@ -221,22 +218,6 @@ export async function policyVersions(
     ),
   );
   return [current, ...older.filter((p): p is Policy => p !== null)];
-}
-
-export interface MandateSummary {
-  id: string;
-  status: Mandate["status"];
-  /** PENDING with a PayPal setup started: the owner still has to approve at PayPal. */
-  awaitingPayPal: boolean;
-  hasSavedMethod: boolean;
-  createdAt: string;
-  activatedAt: string | null;
-  revokedAt: string | null;
-  /** When PayPal confirmed the saved method was deleted after a revoke. */
-  savedMethodDeletedAt: string | null;
-  policyVersion: number;
-  pendingHolds: number;
-  agents: number;
 }
 
 /** The permission slip at a glance: status, limits version, what is waiting. */
