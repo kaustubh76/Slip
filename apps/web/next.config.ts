@@ -21,6 +21,8 @@ const config: NextConfig = {
     "@electric-sql/pglite",
   ],
   poweredByHeader: false,
+  // `next dev` would otherwise write an AGENTS.md into the app when a coding agent runs it.
+  agentRules: false,
   reactStrictMode: true,
 };
 
