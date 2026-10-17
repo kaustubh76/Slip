@@ -10,10 +10,12 @@ pay, reject, or hold for a human.
 
 > Agents shop. Slip checks. Policy decides. PayPal pays.
 
-The demo runs in PayPal sandbox with Slip as the seller. Prices, offers and commission rates are
-real (Channel3); no order reaches a retailer; no real money moves. Read
-[docs/SPEC.md](docs/SPEC.md) for the full spec and [docs/diagram.png](docs/diagram.png) for the
-execution flow. Design decisions are logged in [docs/DECISIONS.md](docs/DECISIONS.md).
+With API keys, the demo runs in PayPal sandbox with Slip as the seller, on real Channel3 prices,
+offers and commission rates; no order reaches a retailer and no real money moves. Until the keys
+are in, demo mode runs on stand-ins for Channel3 and PayPal with made-up stores and prices, and
+every page says so. Read [docs/SPEC.md](docs/SPEC.md) for the full spec,
+[docs/diagram.png](docs/diagram.png) for the execution flow and [docs/UI.md](docs/UI.md) for the
+owner UI. Design decisions are logged in [docs/DECISIONS.md](docs/DECISIONS.md).
 
 ## Layout
 
@@ -28,10 +30,13 @@ packages/app       use cases: checkout, holds, resolver, webhooks, mandates,
 packages/offers    in-memory Channel3 fake (done); Channel3 adapter     (needs Channel3 key)
 packages/paypal    in-memory PayPal fake (done); REST adapter          (needs PayPal sandbox)
 packages/steering  scripted classifier fake (done); Claude classifier  (needs Anthropic key)
+packages/receipt   the one receipt renderer: copy, state line, gap scale, wire schemas (done)
+packages/ui        React kit: Till Roll theme, stationery components, client and hooks (done)
 tests              end-to-end scenarios on the fakes and PGlite, and a reusable testkit (done)
-apps/web           owner UI: mandate, receipts, holds, limits, report           (next)
-apps/mcp           MCP server: search, checkout, get_receipt, get_report
-study/  bench/     market study and SlipBench
+apps/web           owner UI on Next.js: receipts, holds, limits, agents, permission slip,
+                   kill switch, read API, agent endpoint, demo mode                  (done)
+apps/mcp           MCP server: search, checkout, get_receipt, get_report            (next)
+study/  bench/     market study and SlipBench                                    (not run yet)
 ```
 
 Dependencies point inward: apps → app → check / domain. Adapters implement ports declared in
@@ -63,6 +68,43 @@ Schema changes: edit `packages/db/src/schema.ts`, run `pnpm db:generate`, commit
 
 Requires Node ≥ 22.12 and pnpm 10 (`corepack enable` picks the pinned version).
 
+## Run the demo
+
+The owner UI runs without any API key, on stand-ins for Channel3 and PayPal in one process:
+
+```sh
+SLIP_DEMO=1 SLIP_BASE_URL=http://localhost:3000 pnpm web:dev
+```
+
+Open <http://localhost:3000>, choose **Open a demo desk**, and you get a fresh owner with a
+permission in force and four purchases already checked: one paid, one rejected, two held. Then:
+
+1. **Demo** tab → **Issue a key for the script**, and run the command it shows in a terminal:
+
+   ```sh
+   SLIP_AGENT_KEY=slip_live_… pnpm demo:agent --errand top-pick --url http://localhost:3000
+   ```
+
+   The terminal prints what the agent searched (the "[synthetic] Top pick" label marked as
+   such), what it picked, and Slip's answer. The REJECTED receipt prints on the open roll within
+   a second. `--errand cheaper` pays: watch its status line go from INITIATED to CAPTURED.
+   Without `--errand`, the script lists the errands.
+2. **Holds** → approve or decline. The dialog names the exact amount, and the status line walks
+   CAPTURING → CAPTURED or VOIDING → VOIDED.
+3. The **Demo** console also makes PayPal time out, decline or leave a payment pending for one
+   purchase, and raises a price so approving a hold meets PRICE_CHANGED.
+4. **Mandate** → the kill switch. The agent's next call is refused.
+
+Production build and browser tests (Playwright starts the built app in demo mode itself):
+
+```sh
+pnpm web:build
+pnpm --filter @slip/web exec playwright install chromium   # once
+pnpm web:e2e
+```
+
+Demo settings are listed in [docs/UI.md](docs/UI.md#demo-mode).
+
 ## Status
 
 Done: the check, the domain model, persistence, and every use case, running on fakes of the
@@ -88,6 +130,15 @@ Every write that can move money is atomic, fenced by the checkout lease, refused
 is revoked, and guarded twice: by shared pure rules in code and by constraints and triggers in
 Postgres. The spec's §11 scenarios and the money paths run end to end on both stores.
 
-Next: the owner UI on top of `@slip/app`, then the MCP server; the Channel3, PayPal and Claude
-adapters replace the fakes once API keys are available. See `docs/SPEC.md` §15 for dates and
-`docs/DECISIONS.md` (D1–D37) for every departure from the written spec.
+**Owner UI** — the Till Roll design in two themes (Original and Carbon): a roll of receipts that
+prints new ones live, a tray of holds with countdowns, receipts that read in five seconds with
+the offers behind them and a gap scale, approve and decline that name the exact amount and never
+assume success, limits as numbered versions, agents with report cards and one-time keys, the
+permission slip and its kill switch. The React kit (`@slip/ui`) holds the theme, the components,
+a typed client and hooks, so a platform can embed it; the Next.js app hosts it with a read API, an
+agent checkout endpoint and demo mode. Browser tests cover the money paths and run axe on every
+page in both themes.
+
+Next: the MCP server; the Channel3, PayPal and Claude adapters replace the fakes once API keys are
+available; then the market study and SlipBench. See `docs/SPEC.md` §15 for dates and
+`docs/DECISIONS.md` (D1–D50) for every departure from the written spec.
