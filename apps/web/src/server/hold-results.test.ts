@@ -25,7 +25,7 @@ describe("what reaches the browser", () => {
       status: "preview",
       kind: "capture",
       amountCents: 23_900,
-      store: "store-k.example",
+      store: "Store K",
     });
   });
 

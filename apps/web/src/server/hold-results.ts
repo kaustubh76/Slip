@@ -1,5 +1,5 @@
 import type { ApprovalPreview, HoldRefusal, HoldResult } from "@slip/app";
-import type { ReceiptView } from "@slip/receipt";
+import { type ReceiptView, storeName } from "@slip/receipt";
 
 /**
  * What a hold decision looks like by the time it reaches the browser. Three shapes only, and no
@@ -48,7 +48,8 @@ export function previewResult(preview: ApprovalPreview | HoldRefusal): PreviewRe
         status: "preview",
         kind: preview.kind,
         amountCents: preview.amountCents,
-        store: preview.merchant,
+        // Named the way every receipt names it: "Store K", or the domain without `www.`.
+        store: storeName(preview.merchant),
       };
 }
 
