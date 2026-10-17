@@ -12,6 +12,7 @@ onlyBuiltDependencies:
 # Every dependency version lives here once; packages reference them with "catalog:".
 catalogMode: strict
 catalog:
+  "@tanstack/react-query": 5.104.2
   "@biomejs/biome": 2.5.15
   drizzle-kit: 0.31.11
   drizzle-orm: 0.45.4

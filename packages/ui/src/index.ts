@@ -17,6 +17,29 @@ export { StatusLine } from "./components/StatusLine.js";
 export { clockTime, printedAt, withAmounts } from "./components/text.js";
 export { timeLeft } from "./components/time.js";
 export {
+  createSlipClient,
+  type ReceiptsQuery,
+  type SlipClient,
+  SlipClientError,
+  type SlipClientErrorKind,
+} from "./data/client.js";
+export {
+  type DecisionAnswer,
+  type IssueKeyAnswer,
+  type LimitsAnswer,
+  type LimitsInput,
+  type PreviewAnswer,
+  type Refused,
+  type RevokeKeyAnswer,
+  type RevokeMandateAnswer,
+  type SlipCommands,
+  safeCommands,
+  type Unknown,
+} from "./data/commands.js";
+export { slipKeys } from "./data/keys.js";
+export { type SlipEvent, SlipHydrate, SlipProvider, useSlip } from "./data/provider.js";
+export { createSlipQueryClient } from "./data/query-client.js";
+export {
   parseTheme,
   SLIP_THEMES,
   type SlipTheme,
