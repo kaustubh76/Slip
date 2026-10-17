@@ -1,7 +1,9 @@
 "use server";
 
 import { approveHold, declineHold, previewApproval } from "@slip/app";
+import { cents } from "@slip/domain";
 import { revalidatePath } from "next/cache";
+import { AmountCentsSchema, invalidRequest, ReceiptIdSchema } from "../../server/action-input";
 import {
   type DecisionResult,
   decisionResult,
@@ -21,6 +23,9 @@ import { requireOwner } from "../../server/owner";
  * command the owner triggers, never something a page does on its own. */
 export async function previewHoldApproval(id: string): Promise<PreviewResult> {
   const { ownerId, deps } = await requireOwner();
+  if (!ReceiptIdSchema.safeParse(id).success) {
+    return invalidRequest("receipt");
+  }
   try {
     return previewResult(await previewApproval(deps, ownerId, id));
   } catch (error) {
@@ -31,9 +36,13 @@ export async function previewHoldApproval(id: string): Promise<PreviewResult> {
 
 export async function approve(id: string, expectedAmountCents: number): Promise<DecisionResult> {
   const { ownerId, deps } = await requireOwner();
+  const amount = AmountCentsSchema.safeParse(expectedAmountCents);
+  if (!ReceiptIdSchema.safeParse(id).success || !amount.success) {
+    return invalidRequest("receipt or amount");
+  }
   try {
     const result = await approveHold(deps, ownerId, id, {
-      expectedAmountCents: expectedAmountCents as never,
+      expectedAmountCents: cents(amount.data),
     });
     revalidate(id);
     return decisionResult(result);
@@ -46,6 +55,9 @@ export async function approve(id: string, expectedAmountCents: number): Promise<
 
 export async function decline(id: string): Promise<DecisionResult> {
   const { ownerId, deps } = await requireOwner();
+  if (!ReceiptIdSchema.safeParse(id).success) {
+    return invalidRequest("receipt");
+  }
   try {
     const result = await declineHold(deps, ownerId, id);
     revalidate(id);

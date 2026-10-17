@@ -2,9 +2,14 @@
 
 import { ApproveDialog, DeclineDialog } from "@slip/ui";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { approve, decline, previewHoldApproval } from "../app/actions/holds";
 import type { DecisionResult, PreviewResult, Refused } from "../server/hold-results";
+import { answerOf } from "./answer";
+
+/** While an answer is unknown, the page is read again this often, for this long. */
+const REREAD_EVERY_MS = 1_000;
+const REREAD_FOR_MS = 30_000;
 
 type Open = "approve" | "decline" | null;
 type Status = "idle" | "busy" | "unknown";
@@ -29,6 +34,20 @@ export function HoldDecision({
   const [refusal, setRefusal] = useState<Refused | null>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [, start] = useTransition();
+
+  // An answer that never arrived: read the receipt again until the decision shows (the hold leaves
+  // PENDING and this component with it) — never send the decision a second time.
+  useEffect(() => {
+    if (status !== "unknown") {
+      return;
+    }
+    const every = setInterval(() => start(() => router.refresh()), REREAD_EVERY_MS);
+    const enough = setTimeout(() => clearInterval(every), REREAD_FOR_MS);
+    return () => {
+      clearInterval(every);
+      clearTimeout(enough);
+    };
+  }, [status, router]);
 
   const close = () => {
     setOpen(null);
@@ -55,7 +74,7 @@ export function HoldDecision({
     setPreview(null);
     setRefusal(null);
     setStatus("idle");
-    void previewHoldApproval(receiptId).then((result) => {
+    void answerOf(previewHoldApproval(receiptId)).then((result) => {
       setPreview(result.status === "preview" ? result : null);
       setRefusal(result.status === "refused" ? result : null);
       setStatus(result.status === "unknown" ? "unknown" : "idle");
@@ -92,7 +111,7 @@ export function HoldDecision({
         status={status}
         onApprove={(amountCents) => {
           setStatus("busy");
-          void approve(receiptId, amountCents).then(settle);
+          void answerOf(approve(receiptId, amountCents)).then(settle);
         }}
         onClose={close}
       />
@@ -103,7 +122,7 @@ export function HoldDecision({
         refusal={refusal}
         onDecline={() => {
           setStatus("busy");
-          void decline(receiptId).then(settle);
+          void answerOf(decline(receiptId)).then(settle);
         }}
         onClose={close}
       />

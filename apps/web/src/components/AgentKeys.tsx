@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { type IssueResult, issueKey, revokeKey } from "../app/actions/agents";
+import { answerOf } from "./answer";
 
 /**
  * Issuing and revoking agent keys. A new key is shown once, here, and held only in this
@@ -43,7 +44,7 @@ export function IssueAgentKey() {
       onSubmit={(event) => {
         event.preventDefault();
         setBusy(true);
-        void issueKey(name).then((answer) => {
+        void answerOf(issueKey(name)).then((answer) => {
           setBusy(false);
           setResult(answer);
           if (answer.status === "issued") {
@@ -100,7 +101,7 @@ export function RevokeAgentKey({ agentId, name }: { agentId: string; name: strin
         aria-busy={busy}
         onClick={() => {
           setBusy(true);
-          void revokeKey(agentId).then((answer) => {
+          void answerOf(revokeKey(agentId)).then((answer) => {
             setBusy(false);
             setMessage(
               answer.status === "revoked"

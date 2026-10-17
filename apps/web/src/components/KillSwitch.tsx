@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { type RevokeMandateResult, revokeTheMandate } from "../app/actions/mandate";
+import { answerOf } from "./answer";
 
 /**
  * The tear-off strip at the foot of the permission slip. The consequences are printed before the
@@ -76,7 +77,7 @@ export function KillSwitch({ pendingHolds }: { pendingHolds: number }) {
           aria-busy={busy}
           onClick={() => {
             setBusy(true);
-            void revokeTheMandate(typed).then((answer) => {
+            void answerOf(revokeTheMandate(typed)).then((answer) => {
               setBusy(false);
               setResult(answer);
               router.refresh();

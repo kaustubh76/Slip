@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { beginSetup, type SetupResult } from "../app/actions/mandate";
+import { answerOf } from "./answer";
 
 /** "Sign with PayPal": Slip asks PayPal for the approval link and sends the owner there. */
 export function BeginSetup({ label }: { label: string }) {
@@ -17,7 +18,7 @@ export function BeginSetup({ label }: { label: string }) {
         aria-busy={busy}
         onClick={() => {
           setBusy(true);
-          void beginSetup().then((answer) => {
+          void answerOf(beginSetup()).then((answer) => {
             setResult(answer);
             if (answer.status === "started") {
               window.location.href = answer.approveUrl;

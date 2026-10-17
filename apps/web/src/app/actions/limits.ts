@@ -2,19 +2,16 @@
 
 import { updateLimits } from "@slip/app";
 import { revalidatePath } from "next/cache";
+import {
+  invalidRequest,
+  type LimitsInput,
+  LimitsInputSchema,
+  PolicyVersionSchema,
+} from "../../server/action-input";
 import { requireOwner } from "../../server/owner";
 
-/** The limits the owner typed, as numbers people write them. */
-export interface LimitsInput {
-  /** Percent, one decimal: 5 means 5 %. */
-  maxOverpayPct: number;
-  /** Dollars: 8 means $8.00. */
-  maxOverpayDollars: number;
-  flagPct: number;
-  orderCapDollars: number;
-  /** Minutes. */
-  snapshotMaxAgeMinutes: number;
-}
+/** The limits the owner typed, as numbers people write them (percent, dollars, minutes). */
+export type { LimitsInput };
 
 /** The version the page was showing, so a stale tab cannot overwrite a newer one. */
 export type LimitsResult =
@@ -31,17 +28,22 @@ export async function saveLimits(
   basedOnVersion: number,
 ): Promise<LimitsResult> {
   const { ownerId, mandateId, deps } = await requireOwner();
+  const parsed = LimitsInputSchema.safeParse(input);
+  if (!parsed.success || !PolicyVersionSchema.safeParse(basedOnVersion).success) {
+    return invalidRequest("limits");
+  }
+  const values = parsed.data;
   try {
     const result = await updateLimits(
       deps,
       ownerId,
       mandateId,
       {
-        maxOverpayPctHundredths: hundredths(input.maxOverpayPct),
-        maxOverpayAbsCents: cents(input.maxOverpayDollars),
-        flagPctHundredths: hundredths(input.flagPct),
-        orderCapCents: cents(input.orderCapDollars),
-        snapshotMaxAgeMs: Math.round(input.snapshotMaxAgeMinutes * 60_000),
+        maxOverpayPctHundredths: hundredths(values.maxOverpayPct),
+        maxOverpayAbsCents: cents(values.maxOverpayDollars),
+        flagPctHundredths: hundredths(values.flagPct),
+        orderCapCents: cents(values.orderCapDollars),
+        snapshotMaxAgeMs: Math.round(values.snapshotMaxAgeMinutes * 60_000),
       },
       { basedOnVersion },
     );

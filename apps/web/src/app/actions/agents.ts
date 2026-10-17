@@ -2,6 +2,7 @@
 
 import { issueAgentKey, revokeAgentKey } from "@slip/app";
 import { revalidatePath } from "next/cache";
+import { AgentIdSchema, AgentNameSchema, invalidRequest } from "../../server/action-input";
 import { requireOwner } from "../../server/owner";
 
 export type IssueResult =
@@ -20,6 +21,9 @@ export type RevokeResult =
  */
 export async function issueKey(name: string): Promise<IssueResult> {
   const { ownerId, mandateId, deps } = await requireOwner();
+  if (!AgentNameSchema.safeParse(name).success) {
+    return invalidRequest("name");
+  }
   try {
     const result = await issueAgentKey(deps, ownerId, mandateId, { name });
     revalidatePath("/agents");
@@ -35,6 +39,9 @@ export async function issueKey(name: string): Promise<IssueResult> {
 /** Stops one agent at once, and nothing else: the mandate and the other agents carry on. */
 export async function revokeKey(agentId: string): Promise<RevokeResult> {
   const { ownerId, deps } = await requireOwner();
+  if (!AgentIdSchema.safeParse(agentId).success) {
+    return invalidRequest("agent");
+  }
   try {
     const result = await revokeAgentKey(deps, ownerId, agentId);
     revalidatePath("/agents");

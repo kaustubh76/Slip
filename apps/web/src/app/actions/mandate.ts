@@ -2,6 +2,7 @@
 
 import { revokeMandate, startMandate } from "@slip/app";
 import { revalidatePath } from "next/cache";
+import { RevokeWordSchema } from "../../server/action-input";
 import { requireOwner, startSession } from "../../server/owner";
 
 export type SetupResult =
@@ -41,7 +42,7 @@ export async function beginSetup(): Promise<SetupResult> {
  */
 export async function revokeTheMandate(typed: string): Promise<RevokeMandateResult> {
   const { ownerId, mandateId, deps } = await requireOwner();
-  if (typed.trim().toUpperCase() !== "REVOKE") {
+  if (!RevokeWordSchema.safeParse(typed).success || typed.trim().toUpperCase() !== "REVOKE") {
     return {
       status: "refused",
       reason: "NOT_CONFIRMED",

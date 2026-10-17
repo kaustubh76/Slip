@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { type LimitsInput, type LimitsResult, saveLimits } from "../app/actions/limits";
+import { answerOf } from "./answer";
 
 /**
  * The limits, as blanks on a numbered form. Each one says which decision it makes, in the owner's
@@ -45,7 +46,7 @@ export function LimitsForm({ version, initial }: { version: number; initial: Lim
         event.preventDefault();
         setBusy(true);
         setResult(null);
-        void saveLimits(values, version).then((answer) => {
+        void answerOf(saveLimits(values, version)).then((answer) => {
           setBusy(false);
           setResult(answer);
           if (answer.status === "updated") {
