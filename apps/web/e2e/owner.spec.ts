@@ -89,3 +89,13 @@ test("nothing is readable without a session", async ({ request }) => {
     expect(response.status(), path).toBe(401);
   }
 });
+
+test("the bench says neither study has run, and prints no figures", async ({ page }) => {
+  await openDesk(page);
+  await page.getByRole("link", { name: "Bench" }).click();
+  await expect(page.getByRole("img", { name: "This study has not run yet" })).toBeVisible();
+  await expect(page.getByRole("img", { name: "This benchmark has not run yet" })).toBeVisible();
+  await expect(page.getByRole("main")).toContainText("150–200 products");
+  // No measured-looking number until a study has produced one.
+  expect(await page.getByRole("main").textContent()).not.toMatch(/\d%/);
+});

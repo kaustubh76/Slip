@@ -513,6 +513,11 @@
     font-variant-numeric: tabular-nums;
   }
 
+  .slip-offers > caption {
+    text-align: start;
+    padding-block: 16px 4px;
+  }
+
   .slip-offers th,
   .slip-offers td {
     text-align: start;

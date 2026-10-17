@@ -19,6 +19,7 @@ for (const theme of ["original", "carbon"] as const) {
       "/limits",
       "/agents",
       "/mandate",
+      "/bench",
       "/demo",
     ]) {
       await page.goto(path);
