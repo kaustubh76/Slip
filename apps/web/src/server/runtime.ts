@@ -102,7 +102,7 @@ async function build(): Promise<Runtime> {
   };
   const limiter = new DeskLimiter({
     maxDesks: positiveInt(env["SLIP_DEMO_MAX_DESKS"], 500),
-    perAddress: 10,
+    perAddress: positiveInt(env["SLIP_DEMO_DESKS_PER_ADDRESS"], 10),
     windowMs: 10 * 60_000,
   });
   if (demo && env["NODE_ENV"] !== "test") {

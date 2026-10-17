@@ -31,6 +31,8 @@ export default defineConfig({
       SLIP_BASE_URL: BASE,
       SLIP_DEMO_LATENCY_MS: "300",
       SLIP_DEMO_MAX_DESKS: "1000",
+      // Every test opens a desk, all from one address.
+      SLIP_DEMO_DESKS_PER_ADDRESS: "1000",
     },
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
