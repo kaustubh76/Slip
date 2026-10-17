@@ -37,6 +37,14 @@ export {
   safeCommands,
   type Unknown,
 } from "./data/commands.js";
+export {
+  type CommandStatus,
+  type HoldDecisionState,
+  useAgentKeys,
+  useHoldDecision,
+  useRevokeMandate,
+  useUpdateLimits,
+} from "./data/commands-hooks.js";
 export { slipKeys } from "./data/keys.js";
 export { type SlipEvent, SlipHydrate, SlipProvider, useSlip } from "./data/provider.js";
 export { createSlipQueryClient } from "./data/query-client.js";

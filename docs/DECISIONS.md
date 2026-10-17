@@ -454,3 +454,14 @@ A demo has no scheduler, so the runtime runs `runResolver` itself, 5 s after eac
 two at once). It starts inside the shared runtime rather than in `instrumentation.ts`, which would
 be one more server bundle with its own copies of the packages; the runtime is built once per
 process whichever bundle asks first.
+
+## D48 · 2026-10-17 · Money commands are never optimistic
+
+The kit's command hooks (approve, decline, the kill switch, limits, keys) change nothing on the
+page until the server answers: no receipt is drawn as paid, held or released on a guess. A hold's
+preview is an explicit command, never a query, because a preview for a hold with nothing reserved
+prices the item again (a Channel3 call, perhaps the classifier). A decision is sent at most once
+at a time however often it is clicked. A call whose answer is lost is `unknown` — "Slip is
+checking" — and the hook reads the receipt again every second, for up to 30 s, until the outcome
+shows; it is never sent a second time on its own, because the first may have moved the money. An
+issued agent key lives only in the hook's state, never in the query cache, a URL or a log.
