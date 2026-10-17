@@ -43,7 +43,12 @@ export function createViewer(deps: AppDeps): Viewer {
           ? deps.store.snapshots.get(checkResult.snapshotId)
           : null,
     ]);
-    return renderReceipt(receipt, { ...(policy === null ? {} : { policy }), child, snapshot });
+    return renderReceipt(receipt, {
+      ...(policy === null ? {} : { policy }),
+      child,
+      snapshot,
+      pricesSource: deps.config.pricesSource,
+    });
   };
 }
 

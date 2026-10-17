@@ -11,7 +11,7 @@ export {
   ReceiptViewSchema,
   StateLineSchema,
 } from "./schema.js";
-export { footer, openingLines, ruleSentence, verdict } from "./sentences.js";
+export { footer, openingLines, type PricesSource, ruleSentence, verdict } from "./sentences.js";
 export { type StateContext, type StateGlyph, type StateLine, stateLine } from "./state.js";
 export { storeName } from "./store-name.js";
 export { type RenderOptions, renderReceipt } from "./view.js";

@@ -34,7 +34,8 @@ export function ReceiptSlip(props: {
   const { view } = props;
   const stamp = stampOf(view);
   const headingId = `slip-${view.receiptId}`;
-  const cheaper = view.gap !== null && view.best !== null ? view.best : null;
+  // A demo's stores are made up: there is no page to send the owner to.
+  const cheaper = view.gap !== null && view.best !== null && !view.simulated ? view.best : null;
   return (
     <article
       className="slip-sheet slip-receipt"

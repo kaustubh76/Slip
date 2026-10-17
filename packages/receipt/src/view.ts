@@ -12,7 +12,7 @@ import {
 import { measureModel } from "./measure.js";
 import { gapPercent } from "./percent.js";
 import type { OfferSummary, ReceiptView } from "./schema.js";
-import { footer, openingLines, ruleSentence, verdict } from "./sentences.js";
+import { footer, openingLines, type PricesSource, ruleSentence, verdict } from "./sentences.js";
 import { stateLine } from "./state.js";
 import { storeName } from "./store-name.js";
 
@@ -49,6 +49,11 @@ export interface RenderOptions {
    * puts the other comparable offers on the gap scale.
    */
   snapshot?: OfferSnapshot | null;
+  /**
+   * Who served the prices. `simulated` (a demo on the stand-in catalogue) changes the footer and
+   * marks the view, so nothing on the receipt implies a real store or real Channel3 listing.
+   */
+  pricesSource?: PricesSource;
 }
 
 export function renderReceipt(receipt: Receipt, options: RenderOptions = {}): ReceiptView {
@@ -88,7 +93,8 @@ export function renderReceipt(receipt: Receipt, options: RenderOptions = {}): Re
     snapshot: options.snapshot ?? null,
   });
   const state = stateLine(receipt, { store: chosen?.store ?? null, child: options.child ?? null });
-  const foot = footer(result.snapshotFetchedAt, attempt.createdAt);
+  const source = options.pricesSource ?? "channel3";
+  const foot = footer(result.snapshotFetchedAt, attempt.createdAt, source);
   // A rejection's verdict already says what happened to the money; otherwise the state line does.
   const lines = [
     ...opening,
@@ -106,6 +112,7 @@ export function renderReceipt(receipt: Receipt, options: RenderOptions = {}): Re
     opening,
     verdict: decided,
     footer: foot,
+    simulated: source === "simulated",
     agentReason: attempt.reason,
     chosen,
     best,

@@ -15,6 +15,7 @@ describe("appConfig", () => {
       orderResendWindowMs: 30 * 60_000,
       reportingLagMs: 3 * 3_600_000,
       orderGiveUpMs: 24 * 3_600_000,
+      pricesSource: "channel3",
     });
   });
 

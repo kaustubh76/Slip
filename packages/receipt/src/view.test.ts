@@ -40,6 +40,42 @@ describe("renderReceipt", () => {
     expect(view.chosen?.store).toBe("Store A");
   });
 
+  it("a demo's receipt names its prices as simulated, never as Channel3's", () => {
+    const attempt = testAttempt({
+      decision: testDecision({
+        ruleCode: "R4_OVERPAID",
+        chosen: storeA(58.99),
+        best: storeB(47.99),
+      }),
+    });
+    const real = renderReceipt({ attempt, payment: null, hold: null });
+    expect(real.simulated).toBe(false);
+    const demo = renderReceipt(
+      { attempt, payment: null, hold: null },
+      { pricesSource: "simulated" },
+    );
+    expect(demo.simulated).toBe(true);
+    expect(demo.footer).toBe(
+      "Listed item prices from a simulated Channel3 at 14:02 UTC. Shipping and tax are not included.",
+    );
+    expect(demo.lines.at(-1)).toBe(demo.footer);
+    const unpriced = renderReceipt(
+      {
+        attempt: {
+          ...attempt,
+          decision: {
+            ...attempt.decision,
+            checkResult: { ...attempt.decision.checkResult, snapshotFetchedAt: null },
+          },
+        },
+        payment: null,
+        hold: null,
+      },
+      { pricesSource: "simulated" },
+    );
+    expect(unpriced.footer).toBe("No listed item prices from a simulated Channel3 at 14:02 UTC.");
+  });
+
   it("only a live reservation reports held money", () => {
     const attempt = testAttempt({
       decision: testDecision({ ruleCode: "R6_ABOVE_ORDER_CAP", chosen: storeA(250) }),

@@ -44,6 +44,11 @@ describe("StatusLine", () => {
 });
 
 describe("ReceiptSlip", () => {
+  it("offers no link to a demo's made-up store", () => {
+    render(<ReceiptSlip view={{ ...rejectedView(), simulated: true }} agentName="shopper-1" />);
+    expect(screen.queryByRole("link", { name: /Open the/ })).toBeNull();
+  });
+
   it("prints the spec's receipt word for word, stamped REJECTED, with the cheaper offer one click away", () => {
     const { container } = render(<ReceiptSlip view={rejectedView()} agentName="shopper-1" />);
     const sentences = [...container.querySelectorAll(".slip-sentence")].map((p) => p.textContent);

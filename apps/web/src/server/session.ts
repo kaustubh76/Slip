@@ -1,6 +1,7 @@
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { deriveKey, type Env, KEY_PURPOSES, masterKeyFromEnv } from "@slip/db";
 import { isUuid } from "@slip/domain";
+import { isDemo } from "./demo";
 
 /**
  * Who is reading the owner's pages, in a cookie the browser cannot forge: the owner id and the
@@ -152,7 +153,7 @@ export function newSession(
 export function deriveSessionKey(env: Env = process.env): Buffer {
   const configured = env["SLIP_ENCRYPTION_KEY"]?.trim();
   const master =
-    (configured === undefined || configured === "") && env["SLIP_DEMO"] === "1"
+    (configured === undefined || configured === "") && isDemo(env)
       ? randomBytes(32)
       : masterKeyFromEnv(env);
   return deriveKey(master, KEY_PURPOSES.ownerSession);

@@ -25,6 +25,12 @@ import { isDemo } from "./demo";
  * need to stock a catalogue and approve a PayPal setup, which only a fake can do.
  */
 
+/**
+ * True while Channel3 and PayPal are the in-memory stand-ins. Receipts and the disclosure line say
+ * so; it becomes false when the real adapters are wired in here.
+ */
+export const SIMULATED_SERVICES = true;
+
 export interface Fakes {
   offers: FakeOffersSource;
   gateway: FakePaymentGateway;
@@ -68,7 +74,10 @@ async function build(): Promise<Runtime> {
     clock,
     ids: randomIds,
     log: env["NODE_ENV"] === "test" ? silentLogger : jsonLogger,
-    config: appConfig(env["SLIP_BASE_URL"] ? { publicBaseUrl: env["SLIP_BASE_URL"] } : {}),
+    config: appConfig({
+      ...(env["SLIP_BASE_URL"] ? { publicBaseUrl: env["SLIP_BASE_URL"] } : {}),
+      pricesSource: SIMULATED_SERVICES ? "simulated" : "channel3",
+    }),
   };
   return { deps, fakes };
 }

@@ -143,6 +143,11 @@ describe("the signing key", () => {
     expect(deriveSessionKey({ SLIP_DEMO: "1" })).not.toEqual(demo);
   });
 
+  it("does not fall back to a throwaway key where demos are refused (Vercel)", () => {
+    // Each instance would sign with its own random key and reject the others' cookies.
+    expect(() => deriveSessionKey({ SLIP_DEMO: "1", VERCEL: "1" })).toThrow(InvariantError);
+  });
+
   it("is derived once for the whole process, not once per bundle", () => {
     const key = randomBytes(32).toString("base64");
     const first = sessionKey({ SLIP_ENCRYPTION_KEY: key });

@@ -124,12 +124,23 @@ function unverified(offer: Offer | null): string {
   return "The listing did not state its price, condition or currency clearly.";
 }
 
-/** Where the prices came from, and what they leave out. */
-export function footer(pricesAt: Date | null, decidedAt: Date): string {
+/**
+ * Where the prices came from, and what they leave out. `simulated`: the demo's stand-in catalogue
+ * served them, so the receipt says so instead of naming Channel3 as the source.
+ */
+export function footer(
+  pricesAt: Date | null,
+  decidedAt: Date,
+  source: PricesSource = "channel3",
+): string {
+  const from = source === "simulated" ? "a simulated Channel3" : "Channel3";
   return pricesAt === null
-    ? `No listed item prices from Channel3 at ${utcTime(decidedAt)}.`
-    : `Listed item prices from Channel3 at ${utcTime(pricesAt)}. Shipping and tax are not included.`;
+    ? `No listed item prices from ${from} at ${utcTime(decidedAt)}.`
+    : `Listed item prices from ${from} at ${utcTime(pricesAt)}. Shipping and tax are not included.`;
 }
+
+/** Who served the prices: Channel3 itself, or the stand-in a demo runs on. */
+export type PricesSource = "channel3" | "simulated";
 
 /** Why one rule tripped, for the list of rules behind the receipt; adds the owner's own numbers. */
 export function ruleSentence(code: RuleCode, policy: Policy | undefined): string {

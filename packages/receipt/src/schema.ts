@@ -74,6 +74,11 @@ export const ReceiptViewSchema = z.object({
   /** Where the prices came from and what they leave out. */
   footer: z.string(),
   /**
+   * The prices came from the demo's stand-in catalogue, not Channel3: the stores and their pages
+   * do not exist, so a reader must not offer a link to them.
+   */
+  simulated: z.boolean(),
+  /**
    * Why the agent said it chose this offer — its own words, quoted on the receipt and labelled as
    * untrusted, because no rule reads it (D4).
    */

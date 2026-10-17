@@ -45,6 +45,11 @@ export const AppConfigSchema = z
     resolverConcurrency: z.number().int().positive().max(64).default(8),
     /** Where PayPal sends the owner back after approving or cancelling. */
     publicBaseUrl: z.url().default("http://localhost:3000"),
+    /**
+     * Who serves the prices: Channel3, or the stand-in catalogue a demo runs on. Receipts say
+     * which, so a demo never presents made-up stores as Channel3 listings.
+     */
+    pricesSource: z.enum(["channel3", "simulated"]).default("channel3"),
   })
   .refine((c) => c.leaseTtlMs > c.offersTimeoutMs + c.classifierTimeoutMs + c.paypalTimeoutMs, {
     message: "leaseTtlMs must outlast the Channel3, classifier and PayPal deadlines together",

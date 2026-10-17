@@ -9,8 +9,10 @@ import type { ReactNode } from "react";
 import { LiveUpdates } from "../components/LiveUpdates";
 import { Tabs } from "../components/Tabs";
 import { ThemeToggle } from "../components/ThemeToggle";
+import { disclosure } from "../server/disclosure";
 import { stampTokenFor } from "../server/live";
 import { currentOwner } from "../server/owner";
+import { SIMULATED_SERVICES } from "../server/runtime";
 
 const sans = IBM_Plex_Sans({
   subsets: ["latin"],
@@ -56,10 +58,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           </div>
         </header>
         <p className="slip-band">
-          <span>
-            Demo runs in PayPal sandbox. Slip is the seller. No real money moves; no order reaches a
-            retailer.
-          </span>
+          <span>{disclosure(SIMULATED_SERVICES)}</span>
         </p>
         <main className="slip-main">{children}</main>
       </body>
