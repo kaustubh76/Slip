@@ -1,21 +1,14 @@
-import { NextResponse } from "next/server";
+import { answer } from "../../../../server/json";
 import { stampTokenFor } from "../../../../server/live";
-import { currentOwner } from "../../../../server/owner";
+import { ownerRoute } from "../../../../server/owner-route";
 
 export const dynamic = "force-dynamic";
 
 /**
  * `GET /api/v1/stamp` — how much has happened under this owner's mandate, as one short token.
- * The owner's pages poll it and re-read themselves when it changes. It is never cached by the
- * browser, and it says nothing about what changed, only that something did.
+ * The owner's pages poll it and re-read what changed. It is never cached by the browser, and it
+ * says nothing about what changed beyond which counters moved.
  */
-export async function GET(): Promise<NextResponse> {
-  const owner = await currentOwner();
-  if (owner === null) {
-    return NextResponse.json({ error: "no session" }, { status: 401 });
-  }
-  return NextResponse.json(
-    { token: await stampTokenFor(owner.deps, owner.mandateId) },
-    { headers: { "Cache-Control": "no-store" } },
-  );
-}
+export const GET = ownerRoute(async (owner) =>
+  answer(200, { token: await stampTokenFor(owner.deps, owner.mandateId) }),
+);

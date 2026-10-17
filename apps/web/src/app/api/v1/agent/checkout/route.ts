@@ -1,6 +1,7 @@
 import { runCheckout } from "@slip/app";
-import { NextResponse } from "next/server";
 import { bearerKey, checkoutResponse } from "../../../../../server/agent-api";
+import { answer, jsonRoute } from "../../../../../server/json";
+import { logApiError } from "../../../../../server/owner-route";
 import { deps } from "../../../../../server/runtime";
 
 export const dynamic = "force-dynamic";
@@ -12,28 +13,25 @@ export const dynamic = "force-dynamic";
  *
  * This is the same use case the MCP server will wrap, so an agent that works here works there.
  */
-export async function POST(request: Request): Promise<NextResponse> {
+export const POST = jsonRoute(async (request: Request) => {
   const key = bearerKey(request.headers.get("authorization"));
   if (key === null) {
-    return NextResponse.json(
-      {
-        status: "refused",
-        reason: "UNAUTHENTICATED",
-        message: "Send your Slip key as `Authorization: Bearer slip_live_…`.",
-      },
-      { status: 401 },
-    );
+    return answer(401, {
+      status: "refused",
+      reason: "UNAUTHENTICATED",
+      message: "Send your Slip key as `Authorization: Bearer slip_live_…`.",
+    });
   }
   let body: unknown;
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json(
-      { status: "refused", reason: "INVALID_REQUEST", message: "The body must be JSON." },
-      { status: 400 },
-    );
+    return answer(400, {
+      status: "refused",
+      reason: "INVALID_REQUEST",
+      message: "The body must be JSON.",
+    });
   }
-  const application = await deps();
-  const answer = checkoutResponse(await runCheckout(application, key, body));
-  return NextResponse.json(answer.body, { status: answer.status });
-}
+  const result = checkoutResponse(await runCheckout(await deps(), key, body));
+  return answer(result.status, result.body);
+}, logApiError);
