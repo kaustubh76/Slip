@@ -15,7 +15,7 @@ export default defineConfig({
     name: "web",
     // Server-side units only (session, composition root, the demo desk). Browser flows are
     // Playwright's job: they need a built app, so they run in their own step.
-    include: ["src/**/*.test.ts"],
+    include: ["src/**/*.test.ts", "scripts/**/*.test.ts"],
     environment: "node",
   },
 });

@@ -1,3 +1,5 @@
+import { execFile } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
 import { openDesk } from "./helpers";
 
@@ -29,4 +31,46 @@ test("the console issues a key for the agent script, shown once with the command
     /^SLIP_AGENT_KEY=slip_live_\S+ pnpm demo:agent --errand top-pick --url http:\/\/localhost:3100$/,
   );
   await expect(page.getByRole("button", { name: "Issue a key for the script" })).toHaveCount(0);
+  // The script's listing answers to an agent key, never to the owner's cookie.
+  expect((await page.request.get("/api/v1/demo/errands")).status()).toBe(401);
 });
+
+test("the agent script, run from a terminal, is checked by Slip and prints on the open roll", async ({
+  page,
+  baseURL,
+}) => {
+  await openDesk(page);
+  await page.goto("/demo");
+  await page.getByRole("button", { name: "Issue a key for the script" }).click();
+  const command = (await page.locator(".slip-key").textContent()) ?? "";
+  const key = /SLIP_AGENT_KEY=(\S+)/.exec(command)?.[1] ?? "";
+  await page.goto("/receipts");
+  const roll = page.getByRole("region", { name: "Receipts" });
+  await expect(roll.getByRole("img", { name: "Outcome: rejected" })).toHaveCount(1);
+
+  const transcript = await agentScript(["--errand", "top-pick", "--url", baseURL ?? ""], key);
+  expect(transcript.code).toBe(0);
+  expect(transcript.stdout).toContain('listing says: "[synthetic] Top pick"');
+  expect(transcript.stdout).toContain("REJECTED by R4_OVERPAID");
+  // Printed on the roll by the live poll, with no reload.
+  await expect(roll.getByRole("img", { name: "Outcome: rejected" })).toHaveCount(2, {
+    timeout: 10_000,
+  });
+  await expect(roll).toContainText("agent script");
+});
+
+/** Runs `pnpm demo:agent` the way a presenter would, from the repository root. */
+function agentScript(
+  args: string[],
+  key: string,
+): Promise<{ code: number | null; stdout: string }> {
+  const root = fileURLToPath(new URL("../../..", import.meta.url));
+  return new Promise((resolve) => {
+    execFile(
+      `${root}node_modules/.bin/tsx`,
+      ["apps/web/scripts/demo-agent.ts", ...args],
+      { cwd: root, env: { ...process.env, SLIP_AGENT_KEY: key } },
+      (error, stdout) => resolve({ code: error === null ? 0 : (error.code as number), stdout }),
+    );
+  });
+}
