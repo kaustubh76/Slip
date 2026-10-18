@@ -66,6 +66,23 @@ describe("what it sends", () => {
     expect(calls[0]?.init.headers).toMatchObject({ "content-type": "application/json" });
   });
 
+  it("sends a string body exactly as given, with the caller's own content type", async () => {
+    // An OAuth token is asked for with a form-encoded body; everything else Slip sends is JSON.
+    const { fetch, calls } = stub(json(200, { access_token: "A" }));
+    const client = createJsonClient({ fetch });
+    await client.send({
+      url: "https://api-m.sandbox.paypal.com/v1/oauth2/token",
+      method: "POST",
+      body: "grant_type=client_credentials",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      signal: live(),
+    });
+    expect(calls[0]?.init.body).toBe("grant_type=client_credentials");
+    expect(calls[0]?.init.headers).toMatchObject({
+      "content-type": "application/x-www-form-urlencoded",
+    });
+  });
+
   it("lets a per-request header override a standing one, whatever its case", async () => {
     const { fetch, calls } = stub(json(200, {}));
     const client = createJsonClient({ fetch, headers: { Authorization: "Bearer old" } });

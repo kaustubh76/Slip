@@ -19,7 +19,11 @@ export type Fetch = typeof globalThis.fetch;
 export interface JsonRequest {
   url: string;
   method?: "GET" | "POST" | "PATCH" | "DELETE";
-  /** Serialised as JSON when present; `Content-Type` is then set for you. */
+  /**
+   * Serialised as JSON when present, and `content-type: application/json` is then set for you. A
+   * **string** is sent verbatim instead, for the one request that is not JSON: an OAuth token is
+   * asked for with a form-encoded body, and the caller sets the `content-type` to say so.
+   */
   body?: unknown;
   headers?: Readonly<Record<string, string>>;
   signal: AbortSignal;
@@ -67,18 +71,17 @@ export function createJsonClient(options: JsonClientOptions = {}): JsonClient {
     async send(request) {
       const headers: Record<string, string> = {
         accept: "application/json",
+        // Before the caller's headers, so a request that is not JSON can say what it is.
+        ...(request.body === undefined ? {} : { "content-type": "application/json" }),
         ...lowercased(options.headers),
         ...lowercased(request.headers),
       };
-      if (request.body !== undefined) {
-        headers["content-type"] = "application/json";
-      }
       let response: Response;
       try {
         response = await doFetch(request.url, {
           method: request.method ?? "GET",
           headers,
-          ...(request.body === undefined ? {} : { body: JSON.stringify(request.body) }),
+          ...(request.body === undefined ? {} : { body: encode(request.body) }),
           signal: request.signal,
         });
       } catch (error) {
@@ -106,6 +109,11 @@ export function createJsonClient(options: JsonClientOptions = {}): JsonClient {
       };
     },
   };
+}
+
+/** A string is already encoded; anything else becomes JSON. */
+function encode(body: unknown): string {
+  return typeof body === "string" ? body : JSON.stringify(body);
 }
 
 function parseJson(text: string): { body: unknown; parsed: boolean } {
