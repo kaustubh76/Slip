@@ -541,3 +541,26 @@ port method.
   synthetic labels, passes through verbatim and is labelled as the store's untrusted words.
 - **Classifier.** `searchContext`, meant to carry what Slip's search showed the agent, stays
   `null` until searches are recorded. Recording them belongs with the Channel3 adapter.
+
+## D60 · 2026-10-18 · A listing's text comes only from the offer itself
+
+Channel3 gives a product one shared `description` and each merchant's offer its own `title` and
+`description`. The steering check reads **only the offer's own text**. The shared description is
+identical across every merchant, so a prompt injection hidden in it would flag whichever offer the
+agent happened to pick — Slip would hold a purchase and blame a merchant that wrote nothing.
+
+An offer with no text of its own gets `listingText: null`, and the check is simply not run for it
+(`checkOffers` already skips a listing with no text). An unflagged offer is the right answer there:
+Slip has seen nothing to object to.
+
+## D61 · 2026-10-18 · A failure detail is Slip's own words, never the service's text
+
+Every adapter maps a failure to its port's reason plus a short `detail`. That detail is built from
+the status and a fixed sentence Slip wrote; the service's own message body is dropped.
+
+Two reasons, either sufficient. A 401 from Channel3 answers `{"detail": "Invalid API key: <key>"}`
+— the key itself — and these details are bound for a log. And a third party's free text is not
+Slip's voice: nothing stops it from carrying a sentence addressed to whoever reads it, which is the
+same injection surface the steering check exists for. The status is the diagnostic part and is
+always kept (`Channel3 answered 402: there are no catalogue credits left`). Our own transport
+errors are different — `TypeError: fetch failed (ENOTFOUND)` is Slip's own text, and it stays.

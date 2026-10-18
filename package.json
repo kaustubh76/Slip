@@ -26,6 +26,7 @@
     "db:generate": "tsc -b packages/domain && pnpm --filter @slip/db exec drizzle-kit generate",
     "db:migrate": "pnpm --filter @slip/db migrate",
     "test:pg": "pnpm db:up && SLIP_TEST_DATABASE_URL=postgres://slip:slip@localhost:54329/postgres vitest run --project db",
+    "test:live:channel3": "vitest run --project offers src/live.test.ts",
     "web:e2e": "pnpm --filter @slip/web e2e",
     "demo:agent": "tsx apps/web/scripts/demo-agent.ts"
   },

@@ -2,9 +2,15 @@
   "name": "@slip/offers",
   "version": "0.0.1",
   "private": true,
-  "description": "Offers source: the Channel3 adapter (Increment 1) and an in-memory fake.",
+  "description": "Offers source: the Channel3 adapter and an in-memory fake.",
   "type": "module",
   "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "@slip/source": "./src/index.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
     "./fake": {
       "types": "./dist/fake.d.ts",
       "@slip/source": "./src/fake.ts",
@@ -20,7 +26,9 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@slip/domain": "workspace:*"
+    "@slip/domain": "workspace:*",
+    "@slip/http": "workspace:*",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",
