@@ -1,0 +1,27 @@
+{
+  "name": "@slip/http",
+  "version": "0.0.1",
+  "private": true,
+  "description": "The one JSON client the outside-service adapters talk through: no retries, no timeouts of its own, every outcome a value.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "@slip/source": "./src/index.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
