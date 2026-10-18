@@ -1,6 +1,7 @@
 import { completeMandateSetup, registerOwner, startMandate } from "@slip/app";
 import { describe, expect, it } from "vitest";
 import { demoWorld } from "./demo/__fixtures__/world";
+import { DEMO_PRODUCTS, productIdFor } from "./demo/catalogue";
 import { approveSimulatedSetup, findSimulatedSetup } from "./simulated-approval";
 
 async function setupFor(world: ReturnType<typeof demoWorld>) {
@@ -23,9 +24,16 @@ describe("the simulated PayPal approval", () => {
     expect(approveUrl.startsWith("http://localhost:3100/demo/paypal/approve/")).toBe(true);
     const found = await findSimulatedSetup(world.deps, ownerId, reference);
     expect(found).toMatchObject({ status: "pending", mandateId });
-    expect(
-      await approveSimulatedSetup(world.deps, world.fakes.gateway, ownerId, reference),
-    ).toMatchObject({ status: "pending", mandateId });
+    expect(await approveSimulatedSetup(world.deps, world.fakes, ownerId, reference)).toMatchObject({
+      status: "pending",
+      mandateId,
+    });
+    // The new desk has the demo's products to buy.
+    for (const product of DEMO_PRODUCTS) {
+      expect(world.fakes.offers.product(productIdFor(product.base, mandateId))?.title).toBe(
+        product.title,
+      );
+    }
     const back = await completeMandateSetup(world.deps, ownerId as never, mandateId);
     expect(back).toMatchObject({ status: "active" });
     // Once settled, the page says so instead of offering to approve again.
@@ -43,9 +51,9 @@ describe("the simulated PayPal approval", () => {
     expect(await findSimulatedSetup(world.deps, mine.ownerId, reference)).toEqual({
       status: "not-found",
     });
-    expect(
-      await approveSimulatedSetup(world.deps, world.fakes.gateway, mine.ownerId, reference),
-    ).toEqual({ status: "not-found" });
+    expect(await approveSimulatedSetup(world.deps, world.fakes, mine.ownerId, reference)).toEqual({
+      status: "not-found",
+    });
     expect(await findSimulatedSetup(world.deps, mine.ownerId, "SETUP-999999")).toEqual({
       status: "not-found",
     });

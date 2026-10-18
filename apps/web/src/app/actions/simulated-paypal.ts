@@ -21,7 +21,7 @@ export async function approveOnSimulatedPayPal(form: FormData): Promise<void> {
   }
   const { ownerId } = await requireOwner();
   const { deps, fakes } = await runtime();
-  const result = await approveSimulatedSetup(deps, fakes.gateway, ownerId, reference);
+  const result = await approveSimulatedSetup(deps, fakes, ownerId, reference);
   redirect(
     result.status === "not-found"
       ? "/mandate?setup=not_found"

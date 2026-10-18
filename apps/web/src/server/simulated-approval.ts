@@ -1,7 +1,7 @@
 import "server-only";
 import type { AppDeps } from "@slip/app";
 import type { Policy } from "@slip/domain";
-import type { DemoPayPal } from "./demo/paypal";
+import { type DemoFakes, stockDesk } from "./demo/desk";
 
 /**
  * The page that plays PayPal's part while there are no sandbox keys: the owner approves saving a
@@ -33,10 +33,14 @@ export async function findSimulatedSetup(
   };
 }
 
-/** The owner approves at (simulated) PayPal; Slip then reads the saved method on the way back. */
+/**
+ * The owner approves at (simulated) PayPal; Slip then reads the saved method on the way back. The
+ * new permission's desk is stocked with the demo's products, as the first one was at sign-in, so
+ * its agents have something to buy and to search for.
+ */
 export async function approveSimulatedSetup(
   deps: AppDeps,
-  gateway: DemoPayPal,
+  fakes: DemoFakes,
   ownerId: string,
   reference: string,
 ): Promise<SimulatedSetup> {
@@ -45,9 +49,10 @@ export async function approveSimulatedSetup(
     return found;
   }
   try {
-    gateway.approveSetup(reference);
+    fakes.gateway.approveSetup(reference);
   } catch {
     return { status: "not-found" };
   }
+  stockDesk(fakes.offers, found.mandateId);
   return found;
 }
