@@ -155,9 +155,18 @@ export const ERRANDS: Readonly<Record<ErrandName, Errand>> = {
   },
 };
 
-/** One desk's own id for a product: the same product, listed separately per visitor. */
+/**
+ * One desk's own id for a product: the same product, listed separately per visitor. The suffix is
+ * the permission's first 48 bits, so two desks share a product only by a one-in-trillions chance;
+ * 32 bits left a few in a hundred thousand among a full process of desks.
+ */
 export function productIdFor(base: string, mandateId: string): string {
-  return `${base}--${mandateId.slice(0, 8)}`;
+  return `${base}--${deskSuffix(mandateId)}`;
+}
+
+/** The part of a desk's product ids that names the desk: 12 hex digits of its permission. */
+export function deskSuffix(mandateId: string): string {
+  return mandateId.replaceAll("-", "").slice(0, 12);
 }
 
 export function demoProduct(base: string): DemoProduct {

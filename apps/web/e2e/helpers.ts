@@ -8,11 +8,11 @@ export async function openDesk(page: Page): Promise<void> {
   await expect(page.getByRole("region", { name: "Receipts" })).toBeVisible();
 }
 
-/** This desk's own id for a demo product, as the catalogue lists it (`<product>--<slip no.>`). */
+/** This desk's own id for a demo product, as the catalogue lists it (`<product>--<12 hex digits>`). */
 export async function productId(page: Page, base: string): Promise<string> {
   const response = await page.request.get("/api/v1/mandate");
   const mandate = (await response.json()) as { id: string };
-  return `${base}--${mandate.id.slice(0, 8)}`;
+  return `${base}--${mandate.id.replaceAll("-", "").slice(0, 12)}`;
 }
 
 /** Issues a key for a new agent on the agents page and reads it off the slip, where it shows once. */

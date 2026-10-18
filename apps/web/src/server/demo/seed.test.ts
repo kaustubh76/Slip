@@ -2,7 +2,7 @@ import { type AppDeps, previewApproval } from "@slip/app";
 import type { AttemptId, MandateId, OwnerId } from "@slip/domain";
 import { beforeAll, describe, expect, it } from "vitest";
 import { demoWorld } from "./__fixtures__/world";
-import { productIdFor } from "./catalogue";
+import { deskSuffix, productIdFor } from "./catalogue";
 import type { DemoFakes } from "./desk";
 import { type DemoOwner, seedDemoOwner } from "./seed";
 
@@ -67,7 +67,7 @@ describe("seedDemoOwner", () => {
       limit: 50,
     });
     for (const r of page.items) {
-      expect(r.attempt.productId.endsWith(`--${owner.mandateId.slice(0, 8)}`)).toBe(true);
+      expect(r.attempt.productId.endsWith(`--${deskSuffix(owner.mandateId)}`)).toBe(true);
     }
     // The outage was this desk's alone, and it is over.
     expect(fakes.offers.isDown(productIdFor("standing-desk", owner.mandateId))).toBe(false);
