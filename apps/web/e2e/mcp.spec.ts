@@ -61,7 +61,11 @@ test("Slip's MCP server answers an agent with a key, and turns away a call witho
     data: { jsonrpc: "2.0", id: 2, method: "tools/list" },
   });
   const tools = ((await rpc(list)).result?.["tools"] ?? []) as { name: string }[];
-  expect(tools.map((t) => t.name)).toEqual(
-    expect.arrayContaining(["checkout", "get_receipt", "get_report"]),
-  );
+  // In demo mode the desk's stand-in catalogue can be searched too.
+  expect(tools.map((t) => t.name).sort()).toEqual([
+    "checkout",
+    "get_receipt",
+    "get_report",
+    "search_products",
+  ]);
 });

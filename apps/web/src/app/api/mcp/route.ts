@@ -1,6 +1,8 @@
 import { createSlipMcpEndpoint } from "@slip/mcp";
+import { isDemo } from "../../../server/demo";
+import { deskSearch } from "../../../server/demo/search";
 import { logApiError } from "../../../server/owner-route";
-import { deps } from "../../../server/runtime";
+import { deps, fakes } from "../../../server/runtime";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -11,7 +13,14 @@ export const runtime = "nodejs";
  * endpoint, so an agent gets the same decisions either way. The application is read per request,
  * never while the module loads (`next build` evaluates route modules).
  */
-const endpoint = createSlipMcpEndpoint({ deps, onError: logApiError });
+const endpoint = createSlipMcpEndpoint({
+  deps,
+  // In demo mode an agent can search its desk's stand-in catalogue; Channel3's search comes with
+  // the real adapter.
+  search: async (mandateId) =>
+    isDemo() ? deskSearch((await fakes()).offers, mandateId) : undefined,
+  onError: logApiError,
+});
 
 export const POST = endpoint;
 export const GET = endpoint;
