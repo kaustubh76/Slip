@@ -2,9 +2,15 @@
   "name": "@slip/steering",
   "version": "0.0.1",
   "private": true,
-  "description": "Steering classifier: the Claude adapter (Increment 5) and a scripted fake.",
+  "description": "Steering classifier: the Claude adapter and a scripted fake.",
   "type": "module",
   "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "@slip/source": "./src/index.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
     "./fake": {
       "types": "./dist/fake.d.ts",
       "@slip/source": "./src/fake.ts",
@@ -20,7 +26,9 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@slip/domain": "workspace:*"
+    "@anthropic-ai/sdk": "catalog:",
+    "@slip/domain": "workspace:*",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",
