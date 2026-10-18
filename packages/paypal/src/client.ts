@@ -41,6 +41,8 @@ export interface PayPalRequest {
   query?: Readonly<Record<string, string>>;
   /** `PayPal-Request-Id`: idempotency for anything that moves money. */
   requestId?: string;
+  /** Anything else one endpoint needs, such as reporting's ISO 8601 switch. */
+  headers?: Readonly<Record<string, string>>;
   /** `Prefer: return=representation`, to be answered with the resource rather than a stub. */
   representation?: boolean;
 }
@@ -129,6 +131,7 @@ export function createPayPalApi(options: PayPalApiOptions): PayPalApi {
           authorization: `Bearer ${bearer}`,
           ...(request.requestId === undefined ? {} : { "paypal-request-id": request.requestId }),
           ...(request.representation === true ? { prefer: "return=representation" } : {}),
+          ...request.headers,
         },
         signal,
       });

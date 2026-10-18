@@ -5,6 +5,12 @@
   "description": "PayPal gateway: the REST adapter and an in-memory fake.",
   "type": "module",
   "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "@slip/source": "./src/index.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
     "./fake": {
       "types": "./dist/fake.d.ts",
       "@slip/source": "./src/fake.ts",
