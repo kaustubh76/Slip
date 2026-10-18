@@ -1,3 +1,9 @@
+export {
+  createSlipMcpEndpoint,
+  DEFAULT_MAX_REQUEST_BYTES,
+  originHosts,
+  type SlipMcpEndpointOptions,
+} from "./endpoint.js";
 export { nextStep } from "./next-step.js";
 export {
   type ListedOffer,
