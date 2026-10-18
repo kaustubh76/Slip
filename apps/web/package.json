@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "catalog:",
+    "@modelcontextprotocol/client": "catalog:",
     "@playwright/test": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",

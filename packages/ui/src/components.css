@@ -646,8 +646,9 @@
     justify-items: start;
   }
 
-  /* A key, shown once: wide enough to select in one go. */
-  .slip-key {
+  /* A key, or a command carrying one, shown once: wide enough to select in one go. */
+  .slip-key,
+  .slip-command {
     overflow-wrap: anywhere;
     user-select: all;
     margin: 4px 0;

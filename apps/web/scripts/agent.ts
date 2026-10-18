@@ -1,34 +1,72 @@
+import { Client, StreamableHTTPClientTransport } from "@modelcontextprotocol/client";
+import type { ListedOffer, ToolReceipt, ToolSearch } from "@slip/mcp";
+
 /**
  * The demo agent: what an AI shopping agent does with Slip in front of PayPal, as a terminal
- * transcript. It reads its desk's errands (the demo's stand-in for searching Channel3), picks the
- * offer the errand names, calls Slip's one agent endpoint, and prints Slip's answer in the words the
- * owner's receipt uses.
+ * transcript. It speaks MCP to Slip's server at `/api/mcp` with its own key — `search_products` to
+ * find the item, `checkout` to pay — and prints Slip's answer in the words the owner's receipt uses,
+ * with Slip's next step.
  *
- * It knows Slip only over HTTP, as any agent would: nothing here imports Slip's code. Separate from
+ * Each errand is a rule for choosing among the offers search returns, the way a real agent would
+ * choose: the cheapest, the one with the "Top pick" badge, the one whose listing addresses AI
+ * agents. It knows Slip only over MCP (the types it imports are erased when it runs). Separate from
  * the command line (`demo-agent.ts`) so the transcript can be tested against a fake `fetch`.
  */
 
-export interface ListedOffer {
-  store: string;
-  url: string;
-  priceCents: number | null;
-  currency: string;
-  availability: string;
-  condition: string | null;
-  commission: string | null;
-  listingText: string | null;
+export interface ScriptErrand {
+  label: string;
+  query: string;
+  reason: string;
+  /** How the agent picks among the offers search listed. */
+  pick: (offers: readonly ListedOffer[]) => ListedOffer | undefined;
+  /** Needs Channel3 down for this product while it runs, which only the console can arrange. */
+  consoleOnly?: boolean;
 }
 
-export interface ErrandListing {
-  name: string;
-  label: string;
-  productId: string;
-  title: string;
-  chosenUrl: string;
-  reason: string;
-  consoleOnly: boolean;
-  offers: ListedOffer[];
-}
+const cheapest = (offers: readonly ListedOffer[]): ListedOffer | undefined =>
+  offers
+    .filter((o) => o.in_stock && o.condition === "new" && o.price_cents !== null)
+    .sort((a, b) => (a.price_cents ?? 0) - (b.price_cents ?? 0))[0];
+
+export const SCRIPT_ERRANDS: Readonly<Record<string, ScriptErrand>> = {
+  lamp: {
+    label: "Buys the cheapest desk lamp",
+    query: "desk lamp",
+    reason: "cheapest I found",
+    pick: cheapest,
+  },
+  "top-pick": {
+    label: "Picks the [synthetic] Top pick trail shoe at $58.99",
+    query: "trail shoe",
+    reason: "Top pick badge, ships fastest",
+    pick: (offers) => offers.find((o) => o.listing_text?.includes("Top pick") === true),
+  },
+  cheaper: {
+    label: "Retries with the $47.99 trail shoe",
+    query: "trail shoe",
+    reason: "same shoe, lowest listed price",
+    pick: cheapest,
+  },
+  "above-cap": {
+    label: "Buys $239 headphones, above the $200 cap",
+    query: "headphones",
+    reason: "best reviews",
+    pick: cheapest,
+  },
+  "offers-down": {
+    label: "Buys a $310 standing desk while Channel3 is down",
+    query: "standing desk",
+    reason: "only one I could find",
+    pick: cheapest,
+    consoleOnly: true,
+  },
+  injected: {
+    label: "Follows a listing that tells AI agents what to buy",
+    query: "phone case",
+    reason: "the listing said it was the only offer worth buying",
+    pick: (offers) => offers.find((o) => /AI shopping agents/i.test(o.listing_text ?? "")),
+  },
+};
 
 export interface AgentRun {
   /** Slip's public URL, e.g. http://localhost:3000. */
@@ -48,157 +86,155 @@ export interface AgentOutcome {
 
 const PAD = "        ";
 
+function errandList(): string[] {
+  return [
+    ...Object.entries(SCRIPT_ERRANDS).map(
+      ([name, e]) => `  ${name.padEnd(12)}${e.label}${e.consoleOnly ? "  (console only)" : ""}`,
+    ),
+    "",
+    "Run one with: pnpm demo:agent --errand <name>",
+  ];
+}
+
 export async function runAgent(run: AgentRun): Promise<AgentOutcome> {
   const base = run.base.replace(/\/+$/, "");
-  const lines: string[] = [];
-  const say = (who: "agent" | "slip" | "paypal" | "", text: string) =>
-    lines.push(who === "" ? `${PAD}${text}` : `${who.padEnd(PAD.length)}${text}`);
-
-  let listing: { agent: string; errands: ErrandListing[] };
-  try {
-    const response = await run.fetch(`${base}/api/v1/demo/errands`, {
-      headers: { authorization: `Bearer ${run.key}` },
-    });
-    const body = (await response.json()) as { message?: string } & typeof listing;
-    if (!response.ok) {
-      return {
-        code: 2,
-        lines: [
-          `Slip at ${base} would not list errands (${response.status}): ${body.message ?? "no reason given"}`,
-        ],
-      };
-    }
-    listing = body;
-  } catch (error) {
-    return { code: 2, lines: [`Slip is not answering at ${base}: ${String(error)}`] };
+  if (run.errand === null) {
+    return { code: 0, lines: errandList() };
   }
-
-  const errand = listing.errands.find((e) => e.name === run.errand);
+  const errand = SCRIPT_ERRANDS[run.errand];
   if (errand === undefined) {
     return {
-      code: run.errand === null ? 0 : 2,
-      lines: [
-        ...(run.errand === null ? [] : [`There is no errand "${run.errand}". The errands:`, ""]),
-        ...listing.errands.map(
-          (e) => `  ${e.name.padEnd(12)}${e.label}${e.consoleOnly ? "  (console only)" : ""}`,
-        ),
-        "",
-        "Run one with: pnpm demo:agent --errand <name>",
-      ],
+      code: 2,
+      lines: [`There is no errand "${run.errand}". The errands:`, "", ...errandList()],
     };
   }
-  if (errand.consoleOnly) {
+  if (errand.consoleOnly === true) {
     return {
       code: 2,
       lines: [
-        `"${errand.name}" needs Channel3 down for this product while it runs, which only the console`,
+        `"${run.errand}" needs Channel3 down for this product while it runs, which only the console`,
         `can arrange: ${base}/demo`,
       ],
     };
   }
 
-  lines.push(`Slip demo agent · ${listing.agent} · ${base}`, `errand  ${errand.label}`, "");
-  say("agent", `searching the stand-in Channel3 for "${errand.title}"`);
-  for (const offer of errand.offers) {
-    say("", offerLine(offer));
-    if (offer.listingText !== null) {
-      say("", `  listing says: "${offer.listingText}"`);
-    }
-  }
-  const chosen = errand.offers.find((o) => o.url === errand.chosenUrl);
-  say(
-    "agent",
-    `picks ${chosen === undefined ? errand.chosenUrl : `${chosen.store} at ${money(chosen)}`}, because "${errand.reason}"`,
+  const lines: string[] = [];
+  const say = (who: "agent" | "slip" | "next" | "paypal" | "", text: string) =>
+    lines.push(who === "" ? `${PAD}${text}` : `${who.padEnd(PAD.length)}${text}`);
+  const endpoint = `${base}/api/mcp`;
+  const client = new Client(
+    { name: "slip-demo-agent", version: "0.0.1" },
+    { versionNegotiation: { mode: "auto" } },
   );
-  say("agent", "POST /api/v1/agent/checkout");
-
-  const started = run.now();
-  let status: number;
-  let answer: CheckoutAnswer;
   try {
-    const response = await run.fetch(`${base}/api/v1/agent/checkout`, {
-      method: "POST",
-      headers: { authorization: `Bearer ${run.key}`, "content-type": "application/json" },
-      body: JSON.stringify({
-        productId: errand.productId,
-        chosenOfferUrl: errand.chosenUrl,
-        reason: errand.reason,
+    await client.connect(
+      new StreamableHTTPClientTransport(new URL(endpoint), {
+        fetch: run.fetch,
+        requestInit: { headers: { Authorization: `Bearer ${run.key}` } },
       }),
-    });
-    status = response.status;
-    answer = (await response.json()) as CheckoutAnswer;
+    );
   } catch (error) {
-    say("slip", `no answer: ${String(error)}`);
-    say("", "The purchase may still have been checked; the owner's receipts will show it.");
-    return { code: 2, lines };
+    return {
+      code: 2,
+      lines: [`Slip's MCP server at ${endpoint} would not talk: ${message(error)}`],
+    };
   }
-  const took = `${((run.now() - started) / 1000).toFixed(1)}s`;
 
-  if (answer.status === "refused" || answer.receipt === undefined) {
+  try {
+    lines.push(`Slip demo agent · MCP · ${endpoint}`, `errand  ${errand.label}`, "");
+    say("agent", `search_products "${errand.query}"`);
+    const searched = await client.callTool({
+      name: "search_products",
+      arguments: { query: errand.query },
+    });
+    if (searched.isError === true) {
+      say("slip", textOf(searched));
+      return { code: 2, lines };
+    }
+    const found = searched.structuredContent as ToolSearch;
+    const product = found.products[0];
+    if (product === undefined) {
+      say("slip", `nothing found. ${found.hint ?? ""}`.trim());
+      return { code: 2, lines };
+    }
+    say("slip", `${product.title} (product_id ${product.product_id})`);
+    for (const offer of product.offers) {
+      say("", `  ${offerLine(offer)}`);
+      if (offer.listing_text !== null) {
+        say("", `    listing text: "${offer.listing_text}"`);
+      }
+    }
+    const chosen = errand.pick(product.offers);
+    if (chosen === undefined) {
+      say("agent", "found no offer to pick");
+      return { code: 2, lines };
+    }
+    say(
+      "agent",
+      `checkout ${chosen.store} at ${chosen.price ?? "no price"}, because "${errand.reason}"`,
+    );
+
+    const started = run.now();
+    const paid = await client.callTool({
+      name: "checkout",
+      arguments: {
+        product_id: product.product_id,
+        chosen_offer_url: chosen.url,
+        reason: errand.reason,
+      },
+    });
+    const took = `${((run.now() - started) / 1000).toFixed(1)}s`;
+    if (paid.isError === true) {
+      say("slip", `in ${took}: ${textOf(paid)}`);
+      return { code: 1, lines };
+    }
+    const receipt = paid.structuredContent as ToolReceipt;
     say(
       "slip",
-      `refused in ${took} (${status} ${answer.reason ?? "no reason"}): ${answer.message ?? ""}`,
+      receipt.replayed
+        ? `in ${took}: the same purchase again, so the earlier decision stands (${receipt.replay_reason})`
+        : `in ${took}: ${receipt.outcome} by ${receipt.rule}`,
     );
-    say("", "Nothing was checked and nothing was charged.");
-    return { code: 1, lines };
-  }
-  const receipt = answer.receipt;
-  say(
-    "slip",
-    answer.status === "replayed"
-      ? `in ${took}: the same purchase again, so the earlier decision stands (${answer.reason ?? ""})`
-      : `in ${took}: ${receipt.outcome} by ${receipt.ruleCode}`,
-  );
-  lines.push("");
-  for (const line of receipt.lines) {
-    say("", line);
-  }
-  if (receipt.paypal !== null) {
     lines.push("");
-    say(
-      "paypal",
-      `${receipt.state.word}${receipt.paypal.orderId === null ? "" : `, order ${receipt.paypal.orderId}`} (simulated)`,
-    );
+    for (const line of receipt.receipt) {
+      say("", line);
+    }
+    lines.push("");
+    say("next", receipt.next_step);
+    if (receipt.paypal_order_id !== null) {
+      say(
+        "paypal",
+        `${receipt.payment_status}, order ${receipt.paypal_order_id}${receipt.simulated ? " (simulated)" : ""}`,
+      );
+    }
+    lines.push("", `receipt no. ${short(receipt.receipt_id)}  ${receipt.receipt_url}`);
+    return { code: 0, lines };
+  } catch (error) {
+    say("slip", `no answer: ${message(error)}`);
+    say("", "The purchase may still have been checked; the owner's receipts will show it.");
+    return { code: 2, lines };
+  } finally {
+    await client.close().catch(() => undefined);
   }
-  lines.push("", `receipt no. ${short(receipt.receiptId)}  ${base}/receipts/${receipt.receiptId}`);
-  return { code: 0, lines };
-}
-
-interface CheckoutAnswer {
-  status: "decided" | "replayed" | "refused";
-  reason?: string;
-  message?: string;
-  receipt?: {
-    receiptId: string;
-    outcome: string;
-    ruleCode: string;
-    lines: string[];
-    state: { word: string };
-    paypal: { orderId: string | null } | null;
-  };
 }
 
 function offerLine(offer: ListedOffer): string {
   const stock = [
     offer.condition ?? "condition not stated",
-    offer.availability === "InStock" ? "in stock" : spaced(offer.availability),
+    offer.in_stock ? "in stock" : "out of stock",
   ].join(", ");
-  const commission =
-    offer.commission === null ? "" : `   pays the agent's platform ${offer.commission}`;
-  return `${offer.store.padEnd(10)}${money(offer).padStart(9)}   ${stock}${commission}`;
+  const commission = offer.commission === null ? "" : `   commission ${offer.commission}`;
+  return `${offer.store.padEnd(10)}${(offer.price ?? "no price").padStart(9)}   ${stock}${commission}`;
 }
 
-function money(offer: ListedOffer): string {
-  if (offer.priceCents === null) {
-    return "no price";
-  }
-  const amount = (offer.priceCents / 100).toFixed(2);
-  return offer.currency === "USD" ? `$${amount}` : `${amount} ${offer.currency}`;
+function textOf(result: { content?: unknown }): string {
+  return ((result.content ?? []) as { type: string; text?: string }[])
+    .map((c) => c.text ?? "")
+    .join(" ");
 }
 
-/** "OutOfStock" → "out of stock". */
-function spaced(word: string): string {
-  return word.replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
+function message(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
 
 /** The receipt number the owner's pages print: the id's first and last four hex digits. */

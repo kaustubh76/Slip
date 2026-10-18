@@ -163,10 +163,10 @@ export function DemoConsole(props: {
       </article>
 
       <article className="slip-sheet">
-        <p className="slip-meta">The agent script</p>
+        <p className="slip-meta">Connect an agent</p>
         <p className="slip-prose">
-          The same errands from a terminal, through the agent checkout endpoint, with a key of the
-          script's own.
+          The same errands from a terminal, through Slip's MCP server, with a key of the script's
+          own — or point any MCP client, such as Claude Code, at this desk with the same key.
         </p>
         {key === null ? (
           <button
@@ -187,8 +187,12 @@ export function DemoConsole(props: {
             <p className="slip-mono slip-key">
               SLIP_AGENT_KEY={key} pnpm demo:agent --errand top-pick --url {props.base}
             </p>
+            <p className="slip-mono slip-command">
+              claude mcp add --transport http slip {props.base}/api/mcp --header "Authorization:
+              Bearer {key}"
+            </p>
             <p className="slip-caption">
-              Copy it now. Slip keeps only the key's hash, so it is shown this once.
+              Copy them now. Slip keeps only the key's hash, so it is shown this once.
             </p>
           </>
         )}

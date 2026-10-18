@@ -30,9 +30,12 @@ test("the console issues a key for the agent script, shown once with the command
   await expect(page.locator(".slip-key")).toContainText(
     /^SLIP_AGENT_KEY=slip_live_\S+ pnpm demo:agent --errand top-pick --url http:\/\/localhost:3100$/,
   );
+  await expect(page.locator(".slip-command")).toContainText(
+    /^claude mcp add --transport http slip http:\/\/localhost:3100\/api\/mcp --header "Authorization:\s+Bearer slip_live_\S+"$/,
+  );
   await expect(page.getByRole("button", { name: "Issue a key for the script" })).toHaveCount(0);
-  // The script's listing answers to an agent key, never to the owner's cookie.
-  expect((await page.request.get("/api/v1/demo/errands")).status()).toBe(401);
+  // The MCP server answers to an agent key, never to the owner's cookie.
+  expect((await page.request.post("/api/mcp", { data: {} })).status()).toBe(401);
 });
 
 test("the agent script, run from a terminal, is checked by Slip and prints on the open roll", async ({
@@ -50,8 +53,10 @@ test("the agent script, run from a terminal, is checked by Slip and prints on th
 
   const transcript = await agentScript(["--errand", "top-pick", "--url", baseURL ?? ""], key);
   expect(transcript.code).toBe(0);
-  expect(transcript.stdout).toContain('listing says: "[synthetic] Top pick"');
+  expect(transcript.stdout).toContain('agent   search_products "trail shoe"');
+  expect(transcript.stdout).toContain('listing text: "[synthetic] Top pick"');
   expect(transcript.stdout).toContain("REJECTED by R4_OVERPAID");
+  expect(transcript.stdout).toContain("next    If you still want this item");
   // Printed on the roll by the live poll, with no reload.
   await expect(roll.getByRole("img", { name: "Outcome: rejected" })).toHaveCount(2, {
     timeout: 10_000,

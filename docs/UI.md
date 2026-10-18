@@ -160,8 +160,8 @@ the same as one that does not exist.
 
 The agent side is one call, `POST /api/v1/agent/checkout`, with `Authorization: Bearer slip_live_…`
 and `{ productId, chosenOfferUrl, reason }`. It answers 200 with the outcome and the receipt view,
-or 400, 401, 403, 409 or 429 with the reason. In demo mode,
-`GET /api/v1/demo/errands` lists the demo agent's errands for that key's desk.
+or 400, 401, 403, 409 or 429 with the reason. Agents that speak MCP use `/api/mcp` instead (see
+[TOOLS.md](../TOOLS.md)).
 
 ## Demo mode
 
