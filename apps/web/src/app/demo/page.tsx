@@ -4,7 +4,7 @@ import { DemoConsole } from "../../components/DemoConsole";
 import { isDemo } from "../../server/demo";
 import { ERRAND_NAMES, ERRANDS } from "../../server/demo/catalogue";
 import { requireOwner } from "../../server/owner";
-import { runtime } from "../../server/runtime";
+import { fakes, runtime } from "../../server/runtime";
 
 export const dynamic = "force-dynamic";
 
@@ -14,8 +14,9 @@ export default async function Demo() {
     notFound();
   }
   const { mandateId } = await requireOwner();
-  const { fakes, deps } = await runtime();
-  const calls = fakes.gateway.callsFor(mandateId).map((c) => ({
+  const { deps } = await runtime();
+  const stand = await fakes();
+  const calls = stand.gateway.callsFor(mandateId).map((c) => ({
     at: c.at,
     call: c.call,
     receipt: c.attemptId === null ? null : shortNo(c.attemptId),

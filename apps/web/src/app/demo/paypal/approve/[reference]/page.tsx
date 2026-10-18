@@ -3,7 +3,7 @@ import { Leaders } from "@slip/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireOwner } from "../../../../../server/owner";
-import { SIMULATED_SERVICES } from "../../../../../server/runtime";
+import { SERVICES } from "../../../../../server/runtime";
 import { findSimulatedSetup } from "../../../../../server/simulated-approval";
 import {
   approveOnSimulatedPayPal,
@@ -21,7 +21,7 @@ export default async function SimulatedApproval({
 }: {
   params: Promise<{ reference: string }>;
 }) {
-  if (!SIMULATED_SERVICES) {
+  if (SERVICES.payment !== "simulated") {
     notFound();
   }
   const { ownerId, deps } = await requireOwner();

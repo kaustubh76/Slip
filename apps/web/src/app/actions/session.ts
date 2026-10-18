@@ -6,7 +6,7 @@ import { isDemo } from "../../server/demo";
 import { addressOf } from "../../server/demo/desks";
 import { seedDemoOwner } from "../../server/demo/seed";
 import { endSession, startSession } from "../../server/owner";
-import { runtime } from "../../server/runtime";
+import { fakes, runtime } from "../../server/runtime";
 
 /**
  * Signs in to the demo: a fresh owner, mandate and agent each time, so no visitor can revoke
@@ -18,12 +18,12 @@ export async function signInToDemo(): Promise<void> {
   if (!isDemo()) {
     throw new Error("demo sign-in is only available when SLIP_DEMO=1");
   }
-  const { deps, fakes, demo } = await runtime();
+  const { deps, demo } = await runtime();
   const admitted = demo.limiter.admit(addressOf(await headers()), deps.clock.now().getTime());
   if (admitted !== "ok") {
     redirect(`/sign-in?refused=${admitted}`);
   }
-  const owner = await seedDemoOwner(deps, fakes);
+  const owner = await seedDemoOwner(deps, await fakes());
   await startSession(owner.ownerId, owner.mandateId);
   redirect("/receipts");
 }

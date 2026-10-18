@@ -13,7 +13,7 @@ import {
   settlePending,
 } from "../../server/demo/console";
 import { requireOwner } from "../../server/owner";
-import { runtime } from "../../server/runtime";
+import { fakes, runtime } from "../../server/runtime";
 
 /**
  * The demo console's commands: demo mode only, and only ever on the signed-in owner's own desk.
@@ -32,8 +32,14 @@ async function desk(): Promise<Desk | null> {
     return null;
   }
   const owner = await requireOwner();
-  const { deps, fakes, demo } = await runtime();
-  return { deps, fakes, ownerId: owner.ownerId, mandateId: owner.mandateId, desks: demo.desks };
+  const { deps, demo } = await runtime();
+  return {
+    deps,
+    fakes: await fakes(),
+    ownerId: owner.ownerId,
+    mandateId: owner.mandateId,
+    desks: demo.desks,
+  };
 }
 
 async function guarded(work: (desk: Desk) => Promise<ConsoleAnswer>): Promise<Answer> {

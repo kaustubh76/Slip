@@ -13,7 +13,7 @@ import { ThemeToggle } from "../components/ThemeToggle";
 import { isDemo } from "../server/demo";
 import { disclosure } from "../server/disclosure";
 import { currentOwner } from "../server/owner";
-import { SIMULATED_SERVICES } from "../server/runtime";
+import { SERVICES } from "../server/runtime";
 import { signOut } from "./actions/session";
 
 const sans = IBM_Plex_Sans({
@@ -65,7 +65,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             </div>
           </header>
           <p className="slip-band">
-            <span>{disclosure(SIMULATED_SERVICES)}</span>
+            <span>{disclosure(SERVICES)}</span>
           </p>
           <main className="slip-main">{children}</main>
         </SlipRoot>

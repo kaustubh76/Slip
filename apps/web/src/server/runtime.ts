@@ -10,9 +10,12 @@ import {
 } from "@slip/app";
 import { createPgStore, openDatabase, VaultCipher } from "@slip/db";
 import { createMemoryStore } from "@slip/db/memory";
-import type { Store } from "@slip/domain";
+import type { OffersSource, PaymentGateway, SteeringClassifier, Store } from "@slip/domain";
+import { createChannel3Offers } from "@slip/offers";
 import { FakeOffersSource } from "@slip/offers/fake";
+import { createPayPalGateway, PAYPAL_LIVE_BASE_URL, PAYPAL_SANDBOX_BASE_URL } from "@slip/paypal";
 import { FakePaymentGateway } from "@slip/paypal/fake";
+import { createClaudeSteeringClassifier } from "@slip/steering";
 import { FakeSteeringClassifier } from "@slip/steering/fake";
 import { isDemo } from "./demo";
 import { INJECTION_PHRASE } from "./demo/catalogue";
@@ -21,23 +24,23 @@ import { type DemoDesk, DeskLimiter } from "./demo/desks";
 import { DemoOffers } from "./demo/offers";
 import { DemoPayPal } from "./demo/paypal";
 import { DEMO_TIMING, demoConfig, demoLatencyMs, every } from "./demo/timing";
+import { resolveServices, type Services } from "./services";
 
 /**
  * Where the application is assembled: one `AppDeps` per server process, built once and reused by
  * every request, because it owns a database pool. Next.js reloads modules in development, so the
  * instance hangs off `globalThis` rather than a module variable.
  *
- * Channel3, PayPal and the steering classifier are still the in-memory fakes (Increments 1, 3 and
- * 5 bring the real adapters), wrapped so many visitors can share one process: outcomes, outages and
- * call logs are kept per desk (`DemoPayPal`, `DemoOffers`). That is why `fakes` is exposed: the
- * demo seed and console stock a catalogue and approve a PayPal setup, which only a fake can do.
+ * Each of Channel3, PayPal and the steering classifier is the real adapter when its keys are set
+ * and the in-memory stand-in otherwise, service by service (`./services`, D63). The stand-ins are
+ * wrapped so many visitors can share one process: outcomes, outages and call logs are kept per desk
+ * (`DemoPayPal`, `DemoOffers`). That is why `fakes` is exposed: the demo seed and console stock a
+ * catalogue and approve a PayPal setup, which only a fake can do — and which is why the shared demo
+ * always runs on the stand-ins.
  */
 
-/**
- * True while Channel3 and PayPal are the in-memory stand-ins. Receipts and the disclosure line say
- * so; it becomes false when the real adapters are wired in here.
- */
-export const SIMULATED_SERVICES = true;
+/** What this process really talks to. Read at import time, so a page can say so without awaiting. */
+export const SERVICES: Services = resolveServices(process.env);
 
 export interface Fakes extends DemoFakes {
   classifier: FakeSteeringClassifier;
@@ -45,7 +48,8 @@ export interface Fakes extends DemoFakes {
 
 export interface Runtime {
   deps: AppDeps;
-  fakes: Fakes;
+  /** Null when any service here is the real one: there is then nothing to stand in for. */
+  fakes: Fakes | null;
   /** Demo desks opened by this process, by mandate, and the limits on opening more. */
   demo: { desks: Map<string, DemoDesk>; limiter: DeskLimiter };
 }
@@ -62,8 +66,16 @@ export async function deps(): Promise<AppDeps> {
   return (await runtime()).deps;
 }
 
+/**
+ * The stand-ins, for the demo's own seeding and console. Throws where a real service is wired in:
+ * a caller asking to approve a PayPal setup by hand has no business doing so against PayPal.
+ */
 export async function fakes(): Promise<Fakes> {
-  return (await runtime()).fakes;
+  const held = (await runtime()).fakes;
+  if (held === null) {
+    throw new Error("this deployment uses the real services; there are no stand-ins to drive");
+  }
+  return held;
 }
 
 async function build(): Promise<Runtime> {
@@ -74,27 +86,20 @@ async function build(): Promise<Runtime> {
   const config = appConfig({
     ...(demo ? demoConfig() : {}),
     ...(env["SLIP_BASE_URL"] ? { publicBaseUrl: env["SLIP_BASE_URL"] } : {}),
-    pricesSource: SIMULATED_SERVICES ? "simulated" : "channel3",
+    pricesSource: SERVICES.prices === "channel3" ? "channel3" : "simulated",
   });
-  const classifier = new FakeSteeringClassifier();
-  // The demo's steered listing carries this note; the stand-in classifier calls it instruction-like.
-  classifier.flagWhenListingIncludes(INJECTION_PHRASE);
-  const fakes: Fakes = {
-    offers: new DemoOffers(new FakeOffersSource()),
-    gateway: new DemoPayPal({
-      inner: new FakePaymentGateway({ clock }),
-      store,
-      clock,
-      latencyMs: demo ? demoLatencyMs(env["SLIP_DEMO_LATENCY_MS"]) : 0,
-      publicBaseUrl: config.publicBaseUrl,
-    }),
-    classifier,
-  };
+  const everythingSimulated =
+    SERVICES.prices === "simulated" &&
+    SERVICES.payment === "simulated" &&
+    SERVICES.steering === "simulated";
+  const fakes: Fakes | null = everythingSimulated
+    ? standIns({ store, clock, demo, env, publicBaseUrl: config.publicBaseUrl })
+    : null;
   const deps: AppDeps = {
     store,
-    offers: fakes.offers,
-    gateway: fakes.gateway,
-    classifier: fakes.classifier,
+    offers: fakes?.offers ?? realOffers(env),
+    gateway: fakes?.gateway ?? realGateway(env, config.publicBaseUrl),
+    classifier: fakes?.classifier ?? realClassifier(env),
     clock,
     ids: randomIds,
     log: env["NODE_ENV"] === "test" ? silentLogger : jsonLogger,
@@ -116,6 +121,64 @@ async function build(): Promise<Runtime> {
     );
   }
   return { deps, fakes, demo: { desks: new Map(), limiter } };
+}
+
+/**
+ * The stand-ins, built only where every service is one. A deployment with some real and some
+ * simulated keeps no stand-in at all: the demo machinery those objects exist for (per-desk
+ * catalogues, a hand-driven PayPal approval) is only coherent when the whole set is simulated.
+ */
+function standIns(input: {
+  store: Store;
+  clock: AppDeps["clock"];
+  demo: boolean;
+  env: NodeJS.ProcessEnv;
+  publicBaseUrl: string;
+}): Fakes {
+  const classifier = new FakeSteeringClassifier();
+  // The demo's steered listing carries this note; the stand-in classifier calls it instruction-like.
+  classifier.flagWhenListingIncludes(INJECTION_PHRASE);
+  return {
+    offers: new DemoOffers(new FakeOffersSource()),
+    gateway: new DemoPayPal({
+      inner: new FakePaymentGateway({ clock: input.clock }),
+      store: input.store,
+      clock: input.clock,
+      latencyMs: input.demo ? demoLatencyMs(input.env["SLIP_DEMO_LATENCY_MS"]) : 0,
+      publicBaseUrl: input.publicBaseUrl,
+    }),
+    classifier,
+  };
+}
+
+function realOffers(env: NodeJS.ProcessEnv): OffersSource {
+  return createChannel3Offers({ apiKey: required(env, "CHANNEL3_API_KEY") });
+}
+
+function realGateway(env: NodeJS.ProcessEnv, publicBaseUrl: string): PaymentGateway {
+  return createPayPalGateway({
+    clientId: required(env, "PAYPAL_CLIENT_ID"),
+    clientSecret: required(env, "PAYPAL_CLIENT_SECRET"),
+    webhookId: required(env, "PAYPAL_WEBHOOK_ID"),
+    baseUrl: SERVICES.payment === "live" ? PAYPAL_LIVE_BASE_URL : PAYPAL_SANDBOX_BASE_URL,
+    brandName: new URL(publicBaseUrl).hostname,
+  });
+}
+
+function realClassifier(env: NodeJS.ProcessEnv): SteeringClassifier {
+  return createClaudeSteeringClassifier({ apiKey: required(env, "ANTHROPIC_API_KEY") });
+}
+
+/**
+ * A service is only ever built because `resolveServices` saw its keys, so a missing one here is a
+ * bug rather than a deployment mistake — but it must still not reach a payment as an empty string.
+ */
+function required(env: NodeJS.ProcessEnv, name: string): string {
+  const value = env[name]?.trim();
+  if (value === undefined || value === "") {
+    throw new Error(`${name} is needed for this deployment's services but is not set`);
+  }
+  return value;
 }
 
 function positiveInt(value: string | undefined, fallback: number): number {

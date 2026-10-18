@@ -594,3 +594,28 @@ structured call, no tools, `maxRetries: 0` on both the client and the request. E
 timeout, transport, refusal, unparsable, no answer — is `NO_ANSWER`, which R4a holds for the owner.
 The adapter never retries: a second call spends the caller's remaining deadline and buys nothing a
 hold does not already give.
+
+## D63 · 2026-10-18 · Each service is real on its own, and the page says which
+
+`SIMULATED_SERVICES` was one flag for all three outside services. It is now one decision per
+service (`apps/web/src/server/services.ts`): prices are Channel3 when `CHANNEL3_API_KEY` is set,
+payment is PayPal when all three of its values are, steering is Claude when `ANTHROPIC_API_KEY` is.
+
+The reason is that the mixed state is the *likely* one. A Channel3 key costs nothing to hold; a
+PayPal sandbox needs an app with Vault enabled and a buyer who has been through the approval flow.
+"Real prices, simulated payment" is where this project will sit for a while, and one flag has to
+lie about one half of it — either calling real listed prices simulated, or calling a stand-in
+payment real. Both are the kind of claim this whole project exists to avoid making.
+
+So the disclosure band is assembled from the services rather than written for one state, and only
+`PAYPAL_ENV=live` omits "no real money moves". The receipt footer already named its prices source;
+it now gets the truth from the same place. PayPal needs its webhook id before it counts as ready:
+without one, every delivery fails verification, so a deployment with the credentials alone would
+take payments and never hear what became of them.
+
+**The shared demo is always the stand-ins**, whatever keys are set. Its catalogue is per visitor by
+construction (each desk's products carry its own ids), its approval page stands in for PayPal's,
+and its injected listing is written for a classifier that will certainly flag it. A real service
+would break the isolation between visitors and spend one account's credits on every passer-by. To
+see the real services, run without `SLIP_DEMO`. That also means the stand-ins are built only when
+*every* service is one: the demo machinery they exist for is coherent only as a set.
