@@ -10,10 +10,12 @@ pay, reject, or hold for a human.
 
 > Agents shop. Slip checks. Policy decides. PayPal pays.
 
-With API keys, the demo runs in PayPal sandbox with Slip as the seller, on real Channel3 prices,
-offers and commission rates; no order reaches a retailer and no real money moves. Until the keys
-are in, demo mode runs on stand-ins for Channel3 and PayPal with made-up stores and prices, and
-every page says so. Read [docs/SPEC.md](docs/SPEC.md) for the full spec,
+All three outside services — Channel3, PayPal and the steering classifier — have real adapters.
+Each is used when its own keys are set and a stand-in otherwise, and the line under the tabs says
+which: real Channel3 prices with a stand-in PayPal is a state Slip will actually be in, and a
+receipt must not call either one the other ([docs/SERVICES.md](docs/SERVICES.md)). With the PayPal
+keys it runs in the sandbox with Slip as the seller; no order reaches a retailer and no real money
+moves. Read [docs/SPEC.md](docs/SPEC.md) for the full spec,
 [docs/diagram.png](docs/diagram.png) for the execution flow and [docs/UI.md](docs/UI.md) for the
 owner UI. Agents connect through Slip's MCP server: [TOOLS.md](TOOLS.md). Design decisions are
 logged in [docs/DECISIONS.md](docs/DECISIONS.md).
@@ -28,9 +30,10 @@ packages/db        Postgres store (Drizzle on postgres.js or PGlite), in-memory 
                    migrations with database-level guards                         (done)
 packages/app       use cases: checkout, holds, resolver, webhooks, mandates,
                    agent keys, receipts and report card                           (done)
-packages/offers    in-memory Channel3 fake (done); Channel3 adapter     (needs Channel3 key)
-packages/paypal    in-memory PayPal fake (done); REST adapter          (needs PayPal sandbox)
-packages/steering  scripted classifier fake (done); Claude classifier  (needs Anthropic key)
+packages/http      the one JSON client: injected fetch, no retries, three outcomes   (done)
+packages/offers    Channel3 adapter + in-memory fake          (done; live check needs a key)
+packages/paypal    PayPal REST adapter + in-memory fake       (done; live check needs keys)
+packages/steering  Claude classifier + scripted fake          (done; live check needs a key)
 packages/receipt   the one receipt renderer: copy, state line, gap scale, wire schemas (done)
 packages/ui        React kit: Till Roll theme, stationery components, client and hooks (done)
 packages/mcp       MCP server: checkout, get_receipt, get_report, search_products,
@@ -110,10 +113,37 @@ pnpm web:e2e
 
 Demo settings are listed in [docs/UI.md](docs/UI.md#demo-mode).
 
+## Run the real services
+
+`SLIP_DEMO=1` always uses the stand-ins — the demo gives every visitor their own catalogue, and
+stands in for PayPal's approval page. Without it, each service is real as soon as its keys are set:
+
+```sh
+CHANNEL3_API_KEY=… \
+PAYPAL_CLIENT_ID=… PAYPAL_CLIENT_SECRET=… PAYPAL_WEBHOOK_ID=… PAYPAL_ENV=sandbox \
+ANTHROPIC_API_KEY=… \
+SLIP_ENCRYPTION_KEY=$(openssl rand -base64 32) \
+SLIP_BASE_URL=http://localhost:3000 DATABASE_URL=pglite://.data/slip pnpm web:dev
+```
+
+Each adapter also has a live suite that skips itself until its keys exist:
+
+```sh
+pnpm test:live:channel3   # the key, the path, and offers the domain accepts
+pnpm test:live:steering   # the prompt's boundary: injected text flagged, loud sales copy not
+pnpm test:live:paypal     # the gateway contract the fake passes, against the sandbox
+```
+
+What to get where, what each suite proves and what it costs: [docs/SERVICES.md](docs/SERVICES.md).
+The PayPal one needs one step nothing can automate — a sandbox buyer whose wallet has been
+vaulted through the approval flow.
+
 ## Status
 
-Done: the check, the domain model, persistence, and every use case, running on fakes of the
-three outside services.
+Done: the check, the domain model, persistence, every use case, the owner UI, the MCP server, and
+the adapters for all three outside services. What is left is to run each live suite against a real
+key — the offline tests are written from PayPal's and Channel3's own documented payloads, which is
+not the same as traffic from a live account.
 
 - **Checkout** — key, ACTIVE mandate and request checked; one checkout per agent and product at a
   time; repeats replayed rather than paid twice; prices refreshed from Channel3 within their
