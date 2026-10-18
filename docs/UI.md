@@ -179,8 +179,8 @@ says it is simulated.
   pending payments, raise the standing desk's price (approving its hold then meets
   PRICE_CHANGED once Slip's one-minute copy of the listing is stale), issue a key for the agent
   script, and list the stand-in PayPal's calls.
-- **`pnpm demo:agent --errand <name>`** plays an agent in a terminal with that key (see the
-  README).
+- **`pnpm demo:agent --errand <name>`** plays an agent in a terminal with that key, over Slip's MCP
+  server (see the README and [TOOLS.md](../TOOLS.md)).
 - A new permission after the kill switch is signed on a simulated PayPal approval page.
 
 | Variable | Default | Meaning |

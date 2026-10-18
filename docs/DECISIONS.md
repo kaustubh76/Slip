@@ -489,3 +489,55 @@ and EventSource's own rules (a non-200 closes it for good, a planned close fires
 save under a second. The client's unused `liveUrl` is removed rather than left pointing at a
 route that does not exist. If many owners or tighter latency need it, events can carry the same
 stamp, and `useLive` would refresh exactly as it does now.
+
+## D51 · 2026-10-18 · The MCP server is a package, served by the web app at /api/mcp
+
+Slip's MCP tools live in `@slip/mcp`, which has no web framework in it: `createSlipServer` builds
+the server for one agent, and `createSlipMcpEndpoint` serves it as a web-standard
+`(request) => response`. The web app mounts that endpoint at `/api/mcp`. It runs in the web
+process because the demo's state lives there: the memory store, the stand-in PayPal's vaults and
+each desk's products. With Postgres and the real adapters the same route works on any instance.
+The package keeps the tools testable on both stores in `tests/`, lets a platform mount them in its
+own app, and lets the benchmark serve them in-process. There is no stdio entry: it would need the
+database and PayPal's credentials on the agent's machine. SPEC §8 already placed the server in
+`packages/mcp`.
+
+## D52 · 2026-10-18 · The MCP wire is snake_case; the key is the agent; refusals are tool errors
+
+Arguments and answers are snake_case, as SPEC §8 writes them. The REST endpoint keeps its
+camelCase and full `ReceiptView`. SPEC §8's `agent_id` arguments are dropped: the key identifies
+the agent (extending D31), so `get_report` takes nothing, and `get_receipt` reads only the
+caller's own receipts.
+- **Answers.** `checkout` and `get_receipt` return one object: the decision, the payment, the two
+  offers and the gap, the owner's receipt lines word for word (D39), and a `next_step`. The SDK
+  requires an object at the top level, so there is no union.
+- **`next_step`** is MCP guidance that names the tools. It lives in `@slip/mcp`, not
+  `@slip/receipt`, and never restates money facts, so it cannot contradict the receipt.
+- **Refusals** (`MANDATE_NOT_ACTIVE`, `BUSY`, `RETRY_LIMIT`, …) are tool errors (`isError`) whose
+  text a model can act on.
+- **Failures inside Slip** are logged and answered with a fixed sentence. The SDK would otherwise
+  pass the exception's own message to the agent.
+
+## D53 · 2026-10-18 · One stateless handler for both protocol eras, the key checked per request
+
+The endpoint serves 2025-era clients (Claude Code today) through the SDK's stateless fallback and
+2026-07-28 clients per request; nothing is kept between requests. On every request it:
+1. refuses a browser `Origin` from another site (403);
+2. reads the Bearer key, so a revoked key fails on its next call (401);
+3. caps the body at 64 KiB;
+4. hands the SDK the agent and its permission.
+
+The server advertises no changing tool list, so no client holds a subscription stream open. Slip
+parses the header itself because the SDK's bearer helper requires an expiry and Slip's keys don't
+expire. The key is never logged.
+
+## D54 · 2026-10-18 · Search is a hook the host supplies; the classifier's search context stays empty
+
+`search_products` exists only when the host gives the server a `ProductSearch`. It is not part of
+the check: every checkout is priced from Slip's own snapshot whatever a search showed. Channel3's
+search costs credits, unlike fetching a product, and its adapter doesn't exist yet, so it is not a
+port method.
+- **Demo.** Searches only the desk's own copies of its products. Listing text, including the
+  synthetic labels, passes through verbatim and is labelled as the store's untrusted words.
+- **Classifier.** `searchContext`, meant to carry what Slip's search showed the agent, stays
+  `null` until searches are recorded. Recording them belongs with the Channel3 adapter.

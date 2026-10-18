@@ -15,7 +15,8 @@ offers and commission rates; no order reaches a retailer and no real money moves
 are in, demo mode runs on stand-ins for Channel3 and PayPal with made-up stores and prices, and
 every page says so. Read [docs/SPEC.md](docs/SPEC.md) for the full spec,
 [docs/diagram.png](docs/diagram.png) for the execution flow and [docs/UI.md](docs/UI.md) for the
-owner UI. Design decisions are logged in [docs/DECISIONS.md](docs/DECISIONS.md).
+owner UI. Agents connect through Slip's MCP server: [TOOLS.md](TOOLS.md). Design decisions are
+logged in [docs/DECISIONS.md](docs/DECISIONS.md).
 
 ## Layout
 
@@ -32,10 +33,11 @@ packages/paypal    in-memory PayPal fake (done); REST adapter          (needs Pa
 packages/steering  scripted classifier fake (done); Claude classifier  (needs Anthropic key)
 packages/receipt   the one receipt renderer: copy, state line, gap scale, wire schemas (done)
 packages/ui        React kit: Till Roll theme, stationery components, client and hooks (done)
+packages/mcp       MCP server: checkout, get_receipt, get_report, search_products,
+                   and its HTTP endpoint                                           (done)
 tests              end-to-end scenarios on the fakes and PGlite, and a reusable testkit (done)
 apps/web           owner UI on Next.js: receipts, holds, limits, agents, permission slip,
-                   kill switch, read API, agent endpoint, demo mode                  (done)
-apps/mcp           MCP server: search, checkout, get_receipt, get_report            (next)
+                   kill switch, read API, agent endpoints (MCP and REST), demo mode (done)
 study/  bench/     market study and SlipBench                                    (not run yet)
 ```
 
@@ -85,15 +87,18 @@ permission in force and four purchases already checked: one paid, one rejected, 
    SLIP_AGENT_KEY=slip_live_… pnpm demo:agent --errand top-pick --url http://localhost:3000
    ```
 
-   The terminal prints what the agent searched (the "[synthetic] Top pick" label marked as
-   such), what it picked, and Slip's answer. The REJECTED receipt prints on the open roll within
-   a second. `--errand cheaper` pays: watch its status line go from INITIATED to CAPTURED.
-   Without `--errand`, the script lists the errands.
-2. **Holds** → approve or decline. The dialog names the exact amount, and the status line walks
+   The script is an MCP client. It searches the desk's catalogue (the "[synthetic] Top pick"
+   label marked as such), picks an offer, and calls `checkout`; the terminal prints Slip's
+   receipt and next step. The REJECTED receipt prints on the open roll within a second.
+   `--errand cheaper` pays: watch its status line go from INITIATED to CAPTURED. Without
+   `--errand`, the script lists the errands.
+2. **A real model.** The console also shows a `claude mcp add …` command with the same key. Add
+   it in Claude Code, ask for a pair of trail shoes, and watch Slip decide on the roll.
+3. **Holds** → approve or decline. The dialog names the exact amount, and the status line walks
    CAPTURING → CAPTURED or VOIDING → VOIDED.
-3. The **Demo** console also makes PayPal time out, decline or leave a payment pending for one
+4. The **Demo** console also makes PayPal time out, decline or leave a payment pending for one
    purchase, and raises a price so approving a hold meets PRICE_CHANGED.
-4. **Mandate** → the kill switch. The agent's next call is refused.
+5. **Mandate** → the kill switch. The agent's next call is refused.
 
 Production build and browser tests (Playwright starts the built app in demo mode itself):
 
@@ -139,6 +144,12 @@ a typed client and hooks, so a platform can embed it; the Next.js app hosts it w
 agent checkout endpoint and demo mode. Browser tests cover the money paths and run axe on every
 page in both themes.
 
-Next: the MCP server; the Channel3, PayPal and Claude adapters replace the fakes once API keys are
-available; then the market study and SlipBench. See `docs/SPEC.md` §15 for dates and
-`docs/DECISIONS.md` (D1–D50) for every departure from the written spec.
+**MCP server** — agents pay through Slip's MCP tools at `/api/mcp`: `checkout`, `get_receipt`,
+`get_report`, and `search_products` where a catalogue is available. Each wraps the same use case
+as the REST endpoint, run with the agent's own key, and answers with the owner's receipt and a
+next step. 2025-era and 2026-07-28 clients are both served; the key is checked on every request.
+A real MCP client drives every tool path on both stores. See [TOOLS.md](TOOLS.md).
+
+Next: the Channel3, PayPal and Claude adapters replace the fakes once API keys are available; then
+the market study and SlipBench. See `docs/SPEC.md` §15 for dates and `docs/DECISIONS.md`
+(D1–D54) for every departure from the written spec.
