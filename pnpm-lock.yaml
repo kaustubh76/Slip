@@ -284,6 +284,31 @@ importers:
         specifier: 'catalog:'
         version: 5.0.3(@types/node@26.6.5)(jsdom@30.1.2)(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(tsx@4.23.15))
 
+  packages/mcp:
+    dependencies:
+      '@slip/app':
+        specifier: workspace:*
+        version: link:../app
+      '@slip/domain':
+        specifier: workspace:*
+        version: link:../domain
+      '@slip/receipt':
+        specifier: workspace:*
+        version: link:../receipt
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.5
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 26.6.5
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vitest:
+        specifier: 'catalog:'
+        version: 5.0.3(@types/node@26.6.5)(jsdom@30.1.2)(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(tsx@4.23.15))
+
   packages/offers:
     dependencies:
       '@slip/domain':

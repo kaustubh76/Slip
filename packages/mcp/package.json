@@ -1,0 +1,33 @@
+{
+  "name": "@slip/mcp",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Slip's MCP server: the tools an AI agent pays through, and the HTTP endpoint that serves them. No web framework.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "@slip/source": "./src/index.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@slip/app": "workspace:*",
+    "@slip/domain": "workspace:*",
+    "@slip/receipt": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
