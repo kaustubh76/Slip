@@ -1,5 +1,17 @@
 export { nextStep } from "./next-step.js";
 export {
+  type ListedOffer,
+  ListedOfferSchema,
+  type ProductSearch,
+  SEARCH_LIMIT,
+  type SearchAnswer,
+  type SearchHit,
+  searchText,
+  type ToolSearch,
+  ToolSearchSchema,
+  toolSearch,
+} from "./search.js";
+export {
   createSlipServer,
   SLIP_INSTRUCTIONS,
   SLIP_SERVER_INFO,
