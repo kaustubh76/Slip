@@ -16,6 +16,7 @@
     "@slip/check": "workspace:*",
     "@slip/db": "workspace:*",
     "@slip/domain": "workspace:*",
+    "@slip/mcp": "workspace:*",
     "@slip/offers": "workspace:*",
     "@slip/paypal": "workspace:*",
     "@slip/receipt": "workspace:*",

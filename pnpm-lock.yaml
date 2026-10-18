@@ -119,6 +119,9 @@ importers:
       '@slip/domain':
         specifier: workspace:*
         version: link:../../packages/domain
+      '@slip/mcp':
+        specifier: workspace:*
+        version: link:../../packages/mcp
       '@slip/offers':
         specifier: workspace:*
         version: link:../../packages/offers

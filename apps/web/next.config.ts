@@ -15,10 +15,13 @@ const config: NextConfig = {
     "@slip/check",
     "@slip/db",
     "@slip/domain",
+    "@slip/mcp",
     "@slip/offers",
     "@slip/paypal",
     "@slip/steering",
     "@electric-sql/pglite",
+    // Loaded by Node as tests load it, rather than bundled into the route.
+    "@modelcontextprotocol/server",
   ],
   poweredByHeader: false,
   // `next dev` would otherwise write an AGENTS.md into the app when a coding agent runs it.
