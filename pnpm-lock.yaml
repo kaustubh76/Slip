@@ -366,6 +366,9 @@ importers:
       '@slip/domain':
         specifier: workspace:*
         version: link:../domain
+      '@slip/http':
+        specifier: workspace:*
+        version: link:../http
     devDependencies:
       '@types/node':
         specifier: 'catalog:'

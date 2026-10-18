@@ -2,7 +2,7 @@
   "name": "@slip/paypal",
   "version": "0.0.1",
   "private": true,
-  "description": "PayPal gateway: the REST adapter (Increment 3) and an in-memory fake.",
+  "description": "PayPal gateway: the REST adapter and an in-memory fake.",
   "type": "module",
   "exports": {
     "./fake": {
@@ -20,7 +20,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@slip/domain": "workspace:*"
+    "@slip/domain": "workspace:*",
+    "@slip/http": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "catalog:",
