@@ -20,6 +20,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@modelcontextprotocol/server": "catalog:",
     "@slip/app": "workspace:*",
     "@slip/domain": "workspace:*",
     "@slip/receipt": "workspace:*",

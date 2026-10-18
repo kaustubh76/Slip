@@ -14,9 +14,11 @@
     "test": "vitest run"
   },
   "devDependencies": {
+    "@modelcontextprotocol/client": "catalog:",
     "@slip/app": "workspace:*",
     "@slip/db": "workspace:*",
     "@slip/domain": "workspace:*",
+    "@slip/mcp": "workspace:*",
     "@slip/offers": "workspace:*",
     "@slip/paypal": "workspace:*",
     "@slip/steering": "workspace:*",
