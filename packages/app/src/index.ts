@@ -38,6 +38,7 @@ export {
 } from "./holds.js";
 export {
   API_KEY_PREFIX,
+  apiKeyFromHeader,
   derivedUuid,
   generateApiKey,
   hashApiKey,

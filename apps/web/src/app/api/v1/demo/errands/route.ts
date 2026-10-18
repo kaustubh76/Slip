@@ -1,5 +1,4 @@
-import { hashApiKey } from "@slip/app";
-import { bearerKey } from "../../../../../server/agent-api";
+import { apiKeyFromHeader, hashApiKey } from "@slip/app";
 import { isDemo } from "../../../../../server/demo";
 import { errandsFor } from "../../../../../server/demo/errands-api";
 import { answer, jsonRoute, NOT_FOUND } from "../../../../../server/json";
@@ -18,7 +17,7 @@ export const GET = jsonRoute(async (request: Request) => {
   if (!isDemo()) {
     return NOT_FOUND;
   }
-  const key = bearerKey(request.headers.get("authorization"));
+  const key = apiKeyFromHeader(request.headers.get("authorization"));
   const { deps, fakes } = await runtime();
   const auth = key === null ? null : await deps.store.agents.authenticate(hashApiKey(key));
   if (auth === null) {

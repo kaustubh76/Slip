@@ -35,16 +35,6 @@ export interface AgentResponse {
   body: AgentCheckoutBody;
 }
 
-/** The key from `Authorization: Bearer …`, or null. The header is the only way in. */
-export function bearerKey(header: string | null): string | null {
-  if (header === null) {
-    return null;
-  }
-  const [scheme, ...rest] = header.trim().split(/\s+/);
-  const key = rest.join("");
-  return scheme?.toLowerCase() === "bearer" && key !== "" ? key : null;
-}
-
 const REFUSAL_STATUS: Record<string, number> = {
   UNAUTHENTICATED: 401,
   MANDATE_NOT_ACTIVE: 403,

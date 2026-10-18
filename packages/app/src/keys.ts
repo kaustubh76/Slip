@@ -26,6 +26,20 @@ export function hashApiKey(key: string): string {
 }
 
 /**
+ * The key from an `Authorization: Bearer …` header, or null. Every way an agent reaches Slip (the
+ * REST checkout, the MCP endpoint) reads it here; the header is the only way in, never a query
+ * string or a body field.
+ */
+export function apiKeyFromHeader(header: string | null): string | null {
+  if (header === null) {
+    return null;
+  }
+  const [scheme, ...rest] = header.trim().split(/\s+/);
+  const key = rest.join("");
+  return scheme?.toLowerCase() === "bearer" && key !== "" ? key : null;
+}
+
+/**
  * A v4-shaped UUID derived from `seed`, the same on every call. Used as the PayPal-Request-Id of an
  * operation several callers may each try once (the owner's return from PayPal, the resolver's
  * poll), so PayPal sees one request however many of them get there.

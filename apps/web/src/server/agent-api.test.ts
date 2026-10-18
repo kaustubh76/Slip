@@ -3,7 +3,7 @@ import { DEFAULT_POLICY } from "@slip/domain";
 import { offer, testAttempt, testDecision } from "@slip/domain/testing";
 import { renderReceipt } from "@slip/receipt";
 import { describe, expect, it } from "vitest";
-import { bearerKey, checkoutResponse } from "./agent-api";
+import { checkoutResponse } from "./agent-api";
 
 const paid = () => {
   const chosen = offer({ price: 10 });
@@ -12,16 +12,6 @@ const paid = () => {
   });
   return { attempt, payment: null, hold: null };
 };
-
-describe("bearerKey", () => {
-  it("takes the key out of the header, and nothing else", () => {
-    expect(bearerKey("Bearer slip_live_abc")).toBe("slip_live_abc");
-    expect(bearerKey("bearer   slip_live_abc")).toBe("slip_live_abc");
-    for (const header of [null, "", "slip_live_abc", "Basic abc", "Bearer", "Bearer   "]) {
-      expect(bearerKey(header), String(header)).toBeNull();
-    }
-  });
-});
 
 describe("checkoutResponse", () => {
   it("a decision is 200 with the outcome, whether money moved, and the owner's receipt", () => {

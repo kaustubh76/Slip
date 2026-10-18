@@ -1,5 +1,5 @@
-import { runCheckout } from "@slip/app";
-import { bearerKey, checkoutResponse } from "../../../../../server/agent-api";
+import { apiKeyFromHeader, runCheckout } from "@slip/app";
+import { checkoutResponse } from "../../../../../server/agent-api";
 import { answer, jsonRoute } from "../../../../../server/json";
 import { logApiError } from "../../../../../server/owner-route";
 import { deps } from "../../../../../server/runtime";
@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
  * This is the same use case the MCP server will wrap, so an agent that works here works there.
  */
 export const POST = jsonRoute(async (request: Request) => {
-  const key = bearerKey(request.headers.get("authorization"));
+  const key = apiKeyFromHeader(request.headers.get("authorization"));
   if (key === null) {
     return answer(401, {
       status: "refused",

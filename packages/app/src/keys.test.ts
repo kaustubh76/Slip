@@ -1,6 +1,22 @@
 import { isUuid } from "@slip/domain";
 import { describe, expect, it } from "vitest";
-import { API_KEY_PREFIX, derivedUuid, generateApiKey, hashApiKey } from "./keys.js";
+import {
+  API_KEY_PREFIX,
+  apiKeyFromHeader,
+  derivedUuid,
+  generateApiKey,
+  hashApiKey,
+} from "./keys.js";
+
+describe("apiKeyFromHeader", () => {
+  it("takes the key out of a Bearer header, and nothing else", () => {
+    expect(apiKeyFromHeader("Bearer slip_live_abc")).toBe("slip_live_abc");
+    expect(apiKeyFromHeader("bearer   slip_live_abc")).toBe("slip_live_abc");
+    for (const header of [null, "", "slip_live_abc", "Basic abc", "Bearer", "Bearer   "]) {
+      expect(apiKeyFromHeader(header), String(header)).toBeNull();
+    }
+  });
+});
 
 describe("agent API keys", () => {
   it("a key is shown once; only its hash and a recognisable prefix are kept", () => {
