@@ -394,6 +394,86 @@
     padding-block: 8px;
   }
 
+  /* ---------- what the rail holds: the desk's totals, and what narrows the roll ---------- */
+
+  .slip-summary,
+  .slip-filters {
+    display: grid;
+    gap: 4px;
+  }
+
+  .slip-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  /*
+   * A word and a count, in the ink of the outcome it names. Pressed, it is the one in force: the
+   * border thickens rather than the colour changing, so it reads the same without colour.
+   */
+  .slip-filter {
+    font-family: var(--slip-font-sans);
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--slip-ink-faint);
+    background: transparent;
+    border: 1px solid var(--slip-edge);
+    border-radius: var(--slip-radius-control);
+    padding: 3px 8px;
+    min-block-size: 28px;
+    cursor: pointer;
+  }
+
+  .slip-filter[data-outcome="PAID"] {
+    color: var(--slip-stamp-paid);
+  }
+
+  .slip-filter[data-outcome="REJECTED"] {
+    color: var(--slip-stamp-rejected);
+  }
+
+  .slip-filter[data-outcome="HELD"] {
+    color: var(--slip-stamp-held);
+  }
+
+  .slip-filter[aria-pressed="true"] {
+    border-width: 2px;
+    border-color: currentcolor;
+    padding: 2px 7px;
+    color: var(--slip-ink);
+  }
+
+  .slip-filter[disabled] {
+    cursor: default;
+    opacity: 0.55;
+  }
+
+  .slip-filter-count {
+    font-family: var(--slip-font-mono);
+  }
+
+  /*
+   * The day a run of receipts opens, written inside its first row and spanning every column, so
+   * the roll remains a list whose items are all receipts.
+   */
+  .slip-day {
+    grid-column: 1 / -1;
+    font-family: var(--slip-font-mono);
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--slip-ink-faint);
+    margin: 0 0 8px;
+    padding-block-end: 4px;
+    border-block-end: 1px solid var(--slip-edge);
+  }
+
+  .slip-row:first-child > .slip-day {
+    margin-block-start: 0;
+  }
+
   @media (min-width: 900px) {
     .slip-workbench {
       grid-template-columns: minmax(20rem, var(--slip-list)) minmax(0, 1fr);

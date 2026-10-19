@@ -1,4 +1,4 @@
-export { shortNo, utcDateTime, utcDayTime, utcTime } from "./format.js";
+export { shortNo, utcDateTime, utcDay, utcDayTime, utcTime } from "./format.js";
 export { MEASURE_WIDTH, measureModel } from "./measure.js";
 export { offerRows } from "./offers.js";
 export { gapPercent, percentFromHundredths } from "./percent.js";

@@ -1,4 +1,5 @@
 import type { ReceiptView } from "@slip/receipt";
+import { Fragment } from "react";
 import { type LinkLike, PlainLink } from "./Link.js";
 import { stampOf } from "./ReceiptSlip.js";
 import { Stamp } from "./Stamp.js";
@@ -18,6 +19,11 @@ export function RollRow(props: {
   Link?: LinkLike;
   /** It just printed: the row opens and its stamp presses. */
   fresh?: boolean;
+  /**
+   * The day this row opens, when it is the first of one. It is written inside the row rather than
+   * between rows, so the roll stays a list of receipts and nothing else.
+   */
+  day?: string;
 }) {
   const { view, agent } = props.entry;
   const Link = props.Link ?? PlainLink;
@@ -29,6 +35,7 @@ export function RollRow(props: {
       data-cocked={waiting ? "" : undefined}
       data-slip-outcome={view.outcome}
     >
+      {props.day === undefined ? null : <p className="slip-day">{props.day}</p>}
       <time className="slip-mono" dateTime={view.createdAt}>
         {clockTime(view.createdAt)}
       </time>
@@ -64,6 +71,11 @@ export function Roll(props: {
   olderHref?: string;
   /** Receipt ids that just printed, to animate. */
   fresh?: ReadonlySet<string>;
+  /**
+   * Where the day changes, by the id of the first receipt of each day (see `dayStarts`). The
+   * separator is marked as presentation, so the roll still counts one item per receipt.
+   */
+  days?: ReadonlyMap<string, string>;
 }) {
   const Link = props.Link ?? PlainLink;
   const newAbove = props.newAbove ?? 0;
@@ -82,15 +94,19 @@ export function Roll(props: {
         </div>
       ) : (
         <ol className="slip-roll">
-          {props.entries.map((entry) => (
-            <RollRow
-              key={entry.view.receiptId}
-              entry={entry}
-              href={props.hrefFor(entry)}
-              fresh={props.fresh?.has(entry.view.receiptId) ?? false}
-              {...(props.Link === undefined ? {} : { Link: props.Link })}
-            />
-          ))}
+          {props.entries.map((entry) => {
+            const day = props.days?.get(entry.view.receiptId);
+            return (
+              <RollRow
+                key={entry.view.receiptId}
+                entry={entry}
+                href={props.hrefFor(entry)}
+                fresh={props.fresh?.has(entry.view.receiptId) ?? false}
+                {...(day === undefined ? {} : { day })}
+                {...(props.Link === undefined ? {} : { Link: props.Link })}
+              />
+            );
+          })}
         </ol>
       )}
       {props.hasOlder ? (

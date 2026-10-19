@@ -20,6 +20,11 @@ export function utcDayTime(date: Date): string {
   return `${date.getUTCDate()} ${MONTHS[date.getUTCMonth()]} ${utcTime(date)}`;
 }
 
+/** `19 Oct 2026` — the day a roll groups its receipts under. */
+export function utcDay(date: Date): string {
+  return `${date.getUTCDate()} ${MONTHS[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
+}
+
 /** `7c1e…a4f2` — enough of a receipt id to tell receipts apart on screen. */
 export function shortNo(id: string): string {
   const hex = id.replaceAll("-", "");

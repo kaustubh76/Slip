@@ -10,9 +10,11 @@ export { HoldsTray } from "./components/HoldsTray.js";
 export { Leaders } from "./components/Leaders.js";
 export { type LinkLike, PlainLink } from "./components/Link.js";
 export { LiveBadge } from "./components/LiveBadge.js";
+export { OutcomeFilter } from "./components/OutcomeFilter.js";
 export { ReceiptSlip, stampOf } from "./components/ReceiptSlip.js";
 export { ReportCard, type ReportCardData } from "./components/ReportCard.js";
 export { Roll, type RollEntry, RollRow } from "./components/Roll.js";
+export { RollSummary } from "./components/RollSummary.js";
 export { Stamp, type StampKind } from "./components/Stamp.js";
 export { StatusLine } from "./components/StatusLine.js";
 export { clockTime, printedAt, withAmounts } from "./components/text.js";
@@ -71,6 +73,15 @@ export {
   useReceipts,
   useReport,
 } from "./data/reads.js";
+export {
+  countByOutcome,
+  dayOf,
+  dayStarts,
+  filterRows,
+  type OutcomeCounts,
+  type RollTotals,
+  summariseAgents,
+} from "./rollView.js";
 export {
   CHORD_MS,
   createShortcutResolver,

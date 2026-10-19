@@ -1,9 +1,16 @@
 "use client";
 
+import type { Outcome } from "@slip/domain";
 import {
+  countByOutcome,
+  dayStarts,
+  filterRows,
   HoldsTray,
   LiveBadge,
+  OutcomeFilter,
   Roll,
+  RollSummary,
+  summariseAgents,
   useAgents,
   useClock,
   useHolds,
@@ -12,7 +19,7 @@ import {
 } from "@slip/ui";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ErrorSlip } from "../components/Slips";
 import { receiptHref, rollHref } from "./links";
 
@@ -30,21 +37,30 @@ export function ReceiptsWorkbench(props: {
   children: ReactNode;
 }) {
   const [agent, setAgent] = useState<string | null>(null);
+  const [outcome, setOutcome] = useState<Outcome | null>(null);
   const receipts = useReceipts({ agent });
   const holds = useHolds();
   const agents = useAgents();
   const now = useClock(1_000, props.serverNow);
   const olderHref =
     receipts.olderCursor === null ? undefined : rollHref({ before: receipts.olderCursor, agent });
+  const rows = useMemo(() => filterRows(receipts.rows, outcome), [receipts.rows, outcome]);
+  const counts = useMemo(() => countByOutcome(receipts.rows), [receipts.rows]);
+  const days = useMemo(() => dayStarts(rows), [rows]);
+  const totals = useMemo(() => summariseAgents(agents.data ?? []), [agents.data]);
   return (
     <Workbench
       rail={
-        <HoldsTray
-          entries={holds.data?.pending ?? []}
-          hrefFor={receiptHref}
-          now={now}
-          Link={Link}
-        />
+        <>
+          <HoldsTray
+            entries={holds.data?.pending ?? []}
+            hrefFor={receiptHref}
+            now={now}
+            Link={Link}
+          />
+          <RollSummary totals={totals} />
+          <OutcomeFilter value={outcome} counts={counts} onChange={setOutcome} />
+        </>
       }
       list={
         <>
@@ -72,7 +88,8 @@ export function ReceiptsWorkbench(props: {
             <ErrorSlip what="the receipts" error={receipts.error} />
           ) : null}
           <Roll
-            entries={receipts.rows}
+            entries={rows}
+            days={days}
             hrefFor={receiptHref}
             Link={Link}
             newAbove={receipts.newAbove}
