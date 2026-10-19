@@ -1,4 +1,5 @@
-import { dirname, join } from "node:path";
+import { mkdir } from "node:fs/promises";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { PgDatabase, PgQueryResultHKT } from "drizzle-orm/pg-core";
 import * as schema from "./schema.js";
@@ -67,7 +68,13 @@ export async function openDatabase(
     const { PGlite } = await import("@electric-sql/pglite");
     const { drizzle } = await import("drizzle-orm/pglite");
     const { migrate } = await import("drizzle-orm/pglite/migrator");
-    const client = location === "" || location === "memory" ? new PGlite() : new PGlite(location);
+    const inMemory = location === "" || location === "memory";
+    if (!inMemory) {
+      // PGlite creates its own directory but not the ones above it: a first run of
+      // pglite://<project>/.data/slip would otherwise fail when `.data` does not exist yet.
+      await mkdir(dirname(resolve(location)), { recursive: true });
+    }
+    const client = inMemory ? new PGlite() : new PGlite(location);
     const db = drizzle({ client, schema });
     return {
       db: db as unknown as Db,
