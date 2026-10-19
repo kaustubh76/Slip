@@ -1,0 +1,4087 @@
+{
+  "slug": "yoga-mat",
+  "query": "yoga mat",
+  "fetchedAt": "2026-10-19T12:21:37.528Z",
+  "rawHash": "e351689b808fe3ad3b3920c23ce9f95cdabb6ad8d9dd04f0f291ce61acaa9f9e",
+  "body": {
+    "products": [
+      {
+        "id": "ZtRjRXs",
+        "title": "Yoga Mat",
+        "description": "This GoFit Yoga Mat offers a comfortable and stable surface for your yoga, Pilates, and stretching routines. Its textured, cushioned surface provides excellent grip and protection, while the closed-cell foam construction ensures durability. The mat easily rolls up for convenient storage and transport, making it ideal for workouts on the go. Dimensions: 68\" L x 24\" W, with a 3.5 mm thickness. Easy to clean with a damp cloth.",
+        "brands": [
+          {
+            "id": "2Kdt",
+            "name": "GoFit"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/a9e0db88-1684-4092-8a75-1b919c885efe?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=c4cn",
+            "cleaned_url": "https://cdn.trychannel3.com/6f22776b-4793-4036-b644-0364092de0ab?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=c4cn",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Grey textured GoFit yoga mat, partially rolled."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["foam"],
+        "key_features": [
+          "Textured anti slip surface",
+          "68\" in length, and 24\" in width",
+          "3.5 mm thickness",
+          "Closed cell foam construction"
+        ],
+        "colors": [
+          {
+            "hex": "#636169",
+            "percentage": 0.8137
+          },
+          {
+            "hex": "#89868d",
+            "percentage": 0.0972
+          },
+          {
+            "hex": "#312f34",
+            "percentage": 0.0891
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/ZtRjRXs-c4cn-CNrACL?o=01KY29820RKHQ6934AFXR69ZX4&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "big5sportinggoods.com",
+            "price": {
+              "price": 22.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "exercise-mat-accessories-included": ["Yoga block"],
+          "exercise-mat-material": ["Ethylene vinyl acetate (EVA)"],
+          "pattern": ["Animal"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "aptv0JX",
+        "title": "Aim'n Yoga Mat",
+        "description": "The Black aim’n Yoga Mat is a professional-grade exercise mat designed for yoga, pilates, and various fitness activities. Crafted from natural rubber for enhanced support and grip, it features an anti-glide function to ensure stability during movement. The mat is detailed with a large white aim’n logo and includes a convenient carrying strap for transport.",
+        "brands": [
+          {
+            "id": "ad23",
+            "name": "aim'n"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/ec2d635a-fffa-4ce8-a571-5e0ef9ed708d?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=VifH",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "on_model",
+            "alt_text": "Woman doing a yoga pose on a black yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/d8428cd3-afcd-492b-a34f-ba317154077d?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=VifH",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "on_model",
+            "alt_text": "Woman wearing black yoga attire holding a rolled mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/7fbc0814-05f0-473c-a333-9dcc196fbaec?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=VifH",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Black yoga mat with white logo."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/2bda4cba-cf6b-4ef8-bf46-da412b402b3e?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=VifH",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Black yoga mat with accessories on a light surface."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["100% PU", "Natural rubber"],
+        "key_features": [
+          "Crafted from natural rubber for extra support and grip",
+          "Anti-glide function",
+          "Large white aim’n logo",
+          "Strap for the yoga mat included"
+        ],
+        "colors": [
+          {
+            "hex": "#a5a199",
+            "percentage": 0.3029
+          },
+          {
+            "hex": "#575754",
+            "percentage": 0.2748
+          },
+          {
+            "hex": "#131210",
+            "percentage": 0.2286
+          },
+          {
+            "hex": "#7e7d79",
+            "percentage": 0.1101
+          },
+          {
+            "hex": "#d0d2d0",
+            "percentage": 0.0836
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/aptv0JX-VifH-CNrACL?o=01M2PH1HGS8EDMT6DAP9HWNMAK&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "aimn.com",
+            "price": {
+              "price": 69.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": {
+                "number": 183,
+                "unit": "cm"
+              },
+              "width": {
+                "number": 68,
+                "unit": "cm"
+              },
+              "height": null,
+              "weight": {
+                "number": 2800,
+                "unit": "g"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "mat-base-material": ["Rubber"],
+          "exercise-mat-accessories-included": ["Carrying strap"],
+          "pattern": ["Logo"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "Ix0PQnA",
+        "title": "Yoga Mat",
+        "description": "Experience a high-performance workout with the Sunny Health & Fitness Durable Tear-Resistant Yoga Mat. Crafted from resilient, high-density PVC and enhanced with high-density foam, this grey mat provides exceptional cushioning and stability for yoga, Pilates, stretching, and meditation. Its textured, non-slip surface ensures a secure grip on hardwood, tile, or carpet, while the tear-resistant material ensures longevity through daily practice. Lightweight and easy to roll, it is designed for both home and studio convenience.",
+        "brands": [
+          {
+            "id": "KnAE",
+            "name": "Sunny Health & Fitness"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/793bae5a-eabf-4bce-9bf2-9309693a821b?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "cleaned_url": "https://cdn.trychannel3.com/af47fba8-1fce-4ec9-a35f-52e2168e4f0f?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Rolled gray yoga mat lying next to a rolled mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/daa74a46-1f02-486f-a671-fcca8d41d4e4?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Gray yoga mat with SUNNY logo on a plain background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/81f104b0-ec36-4da9-b131-e3fc277c1a19?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "cleaned_url": "https://cdn.trychannel3.com/3f5cd37c-c1e2-4d3f-bc66-5f4e4379e28d?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "is_main_image": false,
+            "shot_type": "packaging",
+            "alt_text": "Roll of gray yoga mat tightly rolled up."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/ca742a35-ec10-4471-808c-cc4b837fd312?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "cleaned_url": "https://cdn.trychannel3.com/91949b5e-839f-44da-b416-b167ffdc2bc0?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "is_main_image": false,
+            "shot_type": "packaging",
+            "alt_text": "Roll of gray yoga mat tightly rolled up."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/d90db1bd-77e7-4f6b-b511-e2978d28f879?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "cleaned_url": "https://cdn.trychannel3.com/b30e1d96-81e3-47bf-a920-07163aca96e6?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up detail of the textured surface pattern of the gray yoga mat."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["PVC", "high-density foam"],
+        "key_features": [
+          "Durable and tear-resistant high-density PVC material",
+          "Superior grip non-slip textured surface",
+          "Cushioning and joint protection with high-density foam",
+          "Versatile for yoga, Pilates, stretching, meditation, and bodyweight training",
+          "Lightweight and easy to roll for portability",
+          "Adds comfort and a secure foundation while practicing yoga, Pilates and other stretches and exercises"
+        ],
+        "colors": [
+          {
+            "hex": "#818181",
+            "percentage": 0.7718
+          },
+          {
+            "hex": "#5f5c5d",
+            "percentage": 0.1429
+          },
+          {
+            "hex": "#3b3a3a",
+            "percentage": 0.0853
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/Ix0PQnA-DEoc-CNrACL?o=01M1G3SNH4PWTGAA4PFE9DSWPG&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "academy.com",
+            "price": {
+              "price": 16.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.014,
+            "dimensions": {
+              "length": {
+                "number": 300,
+                "unit": "cm"
+              },
+              "width": null,
+              "height": null,
+              "weight": null
+            }
+          },
+          {
+            "url": "https://buy.trychannel3.com/Ix0PQnA-K6RA-CNrACL?o=01M1RZE7PCX17PSBVK6W5H97N0&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "macys.com",
+            "price": {
+              "price": 29.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.056,
+            "dimensions": {
+              "length": {
+                "number": 68,
+                "unit": "in"
+              },
+              "width": {
+                "number": 24,
+                "unit": "in"
+              },
+              "height": {
+                "number": 0.16,
+                "unit": "in"
+              },
+              "weight": null
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "exercise-mat-material": ["Polyvinyl chloride (PVC)"],
+          "pattern": ["Diamond", "Texture"],
+          "mat-base-material": ["Polyvinyl chloride (PVC)"]
+        },
+        "ratings": {
+          "value": 4.29,
+          "count": 14,
+          "source_count": 2
+        }
+      },
+      {
+        "id": "ROG4O7g",
+        "title": "Yoga Mat",
+        "description": "The TM69 Yoga Mat by Yune Yoga is a studio-quality mat designed for balanced performance and comfort. Featuring a rich blue striped design, this 6mm thick mat provides the ideal 'sweet spot' of cushioning for joints during kneeling and seated work while remaining stable for standing flows. It is crafted from PER (polymer environmental resin), ensuring it is free of phthalates, latex, and heavy metals. The mat features a subtly textured non-slip surface and a moisture-resistant, anti-tear construction, finished with UV-cured digital inks for long-lasting color. Easy to maintain, it can be wiped down with mild soap and water.",
+        "brands": [
+          {
+            "id": "M90a",
+            "name": "Yune"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/62e0ab9f-8295-487e-b918-9f45ae566d49?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=sc5H",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/62e0ab9f-8295-487e-b918-9f45ae566d49?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=sc5H",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Blue and teal striped yoga mat with YUNE logo."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/d2546dec-d19c-4f04-866a-4b5ca61a0f08?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=sc5H",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Woman doing yoga on a striped blue yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/55f70730-da03-4ba3-b45a-3f63d5e14a02?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=sc5H",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/55f70730-da03-4ba3-b45a-3f63d5e14a02?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=sc5H",
+            "is_main_image": false,
+            "shot_type": "flat_lay",
+            "alt_text": "Rolled blue and teal yoga mat with YUNE brand name."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/f67ee85f-1a99-47c8-ba82-774db49c8940?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=sc5H",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/f67ee85f-1a99-47c8-ba82-774db49c8940?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=sc5H",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Roll of striped yoga mat material with black band."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["PER (polymer environmental resin)"],
+        "key_features": [
+          "6mm thickness for balanced cushioning and stability",
+          "Non-slip textured surface for confident grip",
+          "Anti-tear and moisture-resistant construction",
+          "Phthalate-free, latex-free, and heavy-metal-free PER material",
+          "UV-cured digital print for durable color",
+          "Washable with mild soap and water"
+        ],
+        "colors": [
+          {
+            "hex": "#105687",
+            "percentage": 0.5031
+          },
+          {
+            "hex": "#13929a",
+            "percentage": 0.1961
+          },
+          {
+            "hex": "#303555",
+            "percentage": 0.1346
+          },
+          {
+            "hex": "#9fc9ac",
+            "percentage": 0.108
+          },
+          {
+            "hex": "#257d8e",
+            "percentage": 0.0582
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/ROG4O7g-sc5H-CNrACL?o=01M238BJ0ABFVW98SHVHSEVF00&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "yuneyoga.com",
+            "price": {
+              "price": 78,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": {
+                "number": 72,
+                "unit": "in"
+              },
+              "width": {
+                "number": 24,
+                "unit": "in"
+              },
+              "height": {
+                "number": 0.25,
+                "unit": "in"
+              },
+              "weight": {
+                "number": 1361,
+                "unit": "g"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Striped"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "E6Mi5xq",
+        "title": "Yoga Mat",
+        "description": "The Life Fitness Premium Yoga Mat is designed for both style and comfort, enhancing your yoga practice across a wide range of exercises and movements. It features a sleek black design and includes reinforced rings for convenient hanging and storage.",
+        "brands": [
+          {
+            "id": "2RpP",
+            "name": "Life Fitness"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/7ce77fb2-234e-40b6-bc47-e6b1335798e2?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=C666",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/7ce77fb2-234e-40b6-bc47-e6b1335798e2?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=C666",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black yoga mat lying flat on a white background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/746caa30-0961-41ae-b2f7-34173800db13?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=C666",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/746caa30-0961-41ae-b2f7-34173800db13?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=C666",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Black yoga mat viewed from the top, showing corner grommets."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/7ce6122c-b8b9-4a89-8825-8f3523a03632?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=C666",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/7ce6122c-b8b9-4a89-8825-8f3523a03632?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=C666",
+            "is_main_image": false,
+            "shot_type": "flat_lay",
+            "alt_text": "Black yoga mat from above, showing the edge and a corner hole."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/f2059593-f9e9-4445-b588-056afc3fc048?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=C666",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Woman doing a yoga pose on a black yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/87b44c01-84fd-4a2f-b7bc-24e0df4c9a24?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=C666",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Woman practicing yoga on a black mat outdoors."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/8fa1ad01-8573-403d-9c0e-c6b41459e7ef?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=C666",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Woman doing a yoga pose on a black mat outdoors."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/4b462819-91d4-4da5-95f9-fb2974d753f5?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=C666",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Woman touching a yoga mat while stretching on the floor."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": [],
+        "key_features": [
+          "Premium design for look and feel",
+          "Comfortable for all exercises and movements",
+          "Includes reinforced rings for easy hanging and storage",
+          "HSA/FSA eligible"
+        ],
+        "colors": [
+          {
+            "hex": "#29261f",
+            "percentage": 0.9503
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/E6Mi5xq-C666-CNrACL?o=01M1VCRPRG6CBF793S2H0X12ZY&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "shop.lifefitness.com",
+            "price": {
+              "price": 41,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.056,
+            "dimensions": {
+              "length": {
+                "number": 60,
+                "unit": "in"
+              },
+              "width": {
+                "number": 24,
+                "unit": "in"
+              },
+              "height": {
+                "number": 0.16,
+                "unit": "in"
+              },
+              "weight": {
+                "number": 1361,
+                "unit": "g"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Solid"]
+        },
+        "ratings": {
+          "value": 0,
+          "count": 1,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "zTuRy3t",
+        "title": "Premium Yoga Mat",
+        "description": "The Gaiam Premium Yoga Mat is designed for yoga and other fitness routines, featuring a 5mm thick cushioned surface for added comfort. It is made from latex-free PVC and is free of various phthalates (DEHP, DBP, BBP, DINP, DIDP, and DNOP). The mat is textured for non-slip performance and is both lightweight and durable. It also includes a bonus yoga workout download.",
+        "brands": [
+          {
+            "id": "1TtN",
+            "name": "Gaiam"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/4c65000b-aa18-4c2d-a6da-f477564823cb?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Purple yoga mat rolled up showing texture and logo."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/ed7bffca-ab4b-41ed-a928-30f20a6992a7?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "cleaned_url": "https://cdn.trychannel3.com/0c45fe77-c35b-4e6a-b013-193d52d4e7e5?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "is_main_image": false,
+            "shot_type": "packaging",
+            "alt_text": "Rolled up purple yoga mat with Gaiam logo."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/014a16dd-5161-4d98-a0d7-370c419b6ca8?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "cleaned_url": "https://cdn.trychannel3.com/849f2ea2-dae0-46a2-b018-51f171af679a?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Woman in black and white yoga attire stretching on a purple yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/c5dd855f-a756-4e94-944f-86c6538f9647?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "cleaned_url": "https://cdn.trychannel3.com/c734b601-2910-4343-9748-de7f0e2d37df?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Woman performing a yoga pose on a purple yoga mat in a bright room."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["PVC"],
+        "key_features": [
+          "5mm of premium cushioning",
+          "Latex-free and 6P phthalate-free",
+          "Textured for non-slip performance",
+          "Lightweight and durable",
+          "Includes a bonus yoga workout download"
+        ],
+        "colors": [
+          {
+            "hex": "#b6a0c4",
+            "percentage": 0.5236
+          },
+          {
+            "hex": "#8f64b0",
+            "percentage": 0.276
+          },
+          {
+            "hex": "#ab81c5",
+            "percentage": 0.1264
+          },
+          {
+            "hex": "#714591",
+            "percentage": 0.0741
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/zTuRy3t-DEoc-CNrACL?o=01M1BXENN8Z142QBCY82D8N2ET&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "academy.com",
+            "price": {
+              "price": 34.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.014,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "exercise-mat-material": ["Polyvinyl chloride (PVC)"],
+          "mat-base-material": ["Polyvinyl chloride (PVC)"],
+          "pattern": ["Texture"]
+        },
+        "ratings": {
+          "value": 4.5,
+          "count": 63,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "Om7DyY6",
+        "title": "Yoga Mat",
+        "description": "Elevate your yoga practice with the adidas 10mm Yoga Mat. Designed for both beginners and experienced yogis, this mat features a 10mm thickness that perfectly balances stability and plush comfort. It is crafted from a non-toxic, PVC-free blend of 75% EVA and 25% TPE, providing a durable yet soft medium-density foam texture. Committed to sustainability, this mat is made from 50% recycled materials. The subtly textured surface and base ensure exceptional grip and traction across various surfaces for confident transitions. Measuring 183 x 61 cm when unrolled, it provides ample space for all poses and includes an elasticated carry strap for convenient transport and storage.",
+        "brands": [
+          {
+            "id": "MJDR",
+            "name": "adidas"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/d8045c54-810e-47bd-978b-c4377645279d?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/d8045c54-810e-47bd-978b-c4377645279d?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "is_main_image": true,
+            "shot_type": "flat_lay",
+            "alt_text": "Black yoga mat rolled up, showing textured surface and adidas logo."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/46cca94e-52a2-44ad-b40f-b7cf4facbfda?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/46cca94e-52a2-44ad-b40f-b7cf4facbfda?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Roll of blue yoga mat with black carrying straps."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/014c2c2d-8ad2-49df-a884-6394a421ae81?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": "https://cdn.trychannel3.com/ddb1aba1-6c03-487d-b7c3-bf8d5917f4fa?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Blue yoga mat laid flat, showing textured surface and adidas logo."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/5f4fcb0a-b223-4c74-a9cc-a249f1892a37?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/5f4fcb0a-b223-4c74-a9cc-a249f1892a37?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up detail of the textured surface and adidas logo on a blue yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/63989132-c5a2-424f-bc69-2d61b9db0601?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/63989132-c5a2-424f-bc69-2d61b9db0601?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "is_main_image": false,
+            "shot_type": null,
+            "alt_text": "Roll of blue yoga mat showing texture and rolled shape."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/7be4f70a-136a-402f-ba3a-79e2a96e5b5e?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Woman doing yoga pose on a blue yoga mat in green athletic wear."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/d4d5b678-da74-457c-a0e5-bf669505964a?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Woman doing yoga pose on a blue yoga mat in green athletic wear."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/22eab7e6-2b99-4239-a75c-2a1243eb7923?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/22eab7e6-2b99-4239-a75c-2a1243eb7923?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Black yoga mat laid flat on a dark surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/624d6b99-1123-4d90-9e33-9642ee032eb1?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up detail of the textured surface and adidas logo on a black yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/240b0cb8-84ba-49a3-9602-880ed3cd2e13?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Woman resting hands on a black yoga mat during a yoga pose."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["TPE", "EVA"],
+        "key_features": [
+          "Durable TPE and EVA construction",
+          "Textured surface provides grip",
+          "Ribbed base improves traction",
+          "Rolls up for easy storage",
+          "Elastic carry strap allows for secure transportation",
+          "10mm thickness for stability and total comfort",
+          "75% EVA + 25% TPE blend for medium density and durable soft foam texture",
+          "Subtly textured surface and base for ample grip",
+          "Constructed using 50% recycled materials",
+          "Non-toxic and PVC-free materials"
+        ],
+        "colors": [
+          {
+            "hex": "#777777",
+            "percentage": 0.7716
+          },
+          {
+            "hex": "#1b1b1b",
+            "percentage": 0.1233
+          },
+          {
+            "hex": "#444444",
+            "percentage": 0.1051
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/Om7DyY6-8dl5-CNrACL?o=01M0D0NSV0AWT0CDPCDT3KF85V&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "escaladesports.com",
+            "price": {
+              "price": 40,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.05,
+            "dimensions": {
+              "length": {
+                "number": 183,
+                "unit": "cm"
+              },
+              "width": {
+                "number": 61,
+                "unit": "cm"
+              },
+              "height": {
+                "number": 1,
+                "unit": "cm"
+              },
+              "weight": null
+            }
+          },
+          {
+            "url": "https://buy.trychannel3.com/Om7DyY6-DEoc-CNrACL?o=01M13T9SJVGRQX3R1FSM2ZCR1D&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "academy.com",
+            "price": {
+              "price": 40,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.014,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "mat-base-material": ["Ethylene vinyl acetate (EVA)", "Thermoplastic elastomer (TPE)"],
+          "pattern": ["Texture", "Solid"],
+          "exercise-mat-accessories-included": ["Carrying strap"],
+          "exercise-mat-material": ["Ethylene vinyl acetate (EVA)", "Thermoplastic elastomer (TPE)"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "3TRQKiZ",
+        "title": "Yoga Mat",
+        "description": "Stretch and strengthen your body with this durable and comfortable Series-8 Fitness yoga mat, designed for home workouts.",
+        "brands": [
+          {
+            "id": "Deha",
+            "name": "Five Below"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/d395d63b-5373-47a3-b78f-51fc848955ed?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=FLYH",
+            "cleaned_url": "https://cdn.trychannel3.com/ab86517c-8564-4bf8-b888-a6dedcba08f9?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=FLYH",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Dark gray textured yoga mat rolled up."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/f0d6fc83-879e-4441-9daa-360c1486148a?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=FLYH",
+            "cleaned_url": "https://cdn.trychannel3.com/71afe23e-f089-48f1-b7b7-a979750e461d?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=FLYH",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Close-up texture of dark gray yoga mat surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/ac39c1a4-c5db-4299-9841-bb1156ad42ad?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=FLYH",
+            "cleaned_url": "https://cdn.trychannel3.com/28e7d080-5f53-4d1a-849e-8a806bfe6d31?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=FLYH",
+            "is_main_image": false,
+            "shot_type": "packaging",
+            "alt_text": "Rolled black yoga mat in a packaging tube."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["thermoplastic elastomer"],
+        "key_features": [
+          "Comfortable durable home workout mat",
+          "Size: 24in x 68in x 0.2in",
+          "Wipe clean with mild soap and water"
+        ],
+        "colors": [
+          {
+            "hex": "#565452",
+            "percentage": 0.941
+          },
+          {
+            "hex": "#393837",
+            "percentage": 0.059
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/3TRQKiZ-FLYH-CNrACL?o=01M11P8ES9M5B6JRYPHMS3AWYC&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "fivebelow.com",
+            "price": {
+              "price": 7,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": {
+                "number": 68,
+                "unit": "in"
+              },
+              "width": {
+                "number": 24,
+                "unit": "in"
+              },
+              "height": {
+                "number": 0.2,
+                "unit": "in"
+              },
+              "weight": null
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "exercise-mat-material": ["Thermoplastic elastomer (TPE)"],
+          "mat-base-material": ["Thermoplastic elastomer (TPE)"],
+          "pattern": ["Solid"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "lRPLrNw",
+        "title": "Premium Yoga Mat",
+        "description": "This premium yoga mat from Power Systems is designed to enhance your workouts with superior comfort, grip, and durability. Its non-slip, textured surface ensures stability during poses and exercises, while its lightweight and foldable design makes it easy to transport and store. The mat provides cushioning to protect your joints and support balance, making it ideal for yoga, Pilates, and various home workouts. Built for long-lasting performance, it's suitable for both beginners and experienced users.",
+        "brands": [
+          {
+            "id": "nV7L",
+            "name": "Power Systems"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/f8aab12c-b5f5-4948-9eaa-adcfff6be433?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=p1PB",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Solid gray yoga mat rolled up."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/bd1f1b29-d762-4cdb-b3a3-61295bd3a3af?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=p1PB",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of textured purple yoga mat surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/fc5541c1-2b46-4ce9-823f-1c2212fb8648?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=p1PB",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Set of rolled yoga mats in gray, green, and blue."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/238a8867-7b10-44b2-862c-bb76eb8d15c0?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=p1PB",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "product_information",
+            "alt_text": "Infographic showing premium yoga mat features and color options."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["foam"],
+        "key_features": [
+          "Sticky, non-slip texture for improved stability",
+          "Lightweight and portable design",
+          "Cushioned surface for joint protection",
+          "Easy to clean and maintain",
+          "Cushioned Comfort for Yoga & Pilates"
+        ],
+        "colors": [
+          {
+            "hex": "#fdfefe",
+            "percentage": 0.3847
+          },
+          {
+            "hex": "#b7babb",
+            "percentage": 0.2936
+          },
+          {
+            "hex": "#8f9295",
+            "percentage": 0.2091
+          },
+          {
+            "hex": "#dbdddf",
+            "percentage": 0.1126
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/lRPLrNw-p1PB-CNrACL?o=01KZ96BNFBFMAX0QR4AGNJVZWM&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "bestbuy.com",
+            "price": {
+              "price": 18.9,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.005,
+            "dimensions": {
+              "length": {
+                "number": 68,
+                "unit": "in"
+              },
+              "width": {
+                "number": 24,
+                "unit": "in"
+              },
+              "height": {
+                "number": 0.25,
+                "unit": "in"
+              },
+              "weight": null
+            }
+          },
+          {
+            "url": "https://buy.trychannel3.com/lRPLrNw-Qqxu-CNrACL?o=01M54WYAFS6PA59WAJ7G15RFTC&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "lowes.com",
+            "price": {
+              "price": 37.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.021,
+            "dimensions": {
+              "length": {
+                "number": 68,
+                "unit": "in"
+              },
+              "width": {
+                "number": 24,
+                "unit": "in"
+              },
+              "height": null,
+              "weight": null
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "exercise-mat-material": ["Polyvinyl chloride (PVC)", "Memory foam"],
+          "pattern": ["Solid"],
+          "mat-base-material": ["Memory foam"]
+        },
+        "ratings": {
+          "value": 4.86,
+          "count": 7,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "9khaccv",
+        "title": "Yoga Mat",
+        "description": "This adidas 4mm Yoga Mat is designed to enhance your yoga practice. It offers a perfect balance of support and comfort with its 4mm thickness, providing a stable base for all poses. The mat is constructed from a blend of 95% EVA and 5% TPE, offering a medium-density feel that is both durable and soft. It features a subtly textured surface and base for excellent grip, ensuring stability during transitions. Made with non-toxic and PVC-free materials, and incorporating 50% recycled content, this mat is an eco-conscious choice for your wellness routine. Its generous dimensions of 176 x 61 cm accommodate users of all sizes.",
+        "brands": [
+          {
+            "id": "MJDR",
+            "name": "adidas"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/549b2e21-8984-4777-9092-f9bed85b5263?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": "https://cdn.trychannel3.com/94ca76e8-4b6e-4284-97bb-73658e3a51e8?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Rolled up blue adidas Yoga Mat with black logo"
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["EVA", "TPE", "recycled materials"],
+        "key_features": [
+          "4mm thickness combines stability with comfort",
+          "95% EVA + 5% TPE blend offers a medium density with a durable and soft foam texture",
+          "Subtly textured surface and base create ample grip",
+          "Constructed using 50% recycled materials",
+          "Non-toxic and PVC-free"
+        ],
+        "colors": [
+          {
+            "hex": "#ffffff",
+            "percentage": 0.4045
+          },
+          {
+            "hex": "#758ca5",
+            "percentage": 0.3333
+          },
+          {
+            "hex": "#556881",
+            "percentage": 0.121
+          },
+          {
+            "hex": "#323a50",
+            "percentage": 0.112
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/9khaccv-8dl5-CNrACL?o=01KRQMQVGKKBVBQRH5XVD8Z9FZ&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "escaladesports.com",
+            "price": {
+              "price": 24,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.05,
+            "dimensions": {
+              "length": {
+                "number": 176,
+                "unit": "cm"
+              },
+              "width": {
+                "number": 61,
+                "unit": "cm"
+              },
+              "height": null,
+              "weight": null
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "mat-base-material": ["Ethylene vinyl acetate (EVA)", "Thermoplastic elastomer (TPE)"],
+          "pattern": ["Texture", "Geometric", "Logo"],
+          "exercise-mat-material": ["Ethylene vinyl acetate (EVA)", "Thermoplastic elastomer (TPE)"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "r13WHsf",
+        "title": "Yoga Mat",
+        "description": "The adidas 4mm Yoga Mat is designed to balance stability and comfort, providing a secure foundation for any yoga practice. Crafted from a blend of 95% EVA and 5% TPE, the mat features a medium-density, soft foam texture that is both durable and non-toxic. Its subtly textured surface and base ensure excellent grip and traction on various floors. Committed to sustainability, this mat is made from 50% recycled materials and is completely PVC-free. Measuring 176 x 61 cm when unrolled, it offers ample space for practitioners of all levels.",
+        "brands": [
+          {
+            "id": "MJDR",
+            "name": "adidas"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/f7473a22-91e1-4889-9407-491cae7ddce9?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/f7473a22-91e1-4889-9407-491cae7ddce9?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "is_main_image": true,
+            "shot_type": "flat_lay",
+            "alt_text": "Black yoga mat rolled up on a floor."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/ad825466-a8ae-4947-96b2-a583da6c6dac?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": "https://cdn.trychannel3.com/1d23fc7e-9b42-46bc-a7d5-c9d82ca21277?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Solid blue yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/8787ba6a-f1c5-4942-9b1c-b07035786555?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": "https://cdn.trychannel3.com/85141c90-38e5-4425-bc33-f49131f3ebc0?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of the textured pattern on a blue yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/64b6edfa-9aab-442c-99e0-251b70818a0f?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/64b6edfa-9aab-442c-99e0-251b70818a0f?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "is_main_image": false,
+            "shot_type": null,
+            "alt_text": "Roll of blue yoga mat material."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/3e856c66-3d07-4e1f-8711-fb1aecbc2cd3?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": "https://cdn.trychannel3.com/822e8d2d-1ff0-41f5-b5e9-a2932778f0c6?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "is_main_image": false,
+            "shot_type": "scale_reference",
+            "alt_text": "Hand pressing on the black yoga mat surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/a976046b-52d5-4e14-b949-9267ef4125d6?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": "https://cdn.trychannel3.com/ea92c047-b4ad-46c5-af71-50210736ca01?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Woman doing yoga on a blue yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/2c8dc81e-6ed8-4b2d-a6e4-1c54f835e615?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Woman doing yoga on a blue yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/380d3318-8ab1-4a31-b296-8e416e0392db?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Woman doing yoga on a blue yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/faac11e4-7568-4ad5-88fc-d337f05045d2?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/faac11e4-7568-4ad5-88fc-d337f05045d2?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Solid magenta yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/53a4d40f-915f-42be-aa95-14fa60b58856?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "cleaned_url": "https://cdn.trychannel3.com/abc1cbec-17ca-42ef-b0cd-922374c2170b?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=8dl5",
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of the textured pattern on a magenta yoga mat."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["EVA", "TPE"],
+        "key_features": [
+          "4mm thickness for stability and comfort",
+          "95% EVA + 5% TPE blend for medium density and soft foam texture",
+          "Textured surface and base for enhanced grip",
+          "Made from 50% recycled materials",
+          "Non-toxic and PVC-free",
+          "Dimensions: 176 x 61 cm"
+        ],
+        "colors": [
+          {
+            "hex": "#6d6d6d",
+            "percentage": 0.704
+          },
+          {
+            "hex": "#3f3f3f",
+            "percentage": 0.1226
+          },
+          {
+            "hex": "#1c1c1c",
+            "percentage": 0.1132
+          },
+          {
+            "hex": "#888888",
+            "percentage": 0.0602
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/r13WHsf-8dl5-CNrACL?o=01M0D30DZA5QC3470QSMY1360S&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "escaladesports.com",
+            "price": {
+              "price": 24,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.05,
+            "dimensions": {
+              "length": {
+                "number": 176,
+                "unit": "cm"
+              },
+              "width": {
+                "number": 61,
+                "unit": "cm"
+              },
+              "height": {
+                "number": 0.4,
+                "unit": "cm"
+              },
+              "weight": null
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "exercise-mat-material": [
+            "Ethylene vinyl acetate (EVA)",
+            "Thermoplastic elastomer (TPE)"
+          ],
+          "mat-base-material": ["Ethylene vinyl acetate (EVA)", "Thermoplastic elastomer (TPE)"],
+          "pattern": ["Texture"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "I8pr8aO",
+        "title": "Yoga Mat",
+        "description": "A durable and resilient yoga mat perfect for daily practice, meditation, or stretching routines. Its textured surface is designed to stay put, providing stability for various poses, and it easily rolls up for convenient transport and storage.",
+        "brands": [
+          {
+            "id": "dp8v",
+            "name": "Asuna"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/27472c6d-0e85-4d21-96c7-50c8da42310f?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=mn23",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Rolled up solid blue yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/b6459b68-2984-4dc4-9dee-b1b4b5ef93dc?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=mn23",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Two yoga mats, one blue and one purple, standing up."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/76700ba4-45ad-439f-a32e-c372a8bf3820?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=mn23",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Woman doing yoga pose on a blue yoga mat."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["PVC"],
+        "key_features": [
+          "Resilient PVC material",
+          "Rolls for easy transport",
+          "Measures approximately 68\" x 24\" x 4mm thick"
+        ],
+        "colors": [],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/I8pr8aO-mn23-CNrACL?o=01KBPC7BVWS63CDRQG5T1K24F6&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "qvc.com",
+            "price": {
+              "price": 18.98,
+              "compare_at_price": 27.01,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.035,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Solid"],
+          "exercise-mat-material": ["Polyvinyl chloride (PVC)"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "LxeU5c7",
+        "title": "Yoga Mat",
+        "description": "The Sunny Health & Fitness Durable Tear-Resistant Yoga Mat is a high-performance foundation designed for stability and longevity. Crafted from resilient, tear-resistant PVC and high-density foam, it provides exceptional cushioning to protect joints during yoga, Pilates, stretching, and meditation. Its textured, non-slip surface ensures a secure grip on various floor types, while its lightweight design makes it easy to roll and transport between home and the studio.",
+        "brands": [
+          {
+            "id": "KnAE",
+            "name": "Sunny Health & Fitness"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/b194968a-d083-4fc1-844b-5848322b06f0?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "cleaned_url": "https://cdn.trychannel3.com/a7f9ee34-0ec4-44d1-97e4-154d1daf76d3?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Yoga mat rolled up next to a tube."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/9c0df37e-2b17-4902-8923-47b8a946ecf6?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Solid lime green yoga mat background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/78e74f19-9778-4fd4-8368-6cda713a95b9?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "cleaned_url": "https://cdn.trychannel3.com/a0b89b04-4a08-490c-8775-eefa482ce779?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "is_main_image": false,
+            "shot_type": "packaging",
+            "alt_text": "Rolled up lime green yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/890416da-9082-4d55-b0de-ab7fea002e88?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "cleaned_url": "https://cdn.trychannel3.com/536f3d57-7dfd-45a5-8008-793549a62232?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "is_main_image": false,
+            "shot_type": "packaging",
+            "alt_text": "Rolled up lime green yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/90bff21e-c43d-443a-8233-ade4ace99241?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "cleaned_url": "https://cdn.trychannel3.com/735ab60e-f58c-43a3-a420-e0d98dbb0b0c?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=DEoc",
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of the textured surface of a green yoga mat."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["PVC", "foam"],
+        "key_features": [
+          "Designed to withstand intense and vigorous workouts",
+          "Constructed from resilient PVC with a textured surface for superior grip",
+          "High-density foam cushioning for knees, elbows, and feet",
+          "Suitable for yoga, Pilates, stretching, and meditation",
+          "High-density PVC resists wear, stretching, and flaking",
+          "Closed-cell design resists moisture and wipes clean",
+          "Slim 4mm profile for stability and confident alignment",
+          "Lightweight and portable for home, studio, or outdoor workouts",
+          "1-year warranty for structural frame",
+          "180-day warranty for other parts and components"
+        ],
+        "colors": [
+          {
+            "hex": "#adc25a",
+            "percentage": 0.7726
+          },
+          {
+            "hex": "#88a242",
+            "percentage": 0.1442
+          },
+          {
+            "hex": "#5c7929",
+            "percentage": 0.0832
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/LxeU5c7-DEoc-CNrACL?o=01M1FTTC5GA39PDEBKJ3EPBQR5&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "academy.com",
+            "price": {
+              "price": 16.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.014,
+            "dimensions": null
+          },
+          {
+            "url": "https://buy.trychannel3.com/LxeU5c7-QnTm-CNrACL?o=01M36710Z5SR23NCJ9VF2KXAJB&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "target.com",
+            "price": {
+              "price": 27.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": {
+                "number": 68,
+                "unit": "in"
+              },
+              "width": {
+                "number": 24,
+                "unit": "in"
+              },
+              "height": null,
+              "weight": null
+            }
+          },
+          {
+            "url": "https://buy.trychannel3.com/LxeU5c7-K6RA-CNrACL?o=01M1S0GXF24GZH3CJRD8EZMCKY&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "macys.com",
+            "price": {
+              "price": 29.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.056,
+            "dimensions": {
+              "length": {
+                "number": 68,
+                "unit": "in"
+              },
+              "width": {
+                "number": 24,
+                "unit": "in"
+              },
+              "height": {
+                "number": 0.16,
+                "unit": "in"
+              },
+              "weight": null
+            }
+          },
+          {
+            "url": "https://buy.trychannel3.com/LxeU5c7-fdOw-CNrACL?o=01M3KRHWX624FSJTXEPKMXTWWH&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "dickssportinggoods.com",
+            "price": {
+              "price": 29.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": {
+                "number": 24,
+                "unit": "in"
+              },
+              "width": null,
+              "height": {
+                "number": 68,
+                "unit": "in"
+              },
+              "weight": null
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "mat-base-material": ["Polyvinyl chloride (PVC)"],
+          "pattern": ["Texture"],
+          "exercise-mat-material": ["Polyvinyl chloride (PVC)"]
+        },
+        "ratings": {
+          "value": 4.62,
+          "count": 34,
+          "source_count": 4
+        }
+      },
+      {
+        "id": "fmPXvDv",
+        "title": "Premium 1/2-Inch Extra Thick Yoga Mat",
+        "description": "Premium 1/2-inch extra-thick yoga mat offers superior comfort and support for all workouts. Measuring 71\" x 24\", it’s made from durable, anti-tear material with a non-slip surface for stability. Ideal for indoor or outdoor use, it includes a convenient carry strap, making it perfect for yoga, pilates, stretching, or general fitness training.",
+        "brands": [
+          {
+            "id": "4lLR",
+            "name": "Amber Sporting Goods"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/80fd1f7c-e09b-49f8-8c30-c45f40d121bf?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=p1PB",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/80fd1f7c-e09b-49f8-8c30-c45f40d121bf?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=p1PB",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Rolled blue yoga mat with a carrying strap."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/035c8665-8cdd-4ad2-8613-adeb0faa12f9?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=p1PB",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Rolled blue yoga mat material showing thick texture."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/8e28a222-0c94-47c2-a40e-a33740ea8f6f?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=p1PB",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Woman doing a yoga pose on a blue yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/8ad34779-35e6-47cd-aa3d-162c26840bfe?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=p1PB",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "product_information",
+            "alt_text": "Specification details of the blue yoga mat rolled up."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["100% Textured NBR Foam"],
+        "key_features": [
+          "1/2-inch cushioning provides superior support for joints during workouts",
+          "Non-slip surface ensures stability and safety for yoga, pilates, and floor exercises",
+          "Durable & anti-tear material built to withstand regular use without stretching or tearing",
+          "Includes a convenient carry strap for easy transport to gym or outdoors",
+          "Measures 71\" long x 24\" wide, perfect for all body types and fitness routines"
+        ],
+        "colors": [
+          {
+            "hex": "#1b337e",
+            "percentage": 0.2537
+          },
+          {
+            "hex": "#4780e7",
+            "percentage": 0.2294
+          },
+          {
+            "hex": "#fdfdfd",
+            "percentage": 0.1351
+          },
+          {
+            "hex": "#3061d1",
+            "percentage": 0.1241
+          },
+          {
+            "hex": "#77a8ee",
+            "percentage": 0.1019
+          },
+          {
+            "hex": "#5b8bda",
+            "percentage": 0.0947
+          },
+          {
+            "hex": "#4e6ca4",
+            "percentage": 0.0612
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/fmPXvDv-p1PB-CNrACL?o=01M3X7RZ3D36Z7E32W3SSPAKJQ&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "bestbuy.com",
+            "price": {
+              "price": 31.23,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.005,
+            "dimensions": {
+              "length": {
+                "number": 71,
+                "unit": "in"
+              },
+              "width": {
+                "number": 24,
+                "unit": "in"
+              },
+              "height": null,
+              "weight": {
+                "number": 2.7,
+                "unit": "lb"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Texture"],
+          "exercise-mat-accessories-included": ["Carrying strap"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "2ynYLbx",
+        "title": "Yoga Mat",
+        "description": "Enhance your flexibility and strength with the REP Fitness Yoga Mat. Constructed from recyclable thermoplastic elastomer (TPE), this environmentally friendly mat is durable, water-resistant, and designed to avoid absorbing sweat. It features a light gray top side with the REP mountain logo and a black bottom, both providing a grippy texture to ensure stability during poses. Lightweight and flexible, it is ideal for travel and easy storage.",
+        "brands": [
+          {
+            "id": "2ng7",
+            "name": "REP Fitness"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/79212225-7234-43a6-b9ea-b1710b5099a1?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=BfQq",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/79212225-7234-43a6-b9ea-b1710b5099a1?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=BfQq",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Grey yoga mat rolled up showing the logo."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Recyclable TPE"],
+        "key_features": [
+          "Environmentally friendly made from recyclable TPE",
+          "Water-resistant and easy to clean",
+          "Lightweight and flexible for travel",
+          "Grippy texture on both sides to prevent slipping",
+          "6.5mm thickness for cushioned support"
+        ],
+        "colors": [
+          {
+            "hex": "#c5cccc",
+            "percentage": 0.6639
+          },
+          {
+            "hex": "#545251",
+            "percentage": 0.2833
+          },
+          {
+            "hex": "#8d9090",
+            "percentage": 0.0528
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/2ynYLbx-BfQq-CNrACL?o=01M1RVBV2PX9159ENV06705810&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "repfitness.com",
+            "price": {
+              "price": 31.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": {
+                "number": 69,
+                "unit": "in"
+              },
+              "width": {
+                "number": 24,
+                "unit": "in"
+              },
+              "height": {
+                "number": 6.5,
+                "unit": "mm"
+              },
+              "weight": {
+                "number": 2.1,
+                "unit": "lb"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "mat-base-material": ["Thermoplastic elastomer (TPE)"],
+          "exercise-mat-material": ["Thermoplastic elastomer (TPE)"],
+          "pattern": ["Logo", "Texture"]
+        },
+        "ratings": {
+          "value": 4,
+          "count": 4,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "8TthewN",
+        "title": "Yoga Mat",
+        "description": "The Janet Yoga Mat by Yune Yoga is a 6mm thick, eco-friendly mat designed for comfort and stability. Made from polymer environmental resin (PER), it is latex-free, phthalate-free, and manufactured without heavy metals, making it a great choice for those with rubber allergies. The mat features a non-slip texture for better grip and is digitally printed with UV-cured inks to ensure the geometric artwork remains crisp. Its moisture-resistant surface allows for easy cleaning with mild soap and water, supporting a variety of practices from energizing vinyasa to restorative sessions.",
+        "brands": [
+          {
+            "id": "M90a",
+            "name": "Yune"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/2f3e05ba-0be8-4052-bf50-f82a4baee362?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=sc5H",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/2f3e05ba-0be8-4052-bf50-f82a4baee362?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=sc5H",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Flat lay of yoga mat design pattern."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/7f676a16-0bda-4e2a-951b-043b59610708?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=sc5H",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "on_model",
+            "alt_text": "Woman doing yoga on a gray yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/900f9735-e53a-47c1-a520-d2562cb74b91?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=sc5H",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/900f9735-e53a-47c1-a520-d2562cb74b91?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=sc5H",
+            "is_main_image": false,
+            "shot_type": "packaging",
+            "alt_text": "Rolled yoga mat with black and white geometric design label."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/9c245a8a-c748-446e-87e4-19c2d471a554?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=sc5H",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/9c245a8a-c748-446e-87e4-19c2d471a554?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=sc5H",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Close-up of yoga mat side with black stripes and triangles."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/783b489c-41e9-44cd-9814-0407f08615fd?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=sc5H",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/783b489c-41e9-44cd-9814-0407f08615fd?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=sc5H",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Roll of gray yoga mat material with black accents."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["polymer environmental resin (PER)"],
+        "key_features": [
+          "6mm thickness for joint cushioning",
+          "Non-slip texture for stability",
+          "Eco-friendly, latex-free, and phthalate-free PER material",
+          "Moisture-resistant and easy-to-clean surface",
+          "Digitally printed with UV-cured inks",
+          "Dimensions: 24\" x 72\" (61 x 183 cm)"
+        ],
+        "colors": [
+          {
+            "hex": "#c0bfbf",
+            "percentage": 0.6323
+          },
+          {
+            "hex": "#535759",
+            "percentage": 0.1432
+          },
+          {
+            "hex": "#868a8b",
+            "percentage": 0.1153
+          },
+          {
+            "hex": "#19191a",
+            "percentage": 0.1092
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/8TthewN-sc5H-CNrACL?o=01KRME4QYYJGY675D9CKBFSFRG&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "yuneyoga.com",
+            "price": {
+              "price": 78,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": {
+                "number": 72,
+                "unit": "in"
+              },
+              "width": {
+                "number": 24,
+                "unit": "in"
+              },
+              "height": {
+                "number": 6,
+                "unit": "mm"
+              },
+              "weight": null
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Geometric"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "LCmi2HV",
+        "title": "Yoga Mat",
+        "description": "This durable, tear-resistant yoga mat from Sunny Health & Fitness is designed for a variety of fitness activities including yoga, Pilates, and strength training. It features a textured surface for enhanced grip, helping to keep you stable during workouts. The mat is made of resilient PVC material and offers comfortable cushioning to protect your knees, elbows, and hands. Its compact and portable design, with dimensions of 0.25\" thick, 68\" long, and 24\" wide, makes it easy to take to the park or gym. The high-density foam provides excellent support and protects both you and your floors.",
+        "brands": [
+          {
+            "id": "dp8v",
+            "name": "Asuna"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/72dca5db-34ba-4122-b1a8-3d93c8f28779?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=LFnL",
+            "cleaned_url": "https://cdn.trychannel3.com/c84894ba-7f0e-4286-904f-19ca1acfe144?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=LFnL",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Purple yoga mat rolled up against a white background."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["PVC"],
+        "key_features": [
+          "Durable Tear-Resistant Mat",
+          "Textured Surface",
+          "Versatile Function",
+          "High Density Foam",
+          "Compact And Portable"
+        ],
+        "colors": [
+          {
+            "hex": "#7953bd",
+            "percentage": 0.3913
+          },
+          {
+            "hex": "#563497",
+            "percentage": 0.2536
+          },
+          {
+            "hex": "#9a73dc",
+            "percentage": 0.1327
+          },
+          {
+            "hex": "#bb95f6",
+            "percentage": 0.1178
+          },
+          {
+            "hex": "#331868",
+            "percentage": 0.1045
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/LCmi2HV-LFnL-CNrACL?o=01KPJDEA7FBAJJ58YYXQCWDB1W&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "staples.com",
+            "price": {
+              "price": 23.69,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.03,
+            "dimensions": {
+              "length": {
+                "number": 68,
+                "unit": "in"
+              },
+              "width": {
+                "number": 24,
+                "unit": "in"
+              },
+              "height": {
+                "number": 0.25,
+                "unit": "in"
+              },
+              "weight": null
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Texture"],
+          "exercise-mat-material": ["Polyvinyl chloride (PVC)"]
+        },
+        "ratings": {
+          "value": 4.88,
+          "count": 7,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "c7iRi39",
+        "title": "Yoga mat",
+        "description": "Elevate your yoga practice with this elegant pink yoga mat from Maria Lucia Hohan. Designed to support both physical and spiritual wellness, it features unique spiritual artwork and a soft, non-slip surface for comfort and stability during your sessions.",
+        "brands": [
+          {
+            "id": "WURy",
+            "name": "Maria Lucia Hohan"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/89fdce64-beba-4ab0-9178-8aa826e8c864?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=TV3p",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/89fdce64-beba-4ab0-9178-8aa826e8c864?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=TV3p",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Pink yoga mat with a female figure design and radiating lines."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/02e0bfd4-a955-46d5-b6e8-7750f998c43f?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=TV3p",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Pink yoga mat with a female figure design and radiating lines."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/44db571d-48f0-4579-8def-0ab72dec12ae?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=TV3p",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/44db571d-48f0-4579-8def-0ab72dec12ae?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=TV3p",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Pink yoga mat with a female figure design, showing the mat shape."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/a26667a1-bc88-4889-bee3-1d2a926a8d87?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=TV3p",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/a26667a1-bc88-4889-bee3-1d2a926a8d87?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=TV3p",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Pink yoga mat with a female figure design and yoga blocks."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Polyurethane", "rubber"],
+        "key_features": [
+          "Non-slip surface",
+          "Soft cushioning for ultimate comfort and support",
+          "Unique spiritual artwork designed to inspire mindfulness and beauty"
+        ],
+        "colors": [
+          {
+            "hex": "#eacbd1",
+            "percentage": 1
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/c7iRi39-TV3p-CNrACL?o=01M3K997J0SKF2J5SC378R1ZFC&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "marialuciahohan.com",
+            "price": {
+              "price": 104,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": {
+                "number": 183,
+                "unit": "cm"
+              },
+              "width": {
+                "number": 68,
+                "unit": "cm"
+              },
+              "height": null,
+              "weight": null
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Graphic"],
+          "exercise-mat-material": ["Rubber"],
+          "mat-base-material": ["Rubber"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "USvisFV",
+        "title": "Power Systems 68\" x 24\" Premium Yoga Mat, 1/8\" Thick Non Slip Lightweight Sticky Exercise Mat",
+        "description": "This navy blue yoga mat offers a premium, lightweight, and non-slip surface for your workouts. Its cushioned surface provides comfort during exercises, while the durable construction ensures long-lasting use. Perfect for home or studio use, this mat measures 24 inches wide by 68 inches long and is 1/8 inch thick, providing a secure and comfortable foundation for various fitness activities. It is designed to resist wear and tear, making it a reliable choice for your fitness journey.",
+        "brands": [
+          {
+            "id": "nV7L",
+            "name": "Power Systems"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/21ab070c-63c4-4650-b8cf-ea34bee03f41?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=Qqxu",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Navy blue yoga mat laid out flat on a white background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/90408c7a-dc73-4057-a6bf-84b780c7e939?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=Qqxu",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up detail of the textured surface of a purple yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/7514607a-f60f-4fcb-ab3e-c61fdd9211df?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=Qqxu",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Rolled yoga mats in navy, green, gray, and blue laid out."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/b6a337e9-5d71-4408-845a-411c5acb6aad?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=Qqxu",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "product_information",
+            "alt_text": "Infographic showing premium yoga sticky mat options and features."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Foam"],
+        "key_features": [
+          "Lightweight and portable for home or studio use",
+          "Cushioned surface provides comfort during workouts",
+          "Durable construction resists wear",
+          "Non-slip surface",
+          "Sticky, non-slip texture for improved stability",
+          "Durable, high-quality foam construction",
+          "Easy to clean and maintain"
+        ],
+        "colors": [
+          {
+            "hex": "#f6fcfe",
+            "percentage": 0.3823
+          },
+          {
+            "hex": "#8593a7",
+            "percentage": 0.2526
+          },
+          {
+            "hex": "#5e6d84",
+            "percentage": 0.1228
+          },
+          {
+            "hex": "#c0ccd9",
+            "percentage": 0.1217
+          },
+          {
+            "hex": "#405275",
+            "percentage": 0.1206
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/USvisFV-Qqxu-CNrACL?o=01M565ES0FCCD00GXWSAP8DZMZ&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "lowes.com",
+            "price": {
+              "price": 18.9,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.021,
+            "dimensions": {
+              "length": {
+                "number": 68,
+                "unit": "in"
+              },
+              "width": {
+                "number": 24,
+                "unit": "in"
+              },
+              "height": null,
+              "weight": null
+            }
+          },
+          {
+            "url": "https://buy.trychannel3.com/USvisFV-Z87s-CNrACL?o=01M3QQRG9C1VVG6WR95CM987A4&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "kohls.com",
+            "price": {
+              "price": 48.9,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.021,
+            "dimensions": {
+              "length": {
+                "number": 68,
+                "unit": "in"
+              },
+              "width": {
+                "number": 24,
+                "unit": "in"
+              },
+              "height": null,
+              "weight": null
+            }
+          },
+          {
+            "url": "https://buy.trychannel3.com/USvisFV-FP7n-CNrACL?o=01KVWHMTN1WJ7PZ9Y6K8V6T160&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "homedepot.com",
+            "price": {
+              "price": 89.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.08,
+            "dimensions": {
+              "length": {
+                "number": 68,
+                "unit": "in"
+              },
+              "width": {
+                "number": 24,
+                "unit": "in"
+              },
+              "height": {
+                "number": 0.125,
+                "unit": "in"
+              },
+              "weight": null
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Solid", "Texture"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "KLwEuO3",
+        "title": "Yoga Mat",
+        "description": "The Smiley® Good Day Yoga Mat by Samii Ryan is designed to bring positivity to your practice. This PVC yoga mat features a cheerful design with smiley faces and the encouraging phrase 'choose to have a good day'. It is easy to maintain with a wipe-clean surface and provides a comfortable space for yoga and stretching.",
+        "brands": [
+          {
+            "id": "fl7K",
+            "name": "Samii Ryan"
+          },
+          {
+            "id": "Cf21",
+            "name": "Smiley"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/2b480e62-ff99-4da1-8a57-bf70fde7be7d?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=egNj",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "product_information",
+            "alt_text": "Infographic showing four smiling faces for a good day choice."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/cd0afe29-c154-45f0-822f-42f7713078bd?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=egNj",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "product_information",
+            "alt_text": "Infographic showing four smiling faces for a good day choice."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/9d2a0a0b-03c3-4739-8368-c4f545cf4fb9?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=egNj",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Close-up of the texture and branding on a pink yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/e11f516d-1d02-4af4-8592-2ed0a8ff2524?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=egNj",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Close-up of the textured purple surface of a yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/31e06e4e-13f6-4d6c-9bb5-2738c6ea3af5?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=egNj",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Close-up of the textured pink surface of a yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/7f8e3fcb-8e82-4d33-ba38-ec77bbfd8e8c?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=egNj",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/7f8e3fcb-8e82-4d33-ba38-ec77bbfd8e8c?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=egNj",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "A rolled-up purple yoga mat."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["PVC"],
+        "key_features": [
+          "Official collaboration with Smiley®",
+          "Wipe clean surface",
+          "Dimensions: 24\" L x 70\" W x 0.25\" H",
+          "Weight: 3.5lbs"
+        ],
+        "colors": [
+          {
+            "hex": "#833181",
+            "percentage": 0.4733
+          },
+          {
+            "hex": "#925290",
+            "percentage": 0.3805
+          },
+          {
+            "hex": "#ac81a2",
+            "percentage": 0.0806
+          },
+          {
+            "hex": "#723767",
+            "percentage": 0.0656
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/KLwEuO3-egNj-CNrACL?o=01M0FH20B1B8M03D7VKHFQRHHY&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "bysamiiryan.com",
+            "price": {
+              "price": 75,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": {
+                "number": 70,
+                "unit": "in"
+              },
+              "width": {
+                "number": 24,
+                "unit": "in"
+              },
+              "height": {
+                "number": 0.25,
+                "unit": "in"
+              },
+              "weight": {
+                "number": 3.5,
+                "unit": "lb"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "exercise-mat-material": ["Polyvinyl chloride (PVC)"],
+          "mat-base-material": ["Polyvinyl chloride (PVC)"],
+          "pattern": ["Logo"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "fP6FoeQ",
+        "title": "Yoga Mat",
+        "description": "A high-density rubber yoga mat from Sporty & Rich, designed for stability and support. This sleek black mat features white 'health club sporty & rich' branding printed vertically on one side and measures approximately 180 cm in length and 58 cm in width.",
+        "brands": [
+          {
+            "id": "Zrxb",
+            "name": "Sporty & Rich"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/7857c1bc-b427-4142-877e-85ff49e76c84?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=7DeM",
+            "cleaned_url": "https://cdn.trychannel3.com/d388ebf1-bbc2-46ee-9526-a8209da3dec5?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=7DeM",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Dark grey yoga mat standing vertically with white text on the side."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/b4ea96dc-019f-43f4-adcd-66fc0b1605bf?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=7DeM",
+            "cleaned_url": "https://cdn.trychannel3.com/6b2cc9c4-899a-41bc-a76f-6362a7d4a2b7?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=7DeM",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Solid black yoga mat shown from above."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/5bb25741-c533-4cd5-96b2-7ba753b5fbfe?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=7DeM",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Dark grey yoga mat standing vertically with white text on the side."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Rubber"],
+        "key_features": [
+          "High density",
+          "Spot clean",
+          "Measures approx 71\" / 180 cm L x 23\" / 58 cm W"
+        ],
+        "colors": [
+          {
+            "hex": "#605d57",
+            "percentage": 0.8547
+          },
+          {
+            "hex": "#373633",
+            "percentage": 0.1053
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/fP6FoeQ-7DeM-CNrACL?o=01M0Y7CADCZVX94JW8QGYXD60A&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "fwrd.com",
+            "price": {
+              "price": 90,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": {
+                "number": 180,
+                "unit": "cm"
+              },
+              "width": {
+                "number": 58,
+                "unit": "cm"
+              },
+              "height": null,
+              "weight": null
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "exercise-mat-material": ["Rubber"],
+          "pattern": ["Text"],
+          "mat-base-material": ["Rubber"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "J9hFVXe",
+        "title": "Yoga mat",
+        "description": "A luxury yoga mat designed to support both physical and spiritual practice. It features unique spiritual artwork intended to inspire mindfulness and beauty, transforming a yoga session into a ritual of self-love and empowerment.",
+        "brands": [
+          {
+            "id": "WURy",
+            "name": "Maria Lucia Hohan"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/4a00945b-dc07-4452-8bd7-57c1ac447254?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=TV3p",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/4a00945b-dc07-4452-8bd7-57c1ac447254?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=TV3p",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Purple yoga mat with a mermaid design on a light purple background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/c4893db5-182d-49fa-8f3a-ecaea845869f?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=TV3p",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Purple yoga mat with a mermaid design on a light purple background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/0b66b284-8797-44b4-89d0-dc1bcdfeacf7?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=TV3p",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/0b66b284-8797-44b4-89d0-dc1bcdfeacf7?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=TV3p",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Purple yoga mat with a mermaid design on a light purple background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/9a83de38-21f2-4798-9628-b1c3cdcefe62?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=TV3p",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/9a83de38-21f2-4798-9628-b1c3cdcefe62?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=TV3p",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Purple yoga mat with pink accessories shown on top."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/ed8e2bc7-148b-46f3-9d22-688b105e76a1?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=TV3p",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "on_model",
+            "alt_text": "Woman holding a rolled purple yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/b11bc297-5f51-4f8a-8e4b-815b6494af36?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=TV3p",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Woman doing a yoga pose on a purple yoga mat."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Polyurethane", "rubber"],
+        "key_features": [
+          "Non-slip surface",
+          "Soft cushioning for ultimate comfort and support",
+          "Unique spiritual artwork designed to inspire mindfulness and beauty"
+        ],
+        "colors": [
+          {
+            "hex": "#c6aecc",
+            "percentage": 1
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/J9hFVXe-TV3p-CNrACL?o=01M3K99166N1D1HY4CXB2KA8TT&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "marialuciahohan.com",
+            "price": {
+              "price": 104,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": {
+                "number": 183,
+                "unit": "cm"
+              },
+              "width": {
+                "number": 68,
+                "unit": "cm"
+              },
+              "height": null,
+              "weight": null
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "mat-base-material": ["Rubber"],
+          "pattern": ["Graphic"],
+          "exercise-mat-material": ["Rubber"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "lhcO2pP",
+        "title": "Manduka Pro Yoga Mat 6mm",
+        "description": "A studio-quality yoga mat designed for stability and durability, featuring a closed-cell surface for easy cleaning and long-lasting performance. This mat is 6mm thick and suitable for home practice, with a lifetime guarantee and manufactured with high-density cushioning for floor-like stability. Color shown is Thunder/Standard (example variation).",
+        "brands": [
+          {
+            "id": "MuH2",
+            "name": "Manduka"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/5c06b678-afaa-4c7b-b1cc-f06ca29a74e7?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/5c06b678-afaa-4c7b-b1cc-f06ca29a74e7?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Rolled mauve/pink yoga mat with a subtle stripe texture."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/c9ddaf6a-df97-42cb-acb7-7d42d3fa2635?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/c9ddaf6a-df97-42cb-acb7-7d42d3fa2635?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Rolled mauve/pink yoga mat with a fine texture."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/c0741e75-89c9-4303-bc31-b442a9463ef8?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/c0741e75-89c9-4303-bc31-b442a9463ef8?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Rolled yoga mats showing textured surface and corner design."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/1f94148c-dafc-46ae-a645-4cd885d1e517?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Rolled yoga mat with textured surface and corner detail."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/56714106-9ba7-4437-87df-73ae7af1c134?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/56714106-9ba7-4437-87df-73ae7af1c134?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Rolled dark teal/green yoga mat with a textured surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/5bbdcff8-6f63-4c0d-87e6-bbec83210f19?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/5bbdcff8-6f63-4c0d-87e6-bbec83210f19?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Rolled dark teal/green yoga mat with a fine texture."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/23c080ea-aafa-4204-b39f-c29806dec00e?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Rolled dark teal/green yoga mats showing textured surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/52204a67-0732-4ea4-8282-180dfc7cbbb7?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Rolled dark teal/green yoga mat with a fine texture."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/f6da1390-fada-4665-b3c9-062c0fbdd704?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/f6da1390-fada-4665-b3c9-062c0fbdd704?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Rolled black yoga mat with a fine texture."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/593d8d17-be0b-430c-a16f-b4c450ca672c?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/593d8d17-be0b-430c-a16f-b4c450ca672c?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Rolled black yoga mats showing textured surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/98e3a9d8-08f5-4aa7-96cf-16e016217e23?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Rolled black yoga mat with a fine texture."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/ed972284-c472-4b09-b0d5-9a8830e3a344?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/ed972284-c472-4b09-b0d5-9a8830e3a344?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Rolled dark blue yoga mat with a fine texture."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/c20de9b1-c774-4452-a37e-7bcb6574bffb?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=xzz1",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Rolled dark blue/navy yoga mats showing textured surface."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["PVC"],
+        "key_features": [
+          "Lifetime guarantee",
+          "6 mm ultra-dense cushion for floor-like stability",
+          "Hygienic closed-cell surface seals out moisture and bacteria",
+          "Proprietary dot pattern for added stability",
+          "Made in Germany",
+          "OEKO-TEX certified",
+          "Latex-free and phthalate-free"
+        ],
+        "colors": [
+          {
+            "hex": "#a48f97",
+            "percentage": 0.912
+          },
+          {
+            "hex": "#866c73",
+            "percentage": 0.088
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/lhcO2pP-xzz1-CNrACL?o=01KGEKKZXC1SXCXSSXKE56R6W2&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "manduka.com",
+            "price": {
+              "price": 144,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": null,
+              "width": null,
+              "height": null,
+              "weight": {
+                "number": 7.5,
+                "unit": "lb"
+              }
+            }
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Size",
+              "values": [
+                {
+                  "label": "Short 68\" (173cm)",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/1db6eae9-f567-42be-8210-b8fa3e2ff050",
+                  "product_id": "K7Q8Q2X"
+                },
+                {
+                  "label": "Standard 71\" (180cm)",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/5c06b678-afaa-4c7b-b1cc-f06ca29a74e7",
+                  "product_id": "lhcO2pP"
+                },
+                {
+                  "label": "Long 85\" (215cm)",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/d36b278f-9efe-4d2a-9826-73c5a4a04499",
+                  "product_id": "ilqwsGu"
+                }
+              ]
+            }
+          ],
+          "selected": [
+            {
+              "name": "Size",
+              "label": "Standard 71\" (180cm)"
+            }
+          ]
+        },
+        "structured_attributes": {
+          "mat-base-material": ["Polyvinyl chloride (PVC)"],
+          "exercise-mat-material": ["Polyvinyl chloride (PVC)"],
+          "pattern": ["Solid"]
+        },
+        "ratings": {
+          "value": 4.4,
+          "count": 3554,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "OqMkzMY",
+        "title": "Original Exercise Yoga Mat with Carrying Straps, Non Slip",
+        "description": "The ProsourceFit Original Yoga Mat is the perfect yoga class companion  offering 1/4-inch (6mm) thick padding to provide cushion between you and the floor without being so thick it throws off your balance. To further improve your focus and stability  a non-slip textured surface provides grip for your hands and feet  sticking to the floor to prevent sliding. The standard-size 68-inch long by 24-inches wide mat fits most users. The lightweight mat weighs just over three pounds and comes with a carrying strap  making it easy to carry to the studio. These Original Yoga Mats are easy-to-clean and made of PVC that s free of phthalates  dioxins  heavy meals  or furans so you can practice with a peace of mind. For questions or concerns  please contact customer service: (855) 552-2637. We are open Monday - Friday from 8:30AM - 4:30PM Pacific Standard Time",
+        "brands": [
+          {
+            "id": "mx47",
+            "name": "ProsourceFit"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/e7eb69e2-edc1-4524-9c48-27854c8032a3?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=BsaX",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/e7eb69e2-edc1-4524-9c48-27854c8032a3?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=BsaX",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Pink yoga mat rolled up on a white surface."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["PVC"],
+        "key_features": [
+          "1/4-inch (6mm) thick padding",
+          "Non-slip textured surface",
+          "Standard size (68-inch long by 24-inches wide)",
+          "Includes carrying strap",
+          "Easy-to-clean",
+          "Free of phthalates, dioxins, heavy metals, or furans"
+        ],
+        "colors": [
+          {
+            "hex": "#fa9fab",
+            "percentage": 0.515
+          },
+          {
+            "hex": "#f58595",
+            "percentage": 0.3776
+          },
+          {
+            "hex": "#ea6775",
+            "percentage": 0.1074
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/OqMkzMY-BsaX-CNrACL?o=01M1YR1SHPGG9JSZ7N0GQGVHAN&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "walmart.com",
+            "price": {
+              "price": 22.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.07,
+            "dimensions": {
+              "length": {
+                "number": 68,
+                "unit": "in"
+              },
+              "width": {
+                "number": 24,
+                "unit": "in"
+              },
+              "height": {
+                "number": 0.25,
+                "unit": "in"
+              },
+              "weight": {
+                "number": 3,
+                "unit": "lb"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Texture"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "fbu7Vqs",
+        "title": "Premium Yoga Mat",
+        "description": "Enhance your workouts with the Power Systems Premium Yoga Mat. Designed for superior comfort, grip, and durability, its non-slip surface helps keep you steady during poses and exercises. The lightweight design makes it easy to carry and store, perfect for yoga, Pilates, and various home workouts. It offers reliable cushioning to protect joints and support balance, with a durable construction that resists wear.",
+        "brands": [
+          {
+            "id": "nV7L",
+            "name": "Power Systems"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/e0bbdccc-9340-41f6-9637-f69504a8cd57?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=p1PB",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/e0bbdccc-9340-41f6-9637-f69504a8cd57?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=p1PB",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Navy blue yoga mat laid flat on a white background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/af6435eb-3923-4200-aadc-71ef265a7b75?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=p1PB",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of the textured surface of a purple yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/7eeb4aba-4dd6-4669-aabc-0a8f26284fa4?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=p1PB",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Stack of yoga mats in navy, green, gray, and purple colors."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/477b0d33-853e-4801-ad0c-eec4eb0def2f?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=p1PB",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "product_information",
+            "alt_text": "Infographic showcasing Power Systems Yoga Mat features and color options."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": [],
+        "key_features": ["Non Slip", "Lightweight", "Sticky", "Durable", "Cushioning"],
+        "colors": [
+          {
+            "hex": "#f5fafd",
+            "percentage": 0.4087
+          },
+          {
+            "hex": "#596880",
+            "percentage": 0.2345
+          },
+          {
+            "hex": "#8897aa",
+            "percentage": 0.1648
+          },
+          {
+            "hex": "#2e436f",
+            "percentage": 0.1196
+          },
+          {
+            "hex": "#bac5d4",
+            "percentage": 0.0725
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/fbu7Vqs-p1PB-CNrACL?o=01KYXTRP019H51A65VH06VB4TB&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "bestbuy.com",
+            "price": {
+              "price": 18.9,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.004,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Solid"],
+          "exercise-mat-material": ["Polyvinyl chloride (PVC)"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "ikJZOuO",
+        "title": "Yoga Mat",
+        "description": "This Rogue 5MM PU Yoga Mat is designed for durability and stability, offering a firm, non-slip surface for yoga and fitness activities. Made from high-density polyurethane, it provides excellent grip and moisture resistance. Its 5mm thickness offers a balance of comfort and stability, making it suitable for various poses and stretches. The mat is also reversible and latex-free.",
+        "brands": [
+          {
+            "id": "Cy46",
+            "name": "Rogue Fitness"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/f46326fe-f172-4323-9632-b68052713880?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hVO3",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Charcoal gray rectangular yoga mat with ROGUE branding on a dark surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/a9d64efe-94bc-40fd-b94a-73d008f6f70d?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hVO3",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Charcoal gray rectangular yoga mat with ROGUE branding on a dark surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/11ae6cd7-8bbc-404d-b403-423dbf57b388?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hVO3",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Roll of charcoal gray yoga mat material with ROGUE branding."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/4a861a7c-641d-4441-8d9d-9ff38984260d?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hVO3",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Large coil roll of charcoal gray yoga mat material with ROGUE branding."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/16ed26ca-96c7-412d-b828-c36e72fdd43d?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hVO3",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Close-up of the textured surface of a charcoal gray yoga mat roll."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/3488a0e4-a9b3-40ff-a628-330e9cc9b061?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hVO3",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Close-up of the inner texture of a charcoal gray yoga mat roll."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/0cb3813a-ca92-4e86-ac01-73eb8c9d72ec?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hVO3",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Roll of charcoal gray yoga mat material with a black strap and a brown patch."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Polyurethane", "closed-cell foam"],
+        "key_features": [
+          "Durable",
+          "Non-slip",
+          "Firm, stable surface",
+          "Strong connection to the floor",
+          "High-density polyurethane material",
+          "Moisture-resistant",
+          "Slim 5MM profile",
+          "Reversible",
+          "Latex-free",
+          "Carry strap included"
+        ],
+        "colors": [
+          {
+            "hex": "#404040",
+            "percentage": 0.5199
+          },
+          {
+            "hex": "#292929",
+            "percentage": 0.3634
+          },
+          {
+            "hex": "#5a5a5a",
+            "percentage": 0.1167
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/ikJZOuO-hVO3-CNrACL?o=01KS8SQ7PAZ3F5K4BMXZ9A31AX&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "roguefitness.com",
+            "price": {
+              "price": 70,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": null,
+              "width": null,
+              "height": null,
+              "weight": {
+                "number": 8,
+                "unit": "lb"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Solid"]
+        },
+        "ratings": {
+          "value": 5,
+          "count": 5,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "Covputk",
+        "title": "Prana Yoga Mat",
+        "description": "The prAna Yoga Mat is an eco-conscious staple designed for both in-studio and at-home practices. Crafted from 100% recycled materials sourced from discarded windshields, it provides a plush, cushioned feel and a grippy surface for stability during any pose.",
+        "brands": [
+          {
+            "id": "2kgE",
+            "name": "prÃ±na"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/4600570e-2b46-4002-929a-2d3d2048f69f?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=QUX2",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/4600570e-2b46-4002-929a-2d3d2048f69f?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=QUX2",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Full view of a tall, dark grey prana yoga mat standing vertically."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["80% Recycled Polyvinyl Butyral", "20% Recycled Polyester"],
+        "key_features": [
+          "100% Recycled Materials",
+          "Cushioned Support",
+          "Grippy Surface For Stability",
+          "5mm thickness",
+          "72\"L x 26\"W"
+        ],
+        "colors": [
+          {
+            "hex": "#3e4c57",
+            "percentage": 1
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/Covputk-QUX2-CNrACL?o=01M3E3T2SCHDJVZXK31NX2WD3N&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "prana.com",
+            "price": {
+              "price": 81,
+              "compare_at_price": 108,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.084,
+            "dimensions": null
+          }
+        ],
+        "variants": {
+          "options": [],
+          "selected": [
+            {
+              "name": "Color",
+              "label": "Black"
+            }
+          ]
+        },
+        "structured_attributes": {
+          "pattern": ["Solid"],
+          "exercise-mat-material": ["Polyvinyl chloride (PVC)"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "xfewk9R",
+        "title": "Liforme Classic Yoga Mat",
+        "description": "The Liforme Classic Yoga Mat in Dusk Blue is designed for yogis of all levels. It features the AlignForMe system to guide posture, a non-slip GripForMe surface, and sustainably sourced, planet-friendly materials. Includes a yoga mat bag for easy transport.",
+        "brands": [
+          {
+            "id": "R6Dz",
+            "name": "Liforme"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/f20918da-91e8-44c2-b003-04a7fc697064?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hLRW",
+            "cleaned_url": "https://cdn.trychannel3.com/db48fe99-9acf-426c-9f9a-1bc54929a29f?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hLRW",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Dusk blue Liforme Classic Yoga Mat with alignment markings."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/244f61a9-611c-4eb0-833e-c01cf68682eb?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hLRW",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/244f61a9-611c-4eb0-833e-c01cf68682eb?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hLRW",
+            "is_main_image": false,
+            "shot_type": "on_model",
+            "alt_text": "A person practicing yoga on a blue Liforme mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/b02d31e4-7260-4d10-add0-3eb8d716ac3e?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hLRW",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/b02d31e4-7260-4d10-add0-3eb8d716ac3e?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hLRW",
+            "is_main_image": false,
+            "shot_type": "on_model",
+            "alt_text": "A person performing a yoga stretch on a blue Liforme mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/d23ec5ff-fc5f-41f6-944e-13f349271a96?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hLRW",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "on_model",
+            "alt_text": "A person performing a yoga pose on a dusk blue Liforme yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/b354c78e-ea4a-44a4-a3b2-8d1ed96a82ba?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hLRW",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "A person interacting with a black Liforme yoga mat bag."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/9cef2c11-2628-4485-9d25-def1e8d221f5?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hLRW",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Black Liforme yoga mat bag standing on a wooden surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/bd51b2cb-a6a4-445d-abb5-5c0a58c1b403?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hLRW",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Dusk blue Liforme Classic Yoga Mat viewed from a top-down angle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/66a40774-5d12-4aae-bc8d-ef78dc1344a7?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hLRW",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/66a40774-5d12-4aae-bc8d-ef78dc1344a7?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hLRW",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Dusk blue Liforme Classic Yoga Mat shown from a top-down view."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["Natural Rubber", "Eco-Polyurethane"],
+        "key_features": [
+          "AlignForMe posture alignment system",
+          "Non-slip GripForMe surface",
+          "Sustainably sourced natural rubber",
+          "PVC-free materials",
+          "Includes yoga mat bag",
+          "Complimentary Yoga mat bag included",
+          "Sustainable materials",
+          "Stable cushioned foundation",
+          "Non-toxic & body-kind",
+          "money-back guarantee"
+        ],
+        "colors": [
+          {
+            "hex": "#455888",
+            "percentage": 1
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/xfewk9R-hLRW-CNrACL?o=01KBPBGRTPB7FTHQ0T65XCT1VN&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "liforme.com",
+            "price": {
+              "price": 165,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.052,
+            "dimensions": null
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Color",
+              "values": [
+                {
+                  "label": "Black",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/b28d20e4-5bfe-477c-bbf4-d93252c58fb1",
+                  "product_id": "nsJX1a4"
+                },
+                {
+                  "label": "Dusk Blue",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/f20918da-91e8-44c2-b003-04a7fc697064",
+                  "product_id": "xfewk9R"
+                },
+                {
+                  "label": "Terracotta",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/5tCCt22",
+                  "product_id": "5tCCt22"
+                }
+              ]
+            }
+          ],
+          "selected": [
+            {
+              "name": "Color",
+              "label": "Dusk Blue"
+            }
+          ]
+        },
+        "structured_attributes": {
+          "mat-base-material": ["Rubber"],
+          "pattern": ["Geometric"],
+          "exercise-mat-accessories-included": ["Carrying bag"]
+        },
+        "ratings": {
+          "value": 5,
+          "count": 5479,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "qcBSikp",
+        "title": "NBR Yoga Mat - 10MM",
+        "description": "The NBR Yoga Mat is a 10mm-thick, high-density, latex-free mat designed for extra cushioning during yoga, stretching, and meditation. It features a non-slip ribbed textured surface for grip, is water-resistant to protect against sweat and spills, and comes with a carrying strap for portability. Dimensions: 72.5 inches (length) by 24.75 inches (width); weight around 4 lb. Color: dark gray. Brand: Rogue Fitness.",
+        "brands": [
+          {
+            "id": "Cy46",
+            "name": "Rogue Fitness"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/fa6f2b4d-0081-4c64-9a27-c92a712f50e2?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hVO3",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black yoga mat lying on a dark surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/429816a1-a39e-4150-8619-bf6d3e5c5be4?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hVO3",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Black yoga mat with white ROGUE text."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/68c8f0c6-7467-49d3-848b-c361bbfd5f0b?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hVO3",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Black yoga mat rolling up with white ROGUE text."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/2ec9a3ef-05df-4b03-a159-ba8ab514edb5?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hVO3",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Roll of black yoga mat material with ROGUE branding."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/cea09786-8581-427a-9e2d-a4b93d5fb141?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hVO3",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Roll of black yoga mat material viewed from the side."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/638c0121-5fc4-42a5-922d-b62307021af6?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hVO3",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Roll of black yoga mat material with textured surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/a1428dc1-3b1b-4083-817f-14ce3896ee3e?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=hVO3",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "packaging",
+            "alt_text": "Rolled black yoga mat with black strap and ROGUE branding."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["Nitrile Butadiene Rubber (NBR)"],
+        "key_features": [
+          "Non-slip surface",
+          "Latex-free",
+          "Closed cell foam to prevent moisture absorption",
+          "Lightweight and portable with carry strap"
+        ],
+        "colors": [
+          {
+            "hex": "#353638",
+            "percentage": 0.8899
+          },
+          {
+            "hex": "#5b5d64",
+            "percentage": 0.1101
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/qcBSikp-hVO3-CNrACL?o=01KR2QZSCPV48G4XJJGZKZ78Y8&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "roguefitness.com",
+            "price": {
+              "price": 55,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": {
+                "number": 72.5,
+                "unit": "in"
+              },
+              "width": {
+                "number": 24.75,
+                "unit": "in"
+              },
+              "height": null,
+              "weight": {
+                "number": 4,
+                "unit": "lb"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Logo", "Texture"],
+          "exercise-mat-material": ["Rubber"],
+          "mat-base-material": ["Rubber"]
+        },
+        "ratings": {
+          "value": 2.5,
+          "count": 2,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "Wi99Lf9",
+        "title": "Yoga Mat",
+        "description": "The Echelon Fit Blue Yoga Mat provides a non-slip surface ideal for yoga, stretching, core work, and various floor-based exercises. This navy blue mat features a prominent white Echelon logo and is designed to roll up for compact and convenient storage. It is versatile enough to be used as a standalone workout surface or in conjunction with Echelon fitness equipment.",
+        "brands": [
+          {
+            "id": "A0pL",
+            "name": "Echelon"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/5d5856d1-a92f-44cf-ba98-e2c2807d86fb?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=APuZ",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/5d5856d1-a92f-44cf-ba98-e2c2807d86fb?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=APuZ",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Blue yoga mat rolled up on a white background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/2214a17a-1357-45ea-9af3-192c6e989c14?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=APuZ",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Woman in blue tie-dye yoga wear holding a rolled yoga mat."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/95567c27-e536-4b93-8c1b-6b00e773118a?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=APuZ",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/95567c27-e536-4b93-8c1b-6b00e773118a?aid=01M5A1RCPV7VJ07F9HX1MNHMRG&mid=APuZ",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Blue yoga mat rolled up standing upright on a white background."
+          }
+        ],
+        "category": {
+          "slug": "yoga-pilates-mats",
+          "title": "Yoga & Pilates Mats",
+          "path": [
+            {
+              "slug": "sporting-goods",
+              "title": "Sporting Goods"
+            },
+            {
+              "slug": "exercise-fitness",
+              "title": "Exercise & Fitness"
+            },
+            {
+              "slug": "yoga-pilates",
+              "title": "Yoga & Pilates"
+            },
+            {
+              "slug": "yoga-pilates-mats",
+              "title": "Yoga & Pilates Mats"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": [],
+        "key_features": [
+          "Navy blue color with white Echelon logo",
+          "Designed for yoga and general floor exercise",
+          "High-traction surface for stability",
+          "Non-slip surface",
+          "Rolls up for compact storage",
+          "Suitable for yoga, stretching, and core work",
+          "Compatible with Echelon equipment"
+        ],
+        "colors": [
+          {
+            "hex": "#44657f",
+            "percentage": 0.6996
+          },
+          {
+            "hex": "#6b89a0",
+            "percentage": 0.127
+          },
+          {
+            "hex": "#afc4d5",
+            "percentage": 0.1095
+          },
+          {
+            "hex": "#294a62",
+            "percentage": 0.0638
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/Wi99Lf9-APuZ-CNrACL?o=01M199A5WFS6Y9WZZT02Q8Z9C6&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "echelonfit.com",
+            "price": {
+              "price": 19.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.056,
+            "dimensions": null
+          },
+          {
+            "url": "https://buy.trychannel3.com/Wi99Lf9-4t3X-CNrACL?o=01M2QRXD2NB77NTTQGSS43Q7M4&aid=01M5A1RCPV7VJ07F9HX1MNHMRG",
+            "domain": "cityhome.com",
+            "price": {
+              "price": 24.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": {
+                "number": 24.75,
+                "unit": "in"
+              },
+              "width": {
+                "number": 4.37,
+                "unit": "in"
+              },
+              "height": {
+                "number": 4.37,
+                "unit": "in"
+              },
+              "weight": null
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Logo"]
+        },
+        "ratings": null
+      }
+    ],
+    "next_page_token": "eyJjYWNoZV9rZXkiOiAic2VhcmNoOjJkZjQwYjZmZGI5MDcwMTIiLCAib2Zmc2V0IjogMzB9"
+  }
+}

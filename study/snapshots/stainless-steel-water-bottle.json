@@ -1,0 +1,4168 @@
+{
+  "slug": "stainless-steel-water-bottle",
+  "query": "stainless steel water bottle",
+  "fetchedAt": "2026-10-19T12:21:42.139Z",
+  "rawHash": "41633485a3c9dd769de7d67fb3a6ffd2e230959998a0fb6630ca5e1c26d8f1ac",
+  "body": {
+    "products": [
+      {
+        "id": "2oDgFOL",
+        "title": "Stainless Steel Water Bottle",
+        "description": "Stay hydrated with this stylish 17-oz. stainless steel water bottle featuring a white finish and a vertical 'WAKANDA FOREVER' graphic. It is designed with double-wall vacuum insulation to keep beverages hot or cold, is leakproof, and BPS-free for safe daily use.",
+        "brands": [
+          {
+            "id": "WexG",
+            "name": "Marvel"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/eb61dbab-22ad-4068-a78e-271dd335b18c?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/eb61dbab-22ad-4068-a78e-271dd335b18c?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "White Wakanda Forever stainless steel water bottle shown from the front."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["Stainless Steel"],
+        "key_features": [
+          "Lightweight",
+          "Twist-lock closure",
+          "18/8 Kitchen Grade Stainless Steel",
+          "304/304 Double Wall Vacuum Insulated",
+          "Hot & Cold Beverages",
+          "BPS Free",
+          "Leakproof"
+        ],
+        "colors": [
+          {
+            "hex": "#cecece",
+            "percentage": 0.5243
+          },
+          {
+            "hex": "#838383",
+            "percentage": 0.2443
+          },
+          {
+            "hex": "#606060",
+            "percentage": 0.129
+          },
+          {
+            "hex": "#adadad",
+            "percentage": 0.1025
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/2oDgFOL-Z87s-CNrACL?o=01M1PWF4M5V5BBXD4HWWH45X9V&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "kohls.com",
+            "price": {
+              "price": 20,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.021,
+            "dimensions": {
+              "length": {
+                "number": 2.5,
+                "unit": "in"
+              },
+              "width": {
+                "number": 2.5,
+                "unit": "in"
+              },
+              "height": {
+                "number": 10,
+                "unit": "in"
+              },
+              "weight": null
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "insulation-type": ["Vacuum-insulated"],
+          "pattern": ["Text"],
+          "handle-type": ["No handle"],
+          "cleaning-instructions": ["Hand wash only"],
+          "material": ["Stainless steel"],
+          "lid-type": ["Screw-on"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "ENoyfBm",
+        "title": "Glam Logo Stainless Steel Water Bottle",
+        "description": "Travel in style with the Juicy Couture Glam Logo Stainless Steel Water Bottle. Crafted from double-wall stainless steel for effective insulation, this 31.5 oz bottle features the iconic Juicy Couture logo and a convenient easy-carry handle designed to fit in most cupholders. It comes with a versatile lid system, including a push-to-open lid with a silicone spring-loaded pop-up straw and an interchangeable slide lid.",
+        "brands": [
+          {
+            "id": "KQpp",
+            "name": "Juicy Couture"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/102d47b9-6978-40c2-8278-c4152c363dbb?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Tj6w",
+            "cleaned_url": "https://cdn.trychannel3.com/ed3b6761-ca8c-4ab2-8ce4-34908d0bf22e?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Tj6w",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "White Juicy Couture stainless steel water bottle with a pink logo and clear lid with straw."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/6d95ce9a-7f75-4a55-b1d4-a26be320cec9?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Tj6w",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of the clear screw-on lid of a white water bottle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/8509a55a-ca42-4a0b-8694-02f7f11bba0b?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Tj6w",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "product_information",
+            "alt_text": "White Juicy Couture water bottle with text overlays."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/18946725-d32f-4ad4-a931-20f2e083922b?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Tj6w",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/18946725-d32f-4ad4-a931-20f2e083922b?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Tj6w",
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "White water bottle shown with its disassembled lid and straw."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/bdfb9096-569a-403e-b398-618bf2ea4b2b?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Tj6w",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/bdfb9096-569a-403e-b398-618bf2ea4b2b?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Tj6w",
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of the white Juicy Couture water bottle and pink logo."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/bb35bc35-8934-4068-bf6f-766f7ff3724b?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Tj6w",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Four Juicy Couture insulated tumblers in pink, white, black, and light pink."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/5e740203-1ed8-45da-9405-323aae07780a?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Tj6w",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/5e740203-1ed8-45da-9405-323aae07780a?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Tj6w",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "White Juicy Couture stainless steel water bottle with a pink logo."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["stainless steel", "silicone"],
+        "key_features": [
+          "31.5 oz capacity",
+          "Double-wall stainless steel insulation",
+          "Easy-carry handle fits most cupholders",
+          "Push to open lid with silicone spring-loaded pop-up straw",
+          "Interchangeable slide lid & straw",
+          "Hand wash only"
+        ],
+        "colors": [
+          {
+            "hex": "#d1d0d5",
+            "percentage": 0.5426
+          },
+          {
+            "hex": "#f7f7f9",
+            "percentage": 0.2618
+          },
+          {
+            "hex": "#d5b2bc",
+            "percentage": 0.1066
+          },
+          {
+            "hex": "#78585f",
+            "percentage": 0.089
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/ENoyfBm-Tj6w-CNrACL?o=01KZ3SCDBA5E1JPZX1E4HFG76E&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "juicycouture.com",
+            "price": {
+              "price": 36,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.035,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cleaning-instructions": ["Hand wash only"],
+          "handle-type": ["Short"],
+          "insulation-type": ["Double-walled"],
+          "lid-type": ["Screw-on"],
+          "material": ["Stainless steel"],
+          "pattern": ["Logo"],
+          "spout-type": ["Straw"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "qU0G8Uw",
+        "title": "Tervis Wisconsin Badgers Full Speed 36oz. Venture Stainless Steel Water Bottle",
+        "description": "Stay hydrated with the Wisconsin Badgers Full Speed 36oz Venture Stainless Steel Water Bottle by Tervis. Features triple insulation to deter condensation and keep drinks cold, DuraPrint technology for chip- and peel-resistance and dishwasher safety, and an official Wisconsin Badgers logo. Includes a twist-lock lid, carrying loop, textured grip, and a tall stainless steel body designed for sports and travel.",
+        "brands": [
+          {
+            "id": "82oy",
+            "name": "Tervis"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/88e912aa-3203-4761-98e8-cca204b840aa?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "cleaned_url": "https://cdn.trychannel3.com/f2fff5fc-bc6e-47fa-ada0-c77158a239a3?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black and red Tervis Wisconsin Badgers full speed 36oz stainless steel water bottle."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["Stainless steel"],
+        "key_features": [
+          "Officially Licensed Merchandise",
+          "100% Stainless Steel",
+          "Triple insulation reduces condensation",
+          "DuraPrint technology makes it chip-resistant, peel-resistant and dishwasher safe",
+          "Easy-to-swap chug spout and straw spout",
+          "Measures approx. 11.2 tall",
+          "Fits most cup holders",
+          "Tamper-resistant safety lock and comfort handle",
+          "Imported"
+        ],
+        "colors": [
+          {
+            "hex": "#29272c",
+            "percentage": 0.3784
+          },
+          {
+            "hex": "#4b4349",
+            "percentage": 0.2838
+          },
+          {
+            "hex": "#9d8a8c",
+            "percentage": 0.1366
+          },
+          {
+            "hex": "#d1c6c6",
+            "percentage": 0.1187
+          },
+          {
+            "hex": "#9d5b5e",
+            "percentage": 0.0824
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/qU0G8Uw-Z87s-CNrACL?o=01KKWKZDZTVCZ6Q39CJCG4VY36&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "kohls.com",
+            "price": {
+              "price": 40.49,
+              "compare_at_price": 44.99,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.021,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Graphic", "Logo"],
+          "spout-type": ["Soft", "Hard", "Straw"],
+          "handle-type": ["Long", "No handle"],
+          "cleaning-instructions": ["Dishwasher safe"],
+          "closure-type": ["Adjustable straps"],
+          "insulation-type": ["Insulated"],
+          "lid-type": ["Flip-top"],
+          "material": ["Stainless steel"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "2o23Yh7",
+        "title": "Stainless Steel Water Bottle",
+        "description": "A high-quality, eco-friendly stainless steel water bottle designed to reduce single-use plastic. It features a double-wall vacuum seal to keep beverages hot or cold for hours, a powder-coated exterior, and a wide opening for easy filling and ice. Its sleek design fits in standard car cup holders and includes a convenient carrying ring on the lid.",
+        "brands": [
+          {
+            "id": "gdqs",
+            "name": "Line In The Sand Swim"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/e0efb4e3-5d04-496f-9cd8-c35979ecd595?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=ZIXZ",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "White stainless steel water bottle on a wooden deck."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/ef13dab8-702e-4191-bf4a-1449929b36bf?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=ZIXZ",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Woman wearing athletic wear holding a water bottle by the beach."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/9fed4571-d419-4c2f-95e2-96c698b787f7?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=ZIXZ",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Woman holding a white stainless steel water bottle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/e5c2a27b-df71-4f3e-bd39-e5cdfed7bf5d?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=ZIXZ",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Woman holding a white stainless steel water bottle with black athletic wear."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/b85aac04-cf79-430f-b29d-1a97fef626bf?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=ZIXZ",
+            "cleaned_url": "https://cdn.trychannel3.com/4eb9aca8-a414-4000-a28e-d81751e4c4d5?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=ZIXZ",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "White water bottle next to a white cap and patterned cloth."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/433b445c-5c8d-4301-ad77-c0797a65f72c?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=ZIXZ",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Woman smiling while holding a white water bottle near the ocean."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/3bc59522-ea84-4db5-84d4-1fda5425dc08?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=ZIXZ",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "White water bottle with sunburst graphic on a wooden surface."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["18/10 stainless steel"],
+        "key_features": [
+          "Surgical grade 18/10 stainless steel",
+          "Double wall vacuum sealed for temperature retention",
+          "Powder coat exterior",
+          "Wide opening for ice and easy pouring",
+          "Fits in standard car cup holders",
+          "18 oz capacity",
+          "Lightweight design",
+          "Includes carry ring on lid"
+        ],
+        "colors": [
+          {
+            "hex": "#aca6b3",
+            "percentage": 0.6466
+          },
+          {
+            "hex": "#37161c",
+            "percentage": 0.1277
+          },
+          {
+            "hex": "#544448",
+            "percentage": 0.1146
+          },
+          {
+            "hex": "#7e7785",
+            "percentage": 0.1111
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/2o23Yh7-ZIXZ-CNrACL?o=01M0JDACWMJ6AJVWXCWF3JA206&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "lineinthesand.com",
+            "price": {
+              "price": 30,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.07,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "insulation-type": ["Vacuum-insulated"],
+          "material": ["Stainless steel"],
+          "pattern": ["Graphic"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "kGskEPR",
+        "title": "Stainless Steel Water Bottle",
+        "description": "Wildkin's Realtree stainless steel water bottle combines a classic camouflage design with functional features. It features double-wall vacuum insulation to keep drinks cold longer and reduce condensation. The bottle is leakproof when closed and spillproof when open, making it ideal for school, sports, or travel. It is made from BPA and phthalate-free materials and comes with two silicone straws and a matching gift box.",
+        "brands": [
+          {
+            "id": "yfEC",
+            "name": "Wildkin"
+          },
+          {
+            "id": "o5Uk",
+            "name": "Real Tree"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/05aca8d6-b864-428d-8d36-3d3db5b1fb1c?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "cleaned_url": "https://cdn.trychannel3.com/8c0630d7-03fd-4ca2-96d9-b9fd55b989c7?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "is_main_image": true,
+            "shot_type": "packaging",
+            "alt_text": "Steel water bottle with its product packaging box shown."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/f83dd75c-7a6d-4dc3-babc-361593dde897?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "cleaned_url": "https://cdn.trychannel3.com/79a5656a-3744-4298-9d6b-bbfa33fdb389?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Man holding a Realtree water bottle outdoors."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/e6164b81-590b-46cb-ad35-696272c047fe?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "cleaned_url": "https://cdn.trychannel3.com/7bcfacba-bc44-4816-8a81-8a067274d742?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Realtree Original water bottle standing against a white background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/bbdce39c-1f72-4337-b147-d049a37620c2?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "product_information",
+            "alt_text": "Features of the water bottle including straw lid and material safety."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/326b93ed-5543-45d8-adac-227dad0f726d?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "cleaned_url": "https://cdn.trychannel3.com/8db8b4ea-692d-4725-a60d-11aa638a06b3?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "is_main_image": false,
+            "shot_type": "scale_reference",
+            "alt_text": "Realtree Original water bottle with height and width dimensions indicated."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["stainless steel", "silicone"],
+        "key_features": [
+          "BPA & Phthalate free",
+          "Double wall stainless steel",
+          "Vacuum insulated",
+          "Leakproof when closed, spillproof when open",
+          "Lightweight and durable",
+          "Hand Wash"
+        ],
+        "colors": [
+          {
+            "hex": "#3d3f3c",
+            "percentage": 0.2498
+          },
+          {
+            "hex": "#6e7268",
+            "percentage": 0.2421
+          },
+          {
+            "hex": "#8e9388",
+            "percentage": 0.1446
+          },
+          {
+            "hex": "#211f24",
+            "percentage": 0.1265
+          },
+          {
+            "hex": "#5a5348",
+            "percentage": 0.1221
+          },
+          {
+            "hex": "#aaaea6",
+            "percentage": 0.1148
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/kGskEPR-Z87s-CNrACL?o=01M1H2MY5QM6S8NWDDT7ZJQ2FQ&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "kohls.com",
+            "price": {
+              "price": 32.5,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.021,
+            "dimensions": {
+              "length": {
+                "number": 2.875,
+                "unit": "in"
+              },
+              "width": null,
+              "height": {
+                "number": 10,
+                "unit": "in"
+              },
+              "weight": null
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "lid-type": ["Flip-top"],
+          "insulation-type": ["Vacuum-insulated"],
+          "handle-type": ["No handle"],
+          "material": ["Stainless steel", "Silicone"],
+          "spout-type": ["Straw"],
+          "pattern": ["Camouflage"],
+          "safety-certifications": ["BPA-free", "Phthalate-free"],
+          "cleaning-instructions": ["Hand wash only"]
+        },
+        "ratings": {
+          "value": 4.7,
+          "count": 50,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "9zkVKWG",
+        "title": "Stainless Steel Water Bottle",
+        "description": "This LĒVO-branded 17-ounce stainless steel water bottle is designed for an on-the-go lifestyle. Its double-walled insulation keeps beverages at the perfect temperature for hours, while the odor- and leak-proof cap makes it a reliable companion for any adventure.  Whether commuting, hiking, or just out and about, this bottle will keep you refreshed.",
+        "brands": [
+          {
+            "id": "8EaN",
+            "name": "LEVO Oil Infusion, Inc."
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/61bfc745-bd3a-405f-bbf9-afe6dd6fbcd8?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=l4ZL",
+            "cleaned_url": "https://cdn.trychannel3.com/8e74e98d-c120-4826-b141-34439e458b1b?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=l4ZL",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "White stainless steel water bottle standing alone on white background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/bdadb460-66a5-4d4d-91a9-e6776305c8ac?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=l4ZL",
+            "cleaned_url": "https://cdn.trychannel3.com/1be3755a-6fa0-4479-b6e6-b17902f71bb5?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=l4ZL",
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Hand holding a white and stainless steel water bottle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/efff3fde-37d2-4ddf-84b4-d6c6538b6abc?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=l4ZL",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "White water bottle and stainless steel cap shown separately."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["Stainless steel"],
+        "key_features": [
+          "17 oz / 500 mL capacity",
+          "Double-walled insulation",
+          "Odorless and leak-proof cap",
+          "Keeps liquids hot or cold for up to 6 hours",
+          "High-grade stainless steel construction"
+        ],
+        "colors": [
+          {
+            "hex": "#cacbc7",
+            "percentage": 0.631
+          },
+          {
+            "hex": "#7a786f",
+            "percentage": 0.1367
+          },
+          {
+            "hex": "#9c9a92",
+            "percentage": 0.1199
+          },
+          {
+            "hex": "#403e3a",
+            "percentage": 0.1124
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/9zkVKWG-l4ZL-CNrACL?o=01KR2C006MQTH194PSC0BTQWQ9&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "levooil.com",
+            "price": {
+              "price": 29.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.105,
+            "dimensions": {
+              "length": null,
+              "width": null,
+              "height": null,
+              "weight": {
+                "number": 10.9,
+                "unit": "oz"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "insulation-type": ["Double-walled", "Insulated"],
+          "lid-type": ["Screw-on"],
+          "cleaning-instructions": ["Hand wash only"],
+          "pattern": ["Logo", "Solid"],
+          "closure-type": ["Screw-on"],
+          "material": ["Stainless steel"]
+        },
+        "ratings": {
+          "value": 5,
+          "count": 5,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "KOfNVRv",
+        "title": "Stainless Steel Water Bottle",
+        "description": "This Zulay Kitchen 17oz Stainless Steel Water Bottle is designed for ultimate hydration on the go. Its double-wall vacuum insulation keeps drinks cold for up to 24 hours and hot for up to 12 hours, making it ideal for commuting, workouts, travel, and office use. The bottle features a stylish midnight black speckled finish and a leak-proof screw-on cap. It's reusable, durable, BPA-free, and easy to clean (hand wash recommended). Zulay Kitchen offers a 5-year guarantee on this product.",
+        "brands": [
+          {
+            "id": "ZLXY",
+            "name": "Zulay Kitchen"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/2b47ab56-4913-4076-8ac5-26f1b4a6e784?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "cleaned_url": "https://cdn.trychannel3.com/8ba53b5d-a1b7-4d75-8ba8-c88b91acff6a?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "is_main_image": true,
+            "shot_type": "packaging",
+            "alt_text": "Zulay Kitchen water bottle packaging box with black bottle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/13b22849-1a88-42f5-b037-7e1d93982394?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "cleaned_url": "https://cdn.trychannel3.com/6068ca64-3e73-4cb9-b963-6fadf25db282?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of double wall insulation feature on a black water bottle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/b6e56571-2773-497e-a7b4-4353a7c117ff?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "product_information",
+            "alt_text": "Dimension diagram and capacity of the stainless steel water bottle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/aecdbf96-0f7c-471a-ab4f-ca774eedf83b?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "cleaned_url": "https://cdn.trychannel3.com/53f0bdf6-3815-4870-bf7d-284a64bdc12f?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "is_main_image": false,
+            "shot_type": "packaging",
+            "alt_text": "Water bottle with silicone lid and carrying pouch."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/2b7b5956-cdc8-497a-9e80-6b5585351e3a?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "cleaned_url": "https://cdn.trychannel3.com/470e2c5b-d02d-489f-83eb-4946d6258cce?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Water bottle used for various beverages outdoors."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/ac9b8455-52c3-4196-8927-feb10f34de2c?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "cleaned_url": "https://cdn.trychannel3.com/005d84ec-e2da-48cb-b04c-771b5d968780?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Insulated water bottle keeping liquids hot and cool."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/2dad03b7-498f-4685-88e2-7feed191f294?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Woman using a black and silver water bottle outdoors."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/43d88bde-2bf5-4ba6-893b-c82fa9907fec?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "cleaned_url": "https://cdn.trychannel3.com/68b5700e-c257-4fdc-aa06-a070c23d83ee?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "is_main_image": false,
+            "shot_type": "product_information",
+            "alt_text": "Comparison of HON water bottle features vs others."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["Stainless steel"],
+        "key_features": [
+          "Modern & Stylish Hydration Bottle",
+          "Double-walled vacuum insulation",
+          "Leak proof feature",
+          "Reusable and durable construction",
+          "BPA Free",
+          "Vacuum Insulation Design",
+          "Premium copper vacuum insulation coating",
+          "Resistant to condensation",
+          "Sweat-free and cool-to-the-touch exterior",
+          "Top Notch Temperature Retention",
+          "Fingerprint free texture",
+          "Dishwasher safe (hand wash recommended)",
+          "Zulay Kitchen 5-year Guarantee"
+        ],
+        "colors": [
+          {
+            "hex": "#303030",
+            "percentage": 0.5506
+          },
+          {
+            "hex": "#4d4d4d",
+            "percentage": 0.1914
+          },
+          {
+            "hex": "#4f6d88",
+            "percentage": 0.1225
+          },
+          {
+            "hex": "#b3b5b6",
+            "percentage": 0.1224
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/KOfNVRv-p1PB-CNrACL?o=01KY4GYDBPHC2T0FAB6QDWST7B&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "bestbuy.com",
+            "price": {
+              "price": 22.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.004,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cleaning-instructions": ["Dishwasher safe"],
+          "closure-type": ["Screw-on"],
+          "handle-type": ["No handle"],
+          "insulation-type": ["Double-walled"],
+          "lid-type": ["Screw-on"],
+          "material": ["Stainless steel"],
+          "pattern": ["Solid"],
+          "spout-type": ["Hard"]
+        },
+        "ratings": {
+          "value": 5,
+          "count": 1,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "6TsoDnw",
+        "title": "Stainless Steel Water Bottle",
+        "description": "This is a 17oz double-wall insulated stainless steel water bottle in a matte Rock Candy light blue color. It features a leak-proof lid and a polished silver stainless steel cap and base. The bottle is designed for both hot and cold drinks, keeping them cold for up to 24 hours or hot for up to 12 hours. It's perfect for on-the-go hydration during commutes, workouts, or travel.",
+        "brands": [
+          {
+            "id": "ZLXY",
+            "name": "Zulay Kitchen"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/518c62b2-812d-4eee-926d-14e69c0e3ca6?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Blue and silver insulated stainless steel water bottle shown next to its box and caps."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "toddler",
+        "materials": ["stainless steel"],
+        "key_features": [
+          "Double wall insulated",
+          "Leak-proof lid",
+          "Stainless steel",
+          "Keeps drinks cold for up to 24 hours",
+          "Keeps drinks hot for up to 12 hours"
+        ],
+        "colors": [
+          {
+            "hex": "#82cde7",
+            "percentage": 0.6903
+          },
+          {
+            "hex": "#849ca4",
+            "percentage": 0.1303
+          },
+          {
+            "hex": "#376995",
+            "percentage": 0.1031
+          },
+          {
+            "hex": "#aaddea",
+            "percentage": 0.0763
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/6TsoDnw-p1PB-CNrACL?o=01KXZKQ4B4NCQ19MDWZ9M1R49W&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "bestbuy.com",
+            "price": {
+              "price": 22.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.004,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cleaning-instructions": ["Hand wash only"],
+          "closure-type": ["Screw-on"],
+          "handle-type": ["No handle"],
+          "insulation-type": ["Double-walled"],
+          "lid-type": ["Screw-on"],
+          "material": ["Stainless steel"],
+          "pattern": ["Solid"],
+          "spout-type": ["Hard"]
+        },
+        "ratings": {
+          "value": 5,
+          "count": 1,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "OFEd2ZF",
+        "title": "\"Since 1946\" Stainless Steel Water Bottle",
+        "description": "The \"Since 1946\" Stainless Steel Water Bottle by Fender combines a sleek black-and-steel design with high functionality. This vacuum-insulated bottle is designed to keep beverages hot or cold for hours, making it an ideal companion for the studio, road, or outdoor adventures. It features the iconic Fender logo, a \"Since 1946\" badge, and a leak-proof, BPA-free construction with a screw-top lid and a convenient carrying handle.",
+        "brands": [
+          {
+            "id": "QEak",
+            "name": "Fender"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/97dd0017-e07d-48ca-806b-7409ce1151ea?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=fTzn",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/97dd0017-e07d-48ca-806b-7409ce1151ea?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=fTzn",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black stainless steel water bottle with clear lid and Fender logo."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["stainless steel"],
+        "key_features": [
+          "Double-wall vacuum insulation keeps beverages hot or cold for hours",
+          "Durable stainless steel with bold black-and-steel design",
+          "Screw-top lid with convenient carrying handle",
+          "Leak-proof and BPA-free for everyday use",
+          "Iconic Fender logo and “Since 1946” badge"
+        ],
+        "colors": [
+          {
+            "hex": "#0f0e0e",
+            "percentage": 0.5046
+          },
+          {
+            "hex": "#282626",
+            "percentage": 0.1348
+          },
+          {
+            "hex": "#83807c",
+            "percentage": 0.1253
+          },
+          {
+            "hex": "#c8c4c0",
+            "percentage": 0.1237
+          },
+          {
+            "hex": "#4a4846",
+            "percentage": 0.1117
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/OFEd2ZF-fTzn-CNrACL?o=01M31AJPQ2PN674M8VRX8ZNJNB&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "fender.com",
+            "price": {
+              "price": 34.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.04,
+            "dimensions": {
+              "length": null,
+              "width": null,
+              "height": null,
+              "weight": {
+                "number": 476,
+                "unit": "g"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "insulation-type": ["Vacuum-insulated"],
+          "lid-type": ["Screw-on"],
+          "pattern": ["Logo", "Text"],
+          "material": ["Stainless steel"],
+          "safety-certifications": ["BPA-free"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "sleU81H",
+        "title": "Stainless Steel Water Bottle",
+        "description": "This Wildkin stainless steel water bottle features a classic Realtree APX camouflage design. It is constructed with double-wall vacuum insulation to keep drinks cold longer while reducing condensation. The bottle is leakproof when closed and spillproof when open, making it ideal for school, sports, or travel. It is cupholder compatible, made from BPA and phthalate-free materials, and includes two silicone straws and a matching gift box.",
+        "brands": [
+          {
+            "id": "yfEC",
+            "name": "Wildkin"
+          },
+          {
+            "id": "o5Uk",
+            "name": "Real Tree"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/37ae1396-7f95-416d-9792-75562f668284?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "cleaned_url": "https://cdn.trychannel3.com/e8a61f1f-d6d6-4dd6-87e2-c3a67d1cfb94?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "is_main_image": true,
+            "shot_type": "packaging",
+            "alt_text": "Stainless steel water bottle with cork texture and black lid next to its box."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/20771445-42a3-47c5-9578-2a158e1eeda1?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "cleaned_url": "https://cdn.trychannel3.com/93116074-fca6-49df-aa59-2f20e0c33f51?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Girl kissing woman while holding a patterned water bottle outdoors."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/09fcb527-b524-4187-ab0a-baa836b94bbe?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "cleaned_url": "https://cdn.trychannel3.com/27ad03fc-594d-4fef-9980-a68ee52e0387?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Stainless steel water bottle with bark texture and REALTREE APX logo."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/c14dfab7-d5da-48f9-b344-54f27e227540?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "cleaned_url": "https://cdn.trychannel3.com/7dbf312f-a5b7-4215-bb3c-0437de41fba1?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of the flip-up straw lid and bottle features."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/fe36ab77-4556-4a71-afc0-d0b241f5c1aa?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "cleaned_url": "https://cdn.trychannel3.com/7f4699fc-6b1e-4b11-8d45-9fb6125a1949?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "is_main_image": false,
+            "shot_type": "scale_reference",
+            "alt_text": "Water bottle showing dimensions: 9.75 in height and 3.5 in width."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["Stainless Steel", "Silicone"],
+        "key_features": [
+          "BPA & Phthalate free",
+          "Double wall stainless steel",
+          "Vacuum insulated",
+          "Leakproof when closed, spillproof when open",
+          "Lightweight and durable",
+          "Includes two silicone straws",
+          "Includes matching gift box"
+        ],
+        "colors": [
+          {
+            "hex": "#464641",
+            "percentage": 0.2545
+          },
+          {
+            "hex": "#232222",
+            "percentage": 0.2472
+          },
+          {
+            "hex": "#706e63",
+            "percentage": 0.2464
+          },
+          {
+            "hex": "#9a9786",
+            "percentage": 0.1389
+          },
+          {
+            "hex": "#c0beb0",
+            "percentage": 0.113
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/sleU81H-Z87s-CNrACL?o=01M1J07EKBGYAW51W14SPWXD9M&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "kohls.com",
+            "price": {
+              "price": 32.5,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.021,
+            "dimensions": {
+              "length": null,
+              "width": {
+                "number": 2.875,
+                "unit": "in"
+              },
+              "height": {
+                "number": 10,
+                "unit": "in"
+              },
+              "weight": null
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "insulation-type": ["Vacuum-insulated"],
+          "pattern": ["Camouflage"],
+          "cleaning-instructions": ["Hand wash only"],
+          "material": ["Stainless steel"],
+          "spout-type": ["Straw"],
+          "lid-type": ["Flip-top"],
+          "safety-certifications": ["BPA-free", "Phthalate-free"]
+        },
+        "ratings": {
+          "value": 4.7,
+          "count": 50,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "osnPr5c",
+        "title": "Stainless Steel Water Bottle",
+        "description": "Stay hydrated on the go with the Zulay Kitchen 17oz Stainless Steel Water Bottle. This double-wall vacuum-insulated bottle keeps drinks cold for up to 24 hours or hot for up to 12 hours. It features a leak-proof cap, a sleek, fingerprint-free design, and is made from durable stainless steel. Perfect for commuting, workouts, travel, or office use, and it comes in a variety of fun colors.",
+        "brands": [
+          {
+            "id": "ZLXY",
+            "name": "Zulay Kitchen"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/93e67440-5d10-4e8d-b5e3-14d852948bb0?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "cleaned_url": "https://cdn.trychannel3.com/d916ae97-8651-4c0b-84e0-4f02e20d961d?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Pink insulated stainless steel water bottle with box packaging."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/673b53e2-0c28-4eac-aa08-9b198696b030?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "cleaned_url": "https://cdn.trychannel3.com/d05a77ce-f42f-4dab-bc1a-35565d6e0111?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Detail view of water bottle construction and features."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/549fd73f-68d4-444a-a85a-742dbb227700?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "product_information",
+            "alt_text": "Specifications showing capacity and dimensions of the bottle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/ca8cefbb-c185-4224-a949-b052e328578e?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "cleaned_url": "https://cdn.trychannel3.com/9b7f40ba-2676-49da-95aa-5044a646f4ee?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "is_main_image": false,
+            "shot_type": "packaging",
+            "alt_text": "Product components displayed with a carrying pouch."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/8460b6d2-a92f-43bd-bb7d-2a529424593d?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "cleaned_url": "https://cdn.trychannel3.com/9d2d1e0c-0568-489b-8e93-3d6613ea90d3?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Water bottle used for various drinks like juice and coffee."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/6143e2a1-7c9a-45b5-9e79-e9749b7aed09?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "cleaned_url": "https://cdn.trychannel3.com/9f7d1b07-5638-4e5c-b498-7c4943583df1?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Water bottle keeping drinks hot and cool for extended periods."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/f39ee21c-f6c0-4f91-ab1a-42a225f6c5b3?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "cleaned_url": "https://cdn.trychannel3.com/bef3e9c9-d886-41b7-a849-2f41bf70becf?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Woman holding and using the pink insulated water bottle outdoors."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/b215094d-4142-4fa8-bbab-660a2118e1f7?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "cleaned_url": "https://cdn.trychannel3.com/a0e413e5-0ef4-4137-b0c8-c23880e56d58?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "is_main_image": false,
+            "shot_type": "product_information",
+            "alt_text": "Comparison chart of HON water bottle features."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["stainless steel"],
+        "key_features": [
+          "Modern & Stylish Hydration Bottle",
+          "double-walled vacuum insulation technology",
+          "leak proof feature",
+          "Reusable and durable construction",
+          "BPA Free",
+          "Vacuum Insulation Design",
+          "premium copper vacuum insulation coating",
+          "resistant to condensation",
+          "sweat-free and cool-to-the-touch exterior",
+          "Top Notch Temperature Retention",
+          "fitted and lined leak proof lid",
+          "Elegant & Sleek",
+          "fingerprint free texture",
+          "Zulay Kitchen 5-year Guarantee"
+        ],
+        "colors": [
+          {
+            "hex": "#e881c4",
+            "percentage": 0.6832
+          },
+          {
+            "hex": "#52669a",
+            "percentage": 0.1265
+          },
+          {
+            "hex": "#cac0ca",
+            "percentage": 0.1228
+          },
+          {
+            "hex": "#da8ac1",
+            "percentage": 0.0675
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/osnPr5c-p1PB-CNrACL?o=01KY025RGZB2SMYEX02E3PN03X&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "bestbuy.com",
+            "price": {
+              "price": 22.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.004,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cleaning-instructions": ["Hand wash only"],
+          "closure-type": ["Screw-on"],
+          "handle-type": ["No handle"],
+          "insulation-type": ["Double-walled"],
+          "lid-type": ["Screw-on"],
+          "material": ["Stainless steel"],
+          "pattern": ["Solid"]
+        },
+        "ratings": {
+          "value": 5,
+          "count": 1,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "4nKOzJF",
+        "title": "Venture Stainless Steel Water Bottle",
+        "description": "Stay hydrated while cheering on the NC State Wolfpack with this 36oz. Venture Stainless Steel Water Bottle from Tervis. Featuring triple insulation to reduce condensation and keep drinks cold all day, this bottle includes a large lid opening for easy ice addition. Built with DuraPrint technology, it is chip-resistant, peel-resistant, and dishwasher safe.",
+        "brands": [
+          {
+            "id": "82oy",
+            "name": "Tervis"
+          },
+          {
+            "id": "sMyQ",
+            "name": "NC State University"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/5dba5c52-8d9a-477f-ac2a-014b881629c5?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black stainless steel water bottle with NC State Wolfpack logo."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/e32cc86c-a37a-42ca-872f-657b21791e27?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=p1PB",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "NC State Wolfpack head logo graphic on dark patterned background."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["Stainless Steel"],
+        "key_features": [
+          "Triple insulation reduces condensation",
+          "Keeps drinks cold all day",
+          "Large lid opening for easy ice addition",
+          "Chip-resistant and peel-resistant DuraPrint technology",
+          "Dishwasher safe",
+          "Officially Licensed Merchandise"
+        ],
+        "colors": [
+          {
+            "hex": "#2d3034",
+            "percentage": 0.6657
+          },
+          {
+            "hex": "#b0afb1",
+            "percentage": 0.1208
+          },
+          {
+            "hex": "#111111",
+            "percentage": 0.1072
+          },
+          {
+            "hex": "#575658",
+            "percentage": 0.1063
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/4nKOzJF-p1PB-CNrACL?o=01KYXZYGARK205WS8YDH24JAAM&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "bestbuy.com",
+            "price": {
+              "price": 44.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.004,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cleaning-instructions": ["Dishwasher safe"],
+          "insulation-type": ["Insulated"],
+          "material": ["Stainless steel"],
+          "pattern": ["Graphic"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "O6SzYJB",
+        "title": "Standard Mouth Stainless Steel Water Bottle",
+        "description": "The Hydro Cell 32oz Standard Mouth Stainless Steel Water Bottle is your perfect companion for hiking, commuting, or daily hydration. Featuring innovative double-wall vacuum insulation, this bottle keeps cold liquids chilled for up to 24 hours and hot beverages steaming for up to 8 hours. Designed with a built-in straw sports cap, it offers convenient, leak-proof sipping while helping you reduce single-use plastic waste. Crafted from high-grade 18/8 stainless steel with a durable, anti-slip powder coating, it is corrosion-resistant, BPA-free, and engineered to never sweat. Ideal for outdoor adventures or the gym, this eco-friendly bottle combines sustainability with premium performance.",
+        "brands": [
+          {
+            "id": "k2zY",
+            "name": "Hydro Cell"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/168f7e2f-d851-4df8-876b-33f88a874a18?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=8guY",
+            "cleaned_url": "https://cdn.trychannel3.com/4e8c1914-1db8-4f46-b321-a23066d59a79?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=8guY",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Front view of a white Hydro Cell 32oz water bottle with a black sports cap."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/12268711-fa6b-4ca3-99ef-094a6a7ee465?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=8guY",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/12268711-fa6b-4ca3-99ef-094a6a7ee465?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=8guY",
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Infographic showing the internal construction and features of the white water bottle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/e86604b0-edf9-451c-9b40-2d5e8a38f848?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=8guY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "size_chart",
+            "alt_text": "Dimension guide chart comparing four different sizes of white Hydro Cell water bottles."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["18/8 stainless steel"],
+        "key_features": [
+          "Double-wall vacuum insulation",
+          "Keeps cold for 24 hours and hot for 8 hours",
+          "Built-in straw sports cap",
+          "Leak-proof and sweat-proof design",
+          "Durable anti-slip powder coating",
+          "BPA-free and eco-friendly",
+          "Corrosion and rust resistant"
+        ],
+        "colors": [
+          {
+            "hex": "#c2c4c5",
+            "percentage": 0.4576
+          },
+          {
+            "hex": "#212122",
+            "percentage": 0.2671
+          },
+          {
+            "hex": "#8fc8cb",
+            "percentage": 0.1095
+          },
+          {
+            "hex": "#454546",
+            "percentage": 0.1089
+          },
+          {
+            "hex": "#9ea0a1",
+            "percentage": 0.0569
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/O6SzYJB-8guY-CNrACL?o=01KTDT4R9NQYQX1RMVQ23TR6B7&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "hydrocellusa.com",
+            "price": {
+              "price": 22.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": null
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Color",
+              "values": [
+                {
+                  "label": "Black",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/e7837035-9fa0-48e7-b122-11f8e95cbd99",
+                  "product_id": "qgZ2SWE"
+                },
+                {
+                  "label": "White/Pink",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/9aea0020-acc8-474a-b669-913d42fe0344",
+                  "product_id": "XzShIol"
+                },
+                {
+                  "label": "Mint/Green",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/97e89f4e-9eb2-4e30-9b00-a627611f1029",
+                  "product_id": "5w6gRYa"
+                },
+                {
+                  "label": "White",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/168f7e2f-d851-4df8-876b-33f88a874a18",
+                  "product_id": "O6SzYJB"
+                },
+                {
+                  "label": "Navy/White",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/c98cd160-cef3-49f9-afa0-6d6c35ad0da7",
+                  "product_id": "FTcH7Th"
+                },
+                {
+                  "label": "Teal",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/c03d8c1d-035f-421d-a24d-0c031115897a",
+                  "product_id": "IU2NMBF"
+                }
+              ]
+            },
+            {
+              "name": "Size",
+              "values": []
+            }
+          ],
+          "selected": [
+            {
+              "name": "Color",
+              "label": "White"
+            }
+          ]
+        },
+        "structured_attributes": {
+          "safety-certifications": ["BPA-free"],
+          "spout-type": ["Straw"],
+          "closure-type": ["Straps"],
+          "insulation-type": ["Insulated"],
+          "handle-type": ["Long"],
+          "material": ["Stainless steel"],
+          "lid-type": ["Flip-top"],
+          "pattern": ["Solid"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "rdGIuvQ",
+        "title": "Stainless Steel Water Bottle",
+        "description": "Stay hydrated throughout your day with this durable, double-walled stainless steel water bottle. It features a stylish Java Navy & White floral matte finish decal and is completely BPA-free for safe daily use.",
+        "brands": [
+          {
+            "id": "Ct6X",
+            "name": "Vera Bradley"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/7d562555-39ea-4443-8fed-0d8acebae679?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=A6mW",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Stainless steel water bottle with black and white floral pattern."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/7d0c20ed-2b7d-4427-9d51-be764efcaf13?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=A6mW",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": null,
+            "alt_text": "Close-up of black and white floral pattern design."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["stainless steel"],
+        "key_features": [
+          "17 oz capacity",
+          "Double-walled stainless steel",
+          "Matte finish decal",
+          "BPA-free",
+          "Hand wash only"
+        ],
+        "colors": [
+          {
+            "hex": "#1c222f",
+            "percentage": 0.2496
+          },
+          {
+            "hex": "#ebebef",
+            "percentage": 0.1409
+          },
+          {
+            "hex": "#95969d",
+            "percentage": 0.1267
+          },
+          {
+            "hex": "#3d3e4a",
+            "percentage": 0.1263
+          },
+          {
+            "hex": "#73737d",
+            "percentage": 0.1252
+          },
+          {
+            "hex": "#565762",
+            "percentage": 0.125
+          },
+          {
+            "hex": "#c0c1c7",
+            "percentage": 0.1063
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/rdGIuvQ-A6mW-CNrACL?o=01M25YTWN1WQM17NBKC2KGF7G5&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "verabradleyoutlet.com",
+            "price": {
+              "price": 13.98,
+              "compare_at_price": 27.95,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": null,
+              "width": {
+                "number": 2.8,
+                "unit": "in"
+              },
+              "height": {
+                "number": 10.6,
+                "unit": "in"
+              },
+              "weight": {
+                "number": 303,
+                "unit": "g"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "insulation-type": ["Double-walled"],
+          "closure-type": ["Screw-on"],
+          "pattern": ["Floral", "Paisley"],
+          "handle-type": ["No handle"],
+          "safety-certifications": ["BPA-free"],
+          "cleaning-instructions": ["Hand wash only"],
+          "material": ["Stainless steel"],
+          "lid-type": ["Screw-on"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "7TQHeAn",
+        "title": "Stainless Steel Water Bottle",
+        "description": "Stay hydrated throughout your gym sessions, outdoor adventures, and daily errands with this insulated stainless steel water bottle. Designed for an active lifestyle, it features double-wall insulation to keep drinks cold and a leak-proof lid for secure transport. The sleek silver finish is accented with a laser-engraved brand logo along the length.",
+        "brands": [
+          {
+            "id": "KwmJ",
+            "name": "ADANOLA"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/9c3dcce4-6d9b-40b5-9344-60703ca31f51?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=OuvN",
+            "cleaned_url": "https://cdn.trychannel3.com/662b05b1-34e9-4360-9510-8d72e1662acc?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=OuvN",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Silver stainless steel water bottle standing upright on a white background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/70d4e0de-916b-4afd-bd43-1c9f7884a59d?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=OuvN",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/70d4e0de-916b-4afd-bd43-1c9f7884a59d?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=OuvN",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Silver stainless steel water bottle standing upright on a white background."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["Stainless Steel"],
+        "key_features": [
+          "750ml capacity",
+          "Double-wall insulation to keep drinks cold",
+          "Leak-proof lid",
+          "100% Stainless Steel construction",
+          "Laser engraved branding",
+          "Suitable for gym and outdoor use"
+        ],
+        "colors": [
+          {
+            "hex": "#a39f97",
+            "percentage": 0.5183
+          },
+          {
+            "hex": "#eae7e0",
+            "percentage": 0.1465
+          },
+          {
+            "hex": "#7b776f",
+            "percentage": 0.1222
+          },
+          {
+            "hex": "#55524b",
+            "percentage": 0.1094
+          },
+          {
+            "hex": "#ccc9c0",
+            "percentage": 0.1036
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/7TQHeAn-OuvN-CNrACL?o=01M0D6GAW2ZYCQEXQYSX66XF8T&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "adanola.com",
+            "price": {
+              "price": 46,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cleaning-instructions": ["Hand wash only"],
+          "closure-type": ["Screw-on"],
+          "handle-type": ["Short"],
+          "insulation-type": ["Double-walled"],
+          "lid-type": ["Screw-on"],
+          "material": ["Stainless steel"],
+          "pattern": ["Solid"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "9KOO9eL",
+        "title": "Wide Mouth Stainless Steel Water Bottle",
+        "description": "The Hydro Cell 32oz Wide Mouth Stainless Steel Water Bottle is designed for durability and performance, whether you are at the beach or in the mountains. It features double-wall vacuum insulation technology to keep beverages ice cold or piping hot for hours. The bottle comes equipped with a leak-proof straw lid and a comfortable carrying handle for easy portability. Crafted from high-quality, BPA-free materials, it is an eco-friendly and sustainable hydration solution backed by a lifetime warranty.",
+        "brands": [
+          {
+            "id": "k2zY",
+            "name": "Hydro Cell"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/8288f11a-d8f9-48c7-88bd-61ad80210be3?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=8guY",
+            "cleaned_url": "https://cdn.trychannel3.com/cb2131ac-afdf-40b1-8d65-d6b62e948c00?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=8guY",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Matte gray Hydro Cell wide mouth water bottle with black cap."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/a8c9c68a-5e71-434e-bc5b-81538cf7db37?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=8guY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "product_information",
+            "alt_text": "Hydro Cell water bottle features and material specifications."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/176d7d64-7b7b-49f2-a47c-267bb75197bd?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=8guY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "size_chart",
+            "alt_text": "Dimension guide showing various Hydro Cell water bottle sizes and measurements."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["stainless steel"],
+        "key_features": [
+          "Double-wall vacuum insulation\",\"Leak-proof straw lid\",\"BPA-free and non-toxic materials\",\"Wide mouth design for easy filling\",\"Integrated carrying handle\",\"Lifetime warranty"
+        ],
+        "colors": [
+          {
+            "hex": "#606061",
+            "percentage": 0.6618
+          },
+          {
+            "hex": "#87868b",
+            "percentage": 0.136
+          },
+          {
+            "hex": "#282727",
+            "percentage": 0.1018
+          },
+          {
+            "hex": "#bbbbc0",
+            "percentage": 0.1005
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/9KOO9eL-8guY-CNrACL?o=01KTE2WZ19HDJRKWAT14VDFNY1&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "hydrocellusa.com",
+            "price": {
+              "price": 25.95,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": null
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Color",
+              "values": [
+                {
+                  "label": "Red/orange",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/1c87f0bc-4888-4fc8-9a03-5017372ddbe4",
+                  "product_id": "yRElUba"
+                },
+                {
+                  "label": "Teal",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/068d60ae-433d-43f4-8894-370847a896a1",
+                  "product_id": "2XLpz7a"
+                },
+                {
+                  "label": "Sky/blue",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/46cdff6d-94ea-459c-9465-cb317c7cf131",
+                  "product_id": "d5hLgql"
+                },
+                {
+                  "label": "Unspecified",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/b7f34981-14d0-4bab-8019-5538c9ec9828",
+                  "product_id": "DXEAT10"
+                },
+                {
+                  "label": "Teal/black",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/867b4b01-7a06-4937-962a-538d04d4d7ff",
+                  "product_id": "mBKvwtQ"
+                },
+                {
+                  "label": "Teal/blue",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/e85a486b-5316-438c-aa36-1e39b88bdd75",
+                  "product_id": "r6UdiST"
+                },
+                {
+                  "label": "White",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/dc40944a-3599-4c27-9977-6495322d8ab7",
+                  "product_id": "0oZoH8g"
+                },
+                {
+                  "label": "Graphite",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/8288f11a-d8f9-48c7-88bd-61ad80210be3",
+                  "product_id": "9KOO9eL"
+                },
+                {
+                  "label": "White/pink",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/b8adec07-1031-4406-85b5-6af1414204aa",
+                  "product_id": "vuxvCm9"
+                },
+                {
+                  "label": "Navy Blue",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/6045843b-7c48-485e-9a6e-53ae11b1b762",
+                  "product_id": "mhEgjfI"
+                },
+                {
+                  "label": "Army Black",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/82f68890-1996-421f-b4b5-7500eb3e7249",
+                  "product_id": "7fG08RR"
+                },
+                {
+                  "label": "Coral/punch",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/9d71a2e0-d491-4679-9044-134c86f7a068",
+                  "product_id": "qGmV4ai"
+                },
+                {
+                  "label": "Black",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/afbc9d13-b658-423d-b290-a5f2f3773ef4",
+                  "product_id": "5GcxMDx"
+                },
+                {
+                  "label": "Black/white",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/56215fd3-1b3b-4d6d-95ed-3058b4d0da75",
+                  "product_id": "gpkGLq5"
+                },
+                {
+                  "label": "Lavender/White",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/4bf44608-4a84-4eee-84ac-408acb7cf12f",
+                  "product_id": "bH6tf9T"
+                },
+                {
+                  "label": "Mint/green",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/9902168e-c146-4351-9099-72f45d60863a",
+                  "product_id": "TepNqFw"
+                }
+              ]
+            },
+            {
+              "name": "Size",
+              "values": []
+            },
+            {
+              "name": "Color",
+              "values": []
+            }
+          ],
+          "selected": [
+            {
+              "name": "Color",
+              "label": "Graphite"
+            }
+          ]
+        },
+        "structured_attributes": {
+          "cleaning-instructions": ["Hand wash only"],
+          "closure-type": ["Adjustable/Pull"],
+          "spout-type": ["Straw"],
+          "safety-certifications": ["BPA-free"],
+          "lid-type": ["Screw-on"],
+          "insulation-type": ["Insulated"],
+          "handle-type": ["Long"],
+          "material": ["Stainless steel"],
+          "pattern": ["Solid"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "w5DK28L",
+        "title": "Logo Stainless Steel Water Bottle",
+        "description": "This Nautica water bottle is constructed from durable stainless steel and features double-wall insulation, designed to maintain the temperature of your beverages, keeping them cold or hot for extended periods. It includes an easy-to-grip, rotating handle integrated into the lid for convenient carrying. The bottle has a capacity of 24 oz.",
+        "brands": [
+          {
+            "id": "gzxw",
+            "name": "Nautica"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/86b92ce9-1baa-4e59-a35b-5b242e9150d9?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=L8yR",
+            "cleaned_url": "https://cdn.trychannel3.com/b128d54d-eaf1-4651-bf64-f7a33918e034?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=L8yR",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Red stainless steel water bottle with black lid and white logo on a white background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/e3b70879-2718-491f-a1de-7cdbf5de6537?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=L8yR",
+            "cleaned_url": "https://cdn.trychannel3.com/9578dfde-b8d5-4e33-aaac-aca6e6caa145?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=L8yR",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Close-up of a red stainless steel water bottle body and black lid mechanism."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["Stainless steel"],
+        "key_features": [
+          "Double-wall insulation",
+          "24 oz. capacity",
+          "Stainless steel construction",
+          "BPA free",
+          "Rotating handle lid"
+        ],
+        "colors": [
+          {
+            "hex": "#c63b39",
+            "percentage": 0.7265
+          },
+          {
+            "hex": "#242525",
+            "percentage": 0.1639
+          },
+          {
+            "hex": "#ba7e7b",
+            "percentage": 0.0785
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/w5DK28L-L8yR-CNrACL?o=01KD3ECVWJEXA8YGDYY4H9PWTJ&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "nautica.com",
+            "price": {
+              "price": 7.98,
+              "compare_at_price": 25,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.032,
+            "dimensions": null
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Color",
+              "values": [
+                {
+                  "label": "Nautica Red",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/479638e3-60bc-481d-9e74-9e793bb1e417",
+                  "product_id": "Os0u8cD"
+                },
+                {
+                  "label": "Red",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/86b92ce9-1baa-4e59-a35b-5b242e9150d9",
+                  "product_id": "w5DK28L"
+                }
+              ]
+            }
+          ],
+          "selected": [
+            {
+              "name": "Color",
+              "label": "Red"
+            }
+          ]
+        },
+        "structured_attributes": {
+          "pattern": ["Solid"],
+          "insulation-type": ["Insulated"],
+          "cleaning-instructions": ["Hand wash only"],
+          "lid-type": ["Screw-on"],
+          "closure-type": ["Adjustable/Pull"],
+          "material": ["Stainless steel"],
+          "handle-type": ["Long"],
+          "safety-certifications": ["BPA-free"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "S3nfI6e",
+        "title": "Great Wave Stainless Steel Water Bottle",
+        "description": "Stay hydrated in style with this VLIN Great Wave 17-oz. Water Bottle. Crafted from 18/8 stainless steel, this double-wall vacuum insulated bottle features a twist-lock closure and a wraparound Great Wave graphic in blue tones on a light beige background. It is designed for hot and cold beverages, is leakproof, and easy to hand wash. Dimensions approx 10\" x 2.5\" x 2.5\". Imported.",
+        "brands": [
+          {
+            "id": "Zava",
+            "name": "Hot Topic"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/2b870ca9-2137-49fa-b08e-9e617f3d6ac0?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/2b870ca9-2137-49fa-b08e-9e617f3d6ac0?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Z87s",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Front view of a silver stainless steel water bottle featuring The Great Wave artwork."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["18/8 Kitchen Grade Stainless Steel"],
+        "key_features": [
+          "Twist-lock closure",
+          "18/8 Kitchen Grade Stainless Steel",
+          "304/304 Double Wall",
+          "Vacuum Insulated",
+          "Hot & Cold Beverages",
+          "BPA and BPS Free",
+          "Leakproof"
+        ],
+        "colors": [
+          {
+            "hex": "#c6c4b4",
+            "percentage": 0.3942
+          },
+          {
+            "hex": "#8e938e",
+            "percentage": 0.2542
+          },
+          {
+            "hex": "#676f72",
+            "percentage": 0.1333
+          },
+          {
+            "hex": "#3f4f5a",
+            "percentage": 0.1115
+          },
+          {
+            "hex": "#a4aea3",
+            "percentage": 0.1068
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/S3nfI6e-Z87s-CNrACL?o=01KKXNQM32PCC2X69ZB3J27S7N&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "kohls.com",
+            "price": {
+              "price": 20,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.021,
+            "dimensions": null
+          },
+          {
+            "url": "https://buy.trychannel3.com/S3nfI6e-Z7GO-CNrACL?o=01M31PC0R4X3DNWPQWM3GKFJZ5&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "hottopic.com",
+            "price": {
+              "price": 24.9,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "safety-certifications": ["BPA-free", "Non-Toxic"],
+          "insulation-type": ["Insulated", "Double-walled"],
+          "material": ["Stainless steel"],
+          "closure-type": ["Zipper"],
+          "handle-type": ["No handle"],
+          "cleaning-instructions": ["Hand wash only"],
+          "pattern": ["Abstract", "Graphic"],
+          "insulation-material": ["Fiberglass"],
+          "lid-type": ["Screw-on"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "PUeDkHu",
+        "title": "Insulated Stainless Steel Water Bottle",
+        "description": "This 22-ounce insulated stainless steel water bottle is designed for high-performance temperature control in an ergonomic shape that fits most cupholders. It features a double-walled, vacuum-insulated construction that keeps beverages cold for up to 24 hours and hot for over 6 hours. The bottle is made from 18/8 food-grade stainless steel and is BPA and PFAS free, ensuring a safe and durable drinking experience. It includes a convenient twist-off lid and a laser-etched KUIU logo.",
+        "brands": [
+          {
+            "id": "IOHW",
+            "name": "Tempercraft"
+          },
+          {
+            "id": "Gg6g",
+            "name": "KUIU"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/26e0a138-1007-4bd8-9cd5-b6af4b94343f?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Th8C",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/26e0a138-1007-4bd8-9cd5-b6af4b94343f?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Th8C",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Ivory KUIU 22 oz water bottle with black lid and animal graphic."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["18/8 Food-Grade Stainless Steel"],
+        "key_features": [
+          "18/8 Food-grade stainless steel",
+          "Twist-off lid",
+          "Laser-etched logo",
+          "Isothermic, vacuum insulated, double-walled construction",
+          "Condensation free",
+          "BPA & PFAS free",
+          "Keeps contents cold up to 24 hours and hot 6+ hours",
+          "Fits most cupholders"
+        ],
+        "colors": [
+          {
+            "hex": "#c6c6ba",
+            "percentage": 0.6494
+          },
+          {
+            "hex": "#212121",
+            "percentage": 0.153
+          },
+          {
+            "hex": "#9d998f",
+            "percentage": 0.1423
+          },
+          {
+            "hex": "#65635d",
+            "percentage": 0.0553
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/PUeDkHu-Th8C-CNrACL?o=01M25KW822F4WANPQKF4233QPB&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "kuiu.com",
+            "price": {
+              "price": 39,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.105,
+            "dimensions": {
+              "length": null,
+              "width": {
+                "number": 2.75,
+                "unit": "in"
+              },
+              "height": {
+                "number": 10.75,
+                "unit": "in"
+              },
+              "weight": {
+                "number": 343,
+                "unit": "g"
+              }
+            }
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Size",
+              "values": [
+                {
+                  "label": "22 Oz",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/26e0a138-1007-4bd8-9cd5-b6af4b94343f",
+                  "product_id": "PUeDkHu"
+                },
+                {
+                  "label": "32 Oz",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/7092e4d1-490b-4a1e-b032-dd81fc3b8feb",
+                  "product_id": "8tH9iNY"
+                }
+              ]
+            }
+          ],
+          "selected": [
+            {
+              "name": "Size",
+              "label": "22 Oz"
+            }
+          ]
+        },
+        "structured_attributes": {
+          "safety-certifications": ["BPA-free", "Food Grade"],
+          "material": ["Stainless steel"],
+          "pattern": ["Logo"],
+          "insulation-type": ["Vacuum-insulated", "Double-walled"],
+          "lid-type": ["Screw-on"]
+        },
+        "ratings": {
+          "value": 4.8,
+          "count": 12,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "FTqi6rT",
+        "title": "Stainless Steel Water Bottle",
+        "description": "This is a Perricone MD stainless steel water bottle with a matte black finish and a white Perricone MD logo. It features a black sports cap with a clear plastic spout. The bottle is designed to be durable and travel-friendly, fitting comfortably in most car cup holders, and is ideal for everyday hydration on the go.",
+        "brands": [
+          {
+            "id": "nCQx",
+            "name": "Perricone MD"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/3f97f814-98ef-4142-be13-8b1a223da677?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=1hoz",
+            "cleaned_url": "https://cdn.trychannel3.com/6fb9b4c0-990f-452d-818e-961f8a9cd0ff?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=1hoz",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black stainless steel water bottle with black logo text."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["stainless steel"],
+        "key_features": [
+          "Lightweight, durable & travel-friendly design",
+          "Perfect for everyday hydration & on-the-go use",
+          "Fits comfortably in most car cup holders"
+        ],
+        "colors": [
+          {
+            "hex": "#3b3e3d",
+            "percentage": 0.414
+          },
+          {
+            "hex": "#222323",
+            "percentage": 0.2595
+          },
+          {
+            "hex": "#070708",
+            "percentage": 0.2438
+          },
+          {
+            "hex": "#959795",
+            "percentage": 0.0827
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/FTqi6rT-1hoz-CNrACL?o=01KS3FJPW3XKK0AZ72W1F16R05&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "perriconemd.com",
+            "price": {
+              "price": 20,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.105,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cleaning-instructions": ["Hand wash only", "Dishwasher safe"],
+          "handle-type": ["No handle"],
+          "material": ["Stainless steel"],
+          "pattern": ["Solid", "Logo"],
+          "spout-type": ["Straw"],
+          "closure-type": ["None"],
+          "insulation-type": ["Non-insulated"]
+        },
+        "ratings": {
+          "value": 5,
+          "count": 1,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "nlZSoCI",
+        "title": "Premium Stainless Steel Insulated Water Bottle",
+        "description": "The Everlast Premium Stainless Steel Insulated Water Bottle is a stylish and functional accessory designed for outdoor enthusiasts and those with active lifestyles. Featuring double-wall insulation, it keeps beverages at the desired temperature for hours, whether hot or cold. The bottle is equipped with a leak-proof rubber seal on the lid to ensure spill-free use during commutes or intense workouts. It has a generous 500ml capacity and features iconic Everlast branding on a sleek black finish.",
+        "brands": [
+          {
+            "id": "mvHY",
+            "name": "Everlast"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/3b9b1054-bb27-4cb7-95cd-6e06286c8892?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=iY9V",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black Everlast stainless steel water bottle, cap on top."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/94528c9c-faeb-466b-85a1-c0bdd9ae4f7a?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=iY9V",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Close-up of the black cap of the water bottle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/0224e4f3-e7ea-441b-a674-a642706c04b6?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=iY9V",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of the stainless steel neck/rim of the water bottle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/2f16847e-4370-4acf-8dfe-1662c6ed9ce8?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=iY9V",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/2f16847e-4370-4acf-8dfe-1662c6ed9ce8?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=iY9V",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Black Everlast stainless steel water bottle from a three-quarter angle."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["Stainless Steel"],
+        "key_features": [
+          "Double-Wall Insulation",
+          "Leak-Proof Design",
+          "500ml Capacity",
+          "Stainless Steel Construction"
+        ],
+        "colors": [
+          {
+            "hex": "#404040",
+            "percentage": 0.5536
+          },
+          {
+            "hex": "#222222",
+            "percentage": 0.3554
+          },
+          {
+            "hex": "#8d8d8b",
+            "percentage": 0.091
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/nlZSoCI-iY9V-CNrACL?o=01M32KMNBT7694TA1CQVJB7ESV&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "lovellsports.com",
+            "price": {
+              "price": 13,
+              "compare_at_price": 25,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "insulation-type": ["Double-walled"],
+          "lid-type": ["Screw-on"],
+          "pattern": ["Logo"],
+          "material": ["Stainless steel", "Metal"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "etcDx0c",
+        "title": "GEOJUG Stainless Steel Vacuum-Insulated Water Bottle",
+        "description": "The Brentwood Geojug is a 32-ounce stainless steel vacuum-insulated water bottle designed for durability and temperature retention. It features pro-grade 18/8 stainless steel that is tasteless and odorless, with double-wall insulation to keep drinks hot for up to 10 hours and cold for up to 24 hours. The bottle is finished with a slip-free powder coat in black and silver, includes an extra wide mouth for easy filling, and comes with a BPA-free flip and sip cap with a carry handle. It is backed by a 1-year limited warranty.",
+        "brands": [
+          {
+            "id": "mI5z",
+            "name": "The Home Depot"
+          },
+          {
+            "id": "gpNA",
+            "name": "Brentwood"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/39ae0990-bf3b-4538-9487-0a9a0944fae4?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=DEoc",
+            "cleaned_url": "https://cdn.trychannel3.com/413061f0-8be1-4d60-8124-8a8a4491f546?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=DEoc",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Brentwood Geojug 32 oz black and silver stainless steel vacuum-insulated water bottle."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["stainless steel"],
+        "key_features": [
+          "Hot up to 10 hours, cold up to 24 hours",
+          "Tasteless and odorless pro-grade 18/8 stainless steel",
+          "Sweat-free double-wall insulation",
+          "Easy-to-fill extra wide mouth",
+          "Slip-free powder coat finish",
+          "Includes BPA-free flip and sip cap with carry handle",
+          "1-year limited warranty",
+          "Fits in most cup holders"
+        ],
+        "colors": [
+          {
+            "hex": "#ffffff",
+            "percentage": 0.2756
+          },
+          {
+            "hex": "#44474d",
+            "percentage": 0.2746
+          },
+          {
+            "hex": "#a3a5a6",
+            "percentage": 0.1462
+          },
+          {
+            "hex": "#7b7e82",
+            "percentage": 0.1153
+          },
+          {
+            "hex": "#2a2b2e",
+            "percentage": 0.1073
+          },
+          {
+            "hex": "#c6cacb",
+            "percentage": 0.0811
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/etcDx0c-DEoc-CNrACL?o=01M1GGGTBAQKKJX9KFSVDDRP3V&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "academy.com",
+            "price": {
+              "price": 29.95,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.014,
+            "dimensions": null
+          },
+          {
+            "url": "https://buy.trychannel3.com/etcDx0c-AjmY-CNrACL?o=01M4YMCCXZWWH5S43APJPBYDF6&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "belk.com",
+            "price": {
+              "price": 30.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.07,
+            "dimensions": null
+          },
+          {
+            "url": "https://buy.trychannel3.com/etcDx0c-p1PB-CNrACL?o=01KY2115AE46WPXTK7TETWZ14R&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "bestbuy.com",
+            "price": {
+              "price": 42.26,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.004,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Solid"],
+          "handle-type": ["No handle", "Long"],
+          "lid-type": ["Screw-on", "Flip-top"],
+          "cleaning-instructions": ["Hand wash only"],
+          "insulation-type": ["Insulated", "Vacuum-insulated", "Double-walled"],
+          "material": ["Stainless steel", "Plastic"],
+          "closure-type": ["Drawstring", "Straps"],
+          "safety-certifications": ["BPA-free"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "K077vJL",
+        "title": "Wide Loop Cap",
+        "description": "This 64-ounce wide-mouth water bottle from Klean Kanteen is designed for backpackers and outdoor enthusiasts. It features a lightweight, non-insulated, single-wall construction made from 90% recycled 18/8 stainless steel. The included leakproof Wide Loop Cap features a swivel handle and a stainless steel interior to ensure beverages never touch plastic. Its large size and wide mouth make it compatible with most backcountry water filters.",
+        "brands": [
+          {
+            "id": "0itv",
+            "name": "Klean Kanteen"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/4297019d-22e6-422d-9457-d7128f8839f7?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=7vsT",
+            "cleaned_url": "https://cdn.trychannel3.com/5cfff0e0-90ca-4893-9ac9-788ab38f8851?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=7vsT",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Klean Kanteen 64oz wide mouth stainless steel water bottle with black loop cap."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/4df87aad-ab44-4791-b7cf-ec4a3f89de3f?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=7vsT",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Water being poured from a stainless steel bottle into a camping pot."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/781f5349-cf41-438b-9bfd-7de1bbbf5565?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=7vsT",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Stainless steel water bottles stored in a hiking backpack."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/7ff483aa-4e67-45ad-aeec-9966fd7ad320?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=7vsT",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Water being poured from a stainless steel bottle onto fresh carrots."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/d2d38472-e07e-418f-928e-36f1803b2214?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=7vsT",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Person pouring water from a stainless steel bottle into a pot while camping."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/8ab928ee-25ec-4e7b-801d-91703cb9e638?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=7vsT",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Stainless steel water bottle tucked into the pocket of a worker's shirt."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/b123a0be-0791-4436-8e82-38abab72a4e8?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=7vsT",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of a black Klean Kanteen wide mouth loop cap."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["stainless steel"],
+        "key_features": [
+          "Made from 90% recycled 18/8 stainless steel",
+          "Leakproof Wide Loop Cap with swivel handle",
+          "Stainless steel interior in cap",
+          "Compatible with all Wide Caps, including Café Cap 2.0",
+          "Compatible with most backcountry water filters",
+          "Chip-resistant Klean Coat finish (stainless excluded)"
+        ],
+        "colors": [
+          {
+            "hex": "#c1c1c0",
+            "percentage": 0.5343
+          },
+          {
+            "hex": "#e4e4e3",
+            "percentage": 0.2442
+          },
+          {
+            "hex": "#2b2b2b",
+            "percentage": 0.1339
+          },
+          {
+            "hex": "#797979",
+            "percentage": 0.0876
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/K077vJL-7vsT-CNrACL?o=01KBPAQ64TQR055Y5ETR11J5NM&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "kleankanteen.com",
+            "price": {
+              "price": 39.95,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.084,
+            "dimensions": null
+          },
+          {
+            "url": "https://buy.trychannel3.com/K077vJL-p1PB-CNrACL?o=01KZMWS3BRQ0VC11PTYKZE4GMB&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "bestbuy.com",
+            "price": {
+              "price": 39.95,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.004,
+            "dimensions": null
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Size",
+              "values": [
+                {
+                  "label": "27oz",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/902fd4e5-1470-436d-99ea-92df3f88c02f",
+                  "product_id": "gTscd5J"
+                },
+                {
+                  "label": "40oz",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/4561e791-11b9-4522-99d4-9ef7b621d019",
+                  "product_id": "dnmXtcF"
+                },
+                {
+                  "label": "64oz",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/4297019d-22e6-422d-9457-d7128f8839f7",
+                  "product_id": "K077vJL"
+                }
+              ]
+            }
+          ],
+          "selected": [
+            {
+              "name": "Size",
+              "label": "64oz"
+            }
+          ]
+        },
+        "structured_attributes": {
+          "safety-certifications": ["BPA-free", "Lead-Free"],
+          "material": ["Stainless steel"],
+          "closure-type": ["Screw-on"],
+          "pattern": ["Solid"],
+          "cleaning-instructions": ["Dishwasher safe"],
+          "insulation-type": ["Non-insulated"],
+          "handle-type": ["Short"],
+          "lid-type": ["Screw-on"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "dzojWma",
+        "title": "Owala 24 oz. FreeSip Stainless Steel Water Bottle",
+        "description": "The Owala 24 oz. FreeSip Stainless Steel Water Bottle is a durable, insulated hydration solution designed for on-the-go use. It features double-wall vacuum insulation that keeps beverages cold for up to 24 hours and a unique FreeSip® lid with a built-in straw for easy drinking and a wide-mouth opening for larger swigs. The bottle is leak-proof, BPA and phthalate-free, and includes a convenient hinged carrying loop. This specific model features a 'Roughin It' green camouflage pattern with a complementary brown cap.",
+        "brands": [
+          {
+            "id": "GpnK",
+            "name": "Owala"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/28ab6382-64f2-4093-8757-416acad2246a?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=2Msk",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/28ab6382-64f2-4093-8757-416acad2246a?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=2Msk",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Owala water bottle in camouflage with tan lid on white."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/135aac4f-ffc4-4b90-be9f-9f2b09758a13?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=2Msk",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Owala water bottle in camouflage with brown lid."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/4db4dcd8-5301-4c25-b538-e1a512e400ea?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=2Msk",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Owala water bottle with brown lid and camouflage."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/e59e4615-2f11-4aab-8798-b129dd4b71b2?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=2Msk",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Close-up of the opening mechanism of an Owala water bottle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/798a88d4-5a2b-4d7b-a923-9721f468ab45?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=2Msk",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/798a88d4-5a2b-4d7b-a923-9721f468ab45?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=2Msk",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Owala water bottle in camouflage on a tree branch."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/bfe5626f-22fc-4e39-a8d0-776eaed284d0?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=2Msk",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/bfe5626f-22fc-4e39-a8d0-776eaed284d0?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=2Msk",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Owala water bottle in camouflage resting on logs."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/a574fb51-b06c-4f0b-a511-c908577120f1?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=2Msk",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Owala water bottle in camouflage resting on wood."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/696c43aa-e42d-429c-9f8d-fc1e48ad94fa?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=2Msk",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Owala water bottle in camouflage on wood."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/43ffef4b-be01-4d7a-ad40-dfdee2676d78?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=2Msk",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Two Owala water bottles in camouflage on a branch."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/894663ab-7a96-4cf5-b54f-cdbee7a98754?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=2Msk",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Three Owala water bottles in camouflage on a branch."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/7b956424-a1d2-44eb-9500-8e0e14fd809e?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=2Msk",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Three Owala water bottles in camouflage on a branch."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/05a7e31f-19c0-4b9a-a83e-9650ca0abbe6?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=2Msk",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Four Owala water bottles in camouflage on logs."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/a8fc22d4-472c-41d2-82a7-68eb02c98303?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=2Msk",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/a8fc22d4-472c-41d2-82a7-68eb02c98303?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=2Msk",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Owala water bottle in camouflage with brown lid."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["Stainless Steel"],
+        "key_features": [
+          "Double-wall vacuum insulation keeps beverages cold for up to 24 hours",
+          "FreeSip® lid includes a built-in straw for easy drinking",
+          "Wide mouth opening for larger swigs and ice cubes",
+          "Leak-proof design prevents spills",
+          "Hinged loop for easy carrying",
+          "BPA and phthalate free",
+          "Base fits most cup holders"
+        ],
+        "colors": [
+          {
+            "hex": "#625b4c",
+            "percentage": 0.3883
+          },
+          {
+            "hex": "#9f9b71",
+            "percentage": 0.2551
+          },
+          {
+            "hex": "#7f7b5f",
+            "percentage": 0.2509
+          },
+          {
+            "hex": "#373129",
+            "percentage": 0.1056
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/dzojWma-2Msk-CNrACL?o=01M24K5SY5JR64GRM5PV5DAYVA&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "publiclands.com",
+            "price": {
+              "price": 29.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": null,
+              "width": null,
+              "height": {
+                "number": 10.68,
+                "unit": "in"
+              },
+              "weight": null
+            }
+          },
+          {
+            "url": "https://buy.trychannel3.com/dzojWma-gJvb-CNrACL?o=01M34P4H27D6M7P2P18RHKE38S&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "golfgalaxy.com",
+            "price": {
+              "price": 34.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.054,
+            "dimensions": {
+              "length": {
+                "number": 3.12,
+                "unit": "in"
+              },
+              "width": {
+                "number": 3.12,
+                "unit": "in"
+              },
+              "height": {
+                "number": 10.68,
+                "unit": "in"
+              },
+              "weight": null
+            }
+          },
+          {
+            "url": "https://buy.trychannel3.com/dzojWma-fdOw-CNrACL?o=01M3M00AD5W25G5VZHJPXHZ02E&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "dickssportinggoods.com",
+            "price": {
+              "price": 34.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": null,
+              "width": {
+                "number": 3.12,
+                "unit": "in"
+              },
+              "height": {
+                "number": 10.68,
+                "unit": "in"
+              },
+              "weight": null
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "lid-type": ["Flip-top"],
+          "material": ["Stainless steel"],
+          "pattern": ["Camouflage", "Solid"],
+          "spout-type": ["Straw", "Hard"],
+          "closure-type": ["Snap"],
+          "cleaning-instructions": ["Hand wash only", "Dishwasher safe"],
+          "safety-certifications": ["BPA-free", "Phthalate-free"],
+          "insulation-type": ["Vacuum-insulated"]
+        },
+        "ratings": {
+          "value": 4.83,
+          "count": 11895,
+          "source_count": 2
+        }
+      },
+      {
+        "id": "SVPOjdb",
+        "title": "Stainless Steel Water Bottle",
+        "description": "A sleek, reusable stainless steel water bottle designed for everyday use and outdoor activities. This turquoise 17oz/500ml bottle is lightweight, durable, and features a leak-proof cap. Ideal for keeping beverages cold on the go, whether at the beach or during travel. Finish appears smooth and matte, with Calypsa branding in turquoise.",
+        "brands": [
+          {
+            "id": "c3aI",
+            "name": "Calypso by Christiane Celle"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/b30e4638-c079-46b3-82ce-7131f8c56d8a?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=A3ox",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "lifestyle",
+            "alt_text": "White stainless steel water bottle on a sandy beach by the ocean."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/e441da27-7806-4626-88f5-0f41f905f504?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=A3ox",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "White stainless steel water bottle on a sandy beach by the ocean."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Stainless Steel"],
+        "key_features": [
+          "Stainless steel construction for durability",
+          "Leak-proof cap",
+          "Lightweight and sleek beach-ready bottle",
+          "25oz (700ml) capacity with a white finish",
+          "Brand logo: Calypsa in turquoise on the bottle surface",
+          "Turquoise finish",
+          "17oz / 500ml capacity",
+          "Lightweight and durable for on-the-go"
+        ],
+        "colors": [],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/SVPOjdb-A3ox-CNrACL?o=01KJMJY1SNW66YKCSDYHNECYN6&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "calypsa.com",
+            "price": {
+              "price": 5,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": null,
+              "width": null,
+              "height": null,
+              "weight": {
+                "number": 0.453,
+                "unit": "lb"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "material": ["Stainless steel"],
+          "pattern": ["Solid"],
+          "lid-type": ["Screw-on"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "D25MK60",
+        "title": "Stainless Steel Water Bottle",
+        "description": "A minimal and durable 17 fl oz double-wall insulated water bottle crafted from 18/8 stainless steel. Designed to keep both hot and cold beverages at their ideal temperature, it features a condensation-free, BPA-free exterior and a wide mouth for easy filling with ice. Its sleek form is designed to fit most cup holders and serves as a sustainable alternative to disposable containers.",
+        "brands": [
+          {
+            "id": "cVlQ",
+            "name": "Public Goods"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/b241234a-41a8-4a78-9224-80e8ebed88ba?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=aKkE",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/b241234a-41a8-4a78-9224-80e8ebed88ba?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=aKkE",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "White stainless steel water bottle with silver cap on a white background."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["18/8 stainless steel"],
+        "key_features": [
+          "Double-wall insulation for hot and cold beverages",
+          "BPA-free and phthalate-free",
+          "Condensation-free exterior",
+          "Wide mouth for ice",
+          "Fits most cup holders",
+          "Eco-friendly alternative to disposable plastics"
+        ],
+        "colors": [
+          {
+            "hex": "#cbcbcc",
+            "percentage": 0.6421
+          },
+          {
+            "hex": "#9c9c9d",
+            "percentage": 0.2499
+          },
+          {
+            "hex": "#535250",
+            "percentage": 0.108
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/D25MK60-aKkE-CNrACL?o=01M56SNQ2MQ8E6E3CBJGYM6F48&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "publicgoods.com",
+            "price": {
+              "price": 15.95,
+              "compare_at_price": 19.95,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.1,
+            "dimensions": {
+              "length": null,
+              "width": {
+                "number": 2.8,
+                "unit": "in"
+              },
+              "height": {
+                "number": 10.39,
+                "unit": "in"
+              },
+              "weight": {
+                "number": 431,
+                "unit": "g"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "closure-type": ["Adjustable/Pull"],
+          "insulation-type": ["Double-walled"],
+          "material": ["Stainless steel"],
+          "safety-certifications": ["BPA-free", "Phthalate-free"],
+          "handle-type": ["No handle"],
+          "lid-type": ["Screw-on"],
+          "pattern": ["Solid"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "GeJAgid",
+        "title": "Stainless Steel Water Bottle",
+        "description": "Stay hydrated throughout your day with this durable, stainless steel water bottle from Vera Bradley. It features a striking black and white paisley/floral pattern, a matte finish decal, and a dark navy screw-on lid. The double-walled construction is designed to keep beverages at the desired temperature.",
+        "brands": [
+          {
+            "id": "Ct6X",
+            "name": "Vera Bradley"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/48bb9676-c8f6-4913-94ec-9b74dc1ccfc2?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=oBbW",
+            "cleaned_url": "https://cdn.trychannel3.com/e755bf97-ab70-4e12-ae4a-7db6011ca61c?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=oBbW",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black and white patterned stainless steel water bottle against white background."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Stainless Steel"],
+        "key_features": [
+          "17 oz capacity",
+          "Double-walled stainless steel construction for insulation",
+          "Matte finish decal with a black and white floral/paisley pattern",
+          "BPA-free material",
+          "Dimensions: 2.8\" w x 10.6\" h",
+          "Hand wash only; Do not use in microwave or dishwasher"
+        ],
+        "colors": [
+          {
+            "hex": "#1a1e2b",
+            "percentage": 0.3896
+          },
+          {
+            "hex": "#ecedf0",
+            "percentage": 0.2727
+          },
+          {
+            "hex": "#696a76",
+            "percentage": 0.1263
+          },
+          {
+            "hex": "#3c3d49",
+            "percentage": 0.1176
+          },
+          {
+            "hex": "#b1b1ba",
+            "percentage": 0.0938
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/GeJAgid-oBbW-CNrACL?o=01KBPCZHNJ4HPZAM5NB9TQ6NQ3&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "outlet.verabradley.com",
+            "price": {
+              "price": 13.98,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.008,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "handle-type": ["No handle"],
+          "safety-certifications": ["BPA-free"],
+          "material": ["Stainless steel"],
+          "pattern": ["Checkered"],
+          "insulation-type": ["Insulated"],
+          "cleaning-instructions": ["Hand wash only"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "yQ0iEGc",
+        "title": "Quick Flip Go Bottle 24 fl oz Stainless steel Insulated Water bottle",
+        "description": "Keep your drinks ice-cold for up to 12 hours with the Stanley Quick Flip Go Bottle. This 24 fl oz insulated water bottle features double-wall vacuum insulation and a leakproof lid with a push-button mechanism for easy, one-handed use. Constructed from BPA-free 18/8 stainless steel, it's built for durability and is dishwasher safe for effortless cleaning. Its tough design makes it suitable for any adventure, and it comes with a lifetime warranty.",
+        "brands": [
+          {
+            "id": "ZcPs",
+            "name": "Stanley"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/325704b1-022f-4e82-88c3-8c92c3fba430?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Qqxu",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Stanley Quick Flip Go bottle in white and grey on a white background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/8ffc02ac-318e-49ab-8b8b-50f95578ada6?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Qqxu",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Stanley water bottle shown with the lid open."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/e081add1-6a82-446b-91e9-e14ad3ded3ba?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Qqxu",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Stanley water bottle and lid displayed next to each other."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/b9ab966d-e909-4c5e-a033-e74c0f06d2f2?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Qqxu",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "product_information",
+            "alt_text": "Infographic showing temperature retention times for the Stanley bottle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/b656d4a1-6b92-406f-9efe-7013f1ecdfbf?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Qqxu",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "product_information",
+            "alt_text": "Specification graphic detailing the material and features of the water bottle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/08ca6816-bc8e-43d3-986e-94a0142ecd53?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Qqxu",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Woman holding and drinking from a Stanley water bottle outdoors."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/91f882d9-6414-403b-b8ac-35bbb901c8e2?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Qqxu",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Woman drinking water from a Stanley insulated bottle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/9779f518-c81c-4826-b53f-9756c8cfdefa?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Qqxu",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/9779f518-c81c-4826-b53f-9756c8cfdefa?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=Qqxu",
+            "is_main_image": false,
+            "shot_type": "scale_reference",
+            "alt_text": "Hand and body part comparing the size of the Stanley water bottle."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["stainless steel"],
+        "key_features": [
+          "Double-wall vacuum insulation",
+          "Leakproof lid",
+          "BPA-free 18/8 stainless steel",
+          "Dishwasher safe",
+          "Push button mechanism",
+          "Lifetime warranty"
+        ],
+        "colors": [
+          {
+            "hex": "#979896",
+            "percentage": 0.6829
+          },
+          {
+            "hex": "#bfbfbd",
+            "percentage": 0.2344
+          },
+          {
+            "hex": "#646462",
+            "percentage": 0.0827
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/yQ0iEGc-Qqxu-CNrACL?o=01KSVK4D7E90M75JKD12T8DEHT&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "lowes.com",
+            "price": {
+              "price": 26,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.056,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cleaning-instructions": ["Dishwasher safe"],
+          "closure-type": ["Straps", "Buttons"],
+          "handle-type": ["No handle"],
+          "insulation-type": ["Insulated"],
+          "lid-type": ["Flip-top"],
+          "material": ["Stainless steel"],
+          "pattern": ["Solid"],
+          "safety-certifications": ["BPA-free"]
+        },
+        "ratings": {
+          "value": 4.1,
+          "count": 867,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "0m8qEnF",
+        "title": "Stainless Steel Insulated Water Bottle",
+        "description": "This stylish and sustainable 24 oz water bottle is crafted from double-walled stainless steel to provide insulation, keeping your beverages colder for longer. It features the FP Movement buti logo, a secure screw-on cap, and an attached handle for convenient carrying. BPA-free and easy to clean, it's a perfect companion for workouts or on-the-go hydration.",
+        "brands": [
+          {
+            "id": "8sp9",
+            "name": "Free People"
+          },
+          {
+            "id": "veWd",
+            "name": "FP Movement"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/c781a445-d262-4fd5-8e04-df688577538e?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=ICa0",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "White water bottle, mason jar, and sunglasses on a surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/3c523be4-73a3-4f44-bd92-1e5efe0faa00?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=ICa0",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Woman carrying a white water bottle with a blue strap."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/81cd55d9-02c1-4f03-89e0-e7d521fcc392?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=ICa0",
+            "cleaned_url": "https://cdn.trychannel3.com/2989deba-f4cf-4916-9552-ac857ce2606b?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=ICa0",
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Woman holding a white water bottle while posing."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/a5b9d4d1-86f9-4487-9770-2161fd5269ed?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=ICa0",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Two stainless steel water bottles, one white and one metal."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/021473cc-0328-43b0-9654-a36adaf716a4?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=ICa0",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "White water bottle with water droplets on a wet surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/06bdbb19-dbe9-4d19-b230-70f1a6105b2a?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=ICa0",
+            "cleaned_url": "https://cdn.trychannel3.com/e0779ef2-fc81-4946-92bf-065a415b078b?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=ICa0",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "White water bottle with a botanical design on a white background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/859ce6af-77cf-4e53-a8c5-1cb8e9c7da5b?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=ICa0",
+            "cleaned_url": "https://cdn.trychannel3.com/aa15189f-e42f-49a6-a315-ffd536f275f4?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=ICa0",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Plain white water bottle with a wooden lid."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/473698ce-6925-4ece-bd86-fb0b78c2fc97?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=ICa0",
+            "cleaned_url": "https://cdn.trychannel3.com/25d82a51-b76b-42fd-9ea5-d0ddd9bcb834?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=ICa0",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Close-up of the wooden lid and top of a white water bottle."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["Stainless Steel"],
+        "key_features": [
+          "24 oz capacity",
+          "Double-walled stainless steel for insulation",
+          "Screwed-on cap",
+          "Attached carrying handle",
+          "BPA-free",
+          "Easy to clean"
+        ],
+        "colors": [
+          {
+            "hex": "#8a7f7e",
+            "percentage": 0.3201
+          },
+          {
+            "hex": "#b18575",
+            "percentage": 0.2261
+          },
+          {
+            "hex": "#b8a296",
+            "percentage": 0.1287
+          },
+          {
+            "hex": "#866259",
+            "percentage": 0.1272
+          },
+          {
+            "hex": "#ddd4d2",
+            "percentage": 0.1107
+          },
+          {
+            "hex": "#46322d",
+            "percentage": 0.0871
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/0m8qEnF-ICa0-CNrACL?o=01M0XQ0N4XPXPK6CBW8QKTNE0K&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "freepeople.com",
+            "price": {
+              "price": 20,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.03,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "insulation-type": ["Double-walled"],
+          "pattern": ["Leaves"],
+          "closure-type": ["Screw-on"],
+          "safety-certifications": ["BPA-free"],
+          "material": ["Stainless steel"],
+          "handle-type": ["Short"],
+          "lid-type": ["Screw-on"]
+        },
+        "ratings": {
+          "value": 5,
+          "count": 5,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "Sb7GQGB",
+        "title": "Double-walled Insulated Stainless Steel Water Bottle With 2 Lids And Straw",
+        "description": "This 22 oz double-walled insulated stainless steel water bottle is designed to keep your beverages at the perfect temperature, hot for up to 12 hours and cold for 24 hours. It features a leak-proof 360-degree sealing ring and a comfortable, easy-to-grip handle for convenient carrying during outdoor activities like camping, hiking, fishing, or cycling. The bottle comes with two interchangeable lids: a wide mouth lid for quick drinking and easy filling, and a flip-up straw lid for convenient sipping, along with a straw. Constructed from food-grade, BPA-free stainless steel, it ensures safe drinking and prevents flavor transfer. The sleek design and practical features make it an ideal choice for daily use and a great gift option.",
+        "brands": [
+          {
+            "id": "1Sz5",
+            "name": "Costway"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/ae73fda2-f383-413c-8b58-250a798d6288?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=QvHB",
+            "cleaned_url": "https://cdn.trychannel3.com/384aa202-fc6b-4d78-870b-eac8150804df?aid=01M5A1REVHEV0SJTNAZ3QFR329&mid=QvHB",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "White double-walled stainless steel water bottle with black lid and straw lid."
+          }
+        ],
+        "category": {
+          "slug": "water-bottles",
+          "title": "Water Bottles",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "food-beverage-carriers",
+              "title": "Food & Beverage Carriers"
+            },
+            {
+              "slug": "water-bottles",
+              "title": "Water Bottles"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["stainless steel", "BPA-free"],
+        "key_features": [
+          "Double-Walled Vacuum Insulation System",
+          "Keeps beverages hot for up to 12 hours and cold for 24 hours",
+          "Leak-proof Design and Light Weight",
+          "360-degree sealing ring",
+          "Easy-to-grip handle",
+          "Design with 2 Functional Lids (wide mouth and flip-up straw lid)",
+          "Safe and User-friendly Materials (Food-grade stainless steel, BPA-free)",
+          "22 oz capacity",
+          "Includes 2 lids, 1 straw, and 1 gift box"
+        ],
+        "colors": [
+          {
+            "hex": "#b3b9b8",
+            "percentage": 0.5262
+          },
+          {
+            "hex": "#dde1e1",
+            "percentage": 0.3815
+          },
+          {
+            "hex": "#525252",
+            "percentage": 0.0923
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/Sb7GQGB-QvHB-CNrACL?o=01KRBSPD7YNZ8M4G027K738929&aid=01M5A1REVHEV0SJTNAZ3QFR329",
+            "domain": "costway.com",
+            "price": {
+              "price": 9.9,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.04,
+            "dimensions": {
+              "length": {
+                "number": 3,
+                "unit": "in"
+              },
+              "width": {
+                "number": 3,
+                "unit": "in"
+              },
+              "height": {
+                "number": 9.6,
+                "unit": "in"
+              },
+              "weight": {
+                "number": 0.9,
+                "unit": "lb"
+              }
+            }
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Color",
+              "values": [
+                {
+                  "label": "Beige",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/08076eae-94f8-4abb-88f4-6989d04da8ee",
+                  "product_id": "hHTMPi2"
+                },
+                {
+                  "label": "Gray",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/ae73fda2-f383-413c-8b58-250a798d6288",
+                  "product_id": "Sb7GQGB"
+                }
+              ]
+            }
+          ],
+          "selected": [
+            {
+              "name": "Color",
+              "label": "Gray"
+            }
+          ]
+        },
+        "structured_attributes": {
+          "safety-certifications": ["BPA-free"],
+          "handle-type": ["Short"],
+          "material": ["Stainless steel"],
+          "lid-type": ["Flip-top", "Screw-on"],
+          "pattern": ["Solid"],
+          "closure-type": ["Screw-on"],
+          "insulation-type": ["Double-walled", "Insulated", "Vacuum-insulated"],
+          "spout-type": ["Straw"],
+          "cleaning-instructions": ["Hand wash only"]
+        },
+        "ratings": {
+          "value": 4.85,
+          "count": 21,
+          "source_count": 1
+        }
+      }
+    ],
+    "next_page_token": "eyJjYWNoZV9rZXkiOiAic2VhcmNoOjNlMDM1OWM2MGZiZDE1ZmIiLCAib2Zmc2V0IjogMzB9"
+  }
+}

@@ -1,0 +1,4720 @@
+{
+  "slug": "cast-iron-skillet",
+  "query": "cast iron skillet",
+  "fetchedAt": "2026-10-19T12:21:29.580Z",
+  "rawHash": "587985c55e4d84c4d4caecb1b510deb7a60effff64c15220ebd0643ae015d04a",
+  "body": {
+    "products": [
+      {
+        "id": "1Y0c0Ot",
+        "title": "Cast Iron Skillet",
+        "description": "This is a 15-inch cast iron skillet from Lodge. It comes pre-seasoned with vegetable oil for a natural non-stick finish that improves with use. Known for its superior heat retention and even distribution, this durable skillet is versatile enough for indoor and outdoor cooking, including all stovetops (even induction), grills, and campfires. It is oven and broiler-safe up to 500°F and should be hand-washed, dried, and seasoned with cooking oil. Any \"blisters\" that appear are a normal part of the seasoning process and not rust. Made in the USA.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/78f0c99e-1cf9-463b-9799-f6b4c4253b4b?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=FgTK",
+            "cleaned_url": "https://cdn.trychannel3.com/1cde764c-710e-4625-b189-853fd3784b52?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=FgTK",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black cast iron skillet shown alone on a neutral background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/55d40516-ca1d-426a-921d-21fc3a333cd1?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=FgTK",
+            "cleaned_url": "https://cdn.trychannel3.com/7ab37234-1fa1-4e44-8143-09b365b5f800?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=FgTK",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Black cast iron skillet shown on a weathered wooden surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/9229592b-19ae-4286-bdd2-80ea6fd6554a?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=FgTK",
+            "cleaned_url": "https://cdn.trychannel3.com/8935ecf2-36b5-4e3d-8cf5-b88167395d63?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=FgTK",
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Cast iron skillet cooking roasted mushrooms on a grill."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/393163f3-870a-45a6-8798-93a181632440?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=FgTK",
+            "cleaned_url": "https://cdn.trychannel3.com/0fd8ca6d-c636-4d90-8ca1-5fa1b55100ab?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=FgTK",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Black cast iron skillet shown from a top-down view."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/b07e724c-507b-419a-a5bb-9c37f00372ae?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=FgTK",
+            "cleaned_url": "https://cdn.trychannel3.com/c0d1c071-3ce6-4e60-af0a-b2b0fb40f55c?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=FgTK",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Black cast iron skillet viewed from the side."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/f58d07a0-2267-43de-b2db-6ba8f3ec2d19?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=FgTK",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "A black cast iron skillet and a smaller cast iron pan with herbs on a wooden surface."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["cast iron"],
+        "key_features": [
+          "Pre-seasoned with vegetable oil for a natural non-stick finish",
+          "Superior heat distribution and retention",
+          "Suitable for use on the grill or over an open fire",
+          "Suitable for use with all cooktops, including induction",
+          "Oven- and broiler-safe to 500°F",
+          "Hand wash only, dry and rub with cooking oil"
+        ],
+        "colors": [
+          {
+            "hex": "#0e0e0f",
+            "percentage": 0.4944
+          },
+          {
+            "hex": "#262526",
+            "percentage": 0.2703
+          },
+          {
+            "hex": "#444242",
+            "percentage": 0.1272
+          },
+          {
+            "hex": "#979592",
+            "percentage": 0.108
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/1Y0c0Ot-FgTK-CNrACL?o=01KRAW09AB4SBKGR1MSR8WV5HN&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "crateandbarrel.com",
+            "price": {
+              "price": 49.95,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.126,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cookware-coating-type": ["Seasoned cast iron"],
+          "cookware-bakeware-features": ["Induction ready", "Oven safe"],
+          "compatible-stove-top-type": ["Ceramic", "Gas", "Induction"],
+          "shape": ["Round"],
+          "pattern": ["Solid"],
+          "cleaning-instructions": ["Hand wash only"],
+          "cookware-bakeware-material": ["Cast iron"],
+          "handle-material": ["Stainless steel"]
+        },
+        "ratings": {
+          "value": 5,
+          "count": 4,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "XwXQL66",
+        "title": "Cast Iron Skillet",
+        "description": "This Lodge cast iron skillet, featuring a \"Whitetail Buck\" design, is a durable and versatile cooking tool. Made in the USA, it's pre-seasoned for a natural, easy-release finish that improves with use. Suitable for use in the oven, on the stove, grill, or campfire, and compatible with induction cooktops, this skillet offers excellent heat retention for superior cooking results.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/c8bdcea7-def3-4af7-b7e8-57b0e6c1c830?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=wAe3",
+            "cleaned_url": "https://cdn.trychannel3.com/df61a34c-b7b5-47a7-a410-84124cb0c336?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=wAe3",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Bottom view of a Lodge cast iron skillet featuring an embossed deer design."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Cast Iron"],
+        "key_features": [
+          "Seasoned for a natural, easy-release finish that improves with use.",
+          "At home in the oven, on the stove, on the grill or over the campfire.",
+          "Great for induction cooktops.",
+          "Unparalleled heat retention of cast iron provides superior results.",
+          "Made in the USA"
+        ],
+        "colors": [
+          {
+            "hex": "#cacaca",
+            "percentage": 0.2792
+          },
+          {
+            "hex": "#9d9e9b",
+            "percentage": 0.2531
+          },
+          {
+            "hex": "#5f5f5d",
+            "percentage": 0.1266
+          },
+          {
+            "hex": "#7d7e7b",
+            "percentage": 0.1188
+          },
+          {
+            "hex": "#3e3e3c",
+            "percentage": 0.1147
+          },
+          {
+            "hex": "#e7e8e7",
+            "percentage": 0.1076
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/XwXQL66-wAe3-CNrACL?o=01KBP7RSVZ36B0W8CZC9PCVRES&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "acehardware.com",
+            "price": {
+              "price": 33.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.014,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cleaning-instructions": ["Hand wash only"],
+          "handle-material": ["Metal"],
+          "compatible-stove-top-type": ["Ceramic", "Gas", "Halogen", "Induction"],
+          "pattern": ["Logo"],
+          "cookware-bakeware-features": ["Lid", "Oven safe"],
+          "shape": ["Round"],
+          "cookware-coating-type": ["Uncoated"],
+          "cookware-bakeware-material": ["Cast iron"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "WWBpYjr",
+        "title": "Cast Iron Skillet",
+        "description": "This cast iron skillet is perfect for fried chicken, roasted meats and veggies, pan-grilled steaks and more. Whether you’re baking skillet cornbread over an open fire or pan-frying a batch of chicken wings for the game, you’ll love the way this does-it-all pan performs. Lodge cast iron cookware is pre-seasoned at the foundry and is ready to cook right out of the box.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/88699e76-1551-4ba1-9e82-f263eaabcd9c?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": "https://cdn.trychannel3.com/176e1d01-0e21-4fb0-adb6-bd7f0d2f7d87?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black Lodge cast iron skillet with a handle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/5514c0a1-0cdd-4239-8806-3e5076898796?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Lodge cast iron skillet frying an egg on a stovetop."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/79cdbede-066d-47bd-82f1-d2b2afc3e46c?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Black cast iron skillet being used for baking in an oven."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/68aea5e9-c983-4df8-90d6-55d0849088b1?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Set of black cast iron skillets and a baked item on a wooden surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/abdc424f-34c5-480c-b12c-511aa221da7d?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Black Lodge cast iron skillet filled with a baked fruit cake."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Cast iron"],
+        "key_features": [
+          "Pre-seasoned and ready to use",
+          "Lodge cast iron is easy to care for and will last a lifetime",
+          "Cast iron boasts superior heat retention",
+          "Withstands high temperatures—great for stovetop searing or oven roasting",
+          "The 10¼\" and 12\" sizes have additional loop helper handles",
+          "Made in the USA",
+          "Broiler and oven safe to 500°F"
+        ],
+        "colors": [
+          {
+            "hex": "#202326",
+            "percentage": 0.7472
+          },
+          {
+            "hex": "#3f4245",
+            "percentage": 0.1528
+          },
+          {
+            "hex": "#6e7276",
+            "percentage": 0.1
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/WWBpYjr-MuWY-CNrACL?o=01KR1EXZ5Y4XT1FE704QGDD92T&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "surlatable.com",
+            "price": {
+              "price": 33.95,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.063,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cookware-bakeware-material": ["Cast iron"],
+          "shape": ["Round"],
+          "handle-material": ["Iron"],
+          "cookware-bakeware-features": ["Lifetime warranty", "Oven safe"],
+          "cleaning-instructions": ["Hand wash only"],
+          "pattern": ["Solid"],
+          "cookware-coating-type": ["Seasoned cast iron"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "kFW8GJJ",
+        "title": "Cast Iron Skillet",
+        "description": "This Lodge 13.25\" Cast Iron Skillet is a versatile kitchen staple crafted in the USA from iron and oil. It features a naturally seasoned cooking surface that improves with use, making it perfect for layering flavors and cooking delicious meals for a crowd. The skillet is ready to use right out of the box and can be used on the oven, stove, grill, or campfire for searing, sautéing, baking, broiling, braising, or grilling. It is also compatible with induction cooktops and is made without PFOA or PTFE. The skillet boasts excellent heat retention and even heating for a perfect sear, and its signature teardrop handle provides a comfortable grip. For care, hand wash, dry immediately, and apply a light coat of vegetable oil after each use. Mild soapy water is acceptable if dried and oiled immediately. Lodge cast iron is safe for all heat sources except microwaves.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/6c1054c5-860f-49ec-9536-4760c6e4572c?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=DO3T",
+            "cleaned_url": "https://cdn.trychannel3.com/eabe1902-7735-4fdb-aa80-05665dc7ed46?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=DO3T",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Lodge 13.25\" cast iron skillet"
+          },
+          {
+            "url": "https://cdn.trychannel3.com/2bd1988a-78e1-462a-8e5b-bb35c456bab3?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=DO3T",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/a1020cf4-9ccd-4222-9d77-59a1dc7ec212?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=DO3T",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Top-down view of Lodge 13.25\" cast iron skillet"
+          },
+          {
+            "url": "https://cdn.trychannel3.com/012bf764-633b-44d9-92cb-530375fa24fa?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=DO3T",
+            "cleaned_url": "https://cdn.trychannel3.com/82174b41-18b3-4942-a561-f7b003e40b78?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=DO3T",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Side view of Lodge 13.25\" cast iron skillet"
+          },
+          {
+            "url": "https://cdn.trychannel3.com/56814219-8dc9-45cd-81ad-c41ed0f0d95f?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=DO3T",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Cast iron skillet cooking oysters over a campfire"
+          },
+          {
+            "url": "https://cdn.trychannel3.com/e907852f-571e-432b-965f-fd9d42650b38?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=DO3T",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Cast iron skillet and Dutch oven over a campfire"
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Cast Iron"],
+        "key_features": [
+          "Seasoned with 100% natural vegetable oil",
+          "Unparalleled heat retention and even heating",
+          "Use in the oven, on the stove, on the grill, or over a campfire",
+          "Use to sear, sauté, bake, broil, braise, or grill",
+          "Great for induction cooktops",
+          "Made in the USA",
+          "Made without PFOA or PTFE",
+          "Superior Heat Retention And A Generous Size",
+          "Foundry Seasoned, Ready To Use Upon Purchase",
+          "Use On All Cooking Surfaces, Grills And Campfires"
+        ],
+        "colors": [
+          {
+            "hex": "#1a1a1a",
+            "percentage": 0.6216
+          },
+          {
+            "hex": "#585858",
+            "percentage": 0.1398
+          },
+          {
+            "hex": "#3c3c3c",
+            "percentage": 0.1318
+          },
+          {
+            "hex": "#9a9a9a",
+            "percentage": 0.1068
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/kFW8GJJ-DO3T-CNrACL?o=01KREBSE2XDBREGWDG7S0WS3QY&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "abt.com",
+            "price": {
+              "price": 39.9,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": {
+                "number": 20.75,
+                "unit": "in"
+              },
+              "width": {
+                "number": 13.75,
+                "unit": "in"
+              },
+              "height": {
+                "number": 2.81,
+                "unit": "in"
+              },
+              "weight": {
+                "number": 10.5,
+                "unit": "lb"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "shape": ["Round"],
+          "cookware-coating-type": ["Seasoned cast iron"],
+          "pattern": ["Solid"],
+          "cleaning-instructions": ["Hand wash only"],
+          "handle-material": ["Iron"],
+          "compatible-stove-top-type": ["Induction"]
+        },
+        "ratings": {
+          "value": 5,
+          "count": 1,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "Y57Khjp",
+        "title": "Lodge 12\" Cast Iron Skillet",
+        "description": "Die 12-Zoll Gusspfannen aus Gusseisen bieten exzellente Wärmespeicherung und gleichmäßige Hitzeverteilung. Vorgewürzt und einsatzbereit – ideal für Searing, Sautieren, Backofen- und Grillnutzung. Mit komfortablem Griff und Hilfgriff.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/a0f2c20d-2d8d-4b56-8764-06d1cef10088?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=7Nxp",
+            "cleaned_url": "https://cdn.trychannel3.com/84382096-ee0e-4f22-9f63-6e54e17b02b5?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=7Nxp",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Lodge 12-inch cast iron skillet in black."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Cast iron", "seasoned surface"],
+        "key_features": [
+          "Pre-seasoned cast iron",
+          "Heavy and durable",
+          "Suitable for oven, stove, grill, or campfire",
+          "Long ergonomic handle with a helper handle",
+          "Made in USA"
+        ],
+        "colors": [
+          {
+            "hex": "#46524d",
+            "percentage": 0.5691
+          },
+          {
+            "hex": "#222b28",
+            "percentage": 0.3613
+          },
+          {
+            "hex": "#68726c",
+            "percentage": 0.0696
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/Y57Khjp-7Nxp-CNrACL?o=01KJBZGQ36XWPVFZZZCE5T5NS6&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "tractorsupply.com",
+            "price": {
+              "price": 34.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.03,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cookware-coating-type": ["Uncoated"],
+          "cleaning-instructions": ["Hand wash only"],
+          "cookware-bakeware-features": [
+            "Induction ready",
+            "Non-stick coating",
+            "Oven safe",
+            "Stay cool handle"
+          ],
+          "compatible-stove-top-type": ["Ceramic", "Gas", "Halogen", "Induction", "Sealed plate"],
+          "cookware-bakeware-material": ["Cast iron"],
+          "product-certifications-standards": [
+            "Restriction of hazardous substances (RoHS) compliant"
+          ],
+          "handle-material": ["Iron"],
+          "pattern": ["Solid"],
+          "shape": ["Round"]
+        },
+        "ratings": {
+          "value": 5,
+          "count": 10,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "WQdb9cl",
+        "title": "Lodge Chef Collection 13.25-in. Cast Iron Skillet",
+        "description": "A pre-seasoned Lodge cast iron skillet designed for versatile kitchen use. Features ergonomic handle, generous pour spouts, and oven-safe up to 600°F. Ideal for searing, roasting, and stovetop to oven transitions.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          },
+          {
+            "id": "Y6ku",
+            "name": "Kohl's"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/e35b7264-05e6-4d6e-af6d-5ff03092aee1?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/e35b7264-05e6-4d6e-af6d-5ff03092aee1?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black cast iron skillet on a white background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/d2aed1b2-d413-42cc-85d4-e43d95062a19?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/d2aed1b2-d413-42cc-85d4-e43d95062a19?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Black cast iron skillet viewed from above."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/4c4957bd-c7e0-4369-b1cc-8b21ade8d578?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Black cast iron skillet with chicken and lemon in a lifestyle setting."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/ca2ff97b-710b-41cd-8076-9339574abfe1?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Person using a wooden spoon to serve food from a skillet."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["Cast iron"],
+        "key_features": [
+          "Cast iron construction",
+          "Pre-seasoned surface",
+          "Ergonomic handle",
+          "Oven safe up to 600°F",
+          "Made in USA"
+        ],
+        "colors": [
+          {
+            "hex": "#777777",
+            "percentage": 0.3009
+          },
+          {
+            "hex": "#343434",
+            "percentage": 0.2624
+          },
+          {
+            "hex": "#585858",
+            "percentage": 0.2398
+          },
+          {
+            "hex": "#161616",
+            "percentage": 0.1103
+          },
+          {
+            "hex": "#a7a7a7",
+            "percentage": 0.0867
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/WQdb9cl-Z87s-CNrACL?o=01KK83ZA11KZKD4DTNRXY7V8B5&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "kohls.com",
+            "price": {
+              "price": 69.99,
+              "compare_at_price": 79.99,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.021,
+            "dimensions": {
+              "length": {
+                "number": 14.15,
+                "unit": "in"
+              },
+              "width": {
+                "number": 3.08,
+                "unit": "in"
+              },
+              "height": {
+                "number": 20.08,
+                "unit": "in"
+              },
+              "weight": {
+                "number": 8.16,
+                "unit": "lb"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cookware-coating-type": ["Uncoated"],
+          "shape": ["Round"],
+          "pattern": ["Solid"],
+          "cookware-bakeware-features": ["Oven safe"],
+          "compatible-stove-top-type": ["Gas", "Induction"],
+          "cookware-bakeware-material": ["Cast iron"],
+          "cleaning-instructions": ["Hand wash only"],
+          "handle-material": ["Stainless steel"]
+        },
+        "ratings": {
+          "value": 4.3,
+          "count": 20,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "0Tv4oOm",
+        "title": "Blacklock Cast Iron Skillet",
+        "description": "Designed for use with any stovetop, oven, grill, or open flame, this Lodge Blacklock 12-inch triple-seasoned cast iron skillet offers a natural nonstick finish, a thin lightweight design, and a cool longer-staying handle. Oven safe up to 600°F. Made in USA. 12-inch skillet with triple-seasoned surface and two side helper handles for added control.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/499e5c48-e789-406c-9b48-ea4231587c1b?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "cleaned_url": "https://cdn.trychannel3.com/6857bc9d-9e6b-4fa6-855d-ac1abb0642a1?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Top-down view of a black cast iron skillet with a handle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/bf8b446a-11f6-412c-a9fe-e16eedbf9399?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/bf8b446a-11f6-412c-a9fe-e16eedbf9399?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Front view of a black Lodge Blacklock cast iron skillet with a handle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/63fe0ff7-eab4-4503-acf9-c4066b39d7cc?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "A cast iron skillet containing a cooked meal being served."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Cast iron"],
+        "key_features": [
+          "Triple seasoned for a natural nonstick finish",
+          "Cast in a thin, lightweight design",
+          "Extended, raised handle stays cooler longer",
+          "Generous pour spouts for pan sauces and gravies",
+          "Sloped, spatula-friendly sidewalls",
+          "Elevated assist handle for added comfort and great control"
+        ],
+        "colors": [
+          {
+            "hex": "#6a6c69",
+            "percentage": 0.2608
+          },
+          {
+            "hex": "#252724",
+            "percentage": 0.2486
+          },
+          {
+            "hex": "#abadaa",
+            "percentage": 0.1544
+          },
+          {
+            "hex": "#8c8e8b",
+            "percentage": 0.1237
+          },
+          {
+            "hex": "#4b4d4a",
+            "percentage": 0.1129
+          },
+          {
+            "hex": "#d4d5d3",
+            "percentage": 0.0996
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/0Tv4oOm-Z87s-CNrACL?o=01KKWF0PCJ9XG3QY345JPGSWEY&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "kohls.com",
+            "price": {
+              "price": 89.99,
+              "compare_at_price": 99.99,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.021,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cookware-bakeware-features": ["Oven safe", "Stay cool handle"],
+          "cookware-coating-type": ["Ceramic non-stick"],
+          "handle-material": ["Metal"],
+          "pattern": ["Solid"],
+          "compatible-stove-top-type": ["Ceramic", "Gas", "Halogen", "Induction", "Sealed plate"],
+          "cookware-bakeware-material": ["Cast iron"],
+          "cleaning-instructions": ["Hand wash only"]
+        },
+        "ratings": {
+          "value": 4,
+          "count": 6,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "6GHL8VW",
+        "title": "Cast Iron Skillet",
+        "description": "The Lancaster No. 8 Cast Iron Skillet is a versatile, American-made flagship pan designed for a wide range of kitchen tasks, from frying eggs to roasting dinners and baking pies. It features a polished smooth cooking surface that is pre-seasoned with grapeseed oil for immediate use. Engineered to be lighter than standard modern cast iron, it offers a balanced feel and seamless transition from stovetop to oven to table. The skillet includes a traditional stout handle, a helper handle for stability, and large pour spouts.",
+        "brands": [
+          {
+            "id": "1jrf",
+            "name": "Lancaster Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/95d4f838-9d42-4210-9242-dc9592dafa96?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=peiy",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/95d4f838-9d42-4210-9242-dc9592dafa96?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=peiy",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Top view of a cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/8d14b289-f6fd-474a-a178-6d2b89c0e258?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=peiy",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Cast iron skillet with cooked asparagus on a towel."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/807a33e3-9865-419c-84f7-3429edf7cafd?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=peiy",
+            "cleaned_url": "https://cdn.trychannel3.com/1d292237-babb-4388-aa2a-557adae5afc8?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=peiy",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Cast iron skillet with Lancaster branding on the side."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/d79145e3-9832-4bd0-a534-c07ef1ad568a?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=peiy",
+            "cleaned_url": "https://cdn.trychannel3.com/772fe7c6-da37-42c8-9a53-9d16df2055a8?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=peiy",
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Asparagus spears on a cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/9103638c-f7f6-47f1-9009-ef65009a48fd?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=peiy",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Cast iron skillet with asparagus and lemon on a towel."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/3a9a91f5-d73b-4733-9028-c7c10168adbf?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=peiy",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Cast iron skillet on a stove grate next to another pan."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/4de99cef-067b-4cf2-a365-301d935d65c4?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=peiy",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Hands cooking food in a cast iron skillet on a stove."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/9bc12bda-8e41-436d-9157-deda8d9e915d?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=peiy",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Two cast iron skillets, one lid on top."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Cast Iron"],
+        "key_features": [
+          "Lightest cast iron skillet in its class",
+          "Polished smooth cooking surface",
+          "Pre-seasoned and ready to use",
+          "Works on all cooktops, including glass, induction, grills & campfires",
+          "Naturally non-toxic, PFOA & PTFE free",
+          "Made in Lancaster, Pennsylvania",
+          "Lifetime Warranty"
+        ],
+        "colors": [
+          {
+            "hex": "#947560",
+            "percentage": 0.5305
+          },
+          {
+            "hex": "#ae917c",
+            "percentage": 0.155
+          },
+          {
+            "hex": "#291e15",
+            "percentage": 0.1408
+          },
+          {
+            "hex": "#c3b6aa",
+            "percentage": 0.0952
+          },
+          {
+            "hex": "#5b4738",
+            "percentage": 0.0785
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/6GHL8VW-peiy-CNrACL?o=01M1C2HDNCS86VGTZ0MMGHWGPB&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "lancastercastiron.com",
+            "price": {
+              "price": 175,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.07,
+            "dimensions": {
+              "length": {
+                "number": 15.875,
+                "unit": "in"
+              },
+              "width": {
+                "number": 10.5,
+                "unit": "in"
+              },
+              "height": {
+                "number": 2,
+                "unit": "in"
+              },
+              "weight": {
+                "number": 4,
+                "unit": "lb"
+              }
+            }
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Size",
+              "values": [
+                {
+                  "label": "No. 4",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/27f6ae11-5b0c-4ef4-aa08-f079c28b3af5",
+                  "product_id": "aOzbxAD"
+                },
+                {
+                  "label": "No. 6",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/fe238a9c-755c-44cf-ae44-20c9e30a2a87",
+                  "product_id": "aSHxce1"
+                },
+                {
+                  "label": "No. 8",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/95d4f838-9d42-4210-9242-dc9592dafa96",
+                  "product_id": "6GHL8VW"
+                },
+                {
+                  "label": "No. 10",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/29ea17d6-4815-4260-bda0-bb4738e6efae",
+                  "product_id": "gC4by0v"
+                }
+              ]
+            }
+          ],
+          "selected": [
+            {
+              "name": "Size",
+              "label": "No. 8"
+            }
+          ]
+        },
+        "structured_attributes": {
+          "compatible-stove-top-type": ["Ceramic", "Gas", "Induction"],
+          "cookware-bakeware-material": ["Cast iron"],
+          "cookware-coating-type": ["Seasoned cast iron"],
+          "shape": ["Round"],
+          "cookware-bakeware-features": [
+            "Induction ready",
+            "Lid",
+            "Lifetime warranty",
+            "Oven safe"
+          ],
+          "pattern": ["Solid"],
+          "handle-material": ["Iron"],
+          "product-certifications-standards": ["Non-toxic"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "zjJiKEb",
+        "title": "Lodge 8\" Cast Iron Skillet",
+        "description": "This 8-inch Lodge Cast Iron Skillet is perfect for searing, browning, and sautéing your favorite meals. It offers unparalleled heat retention and distribution, ensuring long-lasting performance. Whether you're a seasoned chef or a beginner, this skillet is a versatile companion for all your culinary adventures, allowing you to create delicious dishes with ease and precision.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/7bf65600-04e3-4d89-94aa-59909912ad58?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=VtLY",
+            "cleaned_url": "https://cdn.trychannel3.com/1ad122b0-1c12-4aea-a0dd-34fbfcafcedb?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=VtLY",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black 8-inch Lodge cast iron skillet."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Cast Iron"],
+        "key_features": [
+          "Designed for versatile cooking",
+          "Enhanced heat retention and distribution",
+          "Constructed from black cast iron"
+        ],
+        "colors": [
+          {
+            "hex": "#ffffff",
+            "percentage": 0.4174
+          },
+          {
+            "hex": "#171717",
+            "percentage": 0.3833
+          },
+          {
+            "hex": "#3c3b3b",
+            "percentage": 0.1431
+          },
+          {
+            "hex": "#888887",
+            "percentage": 0.0562
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/zjJiKEb-VtLY-CNrACL?o=01KRDS2830Y66PQ2RXHW6SK201&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "athome.com",
+            "price": {
+              "price": 17.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.008,
+            "dimensions": {
+              "length": {
+                "number": 12.8,
+                "unit": "in"
+              },
+              "width": {
+                "number": 8.7,
+                "unit": "in"
+              },
+              "height": {
+                "number": 1.9,
+                "unit": "in"
+              },
+              "weight": {
+                "number": 3.2,
+                "unit": "lb"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "handle-material": ["Metal"],
+          "cookware-coating-type": ["Seasoned cast iron"],
+          "shape": ["Round"]
+        },
+        "ratings": {
+          "value": 4.8,
+          "count": 90,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "Z6q7LYJ",
+        "title": "Logic Cast Iron Skillet",
+        "description": "This Lodge Logic cast iron skillet is a durable and versatile cooking essential, perfect for searing, sautéing, baking, broiling, braising, frying, and grilling. Pre-seasoned with oil for a natural, easy-release finish that improves with use, it offers excellent heat retention and even heating. Suitable for all cooktops, including induction, and can be used in the oven, on the stove, grill, or campfire. Hand wash, dry, and rub with cooking oil for easy care. Made in the USA.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/da679fc2-a185-45a5-8a7f-691f73fcfe0c?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=wAe3",
+            "cleaned_url": "https://cdn.trychannel3.com/701aa57d-d16f-4ca0-ac54-5eb014a5ea03?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=wAe3",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Logic 12.31 inch black cast iron skillet"
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Cast Iron"],
+        "key_features": [
+          "Seasoned with oil for a natural, easy-release finish that improves with use",
+          "Easy care: hand wash, dry, rub with cooking oil",
+          "The right tool to sear, sautbake, broil, braise, fry or grill",
+          "At home in the oven, on the stove, on the grill or over the campfire",
+          "Great for induction cooktops",
+          "Brutally tough for decades of cooking",
+          "Unparalleled in heat retention and even heating",
+          "Made in the USA"
+        ],
+        "colors": [
+          {
+            "hex": "#454145",
+            "percentage": 0.3915
+          },
+          {
+            "hex": "#605d62",
+            "percentage": 0.273
+          },
+          {
+            "hex": "#221e1e",
+            "percentage": 0.2368
+          },
+          {
+            "hex": "#83848a",
+            "percentage": 0.0986
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/Z6q7LYJ-wAe3-CNrACL?o=01KBP7R5VH4SN4GF9FMQHBH61T&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "acehardware.com",
+            "price": {
+              "price": 36.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.014,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Solid"],
+          "cookware-bakeware-features": ["Lid", "Oven safe"],
+          "cookware-coating-type": ["Uncoated"],
+          "cleaning-instructions": ["Hand wash only"],
+          "shape": ["Round"],
+          "cookware-bakeware-material": ["Cast iron"],
+          "compatible-stove-top-type": ["Ceramic", "Gas", "Halogen", "Induction", "Sealed plate"],
+          "handle-material": ["Stainless steel"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "6wIIwvc",
+        "title": "10.25 in. Cast Iron Skillet",
+        "description": "Round 10.25-inch cast-iron skillet with triple-seasoned finish designed for durability and nonstick performance. Features include a pour spout, integrated short helper handles on the sides and a long center handle. Black matte seasoned surface, shallow depth with broad flat cooking area. Model BL96SK; 10.25 inches in diameter and 2.6 inches tall. Ideal for versatile kitchen use with an easy-to-clean cast iron construction.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/ac51de05-cd3f-4a35-ab8e-efd3726d9113?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/ac51de05-cd3f-4a35-ab8e-efd3726d9113?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black cast-iron skillet on a white background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/741dda0a-0ee7-426c-800e-524ba1ba78a8?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Hand using a spatula to flip an egg in a black skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/c97c451e-1255-43eb-b941-cd87dcd54c23?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Pasta cooked in a black skillet on a wooden board."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/fb81f27e-c2ec-4bd9-b673-2030537d8e26?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/fb81f27e-c2ec-4bd9-b673-2030537d8e26?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Top view of a black cast-iron skillet showing the handle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/212b79cb-08a8-4d66-9d3f-26fea2b09d61?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/212b79cb-08a8-4d66-9d3f-26fea2b09d61?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Top view of a black cast-iron skillet with a logo."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/9d0ff103-ccb9-4304-92cf-624eefa44cda?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/9d0ff103-ccb9-4304-92cf-624eefa44cda?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Z87s",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Side profile view of a black cast-iron skillet."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Cast iron"],
+        "key_features": [
+          "Triple seasoned for a natural nonstick finish",
+          "Generous pour spouts for pan sauces and gravies",
+          "Cast in a thin, lightweight design",
+          "Elevated assist handle for added comfort and great control",
+          "Extended, raised handle stays cooler, longer"
+        ],
+        "colors": [
+          {
+            "hex": "#525251",
+            "percentage": 0.4392
+          },
+          {
+            "hex": "#141414",
+            "percentage": 0.2487
+          },
+          {
+            "hex": "#313131",
+            "percentage": 0.2192
+          },
+          {
+            "hex": "#979797",
+            "percentage": 0.0929
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/6wIIwvc-Z87s-CNrACL?o=01KKES7V7QTPTJP4BTVJ7C1ZKC&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "kohls.com",
+            "price": {
+              "price": 69.99,
+              "compare_at_price": 79.99,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.021,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cookware-bakeware-features": ["Oven safe", "Stay cool handle"],
+          "cleaning-instructions": ["Hand wash only"],
+          "cookware-coating-type": ["Ceramic non-stick"],
+          "pattern": ["Solid"],
+          "cookware-bakeware-material": ["Cast iron"],
+          "handle-material": ["Stainless steel"],
+          "compatible-stove-top-type": ["Gas", "Induction"],
+          "shape": ["Round"]
+        },
+        "ratings": {
+          "value": 4.8,
+          "count": 10,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "W6RkIuS",
+        "title": "Lodge Cast Iron FINEX 8 in. Cast Iron Skillet",
+        "description": "Un skillet de cajón premium con acabado cobre-bronce y mango de acero inoxidable con mango ancho FINEX, octagonal exterior y superficie de cocción interior lisa. Preseasoned con aceite de linaza y apto para sartén, horno, parrilla o fuego directo. Diseñado para ser herencia culinaria duradera, sin recubrimientos PFAS, PTE, PTFE, PFOS ni Teflón. Peso ligero, apto para uso diario.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/4870aade-5cac-4e93-ac14-d99f5da48aa4?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=7Nxp",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/4870aade-5cac-4e93-ac14-d99f5da48aa4?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=7Nxp",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Cast iron skillet with copper handle on a white background."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["cast iron"],
+        "key_features": [],
+        "colors": [
+          {
+            "hex": "#b4967b",
+            "percentage": 0.5621
+          },
+          {
+            "hex": "#3d2b21",
+            "percentage": 0.2587
+          },
+          {
+            "hex": "#6e5646",
+            "percentage": 0.0938
+          },
+          {
+            "hex": "#ddc5ad",
+            "percentage": 0.0854
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/W6RkIuS-7Nxp-CNrACL?o=01M4X30EYJ9N1KQJYEBKE8N0SB&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "tractorsupply.com",
+            "price": {
+              "price": 150.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.03,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "product-certifications-standards": [
+            "Restriction of hazardous substances (RoHS) compliant"
+          ],
+          "cookware-bakeware-material": ["Cast iron"],
+          "compatible-stove-top-type": ["Gas", "Induction"],
+          "pattern": ["Diamond"],
+          "cookware-bakeware-features": ["Induction ready", "Oven safe", "Lifetime warranty"],
+          "shape": ["Hexagonal"],
+          "handle-material": ["Stainless steel"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "3QvF5yk",
+        "title": "Cast Iron Skillet",
+        "description": "This 12-inch cast iron skillet from Victoria is designed for superior heat distribution and durability. It features an extra-thick edge, a deeper vessel than traditional pans, and drip-free spouts on each side. The skillet comes pre-seasoned with 100% non-GMO, kosher-certified flaxseed oil, offering a smoother texture for easy food release. Its long, curved handle ensures comfortable carrying and cooking. Suitable for use over open fires, on grills, in ovens, and can go directly from the oven to the table. It is PTFE- and PFOA-free and available in multiple sizes.",
+        "brands": [
+          {
+            "id": "HlqP",
+            "name": "Victoria Chan"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/8dd48886-6b8a-428e-936e-836c04b862f7?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Pu5r",
+            "cleaned_url": "https://cdn.trychannel3.com/3c728584-b1ec-43d8-83a2-a9fa0aef494a?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Pu5r",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Victoria 12 inch cast iron skillet with long handle and helper handle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/06bf5daf-c8da-4691-8ab8-94893133c2af?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Pu5r",
+            "cleaned_url": "https://cdn.trychannel3.com/d3b7426a-9b78-45d5-95da-433258e505c7?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Pu5r",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Top-down view of a black cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/6a8d4805-8087-4feb-a534-2f318a0409e3?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Pu5r",
+            "cleaned_url": "https://cdn.trychannel3.com/7c88334d-8f7a-44dd-9959-280781c0961c?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Pu5r",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Bottom view of a Victoria 12 inch cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/9cfff625-477b-4479-b10f-6d76b5e02c51?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Pu5r",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "size_chart",
+            "alt_text": "Diagram showing dimensions of the Victoria 12 inch cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/509d4f18-2a72-47be-ac6d-9c153e653dcd?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Pu5r",
+            "cleaned_url": "https://cdn.trychannel3.com/2d5dc7c0-f543-415b-8249-72d7055078c6?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Pu5r",
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Cooked salmon and asparagus in a cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/09003227-d100-4c88-bef0-ec6bc0d5dbf9?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Pu5r",
+            "cleaned_url": "https://cdn.trychannel3.com/46496333-6eb8-4e8c-85e5-bf08402191e8?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Pu5r",
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "A person adding chopped carrots to a skillet on a portable camping stove."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/a49a53ce-e5f9-41b7-a57d-13e669eab828?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Pu5r",
+            "cleaned_url": "https://cdn.trychannel3.com/9dc45896-5ecb-4955-b086-4274df846c2e?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Pu5r",
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Spaghetti with tomato sauce in a cast iron skillet."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["Cast Iron"],
+        "key_features": [
+          "12-inch cast iron skillet",
+          "Superior heat distribution",
+          "Extra-thick edge",
+          "Deeper vessel",
+          "Drip-free spouts on each side",
+          "Pre-seasoned with 100% non-GMO, kosher-certified flaxseed oil",
+          "Smoother texture for easy glide and release",
+          "Long curved handle for effortless carrying and cooking",
+          "PTFE- and PFOA- free",
+          "Versatile: use over open fire, on grill, in oven, oven-to-table",
+          "Long-lasting"
+        ],
+        "colors": [
+          {
+            "hex": "#100f12",
+            "percentage": 0.4968
+          },
+          {
+            "hex": "#2b292d",
+            "percentage": 0.4421
+          },
+          {
+            "hex": "#6f6d70",
+            "percentage": 0.0612
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/3QvF5yk-Pu5r-CNrACL?o=01KRBX2DPAEZGA8YSY5WW3WH3K&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "pcrichard.com",
+            "price": {
+              "price": 29.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.028,
+            "dimensions": {
+              "length": {
+                "number": 20.5,
+                "unit": "in"
+              },
+              "width": {
+                "number": 13.3,
+                "unit": "in"
+              },
+              "height": {
+                "number": 2.8,
+                "unit": "in"
+              },
+              "weight": null
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cookware-coating-type": ["Seasoned cast iron"],
+          "cookware-bakeware-material": ["Cast iron"],
+          "product-certifications-standards": ["Non-GMO", "Kosher"],
+          "cookware-bakeware-features": ["Oven safe"],
+          "compatible-stove-top-type": ["Gas", "Ceramic", "Halogen"]
+        },
+        "ratings": {
+          "value": 4.7,
+          "count": 3,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "R7ObAWk",
+        "title": "Chef Collection Cast Iron Skillet",
+        "description": "The Lodge Chef Collection Cast Iron Skillet offers superior comfort and ease with its updated design. This cast iron skillet is perfect for a variety of cooking tasks, from frying chicken and roasting meats and vegetables to pan-grilling steaks. It features a 15% lighter weight, larger pour spouts, ergonomic handles, and a rounded interior for easier food turning. Pre-seasoned and ready to use, it provides excellent heat retention and includes additional loop helper handles for convenience. Made in the USA with a lifetime warranty.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/cd4b7855-0ae6-4cf0-864c-e137997fff5b?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": "https://cdn.trychannel3.com/868e954d-d607-4676-b300-78e0eccb8e1a?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black Lodge Chef Collection cast iron skillet with handles."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/2c0b6238-f605-498d-874b-f2b745891db7?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "size_chart",
+            "alt_text": "Line drawing of a round cast iron skillet with dimension markings."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/6b2c9694-0c2a-44bb-874d-f665e62e34e7?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "size_chart",
+            "alt_text": "Line drawing of a skillet and handle with dimension markings."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/0495b1da-4b84-444c-92db-631edb270bce?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Cast iron skillet with a baked tart in it."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/f1acc32b-6319-474c-aff4-fd239d421043?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Cast iron skillet being used to fry an egg."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/9ec689e8-e386-4395-94b4-386b71fac4c1?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Cast iron skillet being washed in a sink."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/c0ea6221-7a6f-4f6b-b00f-732f7e5ecc10?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Cast iron skillet being used to bake in an oven."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/a2245a53-4728-4ca4-9c4a-e138128b009e?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Stack of black cast iron skillets and a wooden spoon."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/df40d076-caa8-4f52-bb83-6381b288a24a?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Slice of baked fruit bread with blueberries and crumble."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/b41f2b04-5fe3-4cb7-a773-ad4ecab962ab?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Black Lodge cast iron skillet on a wooden surface."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["Cast iron"],
+        "key_features": [
+          "Classic Lodge skillet with updated features",
+          "Fifteen percent lighter for added comfort",
+          "Larger pour spouts",
+          "Rounded interior for easier turning of food",
+          "Longer, arched handles for ergonomic comfort",
+          "Pre-seasoned and ready to use",
+          "Superior heat retention",
+          "Additional loop helper handles"
+        ],
+        "colors": [
+          {
+            "hex": "#767676",
+            "percentage": 0.2979
+          },
+          {
+            "hex": "#414141",
+            "percentage": 0.2429
+          },
+          {
+            "hex": "#282828",
+            "percentage": 0.1297
+          },
+          {
+            "hex": "#5d5d5d",
+            "percentage": 0.1237
+          },
+          {
+            "hex": "#111111",
+            "percentage": 0.1185
+          },
+          {
+            "hex": "#a5a5a5",
+            "percentage": 0.0874
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/R7ObAWk-MuWY-CNrACL?o=01KNVP6BFED552FB9N37BH999F&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "surlatable.com",
+            "price": {
+              "price": 54.95,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.063,
+            "dimensions": {
+              "length": {
+                "number": 16.5,
+                "unit": "in"
+              },
+              "width": {
+                "number": 10,
+                "unit": "in"
+              },
+              "height": {
+                "number": 2.5,
+                "unit": "in"
+              },
+              "weight": {
+                "number": 4.375,
+                "unit": "lb"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "shape": ["Round"],
+          "cookware-bakeware-material": ["Cast iron"],
+          "compatible-stove-top-type": ["Induction", "Gas"],
+          "cookware-bakeware-features": ["Lifetime warranty", "Oven safe", "Induction ready"],
+          "cookware-coating-type": ["Seasoned cast iron"],
+          "cleaning-instructions": ["Hand wash only"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "IgMpes8",
+        "title": "Cast Iron Skillet",
+        "description": "Experience superior comfort and ease with the Lodge Chef Series skillet. This cast iron upgrade is perfect for preparing fried chicken, roasted meats and veggies, pan-grilled steaks, and more. It features improved ergonomics with larger pour spouts and handles, and is 15% lighter than traditional Lodge skillets. Pre-seasoned and ready to use, it offers excellent heat retention and is oven, broiler, grill, campsite, stovetop, and induction safe up to 500°F. Made in the USA.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/97db803c-f56e-41ef-80a1-88b1caa708c9?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": "https://cdn.trychannel3.com/b4dbc126-2638-4dec-a8e8-75b50a8a031d?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Lodge 8-inch cast iron skillet shown at a 3/4 angle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/c38f9a3e-bee6-4e6a-8b72-1fa215f57242?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": "https://cdn.trychannel3.com/3a0b727b-3cee-4984-84a3-ea3bbad669d6?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Lodge 8-inch cast iron skillet with a helper handle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/8c865c11-8448-496a-a7e5-8ada6a71f31c?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": "https://cdn.trychannel3.com/3b95d9ff-c081-4775-b9af-e62b630ff65d?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Four cooked steaks in a cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/263c4337-f4f8-4bcb-be35-36ff2511ca9a?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "An omelet in a cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/e890d6c4-b2e5-41f8-9bac-dbfb3143f323?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Zucchini tart in a cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/88a47b2a-f495-4726-9800-6525a35377c9?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Four seared steaks in a cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/18e2594c-e6b3-462a-92b7-4b3c56cf8459?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": "https://cdn.trychannel3.com/6dbb8a51-34e3-4404-8f2d-cfa65b169d62?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Side view of a black cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/a0ec5912-92bf-4b78-91ac-7e0f2ea4b27f?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Sautéed vegetables in a cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/d793ec24-b52f-4e07-83de-3d4ad49b5a6a?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "A hand using a fork to serve vegetables from a skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/456096d8-d64d-4ca9-a0d4-560c852615d8?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": "https://cdn.trychannel3.com/c5c53fae-c19a-4977-b57d-0404da18fef7?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Zucchini tart in a cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/22ec12f0-0e34-41db-88c1-7f266a2dcb96?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": "https://cdn.trychannel3.com/56f2449b-33b2-4a59-bbf3-af9cea034864?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Top-down view of a black cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/6730c76c-f311-48a8-90be-5fccdc03ab16?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Shrimp cooked in a cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/5a3eb843-bc9f-48ba-859c-d4c758f72113?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Crepes served in a cast iron skillet."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["Cast iron"],
+        "key_features": [
+          "Pre-seasoned and ready to use",
+          "Superior heat retention",
+          "Larger pour spouts",
+          "Rounded interior for easier turning of food",
+          "Longer, arched handles for ergonomic comfort",
+          "Two-loop helper handles option (on larger sizes)",
+          "Spatula-friendly sidewalls",
+          "Chef-inspired design",
+          "Naturally seasoned cooking surface",
+          "Compatible with any stovetop (including induction), oven, grill, or campfire"
+        ],
+        "colors": [
+          {
+            "hex": "#4e4f4e",
+            "percentage": 0.516
+          },
+          {
+            "hex": "#707270",
+            "percentage": 0.2857
+          },
+          {
+            "hex": "#1c1c1b",
+            "percentage": 0.1023
+          },
+          {
+            "hex": "#979997",
+            "percentage": 0.096
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/IgMpes8-9pD6-CNrACL?o=01KBPDC6BXE3KEH5K5FTCYBWEP&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "lodgecastiron.com",
+            "price": {
+              "price": 19.9,
+              "compare_at_price": 22.95,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.028,
+            "dimensions": null
+          },
+          {
+            "url": "https://buy.trychannel3.com/IgMpes8-MuWY-CNrACL?o=01KNVNWSDVVQQ1PKT04GFRWT1M&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "surlatable.com",
+            "price": {
+              "price": 34.95,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.063,
+            "dimensions": {
+              "length": {
+                "number": 16.5,
+                "unit": "in"
+              },
+              "width": {
+                "number": 10,
+                "unit": "in"
+              },
+              "height": {
+                "number": 2.5,
+                "unit": "in"
+              },
+              "weight": {
+                "number": 4.375,
+                "unit": "lb"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cookware-bakeware-features": ["Oven safe", "Stay cool handle", "Lifetime warranty"],
+          "cookware-bakeware-material": ["Cast iron"],
+          "product-certifications-standards": ["BPA-free", "Non-GMO", "Non-toxic"],
+          "handle-material": ["Stainless steel", "Metal"],
+          "shape": ["Round"],
+          "pattern": ["Solid"],
+          "compatible-stove-top-type": ["Ceramic", "Gas", "Induction"],
+          "cleaning-instructions": ["Hand wash only"],
+          "cookware-coating-type": ["Seasoned cast iron"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "Ey1IjGc",
+        "title": "Cast Iron Skillet",
+        "description": "Celebrate America's culinary heritage with this commemorative 250th Anniversary skillet from Lodge. Designed as part of the American Road Trip Series, this 10.25\" skillet features iconic landmarks and symbols etched into its surface—honoring the diverse stories that shape the nation. Crafted in the USA and seasoned for immediate use, it blends everyday cooking functionality with a unique patriotic design. It's great for use on all cooktops, grills, ovens, and campfires, and is made without synthetic coatings or chemicals. This skillet is made in the USA by a family-owned company founded in 1896.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/23ea760f-bebf-4956-80e0-8bdcdb2b099d?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": "https://cdn.trychannel3.com/39a11726-5dd0-4e56-b6ed-cddf689cfc47?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "is_main_image": true,
+            "shot_type": "flat_lay",
+            "alt_text": "Cast iron skillet with United States of America 250 Years design on a map background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/12d77e46-407d-4662-9566-bfe7a67cd5a0?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "flat_lay",
+            "alt_text": "Cast iron skillet with United States of America 250 Years design on a map background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/122130be-e647-44ff-ac14-f378f63e2704?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "flat_lay",
+            "alt_text": "Cast iron skillet with United States of America 250 Years design on a map background."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["Cast iron"],
+        "key_features": [
+          "Part of Lodge’s American Road Trip Series celebrating the USA’s 250th anniversary",
+          "10.25\" skillet features etched designs of iconic American landmarks",
+          "Pre-seasoned with 100% natural vegetable oil for easy release and improved seasoning over time",
+          "Great for use on all cooktops, grills, ovens and campfires",
+          "Made without synthetic coatings or chemicals",
+          "Made in the USA by a family-owned company founded in 1896"
+        ],
+        "colors": [
+          {
+            "hex": "#adaba7",
+            "percentage": 0.275
+          },
+          {
+            "hex": "#2c2422",
+            "percentage": 0.258
+          },
+          {
+            "hex": "#898783",
+            "percentage": 0.1249
+          },
+          {
+            "hex": "#6e6965",
+            "percentage": 0.1207
+          },
+          {
+            "hex": "#4d4743",
+            "percentage": 0.1122
+          },
+          {
+            "hex": "#d6d2ce",
+            "percentage": 0.1092
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/Ey1IjGc-MuWY-CNrACL?o=01KT23QEWFX9TYE15ERAPZXY31&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "slt-sfcc-react-production.mobify-storefront.com",
+            "price": {
+              "price": 39.95,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.063,
+            "dimensions": {
+              "length": null,
+              "width": null,
+              "height": null,
+              "weight": {
+                "number": 4.61,
+                "unit": "lb"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "compatible-stove-top-type": ["Induction", "Gas", "Ceramic"],
+          "cookware-coating-type": ["Seasoned cast iron"],
+          "cleaning-instructions": ["Hand wash only"],
+          "shape": ["Round"],
+          "pattern": ["Text"],
+          "handle-material": ["Iron"],
+          "cookware-bakeware-features": ["Induction ready", "Oven safe"],
+          "cookware-bakeware-material": ["Cast iron"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "YGRXk8Z",
+        "title": "Lodge Blacklock '63 Cast-iron Skillet",
+        "description": "This Lodge Blacklock '63 7\" Triple Seasoned Cast-Iron Skillet is a durable and versatile cooking tool, perfect for any kitchen. Named after the year Lodge founder Joseph Lodge began his journey, this skillet is triple seasoned for a superior non-stick performance right out of the box. Its classic cast-iron construction ensures even heating and exceptional heat retention, making it ideal for searing, frying, baking, and more. The ergonomic handle provides a comfortable and secure grip for easy maneuvering. Suitable for all cooking surfaces, including induction, and oven-safe, this skillet is built to last a lifetime.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/ec3ca96d-5ded-4a96-a373-ad175287f8d8?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=qzpY",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Blacklock Lightweight Skillet on a bed of dark, rough material."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/f68d2a89-34a1-4c66-bc79-f43777137688?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=qzpY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Blacklock Lightweight Skillet resting on a rough, sandy surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/6131fa69-2dd9-4ab7-9b4b-abec5e942b9b?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=qzpY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Blacklock Lightweight Skillet resting on dark, shredded material."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/77f982be-5530-42fe-b580-5a83d589d3da?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=qzpY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Blacklock Lightweight Skillet being held by a hand."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/9c8e200a-fe93-4f31-a175-7c69ba6d3927?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=qzpY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Blacklock Lightweight Skillet being held by a hand."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/d92fa8d7-46da-43fd-a367-4d49069c0970?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=qzpY",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/d92fa8d7-46da-43fd-a367-4d49069c0970?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=qzpY",
+            "is_main_image": false,
+            "shot_type": "scale_reference",
+            "alt_text": "Scale reference diagram showing dimensions of the skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/94fc8cea-5ca4-4505-9cdc-63b487ca4458?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=qzpY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Blacklock Lightweight Skillet with a fried egg in the pan."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/2db2a861-f323-43a6-a8b0-ad624e35feaf?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=qzpY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Blacklock Lightweight Skillet containing a cooked meal."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/a0e4cb7e-ec0a-4c57-8232-2e0abc14c96a?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=qzpY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Blacklock Lightweight Skillet being held by a hand."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/da72115f-c6ee-45eb-bd31-43bada559217?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=qzpY",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/da72115f-c6ee-45eb-bd31-43bada559217?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=qzpY",
+            "is_main_image": false,
+            "shot_type": "scale_reference",
+            "alt_text": "Scale reference diagram showing dimensions of the skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/36afb1c4-06ac-4354-b2e8-4ec3b05b1279?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=qzpY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Blacklock Lightweight Skillet being held by a hand."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/beb6cb6d-1d3c-4779-8790-4ba058df2bc7?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=qzpY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Blacklock Lightweight Skillet with fried eggs and bacon cooking."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/ac0c7f7c-4101-4dce-8cd3-c36a05406b18?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=qzpY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Blacklock Lightweight Skillet filled with green beans."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/5bd27f80-4721-4e2e-9391-034f579a7141?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=qzpY",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/5bd27f80-4721-4e2e-9391-034f579a7141?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=qzpY",
+            "is_main_image": false,
+            "shot_type": "scale_reference",
+            "alt_text": "Scale reference diagram showing dimensions of the skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/d3db754c-d7b2-4add-ba44-719b79740b60?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=qzpY",
+            "cleaned_url": "https://cdn.trychannel3.com/d44097a9-9253-4f32-85e3-c55fb1c9aff1?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=qzpY",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Blacklock Lightweight Skillet presented against a plain background."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Cast Iron"],
+        "key_features": [
+          "Made in the USA",
+          "Triple seasoned™ with 100% natural vegetable oil",
+          "Cast in a thin, lightweight design",
+          "Extended, raised handle stays cooler longer",
+          "Compatible with any stovetop (including induction), oven, grill, or campfire",
+          "Cast to last for generations",
+          "Nontoxic cookware made without PFAS",
+          "Even heat distribution for superior cooking",
+          "Durable cast iron construction",
+          "Sloped, spatula-friendly sidewalls"
+        ],
+        "colors": [
+          {
+            "hex": "#7b7f81",
+            "percentage": 0.5625
+          },
+          {
+            "hex": "#3e3e3c",
+            "percentage": 0.1523
+          },
+          {
+            "hex": "#1a1a18",
+            "percentage": 0.1019
+          },
+          {
+            "hex": "#565858",
+            "percentage": 0.0959
+          },
+          {
+            "hex": "#b6b7a2",
+            "percentage": 0.0874
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/YGRXk8Z-qzpY-CNrACL?o=01KVGQQVAJTNGM355EAN3BSW12&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "basspro.com",
+            "price": {
+              "price": 39.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.021,
+            "dimensions": null
+          },
+          {
+            "url": "https://buy.trychannel3.com/YGRXk8Z-9IzC-CNrACL?o=01KXTPHMZRC37VD42S4GS6T8KH&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "atbbq.com",
+            "price": {
+              "price": 40,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.056,
+            "dimensions": {
+              "length": {
+                "number": 11.15,
+                "unit": "in"
+              },
+              "width": {
+                "number": 7.28,
+                "unit": "in"
+              },
+              "height": {
+                "number": 1.82,
+                "unit": "in"
+              },
+              "weight": {
+                "number": 1.82,
+                "unit": "lb"
+              }
+            }
+          },
+          {
+            "url": "https://buy.trychannel3.com/YGRXk8Z-9pD6-CNrACL?o=01KXA22842XRW3HQDHH9EAFSQ8&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "lodgecastiron.com",
+            "price": {
+              "price": 40,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.028,
+            "dimensions": {
+              "length": {
+                "number": 11.15,
+                "unit": "in"
+              },
+              "width": {
+                "number": 7.28,
+                "unit": "in"
+              },
+              "height": {
+                "number": 1.82,
+                "unit": "in"
+              },
+              "weight": {
+                "number": 1.82,
+                "unit": "lb"
+              }
+            }
+          },
+          {
+            "url": "https://buy.trychannel3.com/YGRXk8Z-WPap-CNrACL?o=01KVSPMCVHVWYA3W8ZYPE0158W&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "cabelas.com",
+            "price": {
+              "price": 637,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.028,
+            "dimensions": null
+          }
+        ],
+        "variants": {
+          "options": [],
+          "selected": [
+            {
+              "name": "Size",
+              "label": "10.25\""
+            }
+          ]
+        },
+        "structured_attributes": {
+          "shape": ["Round"],
+          "cookware-bakeware-features": [
+            "Induction ready",
+            "Oven safe",
+            "Stay cool handle",
+            "Non-stick coating",
+            "Lid"
+          ],
+          "cleaning-instructions": ["Hand wash only"],
+          "compatible-stove-top-type": ["Ceramic", "Gas", "Induction", "Halogen", "Sealed plate"],
+          "pattern": ["Solid"],
+          "handle-material": ["Stainless steel", "Iron", "Metal"],
+          "cookware-coating-type": ["Uncoated", "Seasoned cast iron", "Ceramic non-stick"],
+          "product-certifications-standards": [
+            "Non-toxic",
+            "Restriction of hazardous substances (RoHS) compliant"
+          ],
+          "cookware-bakeware-material": ["Cast iron"]
+        },
+        "ratings": {
+          "value": 4.43,
+          "count": 17,
+          "source_count": 3
+        }
+      },
+      {
+        "id": "e2SHO2j",
+        "title": "Chef Collection Cast Iron Skillet",
+        "description": "This professional-grade 12-inch skillet from Lodge is constructed from durable cast iron, designed for superior heat retention and even cooking performance. Part of the Chef Collection, it features practical elements like spatula-friendly sloped sides, deep pour spouts for mess-free pouring, a comfortable ergonomic handle, and a helper handle for secure lifting. The pre-seasoned surface means it's ready to use immediately and is designed to become even better with repeated use, a hallmark of quality Lodge cookware made in Tennessee for over a century.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/f295e9b3-76d5-44aa-b80c-7f0594514e6a?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=KgEF",
+            "cleaned_url": "https://cdn.trychannel3.com/e28fd2ac-5d22-4982-b207-259cc3567284?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=KgEF",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black non-stick cast iron skillet."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["cast iron"],
+        "key_features": [
+          "Crafted of cast iron",
+          "No seasoning required",
+          "Hanging loop",
+          "2 pour spouts",
+          "Helper handle",
+          "Safe for all stovetops, ovens, campfires and grills",
+          "Suitable for use with metal utensils"
+        ],
+        "colors": [
+          {
+            "hex": "#262321",
+            "percentage": 0.7398
+          },
+          {
+            "hex": "#423f3f",
+            "percentage": 0.1664
+          },
+          {
+            "hex": "#7d7979",
+            "percentage": 0.0938
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/e2SHO2j-KgEF-CNrACL?o=01KDH2ZZ5S6F66GX8H0RYQ4409&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "worldmarket.com",
+            "price": {
+              "price": 39.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": {
+                "number": 18.7,
+                "unit": "in"
+              },
+              "width": {
+                "number": 12.8,
+                "unit": "in"
+              },
+              "height": {
+                "number": 2.9,
+                "unit": "in"
+              },
+              "weight": null
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cookware-coating-type": ["Uncoated"],
+          "cookware-bakeware-material": ["Cast iron"],
+          "compatible-stove-top-type": ["Ceramic", "Gas", "Halogen", "Induction", "Sealed plate"],
+          "pattern": ["Solid"],
+          "handle-material": ["Stainless steel"],
+          "shape": ["Round"],
+          "cookware-bakeware-features": ["Lid", "Oven safe", "Stay cool handle"]
+        },
+        "ratings": {
+          "value": 4.86,
+          "count": 42,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "a8bvjjd",
+        "title": "Lodge Cast Iron Skillet",
+        "description": "This durable cast iron skillet is perfect for a variety of cooking tasks, from frying chicken and searing steaks to roasting meats and vegetables. It is pre-seasoned at the foundry for immediate use and is designed for superior heat retention and durability. The skillet is oven and broiler safe up to 500°F and is built to last a lifetime with proper care. Hand wash only and dry immediately after washing, then rub with a light coat of vegetable oil to prevent corrosion and maintain its non-stick properties over time.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/26480ad8-42b5-4f21-beda-b375169872f8?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Qoqa",
+            "cleaned_url": "https://cdn.trychannel3.com/768da597-dcb3-4f89-8752-0ebab1d7765f?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Qoqa",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black Lodge cast iron skillet with a handle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/409fbd36-ea23-4221-9fb1-1c5001564925?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Qoqa",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Lodge cast iron skillet frying an egg on a stovetop."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/cd4cdabe-68c8-4b09-8b2a-545029d11793?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Qoqa",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Hand holding a black cast iron skillet from an oven."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/e36228db-1b87-4dc7-88ae-04fb10c04c92?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Qoqa",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Set of black cast iron skillets and a baked item on a wooden surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/b6b83267-2c45-44f5-8ca4-5f6a368b12cd?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=Qoqa",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Black Lodge cast iron skillet with a handle."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Cast iron"],
+        "key_features": [
+          "Broiler Safe",
+          "Cooktop Compatibility: Induction",
+          "Maximum Temp (f): 500 Degrees F",
+          "Care: Hand Wash",
+          "Decor Styles: Traditional",
+          "Material: Cast Iron",
+          "Country of Origin: Made in US",
+          "Pre-seasoned and ready to use",
+          "Superior heat retention",
+          "Withstands high temperatures—great for stovetop searing or oven roasting"
+        ],
+        "colors": [
+          {
+            "hex": "#171415",
+            "percentage": 0.7552
+          },
+          {
+            "hex": "#403b3b",
+            "percentage": 0.144
+          },
+          {
+            "hex": "#807a77",
+            "percentage": 0.1008
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/a8bvjjd-Qoqa-CNrACL?o=01KQW2WN0SR49JSGWTHPT858R1&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "jcpenney.com",
+            "price": {
+              "price": 49.99,
+              "compare_at_price": 100,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": null
+          },
+          {
+            "url": "https://buy.trychannel3.com/a8bvjjd-MuWY-CNrACL?o=01KR1GRVTK6FSP1WN0G2EMKKGT&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "slt-sfcc-react-production.mobify-storefront.com",
+            "price": {
+              "price": 63.95,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.063,
+            "dimensions": null
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Size",
+              "values": [
+                {
+                  "label": "5\"",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": null,
+                  "product_id": null
+                },
+                {
+                  "label": "6.5\"",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": null,
+                  "product_id": null
+                },
+                {
+                  "label": "8\"",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": null,
+                  "product_id": null
+                },
+                {
+                  "label": "9\"",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": null,
+                  "product_id": null
+                },
+                {
+                  "label": "10 inch",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": null,
+                  "product_id": null
+                },
+                {
+                  "label": "13.25\"",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": null,
+                  "product_id": null
+                },
+                {
+                  "label": "15 inch",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": null,
+                  "product_id": null
+                },
+                {
+                  "label": "15\"",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": null,
+                  "product_id": null
+                }
+              ]
+            }
+          ],
+          "selected": []
+        },
+        "structured_attributes": {
+          "shape": ["Round"],
+          "pattern": ["Solid"],
+          "cookware-coating-type": ["Seasoned cast iron"],
+          "handle-material": ["Iron"],
+          "compatible-stove-top-type": ["Induction", "Ceramic", "Gas", "Halogen"],
+          "cleaning-instructions": ["Hand wash only"],
+          "cookware-bakeware-features": ["Lifetime warranty", "Oven safe"],
+          "cookware-bakeware-material": ["Cast iron"]
+        },
+        "ratings": {
+          "value": 5,
+          "count": 1,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "FLo0hiq",
+        "title": "Seasoned Cast Iron Skillet",
+        "description": "This 12-inch seasoned cast iron skillet is a collaboration between Lodge Cast Iron and John Deere, celebrating the legacy of one of America's most iconic manufacturers. Featuring a detailed John Deere design on the bottom, this durable skillet is made in the USA and seasoned with 100% natural vegetable oil. It offers excellent heat retention for even cooking and is a nontoxic alternative to PFAS-coated cookware, making it ideal for everything from farm-to-table biscuits and gravy to roasted chicken.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          },
+          {
+            "id": "1erA",
+            "name": "John Deere"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/7d69bd3e-bab4-4945-bab7-aa2147c0782a?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": "https://cdn.trychannel3.com/bd8e2e86-54b4-4d2d-a5ae-81b00e0d64c5?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "John Deere Moline Mill Cast Iron Skillet on a neutral background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/bee81763-089e-46c0-9ac0-4b0dc6e750f2?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "John Deere Moline Mill Cast Iron Skillet sitting on green grass next to a tractor."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/bf76370b-0cd7-4475-bd6d-14d06880ac14?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "John Deere Moline Mill Cast Iron Skillet resting on dirt and grass."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/8db9ab3a-7874-4269-80ba-eb6fe3e76aa6?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "John Deere Moline Mill Cast Iron Skillet resting on a yellow tractor."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["cast iron"],
+        "key_features": [
+          "Made in the USA",
+          "Features John Deere design",
+          "Seasoned with 100% natural vegetable oil",
+          "Great heat retention for even cooking",
+          "Cast to last for generations",
+          "Nontoxic cookware made without PFAS"
+        ],
+        "colors": [
+          {
+            "hex": "#9a948d",
+            "percentage": 0.2586
+          },
+          {
+            "hex": "#c0b8b1",
+            "percentage": 0.1429
+          },
+          {
+            "hex": "#0b0906",
+            "percentage": 0.1418
+          },
+          {
+            "hex": "#75706a",
+            "percentage": 0.1245
+          },
+          {
+            "hex": "#514c47",
+            "percentage": 0.1219
+          },
+          {
+            "hex": "#e0dbd4",
+            "percentage": 0.1084
+          },
+          {
+            "hex": "#25211d",
+            "percentage": 0.1018
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/FLo0hiq-9pD6-CNrACL?o=01KZXG80K3Z2E6ZR9KT68BEQQ7&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "lodgecastiron.com",
+            "price": {
+              "price": 34.9,
+              "compare_at_price": 42.95,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.028,
+            "dimensions": {
+              "length": null,
+              "width": null,
+              "height": null,
+              "weight": {
+                "number": 7.9,
+                "unit": "lb"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "product-certifications-standards": ["Non-toxic"],
+          "shape": ["Round"],
+          "cookware-bakeware-features": ["Non-stick coating", "Oven safe"],
+          "cookware-bakeware-material": ["Cast iron"],
+          "cleaning-instructions": ["Hand wash only"],
+          "pattern": ["Graphic"],
+          "handle-material": ["Iron"],
+          "cookware-coating-type": ["Seasoned cast iron"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "B7XotZl",
+        "title": "Lodge Chef Collection Cast Iron Skillet",
+        "description": "This Lodge Cast Iron Chef Collection skillet is designed for both professional chefs and home cooks, offering superior heat retention and even heating. Its pre-seasoned surface ensures an easy-release finish that improves with use, while the spatula-friendly sloped walls and ergonomic handles provide enhanced cooking performance and a comfortable grip. Made in the USA with legendary durability, this 10-inch skillet is perfect for searing, sautéing, baking, and more, and features generous pour spouts for convenient sauce making. Easy care instructions recommend hand washing, drying, and a light oil rub.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/f031e4ad-0466-437b-84f0-65f74f36b329?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": "https://cdn.trychannel3.com/d4faeeaa-4089-493d-8ab2-e29501d8af0b?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black cast iron skillet shown from an upright view."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/2623bedf-83ea-4dc2-b9e9-e462275b4379?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "size_chart",
+            "alt_text": "Dimensions of the cast iron skillet provided."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/f8cff837-484f-4250-8a3a-f0f99d7a8fd0?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "size_chart",
+            "alt_text": "Dimensions of the cast iron skillet provided."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/43d066d8-45c0-4d33-8f47-8d166dcdd4fe?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Cast iron skillet filled with steak, eggs, and tomatoes."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/e97a73b7-429f-4b8d-aa50-926b242878c4?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Hand using a spatula to flip an egg in a black cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/30c72dd0-5667-4a03-8546-60e0d7d330a3?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "A spatula lifting food from a cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/78991b6c-c648-4729-b4f1-3a3d60fb1575?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Cast iron skillet filled with roasted meat and vegetables."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/6776394b-c038-495c-9f5d-571f62933ffc?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Meat cooking in a black cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/8d2a947f-d893-475c-a026-a36376e0285d?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Piece of food being lifted from a skillet."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Cast Iron"],
+        "key_features": [
+          "Spatula-friendly sidewalls",
+          "Ergonomic handles",
+          "Seasoned with 100% natural vegetable oil",
+          "Compatible with induction, oven, grill, and campfire",
+          "Made in the USA",
+          "Nontoxic cookware made without PFAS",
+          "Versatile for searing, pan-frying, and more",
+          "Superior heat retention for even cooking on stove, oven, grill, or fire",
+          "Lighter design compared to regular Lodge skillets",
+          "Generous pour spouts for pan sauces and gravies"
+        ],
+        "colors": [
+          {
+            "hex": "#747374",
+            "percentage": 0.5447
+          },
+          {
+            "hex": "#49484a",
+            "percentage": 0.2557
+          },
+          {
+            "hex": "#333133",
+            "percentage": 0.111
+          },
+          {
+            "hex": "#aaaaac",
+            "percentage": 0.0887
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/B7XotZl-9pD6-CNrACL?o=01KZXGEH2C0WWVC4YAQNPW0F62&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "lodgecastiron.com",
+            "price": {
+              "price": 29.9,
+              "compare_at_price": 34.95,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.028,
+            "dimensions": {
+              "length": {
+                "number": 16.63,
+                "unit": "in"
+              },
+              "width": {
+                "number": 10.81,
+                "unit": "in"
+              },
+              "height": {
+                "number": 2.56,
+                "unit": "in"
+              },
+              "weight": {
+                "number": 3.17,
+                "unit": "lb"
+              }
+            }
+          },
+          {
+            "url": "https://buy.trychannel3.com/B7XotZl-p1PB-CNrACL?o=01KZ8EZQHXZAP9H9S784BQ2X51&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "bestbuy.com",
+            "price": {
+              "price": 29.9,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.004,
+            "dimensions": {
+              "length": {
+                "number": 10.81,
+                "unit": "in"
+              },
+              "width": {
+                "number": 10.81,
+                "unit": "in"
+              },
+              "height": {
+                "number": 2.56,
+                "unit": "in"
+              },
+              "weight": null
+            }
+          },
+          {
+            "url": "https://buy.trychannel3.com/B7XotZl-jcD4-CNrACL?o=01KW4N3Y6FMWGDDGCM00GA70KX&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "dillards.com",
+            "price": {
+              "price": 29.95,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": null
+          },
+          {
+            "url": "https://buy.trychannel3.com/B7XotZl-KgEF-CNrACL?o=01KXZS197B74SGBZN8S7WM1DQF&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "worldmarket.com",
+            "price": {
+              "price": 34.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": null
+          }
+        ],
+        "variants": {
+          "options": [],
+          "selected": [
+            {
+              "name": "Size",
+              "label": "10\""
+            }
+          ]
+        },
+        "structured_attributes": {
+          "cookware-coating-type": ["Uncoated", "Seasoned cast iron"],
+          "handle-material": ["Titanium", "Iron"],
+          "cleaning-instructions": ["Dishwasher safe", "Hand wash only"],
+          "compatible-stove-top-type": ["Induction", "Ceramic", "Gas", "Halogen"],
+          "pattern": ["Geometric", "Solid"],
+          "cookware-bakeware-features": [
+            "Oven safe",
+            "Lid",
+            "Induction ready",
+            "Non-stick coating"
+          ],
+          "cookware-bakeware-material": ["Cast iron"],
+          "shape": ["Round"],
+          "product-certifications-standards": ["Non-toxic"]
+        },
+        "ratings": {
+          "value": 4.8,
+          "count": 20,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "XVgmAC7",
+        "title": "Lodge Seasoned Skillet",
+        "description": "This is a classic Lodge cast iron skillet, perfect for a variety of cooking tasks. It's pre-seasoned and ready to use, offering excellent heat retention and durability for stovetop searing or oven roasting. The skillet is suitable for everyday use and will become increasingly non-stick with proper care. It is also broiler and oven safe up to 500°F.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/7f044b5c-fe04-44e6-a974-6110034898c1?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": "https://cdn.trychannel3.com/a9d5dd5a-812d-47dc-8525-b2f267e08e62?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Dark gray Lodge cast iron skillet with a handle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/feec67d7-ec3d-4edf-b57b-0e5578f100bc?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "A set of black cast iron skillets and a large pot on a wooden surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/64500fb5-caa7-4419-9b0b-72b9cd071a9e?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "A round black cast iron skillet filled with baked fruit."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/d30c39ff-7524-478d-8442-552a83015431?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "product_information",
+            "alt_text": "Text overlay showing how to fry an egg with a Lodge cast iron."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/81461aed-0611-40d9-be30-991a82330e6c?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "A hand holding a black cast iron skillet in an oven."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/f0bf2b75-8925-43f8-a6c6-203d4515be98?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "A person's hands tending to pots on a stove."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/db200ee8-a0cc-4d33-8623-ee138f6928ac?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "A collection of black cast iron skillets and measuring cups on a wooden surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/09dbc80d-d407-4908-944e-7a05a1805fd3?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "A round black cast iron skillet filled with baked fruit on a wooden surface."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Cast iron"],
+        "key_features": [
+          "Pre‑seasoned",
+          "Heavyweight",
+          "Even heat distribution",
+          "Ready to use",
+          "Cast iron boasts superior heat retention and withstands high temperatures",
+          "The 10¼\" and 12\" sizes have additional loop helper handles",
+          "Made in the USA",
+          "Easy to care for and will last a lifetime",
+          "Great for stovetop searing or oven roasting",
+          "Broiler and oven safe to 500°F"
+        ],
+        "colors": [
+          {
+            "hex": "#474240",
+            "percentage": 0.4848
+          },
+          {
+            "hex": "#6c6a68",
+            "percentage": 0.425
+          },
+          {
+            "hex": "#9b9a97",
+            "percentage": 0.0902
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/XVgmAC7-MuWY-CNrACL?o=01KNSQ3WEWHNV40YC27C6YAQRD&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "surlatable.com",
+            "price": {
+              "price": 19.95,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.063,
+            "dimensions": null
+          },
+          {
+            "url": "https://buy.trychannel3.com/XVgmAC7-vlrO-CNrACL?o=01KFYEWYJ95SP7CRK8SC7WCVPB&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "williams-sonoma.com",
+            "price": {
+              "price": 19.95,
+              "compare_at_price": 59.95,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cookware-coating-type": ["Seasoned cast iron"],
+          "cleaning-instructions": ["Hand wash only"],
+          "cookware-bakeware-material": ["Cast iron"],
+          "cookware-bakeware-features": ["Lifetime warranty", "Oven safe"],
+          "handle-material": ["Iron"],
+          "shape": ["Round"],
+          "pattern": ["Solid"]
+        },
+        "ratings": {
+          "value": 4.5,
+          "count": 97,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "TuJxt8J",
+        "title": "Cast Iron Skillet",
+        "description": "Invest in your kitchen with this robust cast iron skillet, engineered for superior cooking performance. Its inherent ability to retain and distribute heat evenly makes it perfect for achieving a beautiful sear on steaks, achieving a deep golden crust on vegetables, or baking cornbread to perfection. This essential piece of cookware is built to last and is compatible with stovetops, ovens, and grills.",
+        "brands": [
+          {
+            "id": "YepJ",
+            "name": "Caraway"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/HUKCNES?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=VEoQ",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": null,
+            "alt_text": null
+          },
+          {
+            "url": "https://cdn.shopify.com/s/files/1/0606/8109/3269/files/e986a86b-51e4-4aa4-b1bb-e8239a1956c4_c0cff61d-fba0-4dba-8f21-1d4c8b3c09a3.webp?v=1765483972",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/8e382f9b-5aa4-400c-bdae-165c2febead8?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=VEoQ",
+            "is_main_image": false,
+            "shot_type": "flat_lay",
+            "alt_text": "Black frying pan"
+          },
+          {
+            "url": "https://cdn.shopify.com/s/files/1/0606/8109/3269/files/9a07fc7b-b542-4a82-af7b-c2e0d2d4e5f9_6c05c00c-0551-4c54-9b3d-d13031b27a1f.webp?v=1765483972",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Black frying pan on a gas stove with food inside"
+          },
+          {
+            "url": "https://cdn.shopify.com/s/files/1/0606/8109/3269/files/e08dc3bc-27af-4342-a628-ddc2f32ec7e3_69e50f37-aec1-4931-b07a-89fe3010cf3e.webp?v=1765483972",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/dedc7bd2-b9a2-41dc-a538-c0f00c7b5f84?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=VEoQ",
+            "is_main_image": false,
+            "shot_type": "flat_lay",
+            "alt_text": "Black frying pan"
+          },
+          {
+            "url": "https://cdn.shopify.com/s/files/1/0606/8109/3269/files/27575dd0-6ea0-49d9-bafb-e2daf15488ec_1874c26a-a881-41ad-ad11-679bc38f6f5c.webp?v=1765483972",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Person washing a black frying pan in a sink"
+          },
+          {
+            "url": "https://cdn.shopify.com/s/files/1/0606/8109/3269/files/235038ad-18a5-4686-bfcf-c7745da14ebe_f6525943-9a8b-4dc7-8984-c61443a48b2f.webp?v=1765483972",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "in_use",
+            "alt_text": "Black frying pan on a gas stove with food inside"
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Cast iron"],
+        "key_features": [
+          "Durable cast iron construction",
+          "Excellent heat retention for even cooking",
+          "Versatile use: suitable for stovetop, oven, and grill",
+          "Easy to clean and maintain"
+        ],
+        "colors": [
+          {
+            "hex": "#2b2a2a",
+            "percentage": 0.4834
+          },
+          {
+            "hex": "#555354",
+            "percentage": 0.4391
+          },
+          {
+            "hex": "#919090",
+            "percentage": 0.0775
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/TuJxt8J-VEoQ-CNrACL?o=01KCH1Q1R0WJRNTJFVMM85P89X&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "fromrebel.com",
+            "price": {
+              "price": 73.99,
+              "compare_at_price": 185,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.105,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "compatible-stove-top-type": ["Ceramic", "Gas", "Halogen", "Induction", "Sealed plate"],
+          "cookware-bakeware-features": [
+            "Induction ready",
+            "Lid",
+            "Non-stick coating",
+            "Oven safe"
+          ],
+          "pattern": ["Solid"],
+          "cookware-coating-type": ["Enamel"],
+          "handle-material": ["Stainless steel"],
+          "cookware-bakeware-material": ["Cast iron"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "soapeEt",
+        "title": "13.25 in. Cast Iron Skillet",
+        "description": "This Lodge Chef's Collection 13.25\" Skillet is made from durable cast iron and features a pre-seasoned, easy-release oil finish. Its sloped sides make flipping food simple, while the generous pouring spouts allow for easy transfer of liquids. A helper handle provides extra support when moving the pan, which is suitable for all cooktops, grills, and open fires, as well as being oven-safe up to 650°F. This skillet improves with use, offering unparalleled heat retention and even heating. Made in the USA.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/10e46b2a-0be2-4ef5-858c-91e5dd3e8448?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=FgTK",
+            "cleaned_url": "https://cdn.trychannel3.com/fb73ddfd-70bd-4b82-9b1f-52139f67e306?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=FgTK",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Lodge Chef's Collection 13.25\" cast iron skillet"
+          },
+          {
+            "url": "https://cdn.trychannel3.com/2e693906-d412-4803-8d85-5232badb25f4?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=FgTK",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of the handle of a cast iron skillet"
+          },
+          {
+            "url": "https://cdn.trychannel3.com/2e7bb769-5449-4699-88a6-2ab838012566?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=FgTK",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "product_information",
+            "alt_text": "Two cast iron skillets with a text list of benefits"
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["cast iron"],
+        "key_features": [
+          "Cast iron",
+          "Pre-seasoned",
+          "Spatula-friendly, easy-release oil finish",
+          "Improves with use",
+          "Unparalleled heat retention and even heating",
+          "Helper handle",
+          "Generous pouring spouts",
+          "Metal utensil-safe",
+          "Suitable for all cooktops, grills and open fire",
+          "Oven-safe to 650°F"
+        ],
+        "colors": [
+          {
+            "hex": "#4b4b4c",
+            "percentage": 0.3946
+          },
+          {
+            "hex": "#131313",
+            "percentage": 0.2436
+          },
+          {
+            "hex": "#787879",
+            "percentage": 0.1363
+          },
+          {
+            "hex": "#2e2d2e",
+            "percentage": 0.1167
+          },
+          {
+            "hex": "#b5b5b6",
+            "percentage": 0.1088
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/soapeEt-FgTK-CNrACL?o=01KRACYEA8SYGC7KFS500HSCS8&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "crateandbarrel.com",
+            "price": {
+              "price": 49.95,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.126,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Solid"],
+          "cleaning-instructions": ["Hand wash only"],
+          "cookware-coating-type": ["Seasoned cast iron"],
+          "compatible-stove-top-type": ["Ceramic", "Gas", "Halogen", "Induction", "Sealed plate"],
+          "shape": ["Round"],
+          "cookware-bakeware-material": ["Cast iron"],
+          "handle-material": ["Metal"],
+          "cookware-bakeware-features": ["Oven safe"]
+        },
+        "ratings": {
+          "value": 3.4,
+          "count": 5,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "hdeKN1N",
+        "title": "Monogrammed Lodge Seasoned Cast Iron Skillet",
+        "description": "This cast iron skillet is perfect for searing and sautéing, and its monogrammed lid adds a personal touch. The skillet is made by Lodge and personalized by Legacy Machine and Design, using 3-D CNC machining. The 12-inch size is ideal for cooking for a small group.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/a197f977-b744-403a-99a8-50a4b31b7acc?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=RTLY",
+            "cleaned_url": "https://cdn.trychannel3.com/18e57062-d2d3-43b6-b456-ed8b7c09df03?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=RTLY",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Monogrammed cast iron skillet with a 'Sanchez' monogram on a light brown surface."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["cast iron"],
+        "key_features": ["Monogrammed lid", "Seasoned cast iron", "12-inch diameter"],
+        "colors": [
+          {
+            "hex": "#746759",
+            "percentage": 0.2881
+          },
+          {
+            "hex": "#332b28",
+            "percentage": 0.2686
+          },
+          {
+            "hex": "#c6c2c0",
+            "percentage": 0.1324
+          },
+          {
+            "hex": "#1a1311",
+            "percentage": 0.114
+          },
+          {
+            "hex": "#4f4541",
+            "percentage": 0.1065
+          },
+          {
+            "hex": "#928a82",
+            "percentage": 0.0905
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/hdeKN1N-RTLY-CNrACL?o=01KBPBR8RY3M8YMZN2NHTF6QF0&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "williams-sonoma.com",
+            "price": {
+              "price": 249.95,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cookware-bakeware-features": ["Lid", "Oven safe"],
+          "compatible-stove-top-type": ["Ceramic", "Gas", "Halogen", "Induction"],
+          "cookware-bakeware-material": ["Cast iron", "Enamel"],
+          "pattern": ["Logo"],
+          "cookware-coating-type": ["Uncoated"],
+          "handle-material": ["Metal"],
+          "shape": ["Round"],
+          "cleaning-instructions": ["Hand wash only"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "bK7KxL2",
+        "title": "Lodge 10.25\" Cast Iron Skillet",
+        "description": "A durable 10.25-inch cast iron skillet produced by Lodge in collaboration with John Deere. This skillet comes pre-seasoned with 100% natural vegetable oil, making it naturally nontoxic and ready for immediate use. It features an embossed John Deere logo on the bottom and is designed for superior heat retention, making it suitable for stovetops, ovens, campfires, and grills. Made in the USA, this high-quality cookware is built to last for generations.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          },
+          {
+            "id": "1erA",
+            "name": "John Deere"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/00219dae-6414-4663-b7f3-d59a11427a8e?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": "https://cdn.trychannel3.com/baece9db-bcda-4f15-8319-9d8887b3f0d3?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Seasoned cast iron skillet with John Deere logo on a dark background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/5cc4c3f0-2186-413e-9769-9366680f5f19?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Seasoned cast iron skillet resting on green grass next to a yellow metal object."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/929c9a1a-d9db-43f1-b6c0-e9b130525945?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Seasoned cast iron skillet resting on dark soil and green grass."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/ea458ffd-c8cd-4c8c-941b-c0b608edc78d?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Seasoned cast iron skillet resting on yellow machinery and a leather glove."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Cast Iron"],
+        "key_features": [
+          "Made in the USA",
+          "Features John Deere design",
+          "Seasoned with 100% natural vegetable oil",
+          "Great heat retention for even cooking",
+          "Cast to last for generations",
+          "Nontoxic cookware made without PFAS"
+        ],
+        "colors": [],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/bK7KxL2-9pD6-CNrACL?o=01KZXMBS077C5KAQN2QV05CV6D&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "lodgecastiron.com",
+            "price": {
+              "price": 29.9,
+              "compare_at_price": 39.95,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.028,
+            "dimensions": {
+              "length": null,
+              "width": null,
+              "height": null,
+              "weight": {
+                "number": 5.66,
+                "unit": "lb"
+              }
+            }
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Size",
+              "values": [
+                {
+                  "label": "10.25\"",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": null,
+                  "product_id": null
+                }
+              ]
+            }
+          ],
+          "selected": [
+            {
+              "name": "Logo",
+              "label": "John Deere"
+            }
+          ]
+        },
+        "structured_attributes": {
+          "shape": ["Round"],
+          "handle-material": ["Iron"],
+          "pattern": ["Logo"],
+          "cookware-bakeware-features": ["Oven safe"],
+          "product-certifications-standards": ["Non-toxic"],
+          "cleaning-instructions": ["Hand wash only"],
+          "cookware-coating-type": ["Seasoned cast iron"],
+          "cookware-bakeware-material": ["Cast iron"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "5ckuHbR",
+        "title": "Cast Iron Skillet Set",
+        "description": "This set includes two Lodge Blacklock cast iron skillets, triple seasoned for a natural non-stick finish and ready for immediate use. Their thinly casted construction makes them lighter than traditional cast iron, while the extended and raised handles stay cooler for easier handling. The sloped sidewalls are designed for comfortable spatula use. These skillets offer superior heat retention, making them ideal for searing on the stovetop or roasting in the oven. Each skillet also features additional loop helper handles for added stability.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/bb87ac98-dcbb-425c-826c-fe6226887ff0?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "lifestyle",
+            "alt_text": "Black cast iron skillet filled with golden baked goods"
+          },
+          {
+            "url": "https://cdn.trychannel3.com/f6f4dcda-f4c5-46cb-b5f1-39b04b816783?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=MuWY",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Set of 2 black cast iron skillets"
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["Cast Iron"],
+        "key_features": [
+          "Triple seasoned cooking surface for a natural nonstick finish",
+          "Thinly casted construction for a lightweight feel while cooking",
+          "Extended and raised handle stays cooler longer for easy handling",
+          "Sloped sidewalls for safe spatula storing",
+          "Pre-seasoned and ready to use, Lodge cast iron is easy to care for and will last a lifetime",
+          "Cast iron boasts superior heat retention and withstands high temperatures—great for stovetop searing or oven roasting",
+          "Additional loop helper handles",
+          "Made in the USA",
+          "Lifetime warranty",
+          "10.5\" diameter"
+        ],
+        "colors": [],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/5ckuHbR-MuWY-CNrACL?o=01KQZBPVJVQA2K8CKM9M08TRSP&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "slt-sfcc-react-production.mobify-storefront.com",
+            "price": {
+              "price": 129.95,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.063,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cookware-bakeware-material": ["Cast iron"],
+          "pattern": ["Solid"],
+          "cookware-coating-type": ["Seasoned cast iron"],
+          "shape": ["Round"],
+          "cookware-bakeware-features": [
+            "Lifetime warranty",
+            "Non-stick coating",
+            "Oven safe",
+            "Stay cool handle"
+          ],
+          "cleaning-instructions": ["Hand wash only"],
+          "compatible-stove-top-type": ["Induction"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "0K3Ri7y",
+        "title": "Cast Iron Skillet",
+        "description": "This is a durable and versatile 13.25-inch cast iron skillet from Lodge, pre-seasoned and ready for immediate use. Renowned for its superior heat retention, this skillet is ideal for cooking family-sized portions of dishes like pancakes or fried chicken. It features a natural non-stick finish from its vegetable oil coating and is built with Lodge's 120 years of experience in cast iron cookware. Hand wash, hand dry immediately, and season occasionally to maintain its performance. Made in the USA.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/94795d24-cef8-41d4-bab4-069b34b3d19b?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": "https://cdn.trychannel3.com/943396d2-cd99-4a9a-87b4-1be1fab7cffc?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "is_main_image": true,
+            "shot_type": "angle_view",
+            "alt_text": "Perspective view of a black cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/957041b7-462c-415a-8126-3a8b057d43c0?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": "https://cdn.trychannel3.com/a7c0f372-0157-48e6-ab39-a2a25c475c00?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "is_main_image": false,
+            "shot_type": "angle_view",
+            "alt_text": "Side view of a black cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/11056b45-7c32-407e-ad60-c3700b46285d?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": "https://cdn.trychannel3.com/23629f24-21eb-42ca-98e8-b081c9595666?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Top-down view of a black cast iron skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/fd3e24f3-87bf-42c0-b32c-d3407a017815?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": "https://cdn.trychannel3.com/b57fa37c-ffbc-4d64-9fb9-dd41e0fa396e?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Top-down view of a black cast iron skillet."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["Cast Iron"],
+        "key_features": [
+          "even-heat",
+          "long-lasting heat-retention",
+          "assist handle",
+          "Superior heat distribution and retention",
+          "Vegetable oil coating gives a natural nonstick finish",
+          "Hand wash",
+          "Hand dry immediately after rinsing to avoid rusting",
+          "Made in USA of Domestic and Imported Materials",
+          "Compatible with any stovetop (including induction), oven, grill, or campfire",
+          "Nontoxic cookware made without PFAS"
+        ],
+        "colors": [
+          {
+            "hex": "#1c1c1c",
+            "percentage": 0.6212
+          },
+          {
+            "hex": "#5b5b5b",
+            "percentage": 0.1422
+          },
+          {
+            "hex": "#3f3f3f",
+            "percentage": 0.1301
+          },
+          {
+            "hex": "#9c9c9c",
+            "percentage": 0.1065
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/0K3Ri7y-9pD6-CNrACL?o=01KX8VD6N3W72MGWZKPYC0B7EE&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "lodgecastiron.com",
+            "price": {
+              "price": 39.9,
+              "compare_at_price": 49.95,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.028,
+            "dimensions": {
+              "length": {
+                "number": 20.75,
+                "unit": "in"
+              },
+              "width": {
+                "number": 13.75,
+                "unit": "in"
+              },
+              "height": {
+                "number": 2.81,
+                "unit": "in"
+              },
+              "weight": {
+                "number": 10.5,
+                "unit": "lb"
+              }
+            }
+          },
+          {
+            "url": "https://buy.trychannel3.com/0K3Ri7y-WPap-CNrACL?o=01KVT1NCRDPVZ0KKYBS2H3RJGW&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "cabelas.com",
+            "price": {
+              "price": 39.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.028,
+            "dimensions": null
+          },
+          {
+            "url": "https://buy.trychannel3.com/0K3Ri7y-qzpY-CNrACL?o=01KVGMG6GQ7HHMTQJJ0N6D1Z0D&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "basspro.com",
+            "price": {
+              "price": 39.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.021,
+            "dimensions": null
+          },
+          {
+            "url": "https://buy.trychannel3.com/0K3Ri7y-FgTK-CNrACL?o=01KT7KZDG43VEJ3DPEC0329PTH&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "crateandbarrel.com",
+            "price": {
+              "price": 64.95,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.126,
+            "dimensions": null
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Size",
+              "values": [
+                {
+                  "label": "10.25\"",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/2908f9fb-55eb-4046-aa15-c882b4f25571",
+                  "product_id": "H1ZV5R0"
+                },
+                {
+                  "label": "13.25\"",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/94795d24-cef8-41d4-bab4-069b34b3d19b",
+                  "product_id": "0K3Ri7y"
+                }
+              ]
+            }
+          ],
+          "selected": [
+            {
+              "name": "Size",
+              "label": "13.25\""
+            }
+          ]
+        },
+        "structured_attributes": {
+          "cookware-bakeware-material": ["Cast iron"],
+          "cookware-coating-type": ["Uncoated"],
+          "cookware-bakeware-features": [
+            "Induction ready",
+            "Lid",
+            "Oven safe",
+            "Stay cool handle",
+            "Non-stick coating"
+          ],
+          "compatible-stove-top-type": ["Ceramic", "Gas", "Halogen", "Induction", "Sealed plate"],
+          "shape": ["Round"],
+          "cleaning-instructions": ["Hand wash only"],
+          "handle-material": ["Iron", "Stainless steel", "Metal"],
+          "pattern": ["Solid"],
+          "product-certifications-standards": ["Non-toxic"]
+        },
+        "ratings": {
+          "value": 4.8,
+          "count": 157,
+          "source_count": 2
+        }
+      },
+      {
+        "id": "fYMmt2M",
+        "title": "Cast Iron Skillet with Handle Holder",
+        "description": "This Lodge Cast Iron 12-inch skillet set is perfect for any kitchen. It comes pre-seasoned with 100% natural vegetable oil and is ready to use right out of the box. The set also includes a red silicone handle holder to protect your hands from heat, making it easy to serve dishes directly from the skillet to the table. This durable cookware is compatible with all stovetops (including induction), ovens, grills, and campfires, and is designed to last for generations. It's made without PFAS for a non-toxic cooking experience that improves with every use.",
+        "brands": [
+          {
+            "id": "xHGx",
+            "name": "Cast Iron"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/2e55f129-c4d3-426d-b2b2-cfa41e2eaa25?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "size_chart",
+            "alt_text": "Diagram showing the dimensions of the skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/70d39b7c-6156-4ff9-ad45-f9ddbb774563?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "size_chart",
+            "alt_text": "Diagram showing the dimensions of the skillet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/b7349857-670f-46de-aa58-18e82c8d7322?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "size_chart",
+            "alt_text": "Diagram showing the dimensions of the skillet handle."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/9a3fcf8c-4381-4d54-98b1-194e79130c7e?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Black cast iron skillet filled with pancakes on a rustic surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/93928a5d-6fad-4c93-ae8b-2d2108eda305?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=9pD6",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "size_chart",
+            "alt_text": "Diagram showing the dimensions of the skillet."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": "adult",
+        "materials": ["Cast Iron", "Silicone"],
+        "key_features": [
+          "Includes 12 inch skillet and Red Silicone Handle Holder",
+          "Cast iron provides great heat retention and durability",
+          "Naturally seasoned cooking surface",
+          "Handle holder protects hands from heat up to 500℉",
+          "Compatible with any stovetop (including induction), oven, grill, or campfire",
+          "Nontoxic cookware made without PFAS",
+          "Made in the USA (skillet)",
+          "Made in China (handle holder)"
+        ],
+        "colors": [],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/fYMmt2M-9pD6-CNrACL?o=01KQWJDACVCHS8218PN6MZKEBF&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "lodgecastiron.com",
+            "price": {
+              "price": 34.9,
+              "compare_at_price": 42.95,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.028,
+            "dimensions": {
+              "length": {
+                "number": 18.31,
+                "unit": "in"
+              },
+              "width": {
+                "number": 12.56,
+                "unit": "in"
+              },
+              "height": {
+                "number": 2.68,
+                "unit": "in"
+              },
+              "weight": {
+                "number": 7.69,
+                "unit": "lb"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cookware-bakeware-material": ["Cast iron"],
+          "compatible-stove-top-type": ["Ceramic", "Gas", "Induction"],
+          "shape": ["Round"],
+          "pattern": ["Solid"],
+          "handle-material": ["Silicone"],
+          "cookware-coating-type": ["Seasoned cast iron"],
+          "product-certifications-standards": ["Non-toxic"],
+          "cookware-bakeware-features": ["Induction ready", "Stay cool handle", "Oven safe"],
+          "cleaning-instructions": ["Hand wash only", "Dishwasher safe"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "eghy7CM",
+        "title": "Cast Iron Skillet",
+        "description": "The Caraway Enameled Cast Iron 10.5\" Skillet is designed for effortless cooking, featuring a 3-layer enamel coating that provides superior durability, heat retention, and scratch resistance. Ideal for searing, frying, and sautéing, it boasts a sculpted handle for a secure grip and is compatible with all stovetops. This skillet is easy to clean and requires no seasoning.",
+        "brands": [
+          {
+            "id": "YepJ",
+            "name": "Caraway"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/b1c318d3-5a9e-4802-bbca-bb4c9133cc33?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=K6RA",
+            "cleaned_url": "https://cdn.trychannel3.com/0a399518-d19b-42fb-aea3-9cf55413fe27?aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR&mid=K6RA",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black cast iron skillet with a terracotta rim on a white background."
+          }
+        ],
+        "category": {
+          "slug": "skillets",
+          "title": "Skillets",
+          "path": [
+            {
+              "slug": "home-garden",
+              "title": "Home & Garden"
+            },
+            {
+              "slug": "kitchen-dining",
+              "title": "Kitchen & Dining"
+            },
+            {
+              "slug": "cookware-bakeware",
+              "title": "Cookware & Bakeware"
+            },
+            {
+              "slug": "cookware",
+              "title": "Cookware"
+            },
+            {
+              "slug": "skillets-frying-pans",
+              "title": "Skillets & Frying Pans"
+            },
+            {
+              "slug": "skillets",
+              "title": "Skillets"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": null,
+        "age": null,
+        "materials": ["cast iron", "enamel"],
+        "key_features": [
+          "3-layer enamel coating",
+          "No seasoning required",
+          "Superior heat retention",
+          "Lifetime warranty",
+          "Easy to clean",
+          "All stovetop compatible",
+          "Sculpted handle for secure grip"
+        ],
+        "colors": [
+          {
+            "hex": "#2a2a2c",
+            "percentage": 0.4865
+          },
+          {
+            "hex": "#515052",
+            "percentage": 0.3967
+          },
+          {
+            "hex": "#b2b2b2",
+            "percentage": 0.1167
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/eghy7CM-K6RA-CNrACL?o=01M1BMY7AWFSC11PXBJX3S0NW6&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR",
+            "domain": "macys.com",
+            "price": {
+              "price": 185,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.056,
+            "dimensions": {
+              "length": null,
+              "width": null,
+              "height": null,
+              "weight": {
+                "number": 5.84,
+                "unit": "lb"
+              }
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cleaning-instructions": ["Hand wash only"],
+          "shape": ["Round"],
+          "compatible-stove-top-type": ["Ceramic", "Gas", "Halogen", "Induction", "Sealed plate"],
+          "cookware-bakeware-features": ["Lifetime warranty", "Oven safe"],
+          "cookware-bakeware-material": ["Cast iron"],
+          "cookware-coating-type": ["Enamel"],
+          "handle-material": ["Iron"],
+          "pattern": ["Solid"]
+        },
+        "ratings": {
+          "value": 4.7,
+          "count": 373,
+          "source_count": 1
+        }
+      }
+    ],
+    "next_page_token": "eyJjYWNoZV9rZXkiOiAic2VhcmNoOjIwMjE1ZmZhYzc2MmM3NDYiLCAib2Zmc2V0IjogMzB9"
+  }
+}

@@ -1,6 +1,6 @@
 import { formatPct, formatUsd } from "@slip/domain";
 import type { ProductMeasure, StudyNumbers } from "./measure.js";
-import { G1_SHARE_PCT_HUNDREDTHS } from "./measure.js";
+import { G1_SHARE_PCT_HUNDREDTHS, SUSPECT_GAP_PCT_HUNDREDTHS } from "./measure.js";
 import type { Manifest } from "./snapshots.js";
 
 /**
@@ -41,12 +41,19 @@ export function renderReport(input: {
       ` (${numbers.withTwoOrMore} of ${numbers.products}) |`,
     `| Typical gap, cheapest to priciest | **${pct(numbers.medianGapPctHundredths)}**` +
       `${numbers.medianGapCents === null ? "" : ` · ${formatUsd(numbers.medianGapCents)}`} |`,
-    `| Widest gap seen | ${pct(numbers.widestGapPctHundredths)} |`,
+    `| Middle half of those gaps | ${pct(numbers.quartileGapPctHundredths.lower)} to` +
+      ` ${pct(numbers.quartileGapPctHundredths.upper)} |`,
     `| Dearer offer pays more commission | **${pct(numbers.commissionConflictPctHundredths)}**` +
       ` (${numbers.commissionConflicts} of ${numbers.commissionConsidered} comparable) |`,
     "",
-    `Products with at least one comparable offer: ${numbers.priced} of ${numbers.products}.` +
-      " The rest cannot be checked at all — nothing in them is in stock, new and priced in USD.",
+    numbers.priced === numbers.products
+      ? `Every product in the sample had at least one comparable offer.`
+      : `Products with at least one comparable offer: ${numbers.priced} of ${numbers.products}.` +
+        " The rest cannot be checked at all — nothing in them is in stock, new and priced in USD.",
+    "",
+    `A quarter of the comparable products are priced identically at every store` +
+      ` (${pct(numbers.quartileGapPctHundredths.lower)} gap), so the median is doing real work here:` +
+      ` where there is a difference it is usually large.`,
     "",
     `**G1** asks for ${formatPct(G1_SHARE_PCT_HUNDREDTHS)} of sampled products to carry two or more` +
       ` comparable offers. This sample: ${pct(numbers.shareWithTwoOrMorePctHundredths)} —` +
@@ -62,13 +69,78 @@ export function renderReport(input: {
     );
   }
 
+  if (numbers.suspectGrouping > 0) {
+    lines.push(
+      "",
+      "## Suspected grouping errors, and what they would cost",
+      "",
+      `${numbers.suspectGrouping} of the ${numbers.withTwoOrMore} comparable products show a gap` +
+        ` above ${formatPct(SUSPECT_GAP_PCT_HUNDREDTHS)}. Those are far more likely to be` +
+        " Channel3 filing two different items under one product id than a store selling the same" +
+        " thing for a fraction of the price — one of them puts a $40 skillet beside a $637 one." +
+        " They are listed below as suspected, not counted as bargains.",
+      "",
+      `Excluding them, the typical gap is` +
+        ` **${pct(numbers.medianGapPctHundredthsExcludingSuspect)}** rather than` +
+        ` ${pct(numbers.medianGapPctHundredths)}. Quote the smaller number.`,
+      "",
+      "**This is a live risk in the product, not just in the study.** Slip compares within one" +
+        ' product id, so a wrong grouping makes the cheapest "comparable" offer a different' +
+        " item — and a correct purchase of the dearer one would be rejected against it. The spec" +
+        " anticipated this as gate G4 and left it [UNVERIFIED]; this sample is the first evidence" +
+        " that it happens, at roughly one comparable product in fifteen.",
+      "",
+      "| Suspected gap | Cheapest → priciest | Product | Stores |",
+      "|---|---|---|---|",
+      ...input.measures
+        .filter(
+          (measure) =>
+            measure.spread !== null &&
+            measure.spread.gapPctHundredths >= SUSPECT_GAP_PCT_HUNDREDTHS,
+        )
+        .sort((a, b) => (b.spread?.gapPctHundredths ?? 0) - (a.spread?.gapPctHundredths ?? 0))
+        .map((measure) => {
+          const spread = measure.spread;
+          return (
+            `| ${spread === null ? "—" : formatPct(spread.gapPctHundredths)} |` +
+            ` ${spread === null ? "—" : `${formatUsd(spread.cheapest)} → ${formatUsd(spread.priciest)}`} |` +
+            ` ${measure.title.replace(/\|/g, "/")} | ${measure.domains.join(", ")} |`
+          );
+        }),
+    );
+  }
+
+  const queryText = new Map(manifest.queries.map((query) => [query.slug, query.query]));
   lines.push(
     "",
-    "## What was searched",
+    "## Why so few comparisons",
     "",
-    "| Query | Products |",
+    `Channel3 listed ${numbers.offersListed} offers across the ${numbers.products} products. The` +
+      ` adapter read ${numbers.offersMapped} of them and the check could compare` +
+      ` ${numbers.offersComparable}, so **neither Slip's mapping nor its comparison rule is what` +
+      ` thins the sample** — the catalogue simply carries one offer for most products.`,
+    "",
+    "| Offers not compared | |",
     "|---|---|",
-    ...manifest.queries.map((query) => `| ${query.query} | ${query.products} |`),
+    `| No price Slip could read | ${numbers.excluded.noPrice} |`,
+    `| Not priced in USD | ${numbers.excluded.notUsd} |`,
+    `| Not in stock | ${numbers.excluded.notInStock} |`,
+    `| Not condition new | ${numbers.excluded.notNew} |`,
+    `| The same listing twice | ${numbers.excluded.duplicate} |`,
+    "",
+    "| Comparable offers | Products |",
+    "|---|---|",
+    ...numbers.countsByComparable.map((row) => `| ${row.comparable} | ${row.products} |`),
+    "",
+    "## What was searched, and how dense each one was",
+    "",
+    "| Query | Products | 2+ comparable offers |",
+    "|---|---|---|",
+    ...numbers.perQuery.map(
+      (row) =>
+        `| ${queryText.get(row.slug) ?? row.slug} | ${row.products} |` +
+        ` ${row.withTwoOrMore} (${formatPct(row.sharePctHundredths)}) |`,
+    ),
     "",
     "## Grouping, for a person to check (G4)",
     "",

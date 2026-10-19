@@ -29,14 +29,26 @@ export interface Spread {
   gapPctHundredths: number;
 }
 
+/** Why an offer could not take part in the comparison. Each offer counts once, in this order. */
+export interface Excluded {
+  noPrice: number;
+  notUsd: number;
+  notInStock: number;
+  notNew: number;
+  duplicate: number;
+}
+
 export interface ProductMeasure {
   productId: string;
   title: string;
   /** The query whose results first carried this product. */
   foundBy: string;
+  /** Offers Channel3 listed, before Slip's adapter read them. */
+  listed: number;
   /** Offers the adapter produced, and how many of those could be compared. */
   offers: number;
   comparable: number;
+  excluded: Excluded;
   /** Cheapest against priciest, when there are two or more comparable offers. */
   spread: Spread | null;
   /** How many comparable offers stated a commission rate, and whether the top payer is dearer. */
@@ -45,8 +57,24 @@ export interface ProductMeasure {
   domains: string[];
 }
 
+export interface QueryDensity {
+  slug: string;
+  products: number;
+  withTwoOrMore: number;
+  sharePctHundredths: number;
+}
+
 export interface StudyNumbers {
   products: number;
+  /** Offers listed by Channel3, read by the adapter, and left after the check's own rule. */
+  offersListed: number;
+  offersMapped: number;
+  offersComparable: number;
+  excluded: Excluded;
+  /** How many products had 0, 1, 2 … comparable offers. */
+  countsByComparable: { comparable: number; products: number }[];
+  /** The same density, per query, so a thin sample can be told from a thin category. */
+  perQuery: QueryDensity[];
   /** Products with at least one comparable offer: the rest cannot be checked at all. */
   priced: number;
   withTwoOrMore: number;
@@ -57,6 +85,12 @@ export interface StudyNumbers {
   medianGapPctHundredths: number | null;
   medianGapCents: Cents | null;
   widestGapPctHundredths: number | null;
+  /** The spread of the spreads: a median alone hides that a quarter of them are zero. */
+  quartileGapPctHundredths: { lower: number | null; upper: number | null };
+  /** Products whose gap is wide enough to suspect the grouping rather than the price. */
+  suspectGrouping: number;
+  /** The median again, with those left out: the figure to quote when being careful. */
+  medianGapPctHundredthsExcludingSuspect: number | null;
   /** Products where commission could be compared, and where the dearer offer pays more. */
   commissionConsidered: number;
   commissionConflicts: number;
@@ -65,6 +99,14 @@ export interface StudyNumbers {
 
 /** G1's bar: at least this share of sampled products must carry two or more comparable offers. */
 export const G1_SHARE_PCT_HUNDREDTHS = 6_000;
+
+/**
+ * A gap this wide says more about the catalogue than the market. Channel3 groups each merchant's
+ * offer under one product id, and where that grouping is wrong — a $40 skillet filed under a $637
+ * one — the "cheapest offer" is a different item. Above this line the study reports a product as a
+ * *suspected* grouping error rather than a bargain, and says so instead of parading the number.
+ */
+export const SUSPECT_GAP_PCT_HUNDREDTHS = 10_000;
 
 /**
  * Every product in the sample, each counted once. A product found by two queries is one product;
@@ -118,6 +160,7 @@ export async function measureProducts(snapshots: readonly Snapshot[]): Promise<P
 
 export function measureOne(product: ProductOffers, foundBy: string): ProductMeasure {
   const comparable = comparableOffers(product.offers);
+  const excluded = excludedCounts(product.offers, comparable.length);
   const prices = comparable.map((offer) => offer.priceCents);
   const cheapest = prices.length === 0 ? null : (Math.min(...prices) as Cents);
   const priciest = prices.length === 0 ? null : (Math.max(...prices) as Cents);
@@ -131,12 +174,17 @@ export function measureOne(product: ProductOffers, foundBy: string): ProductMeas
         }
       : null;
   const withCommission = comparable.filter((offer) => offer.commissionBps !== null);
+  const listed = Array.isArray((product.raw as { offers?: unknown } | null)?.offers)
+    ? (product.raw as { offers: unknown[] }).offers.length
+    : product.offers.length;
   return {
     productId: product.productId,
     title: product.title,
     foundBy,
+    listed,
     offers: product.offers.length,
     comparable: comparable.length,
+    excluded,
     spread,
     commissionKnown: withCommission.length,
     topCommissionIsDearer: topPaysMore(withCommission),
@@ -165,6 +213,37 @@ function topPaysMore(offers: readonly (Offer & { priceCents: Cents })[]): boolea
   return !topPayers.some((offer) => offer.priceCents === cheapest);
 }
 
+/**
+ * Why each offer is out, counted once and in a fixed order, so the columns add up: an offer with no
+ * price is not also counted as the wrong currency. What is left over after those four is a listing
+ * that appeared twice.
+ */
+function excludedCounts(offers: readonly Offer[], comparable: number): Excluded {
+  const counts: Excluded = { noPrice: 0, notUsd: 0, notInStock: 0, notNew: 0, duplicate: 0 };
+  for (const offer of offers) {
+    if (offer.priceCents === null) {
+      counts.noPrice += 1;
+    } else if (offer.currency !== "USD") {
+      counts.notUsd += 1;
+    } else if (offer.availability !== "InStock") {
+      counts.notInStock += 1;
+    } else if (offer.condition !== "new") {
+      counts.notNew += 1;
+    }
+  }
+  const named = counts.noPrice + counts.notUsd + counts.notInStock + counts.notNew;
+  counts.duplicate = offers.length - comparable - named;
+  return counts;
+}
+
+const addExcluded = (a: Excluded, b: Excluded): Excluded => ({
+  noPrice: a.noPrice + b.noPrice,
+  notUsd: a.notUsd + b.notUsd,
+  notInStock: a.notInStock + b.notInStock,
+  notNew: a.notNew + b.notNew,
+  duplicate: a.duplicate + b.duplicate,
+});
+
 export function summarise(measures: readonly ProductMeasure[]): StudyNumbers {
   const products = measures.length;
   const priced = measures.filter((m) => m.comparable >= 1).length;
@@ -173,8 +252,45 @@ export function summarise(measures: readonly ProductMeasure[]): StudyNumbers {
   const conflicts = considered.filter((m) => m.topCommissionIsDearer === true).length;
   const share = products === 0 ? 0 : Math.round((spreads.length / products) * 10_000);
   const medianCents = lowerMedian(spreads.map((s) => s.gapCents));
+  const pcts = [...spreads.map((s) => s.gapPctHundredths)].sort((a, b) => a - b);
+  const quartile = (fraction: number): number | null =>
+    pcts.length === 0
+      ? null
+      : (pcts[Math.min(pcts.length - 1, Math.floor(pcts.length * fraction))] ?? null);
+  const sober = spreads.filter((s) => s.gapPctHundredths < SUSPECT_GAP_PCT_HUNDREDTHS);
+  const byQuery = new Map<string, { products: number; withTwoOrMore: number }>();
+  for (const measure of measures) {
+    const seen = byQuery.get(measure.foundBy) ?? { products: 0, withTwoOrMore: 0 };
+    seen.products += 1;
+    if (measure.spread !== null) {
+      seen.withTwoOrMore += 1;
+    }
+    byQuery.set(measure.foundBy, seen);
+  }
+  const counts = new Map<number, number>();
+  for (const measure of measures) {
+    counts.set(measure.comparable, (counts.get(measure.comparable) ?? 0) + 1);
+  }
   return {
     products,
+    offersListed: measures.reduce((total, m) => total + m.listed, 0),
+    offersMapped: measures.reduce((total, m) => total + m.offers, 0),
+    offersComparable: measures.reduce((total, m) => total + m.comparable, 0),
+    excluded: measures
+      .map((m) => m.excluded)
+      .reduce(addExcluded, { noPrice: 0, notUsd: 0, notInStock: 0, notNew: 0, duplicate: 0 }),
+    countsByComparable: [...counts.entries()]
+      .sort(([a], [b]) => a - b)
+      .map(([comparable, count]) => ({ comparable, products: count })),
+    perQuery: [...byQuery.entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([slug, seen]) => ({
+        slug,
+        products: seen.products,
+        withTwoOrMore: seen.withTwoOrMore,
+        sharePctHundredths:
+          seen.products === 0 ? 0 : Math.round((seen.withTwoOrMore / seen.products) * 10_000),
+      })),
     priced,
     withTwoOrMore: spreads.length,
     shareWithTwoOrMorePctHundredths: share,
@@ -183,6 +299,9 @@ export function summarise(measures: readonly ProductMeasure[]): StudyNumbers {
     medianGapCents: medianCents === null ? null : cents(medianCents),
     widestGapPctHundredths:
       spreads.length === 0 ? null : Math.max(...spreads.map((s) => s.gapPctHundredths)),
+    quartileGapPctHundredths: { lower: quartile(0.25), upper: quartile(0.75) },
+    suspectGrouping: spreads.length - sober.length,
+    medianGapPctHundredthsExcludingSuspect: lowerMedian(sober.map((s) => s.gapPctHundredths)),
     commissionConsidered: considered.length,
     commissionConflicts: conflicts,
     commissionConflictPctHundredths:

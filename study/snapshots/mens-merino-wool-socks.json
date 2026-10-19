@@ -1,0 +1,3537 @@
+{
+  "slug": "mens-merino-wool-socks",
+  "query": "mens merino wool socks",
+  "fetchedAt": "2026-10-19T12:21:30.818Z",
+  "rawHash": "8d61516630c7f807ecd87fc43eefe2dcc7ce49aab434f7d99ff16223970be1f6",
+  "body": {
+    "products": [
+      {
+        "id": "HMCQT29",
+        "title": "Merino Wool Ribbed Socks",
+        "description": "These classic ribbed socks from Sunspel are expertly crafted in Italy from soft merino wool, providing natural warmth and breathability. They feature a technical treatment to ensure they maintain their shape and softness over time. The socks come in a sophisticated navy color and are designed for a timeless, high-quality look.",
+        "brands": [
+          {
+            "id": "SMwk",
+            "name": "Sunspel"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/4b50f2e2-aa11-4c33-a8a8-2399d816f18a?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=m1d3",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/4b50f2e2-aa11-4c33-a8a8-2399d816f18a?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=m1d3",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Navy ribbed merino wool socks lying on a light background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/0031cd11-3e1b-4b1d-8983-16ddb1f9c710?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=m1d3",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of the navy sock fabric with SUNSPEL branding."
+          }
+        ],
+        "category": {
+          "slug": "crew-socks",
+          "title": "Crew Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "crew-socks",
+              "title": "Crew Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": null,
+        "materials": ["93% Merino Wool", "6% Polyester", "1% Elastane"],
+        "key_features": [
+          "Expertly made in Italy",
+          "Soft merino wool for natural warmth and breathability",
+          "Technical treatment for long-lasting performance",
+          "Retains shape and softness wash after wash",
+          "Ribbed design"
+        ],
+        "colors": [
+          {
+            "hex": "#1f1f28",
+            "percentage": 0.9501
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/HMCQT29-m1d3-CNrACL?o=01M2E7WY3N5ME550TCF83T4D4K&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "us.sunspel.com",
+            "price": {
+              "price": 35,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.056,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "cushioning-level": ["Medium cushion"],
+          "sock-toe-style": ["Standard seam", "Seamless"],
+          "clothing-features": ["Breathable design", "Lightweight", "Moisture wicking"],
+          "sock-cushioning-level": ["Medium cushioning"],
+          "toe-coverage": ["Full toe"],
+          "grip-coverage": ["Sole grip", "No grip"],
+          "pattern": ["Diagonal", "Solid", "Striped"],
+          "sock-grip-type": ["None"],
+          "accessory-size": ["Small (S)", "Medium (M)"],
+          "sock-cushioning": ["Medium", "None"],
+          "fabric": ["Merino", "Wool"],
+          "activity": ["Universal"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "zR4Lpia",
+        "title": "Mountaineer Mens Merino Quarter Length Socks",
+        "description": "The Mountaineer Men's Merino Quarter Length Socks are designed for comfort and versatility across various conditions. Crafted from soft merino wool, these socks provide natural breathability, moisture management, and temperature regulation, keeping feet warm in the cold and cool in warmer weather. Their quarter length design ends just above the ankle, making them ideal for mid or high-topped shoes, while the natural antibacterial properties of the wool help resist odors for all-day freshness. They are suitable for hiking, walking, travel, and everyday wear.",
+        "brands": [
+          {
+            "id": "X2cA",
+            "name": "EMS"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/6dc504c8-4e7b-4dad-8e1c-3c9d8771612c?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/6dc504c8-4e7b-4dad-8e1c-3c9d8771612c?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Charcoal and light grey merino quarter length sock on white background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/6419015f-8c57-488f-b0f0-611d68720e7f?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of the textured knit and geometric pattern on the sock calf."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/82e4b7c0-76eb-47d6-95af-e323c09439d4?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Close-up of the patterned design of the merino sock material."
+          }
+        ],
+        "category": {
+          "slug": "socks",
+          "title": "Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            }
+          ],
+          "has_children": true
+        },
+        "gender": "male",
+        "age": null,
+        "materials": ["Merino wool"],
+        "key_features": [
+          "Made with soft merino wool for natural breathability and moisture management",
+          "Quarter length design ends just above the ankle to prevent discomfort with mid or high-topped shoes",
+          "Naturally anti-bacterial properties to resist odors",
+          "Temperature regulation to keep feet warm in cold and cool in warmth",
+          "Suitable for hiking, walking, travel, and everyday wear"
+        ],
+        "colors": [
+          {
+            "hex": "#4e4c51",
+            "percentage": 0.7622
+          },
+          {
+            "hex": "#828084",
+            "percentage": 0.1227
+          },
+          {
+            "hex": "#adacae",
+            "percentage": 0.115
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/zR4Lpia-nQUQ-CNrACL?o=01M47DBP71MEWD8RY77PRE0HNF&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "ems.com",
+            "price": {
+              "price": 11.99,
+              "compare_at_price": 22.99,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.02,
+            "dimensions": null
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Size",
+              "values": [
+                {
+                  "label": "10-13",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": null,
+                  "product_id": null
+                }
+              ]
+            }
+          ],
+          "selected": []
+        },
+        "structured_attributes": {
+          "fabric": ["Merino"],
+          "pattern": ["Geometric"],
+          "clothing-features": ["Moisture wicking", "Breathable design"],
+          "activity": ["Hiking", "Walking"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "Tt8Y8PP",
+        "title": "Men's Explorer Merino Socks",
+        "description": "The ON Men's Explorer Merino Socks are breathable, crew-length socks designed for comfort and performance. Crafted from a merino wool blend, they offer thermal warmth, moisture-wicking capabilities, and antimicrobial properties to fight odor. These socks feature underfoot padding for enhanced cushioning and a classic fit, making them ideal for hiking, travel, and everyday wear in cooler weather.",
+        "brands": [
+          {
+            "id": "o1qj",
+            "name": "On"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/e1e6092b-805f-4056-bae7-5da0f3408b76?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=Dxel",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/e1e6092b-805f-4056-bae7-5da0f3408b76?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=Dxel",
+            "is_main_image": true,
+            "shot_type": "on_model",
+            "alt_text": "Men's merino explorer socks worn on legs, showing black, gray, and white pattern."
+          }
+        ],
+        "category": {
+          "slug": "crew-socks",
+          "title": "Crew Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "crew-socks",
+              "title": "Crew Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["merino wool blend"],
+        "key_features": [
+          "Crew Length",
+          "Underfoot Padding",
+          "Moisture-Wicking",
+          "Thermal Properties",
+          "Antimicrobial Properties",
+          "Merino Wool Blend",
+          "Classic Fit"
+        ],
+        "colors": [
+          {
+            "hex": "#f3f3f3",
+            "percentage": 0.4525
+          },
+          {
+            "hex": "#7b6e6a",
+            "percentage": 0.2712
+          },
+          {
+            "hex": "#1e1d1d",
+            "percentage": 0.2446
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/Tt8Y8PP-Dxel-CNrACL?o=01M37P43RBGTAB7XCP6BA7Q5EC&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "saintbernard.com",
+            "price": {
+              "price": 30,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "sock-cushioning": ["Targeted"],
+          "accessory-size": ["Double extra large (XXL)"],
+          "activity": ["Hiking", "Universal"],
+          "clothing-features": ["Moisture wicking", "Breathable design"],
+          "pattern": ["Color-block"],
+          "toe-coverage": ["Full toe"],
+          "grip-coverage": ["No grip"],
+          "sock-grip-type": ["None"],
+          "fabric": ["Merino", "Synthetic"],
+          "cushioning-level": ["Targeted cushion"]
+        },
+        "ratings": {
+          "value": 4.9,
+          "count": 2018,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "Vv2vGVn",
+        "title": "Mens Merino Thermal Quarter Length Socks",
+        "description": "The EMS Mens Merino Thermal Quarter Length Socks are designed for outdoor activities in cold weather. Crafted from a soft wool blend, these socks provide extra warmth and comfort for long walks. They feature high cushioning for a cozy feel and a boot-length fit that reaches the mid-calf, making them ideal for pairing with walking boots.",
+        "brands": [
+          {
+            "id": "X2cA",
+            "name": "EMS"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/5c7daf9d-e436-45fb-b84d-782500639957?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/5c7daf9d-e436-45fb-b84d-782500639957?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black merino thermal quarter length sock shown against a white background."
+          }
+        ],
+        "category": {
+          "slug": "thermal-socks",
+          "title": "Thermal Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "thermal-socks",
+              "title": "Thermal Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": null,
+        "materials": ["merino wool", "wool blend"],
+        "key_features": [
+          "Merino wool with natural antibacterial properties",
+          "IsoTherm technology for heat retention without bulk",
+          "High cushioning for a thick, soft, and cozy feel",
+          "Boot length mid-calf fit"
+        ],
+        "colors": [
+          {
+            "hex": "#21201e",
+            "percentage": 0.9284
+          },
+          {
+            "hex": "#666564",
+            "percentage": 0.0716
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/Vv2vGVn-nQUQ-CNrACL?o=01M37RC016VPX99WEF56YKGKH4&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "ems.com",
+            "price": {
+              "price": 7.99,
+              "compare_at_price": 14.99,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.02,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Solid"],
+          "activity": ["Hiking", "Walking"],
+          "cushioning-level": ["Heavy cushion"],
+          "fabric": ["Merino"],
+          "sock-cushioning": ["Heavy"],
+          "sock-cushioning-level": ["Heavy cushioning"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "ZXK94CG",
+        "title": "Ems Mens Merino Thermal Quarter Length Socks",
+        "description": "The EMS Mens Merino Thermal Quarter Length Socks are designed for outdoor activities in cold weather. They are crafted from a soft wool blend featuring Merino wool for warmth and antibacterial properties, and IsoTherm technology with densely packed fibers to retain heat without adding bulk. These high-cushion socks provide a thick, cozy feel and a mid-calf boot length, making them ideal for pairing with walking boots.",
+        "brands": [
+          {
+            "id": "X2cA",
+            "name": "EMS"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/8eb05b54-ce4f-4cb5-bb22-46801b47aa3c?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/8eb05b54-ce4f-4cb5-bb22-46801b47aa3c?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Brown heathered merino thermal socks standing upright on white background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/7392804e-6aa8-4770-a960-a6c7174beee3?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/7392804e-6aa8-4770-a960-a6c7174beee3?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Black merino thermal socks standing upright on white background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/6e6bb457-30ea-4656-96fe-554698574c8d?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of the knitted texture and ribbing of black socks."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/4921acdb-632c-4988-8472-b60f70e7d413?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/4921acdb-632c-4988-8472-b60f70e7d413?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Black merino thermal socks standing upright on white background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/799a8f89-932e-4eba-8246-e1971840996a?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of the knitted texture of black socks."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/5c1f7b0e-1cc3-49a3-a7f7-b4ac7ef1e178?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/5c1f7b0e-1cc3-49a3-a7f7-b4ac7ef1e178?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Brown heathered merino thermal socks standing upright on white background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/13fe3bbd-0f05-49f5-bb7c-b11746aa3a0c?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of the knitted texture and fabric of brown socks."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/08757005-3543-423c-b651-11545201e211?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of the ribbed cuff of brown socks."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/5eca367d-3adb-4d71-bf40-d70792492291?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of the knitted texture of brown socks."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/f03d0ba8-7a94-4a35-a77d-6f9443238f61?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/f03d0ba8-7a94-4a35-a77d-6f9443238f61?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Grey merino thermal socks standing upright on white background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/40e206de-4340-4458-8ac2-9a5476789cc5?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of the knitted texture of grey socks."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/e0a0270b-cd0b-4ff0-ab0c-d7a65d580834?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/e0a0270b-cd0b-4ff0-ab0c-d7a65d580834?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of the ribbed cuff of grey socks."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/cc15a1fb-0a06-4a56-b557-5f63ccfc621a?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of the knitted texture of grey socks."
+          }
+        ],
+        "category": {
+          "slug": "thermal-socks",
+          "title": "Thermal Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "thermal-socks",
+              "title": "Thermal Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": null,
+        "materials": ["Merino wool blend"],
+        "key_features": [
+          "Merino wool with natural antibacterial properties",
+          "IsoTherm technology to retain heat without bulk",
+          "High level of cushioning for a soft and cosy feel",
+          "Boot length for mid-calf fit"
+        ],
+        "colors": [
+          {
+            "hex": "#746362",
+            "percentage": 0.8343
+          },
+          {
+            "hex": "#5a4948",
+            "percentage": 0.0849
+          },
+          {
+            "hex": "#b0a5a4",
+            "percentage": 0.0807
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/ZXK94CG-nQUQ-CNrACL?o=01M47DJPZ27YM63M4GBVSHYPJN&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "ems.com",
+            "price": {
+              "price": 7.99,
+              "compare_at_price": 14.99,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.02,
+            "dimensions": null
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Color",
+              "values": [
+                {
+                  "label": "BLACK",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/19acca16-16b2-44fe-8e4b-136a5f02bf4d",
+                  "product_id": "64kdmZJ"
+                },
+                {
+                  "label": "BROWN",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/8eb05b54-ce4f-4cb5-bb22-46801b47aa3c",
+                  "product_id": "ZXK94CG"
+                },
+                {
+                  "label": "GREY",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/0150c4cd-bfc0-481c-996a-66b7cdf9ee14",
+                  "product_id": "Yot7evD"
+                }
+              ]
+            },
+            {
+              "name": "Size",
+              "values": [
+                {
+                  "label": "8-11",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": null,
+                  "product_id": null
+                },
+                {
+                  "label": "10-13",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": null,
+                  "product_id": null
+                }
+              ]
+            }
+          ],
+          "selected": [
+            {
+              "name": "Color",
+              "label": "BROWN"
+            }
+          ]
+        },
+        "structured_attributes": {
+          "cushioning-level": ["Heavy cushion"],
+          "pattern": ["Solid"],
+          "sock-cushioning-level": ["Heavy cushioning"],
+          "fabric": ["Merino"],
+          "activity": ["Walking"],
+          "sock-cushioning": ["Heavy"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "WQJ3ppL",
+        "title": "Merino Wool Blend Ribbed Socks",
+        "description": "Men's crew length ribbed socks crafted in Italy from a durable and soft merino wool blend. Designed for all-day wear and comfort, these socks are sized to fit shoe sizes 7 ½ to 12.",
+        "brands": [
+          {
+            "id": "jd7c",
+            "name": "Brooks Brothers"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/0cda7c6a-7075-4adc-9285-3ec90e58be83?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=7Eau",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/0cda7c6a-7075-4adc-9285-3ec90e58be83?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=7Eau",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black ribbed merino wool blend socks lying on a plain background."
+          }
+        ],
+        "category": {
+          "slug": "crew-socks",
+          "title": "Crew Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "crew-socks",
+              "title": "Crew Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["80% Wool", "20% Nylon"],
+        "key_features": [
+          "Crew length",
+          "Ribbed style",
+          "Made in Italy",
+          "Fits shoe sizes 7 ½ to 12"
+        ],
+        "colors": [
+          {
+            "hex": "#252422",
+            "percentage": 0.9335
+          },
+          {
+            "hex": "#5a564f",
+            "percentage": 0.0665
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/WQJ3ppL-7Eau-CNrACL?o=01M28RSW1JCJMKGZVJ8KPPKMX1&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "brooksbrothers.com",
+            "price": {
+              "price": 19.5,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.105,
+            "dimensions": null
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Color",
+              "values": [
+                {
+                  "label": "Black",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/01e2aae2-afcd-498d-bb4e-c72b65252363",
+                  "product_id": "IVscIhA"
+                },
+                {
+                  "label": "Grey",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/0cda7c6a-7075-4adc-9285-3ec90e58be83",
+                  "product_id": "WQJ3ppL"
+                },
+                {
+                  "label": "Navy",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/f61673de-c066-44d0-8514-628214616a30",
+                  "product_id": "txWoR9p"
+                }
+              ]
+            }
+          ],
+          "selected": [
+            {
+              "name": "Color",
+              "label": "Grey"
+            }
+          ]
+        },
+        "structured_attributes": {
+          "pattern": ["Solid"],
+          "accessory-size": ["One size"],
+          "fabric": ["Merino", "Nylon"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "H2E4r9l",
+        "title": "Lightweight Merino Wool Blend No Show Socks",
+        "description": "These Bombas no-show socks are crafted for comfort and performance. They feature a lightweight blend of soft, moisture-wicking Merino wool, polyester, and spandex for a perfect fit. The socks have silicone grips on the heel to prevent slipping and a subtle light gray stripe detail.",
+        "brands": [
+          {
+            "id": "q6ys",
+            "name": "Bombas"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/028e0957-3bf0-40e9-845f-27ecafbc027d?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=vqn8",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/028e0957-3bf0-40e9-845f-27ecafbc027d?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=vqn8",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black no-show sock laid flat, showing the sole and design detail."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/5148e1e2-8c10-4263-b625-51c3e0b99382?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=vqn8",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "on_model",
+            "alt_text": "Man wearing black Bombas no-show socks on his legs."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/52c2e482-9937-4c7f-bd47-815ffbf456f3?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=vqn8",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "on_model",
+            "alt_text": "Man wearing black Bombas no-show socks on his feet."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/05bec2cf-5d79-47d8-a25a-bd7dd37c9e00?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=vqn8",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up detail of the black Bombas sock with grey lettering."
+          }
+        ],
+        "category": {
+          "slug": "sneaker-socks",
+          "title": "Sneaker Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "sneaker-socks",
+              "title": "Sneaker Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["Merino Wool", "polyester", "spandex"],
+        "key_features": ["Lightweight", "Moisture-wicking", "Silicone grips to prevent slipping"],
+        "colors": [
+          {
+            "hex": "#1b1c1e",
+            "percentage": 0.9162
+          },
+          {
+            "hex": "#555658",
+            "percentage": 0.0838
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/H2E4r9l-vqn8-CNrACL?o=01KZE3K4GEPE5GBZ7D07A8YWF6&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "bombas.com",
+            "price": {
+              "price": 21.5,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.01,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "clothing-features": ["Lightweight"],
+          "pattern": ["Solid"],
+          "fabric": ["Merino", "Polyester"],
+          "cushioning-level": ["Light cushion"],
+          "sock-cushioning-level": ["Light cushioning"],
+          "grip-coverage": ["No grip"],
+          "sock-cushioning": ["Light"],
+          "toe-coverage": ["Full toe"],
+          "sock-grip-type": ["None"],
+          "sock-toe-style": ["Standard seam"],
+          "accessory-size": ["Small (S)"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "XjfWdxw",
+        "title": "Men's Merino Sock",
+        "description": "These Men's Navy Merino Merino Socks from Universal Works are crafted from a high-quality blend of 75% Merino Wool and 25% Polyamide. Designed for comfort and warmth, they feature a deep navy blue color with the 'Universal' brand name prominently displayed in white on the foot. These socks combine modern fit with traditional construction, making them a functional and stylish accessory for colder seasons.",
+        "brands": [
+          {
+            "id": "kSMa",
+            "name": "Universal Works"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/67ecfb39-6811-4194-9888-fa7ee58a1092?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=IhEg",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/67ecfb39-6811-4194-9888-fa7ee58a1092?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=IhEg",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Pair of navy merino wool socks with 'Universal' text on the leg."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/ca19f388-db1b-4803-aeb3-7342996ac350?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=IhEg",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/ca19f388-db1b-4803-aeb3-7342996ac350?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=IhEg",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Close-up of a navy merino sock with a white label."
+          }
+        ],
+        "category": {
+          "slug": "socks",
+          "title": "Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            }
+          ],
+          "has_children": true
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["Merino Wool", "Polyamide"],
+        "key_features": [
+          "75% Merino Wool, 25% Polyamide composition",
+          "Wash at 30 degrees",
+          "Do not bleach, tumble dry, iron, or dry clean"
+        ],
+        "colors": [
+          {
+            "hex": "#1c2233",
+            "percentage": 0.9277
+          },
+          {
+            "hex": "#4c505c",
+            "percentage": 0.0723
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/XjfWdxw-IhEg-CNrACL?o=01M4C43NQM1WP1713VHN30B1A2&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "universalworks.com",
+            "price": {
+              "price": 39,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": null,
+              "width": null,
+              "height": null,
+              "weight": {
+                "number": 100,
+                "unit": "g"
+              }
+            }
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Size",
+              "values": [
+                {
+                  "label": "M",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": null,
+                  "product_id": null
+                },
+                {
+                  "label": "L",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": null,
+                  "product_id": null
+                }
+              ]
+            }
+          ],
+          "selected": []
+        },
+        "structured_attributes": {
+          "pattern": ["Text"],
+          "accessory-size": ["Medium (M)", "Large (L)"],
+          "fabric": ["Merino", "Synthetic"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "7OL4x2o",
+        "title": "Men's Merino Wool Blend Half Calf Socks",
+        "description": "A premium men's sock designed with merino wool blend for warmth, softness, and moisture-wicking comfort. Features multiple color options (Light Grey, Black, Khaki) and sizes. Includes a 'One Purchased = One Donated' program and standard Bombas shipping policy. The product is available at $22 USD with in-stock status. Variants include 1-pair and multi-pack options. The sock is midweight with cushioned sole for everyday wear.",
+        "brands": [
+          {
+            "id": "q6ys",
+            "name": "Bombas"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/7a111bd5-7a0f-42e1-af83-70e913d7c4c8?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=vqn8",
+            "cleaned_url": "https://cdn.trychannel3.com/eabfb12f-0bbe-43c9-ae2f-2bfa35911883?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=vqn8",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Single light beige merino wool blend half calf sock shown on a white background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/2f986c0a-6ab3-4def-9b56-43712d5ae0f5?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=vqn8",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/2f986c0a-6ab3-4def-9b56-43712d5ae0f5?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=vqn8",
+            "is_main_image": false,
+            "shot_type": "on_model",
+            "alt_text": "Person wearing light beige merino wool blend socks with brown boots."
+          },
+          {
+            "url": "https://images.ctfassets.net/09hbx69ra4p2/6lP3BjVqDZmjBqt5USk2TM/5dec5a3ee62f50c38784e08c23a5a757/8625-KHAKI-Adult-Male-2-transparent.png",
+            "cleaned_url": "https://cdn.trychannel3.com/80825e99-dd7e-4679-9987-180615307070?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=vqn8",
+            "is_main_image": false,
+            "shot_type": "on_model",
+            "alt_text": "Person wearing light beige merino wool blend socks on dark leggings."
+          },
+          {
+            "url": "https://images.ctfassets.net/09hbx69ra4p2/4U8GJ4zRJj64tAw7DgrqnU/008f613b86a9067318a6e693809dc81e/8625-KHAKI-Adult-Male-3-transparent__1_.png",
+            "cleaned_url": "https://cdn.trychannel3.com/8af25c90-097c-4fa4-b9f8-320239dbcdee?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=vqn8",
+            "is_main_image": false,
+            "shot_type": "on_model",
+            "alt_text": "Person wearing light beige merino wool blend socks on dark leggings."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/b08de7e3-70b8-491e-ac93-fe9a49896ca2?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=vqn8",
+            "cleaned_url": "https://cdn.trychannel3.com/610739e7-192e-44bf-863f-c28731a118b0?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=vqn8",
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up of the foot and sole of a light beige merino wool blend sock showing branding."
+          }
+        ],
+        "category": {
+          "slug": "crew-socks",
+          "title": "Crew Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "crew-socks",
+              "title": "Crew Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": [],
+        "key_features": [],
+        "colors": [
+          {
+            "hex": "#d4cfc3",
+            "percentage": 0.9158
+          },
+          {
+            "hex": "#b1aca0",
+            "percentage": 0.0842
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/7OL4x2o-vqn8-CNrACL?o=01KDR35106JYWZNA5YNZ6K1ACR&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "bombas.com",
+            "price": {
+              "price": 22.5,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.01,
+            "dimensions": null
+          }
+        ],
+        "variants": {
+          "options": [],
+          "selected": [
+            {
+              "name": "Color",
+              "label": "Light Grey"
+            }
+          ]
+        },
+        "structured_attributes": {
+          "fabric": ["Merino", "Synthetic"],
+          "clothing-features": ["Moisture wicking"],
+          "sock-cushioning": ["Medium"],
+          "pattern": ["Texture"],
+          "grip-coverage": ["No grip"],
+          "toe-coverage": ["Full toe"],
+          "cushioning-level": ["Medium cushion"],
+          "sock-grip-type": ["None"],
+          "sock-cushioning-level": ["Medium cushioning"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "fkBA6Sh",
+        "title": "Merino Wool Midweight Hunting Boot Socks",
+        "description": "Keep your feet comfortable and dry during hunting trips with the Darn Tough Merino Wool Midweight Hunting Boot Socks. Designed specifically for boot-height wear, these socks feature midweight fabric with targeted cushioning in the legs to reduce boot-lace pressure and soft terry loops underfoot. They are built for durability with increased Achilles heel protection and impact-resistant toe boxes. The merino wool blend ensures moisture-wicking, breathability, and temperature regulation, while the performance fit prevents slipping and bunching.",
+        "brands": [
+          {
+            "id": "XWJM",
+            "name": "Darn Tough"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/161d2220-a294-4d82-89d0-5a5135d988c8?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": "https://cdn.trychannel3.com/7585e5b6-dd39-4ba9-8cf3-09e9428b345f?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "is_main_image": true,
+            "shot_type": "lifestyle",
+            "alt_text": "Man wearing hiking boots and socks while sitting outdoors."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/65f48f51-fa10-4b92-8025-5af8d52d24ee?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Hands holding up black Darn Tough socks outdoors."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/e3871bca-f701-4ee5-a0fa-946876934833?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": "https://cdn.trychannel3.com/d398b489-415f-4be8-a056-28aeffcc26b0?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Men's merino wool hiking socks, black and grey, right side view."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/e7299c3b-67d5-493e-90e6-eeafe911d6b6?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": "https://cdn.trychannel3.com/cb704378-5d3f-4498-a4c1-b59cb55ad398?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Men's merino wool hiking socks with orange accents, right side view."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/c1a4b695-4962-4726-8bc8-51a12b692f02?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": "https://cdn.trychannel3.com/48176aab-c32b-48a0-a9c9-62e243a7e584?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Men's merino wool hiking socks with grey body and red cuff detail, right side view."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/eca2e20f-a4a3-4d91-bd0e-938daebe6771?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": "https://cdn.trychannel3.com/a1f899b0-b1ba-480e-b8b1-7ac7b1aa8981?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Men's merino wool hiking socks in olive and black, right side view."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/0cb5a37f-3e5d-4014-8fcd-4952330a3d7f?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": "https://cdn.trychannel3.com/d796dfa3-5fa6-477e-a45d-01f7da98e2f3?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Men's merino wool hiking socks with orange accents, right side view."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/9516d4b2-7557-44de-9746-23af8b7faca7?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": "https://cdn.trychannel3.com/79ebe8c3-a038-44c5-b650-aa1723265f7d?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Men's merino wool hiking socks with grey and orange for detail, right side view."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/8396800a-747e-4b71-ac33-bd89c7bbcbd2?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Five pairs of grey merino wool socks laid out on a surface."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/b51dfc31-5622-476a-aca0-fc5c2214b7cd?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": "https://cdn.trychannel3.com/5e62fd48-044c-4c48-a5bb-f29727c6453c?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Men's merino wool hiking socks with black body and red toe detail, right side view."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/42290da9-3504-46b4-81bd-e92ceac64d34?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": "https://cdn.trychannel3.com/4605e7c1-0f6d-477c-a0c4-d4e1a699d257?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Men's merino wool hiking socks with grey and white accents, right side view."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/c5c56ebc-e16f-4d6d-b73e-1c9762ff34f1?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": "https://cdn.trychannel3.com/22d12206-42e9-4413-bbf6-c1da993fd7c9?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Men's merino wool hiking socks with multi-colored block pattern, right side view."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/345ba16d-36b9-4d72-86b1-7442809ccada?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": "https://cdn.trychannel3.com/0962b2aa-b827-4c04-a94a-d87cf76290d8?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Solid grey merino wool hiking sock, right side view."
+          }
+        ],
+        "category": {
+          "slug": "crew-socks",
+          "title": "Crew Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "crew-socks",
+              "title": "Crew Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["merino wool"],
+        "key_features": [
+          "Midweight fabric ideal for hunter boots",
+          "Boot-height socks",
+          "Merino wool construction",
+          "Increased Achilles heel durability",
+          "Impact protection in toe boxes",
+          "Fatigue-easing performance zones",
+          "Performance fit to prevent slipping and bunching",
+          "Moisture-wicking and breathable merino wool",
+          "Underfoot soft terry loops",
+          "Targeted cushioning in the legs to protect from boot-lace pressure"
+        ],
+        "colors": [
+          {
+            "hex": "#383431",
+            "percentage": 0.8333
+          },
+          {
+            "hex": "#67645b",
+            "percentage": 0.0992
+          },
+          {
+            "hex": "#2d1e10",
+            "percentage": 0.0675
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/fkBA6Sh-WPap-CNrACL?o=01M14NFKV5MENBXZ9RGKQM8MKH&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "cabelas.com",
+            "price": {
+              "price": 21.98,
+              "compare_at_price": 28.99,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.028,
+            "dimensions": null
+          },
+          {
+            "url": "https://buy.trychannel3.com/fkBA6Sh-qzpY-CNrACL?o=01M1JRWZ9TSMZXK79HC3EDPYC9&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "basspro.com",
+            "price": {
+              "price": 28.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.021,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "accessory-size": ["Medium (M)"],
+          "sock-cushioning": ["Targeted", "Medium"],
+          "sock-toe-style": ["Reinforced"],
+          "toe-coverage": ["Full toe"],
+          "grip-coverage": ["No grip"],
+          "pattern": ["Solid", "Graphic"],
+          "fabric": ["Merino", "Nylon", "Spandex"],
+          "activity": ["Hunting"],
+          "sock-cushioning-level": ["Medium cushioning"],
+          "sock-grip-type": ["None"],
+          "cushioning-level": ["Targeted cushion"],
+          "clothing-features": [
+            "Moisture wicking",
+            "Quick drying",
+            "Stretchable",
+            "Breathable design",
+            "Lightweight"
+          ]
+        },
+        "ratings": {
+          "value": 4.4,
+          "count": 21,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "2aUsb88",
+        "title": "Merino Wool Boot Socks Full Cushion",
+        "description": "These Men's Darn Tough Vermont Merino Wool Boot Socks Full Cushion are designed for durability and comfort during long days on your feet. Featuring a full-cushion design and fine gauge knitting, they offer a soft feel and help prevent blisters. The merino wool blend ensures warmth, breathability, and moisture-wicking performance across all seasons. They feature a True Seamless™ toe for a smooth fit and are made in the USA.",
+        "brands": [
+          {
+            "id": "XWJM",
+            "name": "Darn Tough"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/dc274750-2444-4c88-a18f-f3df7e070a49?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=fsxO",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/dc274750-2444-4c88-a18f-f3df7e070a49?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=fsxO",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Knee-high sock on a mannequin, showing the texture and cuff detail."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/51df5368-0db2-4a20-b9b2-ebe227ea65dd?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=fsxO",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/51df5368-0db2-4a20-b9b2-ebe227ea65dd?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=fsxO",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Knee-high sock on a mannequin, showing the texture and cuff detail."
+          }
+        ],
+        "category": {
+          "slug": "crew-socks",
+          "title": "Crew Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "crew-socks",
+              "title": "Crew Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["66% Merino wool", "32% nylon", "2% Lycra spandex"],
+        "key_features": [
+          "Fully cushioned throughout the sock",
+          "Performance fit to prevent blisters",
+          "Fine gauge knitting for durability",
+          "Moisture-wicking and breathable merino wool",
+          "True Seamless™ toe",
+          "Made in the USA"
+        ],
+        "colors": [
+          {
+            "hex": "#494a4d",
+            "percentage": 0.4207
+          },
+          {
+            "hex": "#292628",
+            "percentage": 0.2421
+          },
+          {
+            "hex": "#faedcd",
+            "percentage": 0.169
+          },
+          {
+            "hex": "#e6d0ae",
+            "percentage": 0.0878
+          },
+          {
+            "hex": "#6d6b6b",
+            "percentage": 0.0804
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/2aUsb88-fsxO-CNrACL?o=01M4CEH1N45MX4FT2ADACW729T&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "zappos.com",
+            "price": {
+              "price": 30,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.05,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {},
+        "ratings": null
+      },
+      {
+        "id": "fA0buqK",
+        "title": "Men's Modern Rib Calf Socks",
+        "description": "These calf-length socks are crafted from a soft, thermoregulating Merino wool blend for ultimate comfort and a polished look. They feature a modern ribbed texture and a cushioned sole, making them suitable for both casual and dressier occasions. Designed for men, these socks offer durability and warmth.",
+        "brands": [
+          {
+            "id": "q6ys",
+            "name": "Bombas"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/0de12363-0335-4a3c-9c07-c482ed280b07?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=vqn8",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/0de12363-0335-4a3c-9c07-c482ed280b07?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=vqn8",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Single toasted coconut colored calf sock lying down."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/bb7d19d5-d76d-49f3-a664-0b1639bba36b?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=vqn8",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Legs wearing several pairs of different colored calf socks."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/02ef0e1a-a9c4-43ac-95f3-b9c3913c29b2?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=vqn8",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/02ef0e1a-a9c4-43ac-95f3-b9c3913c29b2?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=vqn8",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Pair of toasted coconut calf socks standing upright."
+          }
+        ],
+        "category": {
+          "slug": "crew-socks",
+          "title": "Crew Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "crew-socks",
+              "title": "Crew Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["Merino Wool Blend", "Bamboo"],
+        "key_features": [
+          "Merino wool blend",
+          "Ribbed texture",
+          "Calf length",
+          "Lightweight comfort",
+          "Thermoregulating"
+        ],
+        "colors": [
+          {
+            "hex": "#b69b7d",
+            "percentage": 0.857
+          },
+          {
+            "hex": "#907a5f",
+            "percentage": 0.079
+          },
+          {
+            "hex": "#c6b39d",
+            "percentage": 0.0641
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/fA0buqK-vqn8-CNrACL?o=01KTJFP1HDPCT8C8RK3W49S90X&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "bombas.com",
+            "price": {
+              "price": 25,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.01,
+            "dimensions": null
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Color",
+              "values": [
+                {
+                  "label": "bright white, sea storm, black charcoal, Washed Black, black, soft white, midnight navy",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/f6a0dd39-771c-4d3c-8c9d-26507a93a52c",
+                  "product_id": "fVPimsH"
+                },
+                {
+                  "label": "white black mix",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/0de12363-0335-4a3c-9c07-c482ed280b07",
+                  "product_id": "fA0buqK"
+                }
+              ]
+            },
+            {
+              "name": "Us Size",
+              "values": [
+                {
+                  "label": "6-9",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": null,
+                  "product_id": null
+                },
+                {
+                  "label": "9½-13",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": null,
+                  "product_id": null
+                },
+                {
+                  "label": "13½-16",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": null,
+                  "product_id": null
+                }
+              ]
+            }
+          ],
+          "selected": [
+            {
+              "name": "Color",
+              "label": "white black mix"
+            }
+          ]
+        },
+        "structured_attributes": {
+          "activity": ["Training", "Running", "Walking"],
+          "accessory-size": ["Medium (M)"],
+          "pattern": ["Solid"],
+          "fabric": ["Merino", "Polyester"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "QXkv3Xy",
+        "title": "Wide Open Merino Wool Vintage Stripe Cushioned Crew Socks",
+        "description": "These men's crew socks combine a classic vintage striped look with the high-performance benefits of a supersoft merino wool blend. Designed for all-day comfort, they feature Wide Flex Stretch to prevent cramping, Comfort Stitch Cushioning in high-impact areas, and a True Seamless Toe to eliminate chafing. The merino wool construction ensures temperature regulation (cool in heat, warm in cold) and natural odor resistance, making them suitable for both outdoor trails and office wear.",
+        "brands": [
+          {
+            "id": "XWJM",
+            "name": "Darn Tough"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/af5b2b61-f9ff-4d90-85f9-84aa060568ae?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/af5b2b61-f9ff-4d90-85f9-84aa060568ae?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black crew sock standing upright with horizontal stripes."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/de394261-27f7-49a3-846c-84983a75bd61?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/de394261-27f7-49a3-846c-84983a75bd61?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "A pair of black crew socks standing upright."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/aa419978-6af0-4f7b-946f-27eebff8d6bc?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up detail of black and grey striped sock material."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/0289d7b6-061b-44a4-8977-edcd2feb0533?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/0289d7b6-061b-44a4-8977-edcd2feb0533?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "is_main_image": false,
+            "shot_type": "on_model",
+            "alt_text": "Person wearing black crew socks on legs."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/666c50c7-5e98-43b7-b2f2-269a6c8d5403?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "on_model",
+            "alt_text": "Person wearing black crew socks on legs."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/4d309f02-51b0-435b-b411-577e25589044?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "on_model",
+            "alt_text": "Person wearing black crew socks on legs."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/6d6581da-0602-43f3-8113-8adf1c598ad4?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "size_chart",
+            "alt_text": "Sizing chart for men's socks."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/639f54eb-7f87-41ea-a6aa-f4c579025263?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/639f54eb-7f87-41ea-a6aa-f4c579025263?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "is_main_image": false,
+            "shot_type": "on_model",
+            "alt_text": "Pair of black crew socks worn on legs."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/d7d40f0b-ccaa-4ce7-8937-5307eb6ddce4?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=WPap",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "size_chart",
+            "alt_text": "Detailed sizing chart for socks."
+          }
+        ],
+        "category": {
+          "slug": "crew-socks",
+          "title": "Crew Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "crew-socks",
+              "title": "Crew Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["Merino Wool", "Nylon", "Spandex"],
+        "key_features": [
+          "Wide Flex Stretch™",
+          "Comfort Stitch Cushioning™",
+          "True Seamless™ Toe",
+          "Inclusive sizing for wider feet, ankles, and legs (up to 4E width)",
+          "Supersoft merino wool blend",
+          "Cushioned crew design",
+          "Vintage stripe styling",
+          "63% merino wool/34% nylon/3% spandex",
+          "Merino wool regulates temperature and fights odors",
+          "Manufacturer lifetime guarantee"
+        ],
+        "colors": [
+          {
+            "hex": "#191919",
+            "percentage": 0.7548
+          },
+          {
+            "hex": "#313131",
+            "percentage": 0.1227
+          },
+          {
+            "hex": "#8a8a8a",
+            "percentage": 0.1224
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/QXkv3Xy-WPap-CNrACL?o=01M14YEAMDWT55A1J0HPSD6NFF&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "cabelas.com",
+            "price": {
+              "price": 18.98,
+              "compare_at_price": 24.99,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.028,
+            "dimensions": null
+          },
+          {
+            "url": "https://buy.trychannel3.com/QXkv3Xy-qzpY-CNrACL?o=01M1JQ0FTHB7RG2EV1Z2CE5WVB&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "basspro.com",
+            "price": {
+              "price": 24.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.021,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "grip-coverage": ["No grip"],
+          "activity": ["Universal"],
+          "sock-cushioning-level": ["Medium cushioning"],
+          "sock-cushioning": ["Targeted", "Medium"],
+          "pattern": ["Striped"],
+          "toe-coverage": ["Full toe"],
+          "sock-grip-type": ["None"],
+          "accessory-size": ["Medium (M)", "Large (L)", "Extra large (XL)"],
+          "fabric": ["Merino", "Nylon", "Spandex"],
+          "cushioning-level": ["Targeted cushion", "Medium cushion"],
+          "clothing-features": ["Stretchable", "Breathable design"],
+          "sock-toe-style": ["Seamless"]
+        },
+        "ratings": {
+          "value": 4,
+          "count": 4,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "n43ciMu",
+        "title": "Dickies Men's Mid Weight Merino Wool Blend Crew Socks",
+        "description": "These Dickies Men's Mid Weight Crew Socks come in a 2-pack and are crafted from a soft merino wool blend, specifically concentrated in the footbed for warmth. Designed for comfort and durability, they feature a full cushioned leg and a non-bulky half cushioned foot. Additionally, they provide arch compression for support and stability, along with reinforced heels and toes for long-lasting wear.",
+        "brands": [
+          {
+            "id": "2xO2",
+            "name": "Dickies"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/f574a3c6-13f1-4ea7-a0c8-9a33a4fa8817?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=NtIK",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Grey merino wool blend crew socks with orange accents, shown vertically."
+          }
+        ],
+        "category": {
+          "slug": "crew-socks",
+          "title": "Crew Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "crew-socks",
+              "title": "Crew Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["merino wool"],
+        "key_features": [
+          "Soft Merino wool blend, concentrated in footbed",
+          "Full Cushioned leg for warmth & comfort",
+          "Non-Bulky Half Cushioned foot, warmth without bulk",
+          "Arch compression support & stability",
+          "Durable reinforced heel and toe"
+        ],
+        "colors": [
+          {
+            "hex": "#38393c",
+            "percentage": 0.4015
+          },
+          {
+            "hex": "#524e51",
+            "percentage": 0.3598
+          },
+          {
+            "hex": "#746d6e",
+            "percentage": 0.1338
+          },
+          {
+            "hex": "#9d9b9c",
+            "percentage": 0.1049
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/n43ciMu-NtIK-CNrACL?o=01M2W4MPEZ5P375ZNXT5E7VG55&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "basicsclothing.com",
+            "price": {
+              "price": 10.99,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "clothing-features": ["Lightweight"],
+          "grip-coverage": ["No grip"],
+          "fabric": ["Merino"],
+          "sock-toe-style": ["Reinforced"],
+          "sock-cushioning": ["Medium"],
+          "toe-coverage": ["Full toe"],
+          "sock-grip-type": ["None"],
+          "cushioning-level": ["Medium cushion"],
+          "sock-cushioning-level": ["Medium cushioning"],
+          "pattern": ["Solid"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "oPfoNGM",
+        "title": "Merino Wool Socks For Men | Mugsy",
+        "description": "These Navy Merino Wool Socks for Men by Mugsy are designed for comfort and performance. Made from a breathable and moisture-resistant merino wool blend, they help prevent 'swamp foot' while remaining softer and thinner than typical wool socks, making them versatile for various footwear. They feature a calf-height design and a ribbed texture for a secure fit.",
+        "brands": [
+          {
+            "id": "HpDF",
+            "name": "Mugsy"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/6fe3d616-b21d-41dd-b257-fa1cfd462ca0?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=FqJj",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Navy blue merino wool sock with geometric pattern, shown vertically."
+          }
+        ],
+        "category": {
+          "slug": "crew-socks",
+          "title": "Crew Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "crew-socks",
+              "title": "Crew Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["54% Polyester", "20% Nylon", "20% Acrylic", "6% Merino Wool"],
+        "key_features": [
+          "Merino wool blend for softness, breathability, and moisture resistance",
+          "Calf-height design",
+          "Thinner than typical wool socks",
+          "Ribbed design"
+        ],
+        "colors": [],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/oPfoNGM-FqJj-CNrACL?o=01M2G72P0YTTVZ6YYB403B5P3P&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "mugsyjeans.com",
+            "price": {
+              "price": 18,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.07,
+            "dimensions": {
+              "length": null,
+              "width": null,
+              "height": null,
+              "weight": {
+                "number": 91,
+                "unit": "g"
+              }
+            }
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Color",
+              "values": [
+                {
+                  "label": "GRAY",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/8d497320-110e-4bec-82d3-ad6720db5927",
+                  "product_id": "cMRIHUc"
+                },
+                {
+                  "label": "NAVY",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/6fe3d616-b21d-41dd-b257-fa1cfd462ca0",
+                  "product_id": "oPfoNGM"
+                }
+              ]
+            }
+          ],
+          "selected": [
+            {
+              "name": "Color",
+              "label": "NAVY"
+            }
+          ]
+        },
+        "structured_attributes": {
+          "pattern": ["Solid"],
+          "accessory-size": ["One size"],
+          "clothing-features": ["Moisture wicking", "Breathable design", "Lightweight"],
+          "fabric": ["Polyester", "Nylon", "Acrylic", "Merino"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "VgOPFkB",
+        "title": "Mens Everyday Stitch Stripe Crew Socks",
+        "description": "The Smartwool Mens Everyday Stitch Stripe Crew Socks combine comfort, durability, and style. Crafted from responsibly sourced Merino wool for natural temperature regulation and odor control, these socks feature Shred Shield™ technology for enhanced durability and a Virtually Seamless™ toe to reduce irritation. They are designed with added elastic support across the arch for a secure fit and detailed with a zesty stripe-and-dot pattern.",
+        "brands": [
+          {
+            "id": "VEsJ",
+            "name": "Smartwool"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/d7b5bb87-20ab-485d-a7c1-72c48817c619?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/d7b5bb87-20ab-485d-a7c1-72c48817c619?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Pair of purple and grey striped crew socks on white background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/67d8c4f6-8003-4f36-8ebd-b584e1e01855?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "on_model",
+            "alt_text": "Man wearing jeans and boots, showing patterned socks on his legs."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/50b4135a-f50a-4e6b-b37e-96d8e50958e8?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=nQUQ",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "on_model",
+            "alt_text": "Person sitting wearing jeans and boots, showing patterned socks on their legs."
+          }
+        ],
+        "category": {
+          "slug": "crew-socks",
+          "title": "Crew Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "crew-socks",
+              "title": "Crew Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["merino wool"],
+        "key_features": [
+          "Responsibly sourced Merino wool",
+          "Virtually Seamless™ toe",
+          "Shred Shield™ technology",
+          "Arch support"
+        ],
+        "colors": [
+          {
+            "hex": "#9f9ca9",
+            "percentage": 0.3893
+          },
+          {
+            "hex": "#2f2c2a",
+            "percentage": 0.2715
+          },
+          {
+            "hex": "#bab9c1",
+            "percentage": 0.1328
+          },
+          {
+            "hex": "#77747d",
+            "percentage": 0.1078
+          },
+          {
+            "hex": "#494749",
+            "percentage": 0.0986
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/VgOPFkB-nQUQ-CNrACL?o=01M2NYPKE3N49SCXM7WC1T7158&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "ems.com",
+            "price": {
+              "price": 22,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.02,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "activity": ["Universal"],
+          "toe-coverage": ["Full toe"],
+          "accessory-size": ["Small (S)", "Medium (M)", "Large (L)", "Extra large (XL)"],
+          "sock-toe-style": ["Seamless"],
+          "pattern": ["Dots", "Striped"],
+          "fabric": ["Merino"],
+          "clothing-features": ["Lightweight"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "F4MX2pz",
+        "title": "Realm Merino Mens Quarter Socks",
+        "description": "These quarter-length socks are crafted from 22-micron genuine Merino wool, providing excellent heat and moisture regulation. They feature reinforced toes and heels for added durability and a 7-inch cuff for a comfortable fit. The socks are solid black with a grey cuff.",
+        "brands": [
+          {
+            "id": "Kpvd",
+            "name": "Giant Bicycles"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/9e7b2700-61c2-43eb-b732-757f06f1d617?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=ez4f",
+            "cleaned_url": "https://cdn.trychannel3.com/093e94b7-1871-4771-8dc5-aaf1d85412a3?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=ez4f",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black merino wool quarter socks with grey cuff"
+          }
+        ],
+        "category": {
+          "slug": "socks",
+          "title": "Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            }
+          ],
+          "has_children": true
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["Merino wool", "Nylon"],
+        "key_features": [
+          "Pro grade cold weather sock",
+          "22 Micron genuine Merino wool for good moisture transfer and thermo regulation",
+          "Nylon Reinforced toe and heel for durability",
+          "7 inch long cuff"
+        ],
+        "colors": [
+          {
+            "hex": "#1b1b1b",
+            "percentage": 0.7681
+          },
+          {
+            "hex": "#3e3e3e",
+            "percentage": 0.1223
+          },
+          {
+            "hex": "#9b9b9b",
+            "percentage": 0.1096
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/F4MX2pz-ez4f-CNrACL?o=01KTVR23ZYQDD1Y4JFCJXT39TA&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "giant-bicycles.com",
+            "price": {
+              "price": 4.99,
+              "compare_at_price": 20,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "accessory-size": ["Long"],
+          "activity": ["Training", "Hiking", "Walking"],
+          "clothing-features": ["Moisture wicking", "Insulated"],
+          "fabric": ["Merino", "Nylon", "Synthetic"],
+          "pattern": ["Solid"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "rz6ttAW",
+        "title": "Assorted 3-Pack Italian Merino Wool Crew Socks",
+        "description": "This is a 3-pack of crew socks made from fine Italian Merino wool by Lorenzo Uomo. The socks are designed for men and come in a navy multi colorway. They are suitable for all seasons, keeping feet warm and dry in winter and cool and dry in summer. One size fits men's shoe sizes 7-13.",
+        "brands": [
+          {
+            "id": "JjrT",
+            "name": "Lorenzo Uomo"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/b99e7101-f8dd-49f4-a5f2-e7dc810a1d4c?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=cvfe",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "lifestyle",
+            "alt_text": "Three pairs of assorted merino wool crew socks in various color and pattern combinations."
+          }
+        ],
+        "category": {
+          "slug": "crew-socks",
+          "title": "Crew Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "crew-socks",
+              "title": "Crew Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["Merino wool", "Wool"],
+        "key_features": [
+          "Pack of 3",
+          "Crew length",
+          "Assorted",
+          "Made in Italy",
+          "Fine Italian Merino wool",
+          "Keeps feet warm and dry in winter",
+          "Keeps feet cool and dry in summer"
+        ],
+        "colors": [],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/rz6ttAW-cvfe-CNrACL?o=01KX7Q93Z08S1AJ23BSA7VFGD1&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "nordstromrack.com",
+            "price": {
+              "price": 19.97,
+              "compare_at_price": 36,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.07,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "accessory-size": ["One size"],
+          "pattern": ["Striped"],
+          "toe-coverage": ["Full toe"],
+          "activity": ["Training"],
+          "sock-cushioning": ["Full cushion"],
+          "sock-toe-style": ["Standard seam"],
+          "fabric": ["Merino", "Wool"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "h5vivl9",
+        "title": "Merino Wool Multi Stripe Sock",
+        "description": "Experience unparalleled comfort with the Merino Wool Multi Stripe Sock in Midnight Navy. Expertly crafted in Italy, these socks are made from top-dyed, extra-soft merino wool sourced from mulesing-free sheep. The natural wicking properties of the merino wool ensure your feet stay warm in the winter and cool and dry in the summer, making them ideal for year-round wear. Uniquely, these premium socks are machine washable and dryable for added convenience.",
+        "brands": [
+          {
+            "id": "JjrT",
+            "name": "Lorenzo Uomo"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/5f1bd0d0-bb37-4e61-a180-12621cc8eee9?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=vGV7",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Merino wool striped sock displayed vertically on a white pedestal."
+          }
+        ],
+        "category": {
+          "slug": "socks",
+          "title": "Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            }
+          ],
+          "has_children": true
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["Merino Wool", "Nylon", "Lycra"],
+        "key_features": [
+          "Made in Italy",
+          "65% Merino Wool, 33% Nylon, 2% Lycra",
+          "Machine washable and dry-able",
+          "Moisture-wicking for year-round comfort",
+          "Sourced from non-mulesed sheep",
+          "Produced in a mill powered by renewable energy"
+        ],
+        "colors": [
+          {
+            "hex": "#2b2a38",
+            "percentage": 0.4855
+          },
+          {
+            "hex": "#414856",
+            "percentage": 0.2523
+          },
+          {
+            "hex": "#5d5f69",
+            "percentage": 0.2013
+          },
+          {
+            "hex": "#82858e",
+            "percentage": 0.061
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/h5vivl9-vGV7-CNrACL?o=01M0SWBXS4WVG8YJA15ATQS7B8&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "lorenzouomo.com",
+            "price": {
+              "price": 15,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "accessory-size": ["Standard"],
+          "clothing-features": ["Moisture wicking"],
+          "fabric": ["Merino", "Nylon", "Lycra"],
+          "pattern": ["Striped"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "8cthyRM",
+        "title": "Soft Solid Merino Wool Sock",
+        "description": "These Big and Tall Soft Solid Merino Wool Socks in Navy are crafted for extended sizes, offering unparalleled comfort and versatility. Produced in Biella, Italy, using top-dyed, high-quality merino wool sourced in an animal-friendly manner, these socks provide natural wicking characteristics to keep feet warm in winter and cool and dry in summer. Uniquely for merino wool socks, they are machine washable and dry-able, making them a practical choice for year-round wear.",
+        "brands": [
+          {
+            "id": "JjrT",
+            "name": "Lorenzo Uomo"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/66d7a0fa-6645-4845-bf3c-7ff3fb66481d?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=vGV7",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Navy blue ribbed merino wool sock displayed on a wooden pedestal."
+          }
+        ],
+        "category": {
+          "slug": "socks",
+          "title": "Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            }
+          ],
+          "has_children": true
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["65% Merino Wool", "33% Nylon", "2% Lycra"],
+        "key_features": [
+          "Produced by leading merino wool spinners in Biella, Italy",
+          "Top-dyed extra soft merino wool yarn using longest fibers",
+          "Animal-friendly, non-mulesed wool source",
+          "Sustainable production powered by renewable energy",
+          "Natural wicking keeps feet warm in winter and cool/dry in summer",
+          "Machine washable and dry-able"
+        ],
+        "colors": [],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/8cthyRM-vGV7-CNrACL?o=01M2GDRX92BS36KV8HCZ8M4EZC&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "lorenzouomo.com",
+            "price": {
+              "price": 16,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": {
+              "length": null,
+              "width": null,
+              "height": null,
+              "weight": {
+                "number": 77,
+                "unit": "g"
+              }
+            }
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Color",
+              "values": [
+                {
+                  "label": "Navy",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/66d7a0fa-6645-4845-bf3c-7ff3fb66481d",
+                  "product_id": "8cthyRM"
+                },
+                {
+                  "label": "Taupe",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/de132508-fb92-4eaf-8d83-92f441cf2662",
+                  "product_id": "K1LzYmb"
+                }
+              ]
+            }
+          ],
+          "selected": [
+            {
+              "name": "Color",
+              "label": "Navy"
+            }
+          ]
+        },
+        "structured_attributes": {
+          "clothing-features": ["Moisture wicking"],
+          "fabric": ["Merino", "Nylon", "Lycra"],
+          "pattern": ["Solid"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "FWZPPv3",
+        "title": "Merino Wool Socks",
+        "description": "These cozy essential socks from GANT are crafted from a premium merino wool blend. They feature a classic ribbed texture and an intarsia Gant logo positioned under the footbed for a subtle brand detail.",
+        "brands": [
+          {
+            "id": "qZXG",
+            "name": "GANT"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/3a11410e-eca2-4c66-a148-00f7e52c79ae?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=UazD",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/3a11410e-eca2-4c66-a148-00f7e52c79ae?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=UazD",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Light grey merino wool sock shown vertically on a plain background."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/4b9b6723-6a70-4916-bdf3-2bce77b52554?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=UazD",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/4b9b6723-6a70-4916-bdf3-2bce77b52554?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=UazD",
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Navy blue merino wool sock shown vertically on a plain background."
+          }
+        ],
+        "category": {
+          "slug": "crew-socks",
+          "title": "Crew Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "crew-socks",
+              "title": "Crew Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["85% Merino Wool", "14% Polyamide", "1% Elastane"],
+        "key_features": [
+          "Crafted from a merino wool blend",
+          "Ribbed cuffs",
+          "Intarsia Gant logo under the footbed"
+        ],
+        "colors": [
+          {
+            "hex": "#d8d5d1",
+            "percentage": 0.9131
+          },
+          {
+            "hex": "#b6b5b6",
+            "percentage": 0.0869
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/FWZPPv3-UazD-CNrACL?o=01M319W3TXCYYM2XT18ZBXDVKD&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "gant.sk",
+            "price": {
+              "price": 30,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.07,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "fabric": ["Merino", "Nylon", "Spandex"],
+          "pattern": ["Logo", "Solid"],
+          "clothing-features": ["Breathable design"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "pwKmBI5",
+        "title": "Merino Wool Socks",
+        "description": "A pair of cozy, dark blue merino wool blend socks. These socks feature a ribbed texture for fit and comfort, with ribbed cuffs and an intarsia Gant logo located under the footbed.",
+        "brands": [
+          {
+            "id": "qZXG",
+            "name": "GANT"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/ee9c8d88-7b3e-4ef7-a61e-410b00014247?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=UazD",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/ee9c8d88-7b3e-4ef7-a61e-410b00014247?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=UazD",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Dark blue ribbed merino wool sock standing vertically on a light background."
+          }
+        ],
+        "category": {
+          "slug": "socks",
+          "title": "Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            }
+          ],
+          "has_children": true
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["85% Merino Wool", "14% Polyamide", "1% Elastane"],
+        "key_features": [
+          "Ribbed cuffs",
+          "Intarsia Gant logo under the footbed",
+          "Crafted from a merino wool blend"
+        ],
+        "colors": [
+          {
+            "hex": "#1c2739",
+            "percentage": 0.9266
+          },
+          {
+            "hex": "#5f646a",
+            "percentage": 0.0734
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/pwKmBI5-UazD-CNrACL?o=01M310EF4V14GPHS030C9CT2HW&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "gant.com",
+            "price": {
+              "price": 30,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.07,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Solid"],
+          "fabric": ["Merino", "Nylon", "Spandex"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "rO3d6be",
+        "title": "Ludvig Merino Wool Socks",
+        "description": "The Ludvig is a luxurious calf-length sock crafted from premium Merino wool. Designed for versatility, these socks offer adaptive temperature regulation, providing a cooling effect in warm weather and retaining heat to keep feet warm in cold conditions. They feature a classic ribbed structure and a solid dark grey color, making them a timeless essential for any wardrobe.",
+        "brands": [
+          {
+            "id": "mZ09",
+            "name": "Myrqvist"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/ce2af592-55db-42a8-935c-90c18b9f2f58?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=okU0",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/ce2af592-55db-42a8-935c-90c18b9f2f58?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=okU0",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Dark grey merino wool sock shown from the side."
+          }
+        ],
+        "category": {
+          "slug": "crew-socks",
+          "title": "Crew Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "crew-socks",
+              "title": "Crew Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["Merino Wool", "Polyamide"],
+        "key_features": [
+          "Crafted with premium Merino wool for adaptive temperature regulation",
+          "Calf-high length",
+          "Ribbed structure",
+          "Made in Portugal",
+          "Solid color"
+        ],
+        "colors": [
+          {
+            "hex": "#313130",
+            "percentage": 0.9211
+          },
+          {
+            "hex": "#717270",
+            "percentage": 0.0789
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/rO3d6be-okU0-CNrACL?o=01M16R85WTNQ63155V8YPRBRYD&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "myrqvist.com",
+            "price": {
+              "price": 17,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Solid"],
+          "fabric": ["Merino", "Nylon"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "mTbAqhJ",
+        "title": "Merino Wool Socks",
+        "description": "These luxurious men's ribbed socks from Percival are crafted from 100% merino wool, offering exceptional breathability, moisture management, and temperature regulation. Designed for both style and comfort, they feature a classic ribbed knit in a sophisticated navy blue, making them a perfect accompaniment to loafers, smart shoes, and tailored outfits.",
+        "brands": [
+          {
+            "id": "H6QK",
+            "name": "Percival"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/01M0WM4RGBRB163C9BQ6C7CRRK?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=VMoB",
+            "cleaned_url": null,
+            "is_main_image": true,
+            "shot_type": "lifestyle",
+            "alt_text": "Pair of black ribbed merino wool socks laid out."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/01M0WM4SAKB07SV53X47N26A63?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=VMoB",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/01M0WM4SAKB07SV53X47N26A63?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=VMoB",
+            "is_main_image": false,
+            "shot_type": "packaging",
+            "alt_text": "Navy merino sock with a brown brand tag."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/01M0WM4T27BN4Y74WBW27R6XV0?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=VMoB",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "detail",
+            "alt_text": "Close-up detail of the ribbed cuff of a navy sock."
+          }
+        ],
+        "category": {
+          "slug": "dress-socks",
+          "title": "Dress Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "dress-socks",
+              "title": "Dress Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["100% Merino Wool"],
+        "key_features": [
+          "100% merino wool for breathability and temperature regulation",
+          "Ribbed design for a classic look",
+          "Suitable for EU sizes 43-45 and UK sizes 9-11",
+          "Ideal for pairing with loafers and tailored outfits",
+          "Made in Portugal"
+        ],
+        "colors": [
+          {
+            "hex": "#141115",
+            "percentage": 0.6753
+          },
+          {
+            "hex": "#dcc0a4",
+            "percentage": 0.3041
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/mTbAqhJ-VMoB-CNrACL?o=01M0NQC58BANM6RXW78ZX10YD7&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "percivalclo.com",
+            "price": {
+              "price": 32,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.056,
+            "dimensions": {
+              "length": {
+                "number": 50.5,
+                "unit": "cm"
+              },
+              "width": {
+                "number": 7,
+                "unit": "cm"
+              },
+              "height": null,
+              "weight": null
+            }
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "accessory-size": ["One size"],
+          "clothing-features": ["Moisture wicking", "Breathable design"],
+          "fabric": ["Merino"],
+          "pattern": ["Texture"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "TVNa8Z3",
+        "title": "Merino Wool Mini Dot Crew Socks",
+        "description": "Classic crew length dress socks crafted from a luxurious merino wool blend, featuring a subtle mini dot texture for refined detail. These socks are designed for exceptional feel, durability, and comfort, with handlinked toes. Sized to fit standard shoe sizes 7 ½ to 12. The material composition is 65% Merino Wool, 33% Nylon, and 2% Lycra®.",
+        "brands": [
+          {
+            "id": "jd7c",
+            "name": "Brooks Brothers"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/j6H8cFa?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=7Eau",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/991cfb8e-fa2d-4a3c-8838-c616241ca0be?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=7Eau",
+            "is_main_image": true,
+            "shot_type": "flat_lay",
+            "alt_text": "Pair of black socks with 'Brooks Brothers' logo"
+          },
+          {
+            "url": "https://brooksbrothers.bynder.com/match/WebName/196D_BLACK/MERINO_WOOL_MINI_DOT_CREW_SOCKS_BLACK",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/991cfb8e-fa2d-4a3c-8838-c616241ca0be?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=7Eau",
+            "is_main_image": false,
+            "shot_type": "flat_lay",
+            "alt_text": "Pair of black socks with 'Brooks Brothers' logo"
+          }
+        ],
+        "category": {
+          "slug": "crew-socks",
+          "title": "Crew Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "crew-socks",
+              "title": "Crew Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": null,
+        "materials": ["Merino Wool", "Nylon", "Lycra"],
+        "key_features": [
+          "crew length",
+          "midweight",
+          "textured knit",
+          "ribbed cuff",
+          "reinforced toe and heel",
+          "branding at ankle/toe"
+        ],
+        "colors": [
+          {
+            "hex": "#282727",
+            "percentage": 0.9468
+          },
+          {
+            "hex": "#4d4c49",
+            "percentage": 0.0532
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/TVNa8Z3-7Eau-CNrACL?o=01KMH2BQRQ1NRTQXBW6X9P5ASQ&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "brooksbrothers.com",
+            "price": {
+              "price": 13.65,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.105,
+            "dimensions": null
+          }
+        ],
+        "variants": {
+          "options": [],
+          "selected": [
+            {
+              "name": "Color",
+              "label": "Black"
+            }
+          ]
+        },
+        "structured_attributes": {
+          "pattern": ["Dots"],
+          "accessory-size": ["Regular (R)", "One size"],
+          "fabric": ["Polyester", "Nylon", "Lycra"],
+          "activity": ["Training"]
+        },
+        "ratings": {
+          "value": 4.83,
+          "count": 36,
+          "source_count": 1
+        }
+      },
+      {
+        "id": "gNJX86Y",
+        "title": "Ribbed Merino Wool Socks",
+        "description": "These refined crew socks are knitted from an ultra-soft merino wool blend in a versatile black tone. They feature a fine ribbed texture for a tactile finish and a comfortable fit.",
+        "brands": [
+          {
+            "id": "VYIB",
+            "name": "COS"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/8fd850da-1de7-485c-9780-f4a19faa1d70?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=GBYZ",
+            "cleaned_url": "https://cdn.trychannel3.com/eb66368f-4f0a-4e5c-a630-6d3d034f4f80?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=GBYZ",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black ribbed merino wool sock standing vertically on a plain background."
+          }
+        ],
+        "category": {
+          "slug": "crew-socks",
+          "title": "Crew Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "crew-socks",
+              "title": "Crew Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["merino wool blend"],
+        "key_features": [
+          "Ultra-soft merino wool blend",
+          "Finely ribbed tactile finish",
+          "Crew height"
+        ],
+        "colors": [
+          {
+            "hex": "#1f1f1f",
+            "percentage": 0.9534
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/gNJX86Y-GBYZ-CNrACL?o=01M294PP9879G83K6RM4CD72B9&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "cos.com",
+            "price": {
+              "price": 25,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.016,
+            "dimensions": null
+          },
+          {
+            "url": "https://buy.trychannel3.com/gNJX86Y-aKIP-CNrACL?o=01M24E10YVQ9GJAEG8R1XKDBSX&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "cos.com",
+            "price": {
+              "price": 25,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": null
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Size",
+              "values": [
+                {
+                  "label": "40/42",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": null,
+                  "product_id": null
+                },
+                {
+                  "label": "43/45",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": null,
+                  "product_id": null
+                }
+              ]
+            }
+          ],
+          "selected": []
+        },
+        "structured_attributes": {
+          "pattern": ["Solid", "Striped"],
+          "fabric": ["Merino"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "wI4abNB",
+        "title": "Ludvig Merino Wool Socks",
+        "description": "The Ludvig Merino Wool Socks are a premium 5-pack of calf-high dress socks designed for versatility and year-round comfort. Crafted from a blend of 85% merino wool and 15% polyamide, these socks provide natural temperature regulation, keeping feet warm in winter and cool in summer. Featuring a refined ribbed structure and a solid navy color, they are suitable for both formal office wear and casual ensembles, offering a secure and elegant profile under tailored trousers.",
+        "brands": [
+          {
+            "id": "mZ09",
+            "name": "Myrqvist"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/86fe162e-e4f9-4ad4-8f0a-0846ca88c436?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=okU0",
+            "cleaned_url": "https://cdn.trychannel3.com/77d5e474-562b-40d7-b259-cf784da67845?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=okU0",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Pair of black merino wool socks laid out."
+          }
+        ],
+        "category": {
+          "slug": "dress-socks",
+          "title": "Dress Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "dress-socks",
+              "title": "Dress Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["Merino Wool", "Polyamide"],
+        "key_features": [
+          "Made in Portugal",
+          "Calf-High silhouette",
+          "Ribbed structure",
+          "85% Merino Wool, 15% Polyamide blend",
+          "Temperature regulating properties",
+          "Solid color palette"
+        ],
+        "colors": [
+          {
+            "hex": "#1c1c1c",
+            "percentage": 0.9107
+          },
+          {
+            "hex": "#626160",
+            "percentage": 0.0893
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/wI4abNB-okU0-CNrACL?o=01M1KPMQYMXBGP9YWA13K9FA3S&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "myrqvist.com",
+            "price": {
+              "price": 68,
+              "compare_at_price": 85,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "fabric": ["Merino", "Nylon"],
+          "clothing-features": ["Breathable design"],
+          "activity": ["Universal"],
+          "pattern": ["Solid"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "9gRMYnH",
+        "title": "Ludvig Merino Wool Socks",
+        "description": "The Ludvig is a luxurious calf-length sock crafted from premium Merino wool. Renowned for its adaptive thermoregulating properties, these socks provide a cooling effect in hot weather and maintain warmth in the cold. They feature a classic ribbed structure and a solid forest green color, offering a timeless and comfortable essential for any wardrobe.",
+        "brands": [
+          {
+            "id": "mZ09",
+            "name": "Myrqvist"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/e0aafbfa-85bb-4878-9f1f-9f38e8b79033?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=okU0",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/e0aafbfa-85bb-4878-9f1f-9f38e8b79033?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=okU0",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Dark green merino wool sock shown hanging vertically."
+          }
+        ],
+        "category": {
+          "slug": "crew-socks",
+          "title": "Crew Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "crew-socks",
+              "title": "Crew Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["Merino Wool", "Polyamide"],
+        "key_features": [
+          "Crafted with premium Merino wool for adaptive temperature control",
+          "Calf-high length",
+          "Ribbed structure",
+          "Solid color",
+          "Made in Portugal"
+        ],
+        "colors": [
+          {
+            "hex": "#193a34",
+            "percentage": 0.935
+          },
+          {
+            "hex": "#536c68",
+            "percentage": 0.065
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/9gRMYnH-okU0-CNrACL?o=01M16R8N8EJEFQE8JYAZ6CC6E4&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "myrqvist.com",
+            "price": {
+              "price": 17,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Solid"],
+          "fabric": ["Merino", "Nylon"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "9Pcqb6U",
+        "title": "Stripe Merino Wool Socks",
+        "description": "These Paul Smith Merino Wool Socks feature a classic striped pattern in navy blue, grey, and a neutral tone. Crafted from a blend of 80% Merino Wool and 20% Cotton, they are made in the United Kingdom. The socks have a ribbed texture for comfort and durability, and are designed to be worn by adults.",
+        "brands": [
+          {
+            "id": "gcGX",
+            "name": "Paul Smith"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/3a367c87-9443-4093-8a59-f57ecced7759?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=uIGy",
+            "cleaned_url": "https://cdn.trychannel3.com/4db78a5c-7c8c-49bf-a781-9218ceb2260c?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=uIGy",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Navy striped merino wool socks shown lying down."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/6261a0a1-c7fa-4c14-8531-5f5d2001efae?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=uIGy",
+            "cleaned_url": "https://cdn.trychannel3.com/a0eb69fd-c5fa-47db-afcf-e1cb216f8b57?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=uIGy",
+            "is_main_image": false,
+            "shot_type": "lifestyle",
+            "alt_text": "Close-up of person wearing navy stripe socks and grey trousers."
+          }
+        ],
+        "category": {
+          "slug": "socks",
+          "title": "Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            }
+          ],
+          "has_children": true
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["Merino Wool", "Cotton"],
+        "key_features": [
+          "Made in the British Isles collection",
+          "Crafted by Corgi Hosiery",
+          "80% Merino Wool, 20% Cotton",
+          "Made in United Kingdom",
+          "Machine wash inside out"
+        ],
+        "colors": [
+          {
+            "hex": "#15203f",
+            "percentage": 0.3647
+          },
+          {
+            "hex": "#141421",
+            "percentage": 0.2365
+          },
+          {
+            "hex": "#242729",
+            "percentage": 0.1836
+          },
+          {
+            "hex": "#988e82",
+            "percentage": 0.1562
+          },
+          {
+            "hex": "#4c4b4d",
+            "percentage": 0.0589
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/9Pcqb6U-uIGy-CNrACL?o=01KT6VZ9X735KJ987YC18J3W1N&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "paulsmith.com",
+            "price": {
+              "price": 35,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.035,
+            "dimensions": null
+          }
+        ],
+        "variants": {
+          "options": [
+            {
+              "name": "Size",
+              "values": [
+                {
+                  "label": "S/M",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/3a367c87-9443-4093-8a59-f57ecced7759",
+                  "product_id": "9Pcqb6U"
+                },
+                {
+                  "label": "L/XL",
+                  "exists": true,
+                  "available": null,
+                  "thumbnail_url": "https://cdn.trychannel3.com/a0b29974-b927-4f64-a74c-4a8e50a6e9ff",
+                  "product_id": "0232r2q"
+                }
+              ]
+            },
+            {
+              "name": "Size",
+              "values": []
+            }
+          ],
+          "selected": [
+            {
+              "name": "Size",
+              "label": "S/M"
+            }
+          ]
+        },
+        "structured_attributes": {
+          "accessory-size": ["Large (L)"]
+        },
+        "ratings": null
+      },
+      {
+        "id": "lIzHm5r",
+        "title": "Merino Wool Ribbed Socks",
+        "description": "These classic black crew-length socks are expertly crafted in Italy from soft merino wool for natural warmth and breathability. They feature a timeless vertical ribbed knit construction and are finished with a technical treatment to ensure they retain their shape and softness after multiple washes.",
+        "brands": [
+          {
+            "id": "SMwk",
+            "name": "Sunspel"
+          }
+        ],
+        "images": [
+          {
+            "url": "https://cdn.trychannel3.com/45763134-0f3b-4849-b6d0-ced454d3121e?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=m1d3",
+            "cleaned_url": "https://cdn.trychannel3.com/cleaned/v1/45763134-0f3b-4849-b6d0-ced454d3121e?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=m1d3",
+            "is_main_image": true,
+            "shot_type": "hero",
+            "alt_text": "Black ribbed merino wool socks with a V-shape, viewed from the side."
+          },
+          {
+            "url": "https://cdn.trychannel3.com/19dcdd8f-e9fc-482d-b2f4-813a183e6e4e?aid=01M5A1R6QWVDXYZBN8S7F7JYCB&mid=m1d3",
+            "cleaned_url": null,
+            "is_main_image": false,
+            "shot_type": "hero",
+            "alt_text": "Close-up of black ribbed fabric texture with 'SUNSPEL MADE IN ITALY' text."
+          }
+        ],
+        "category": {
+          "slug": "crew-socks",
+          "title": "Crew Socks",
+          "path": [
+            {
+              "slug": "apparel-accessories",
+              "title": "Apparel & Accessories"
+            },
+            {
+              "slug": "clothing",
+              "title": "Clothing"
+            },
+            {
+              "slug": "underwear-socks",
+              "title": "Underwear & Socks"
+            },
+            {
+              "slug": "socks",
+              "title": "Socks"
+            },
+            {
+              "slug": "crew-socks",
+              "title": "Crew Socks"
+            }
+          ],
+          "has_children": false
+        },
+        "gender": "male",
+        "age": "adult",
+        "materials": ["Merino Wool", "Polyester", "Elastane"],
+        "key_features": [
+          "Expertly made in Italy",
+          "Natural warmth and breathability",
+          "Technical treatment for long-lasting performance",
+          "Retains shape and softness wash after wash"
+        ],
+        "colors": [
+          {
+            "hex": "#1d1b1a",
+            "percentage": 0.9505
+          }
+        ],
+        "offers": [
+          {
+            "url": "https://buy.trychannel3.com/lIzHm5r-m1d3-CNrACL?o=01M2E8GMV91008TY1EA0J7ZDV4&aid=01M5A1R6QWVDXYZBN8S7F7JYCB",
+            "domain": "eu.sunspel.com",
+            "price": {
+              "price": 35,
+              "compare_at_price": null,
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "condition": "new",
+            "max_commission_rate": 0.056,
+            "dimensions": null
+          }
+        ],
+        "variants": null,
+        "structured_attributes": {
+          "pattern": ["Solid"],
+          "fabric": ["Merino", "Polyester", "Spandex"],
+          "clothing-features": ["Breathable design"]
+        },
+        "ratings": null
+      }
+    ],
+    "next_page_token": "eyJjYWNoZV9rZXkiOiAic2VhcmNoOmIyZGQwMzhiOTBkMzliZTkiLCAib2Zmc2V0IjogMzB9"
+  }
+}

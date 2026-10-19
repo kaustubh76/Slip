@@ -1,0 +1,46 @@
+{
+  "sampledAt": "2026-10-19T12:21:23.709Z",
+  "credits": 8,
+  "queries": [
+    {
+      "slug": "trail-running-shoes",
+      "query": "trail running shoes",
+      "products": 30
+    },
+    {
+      "slug": "wireless-noise-cancelling-headphones",
+      "query": "wireless noise cancelling headphones",
+      "products": 30
+    },
+    {
+      "slug": "cast-iron-skillet",
+      "query": "cast iron skillet",
+      "products": 30
+    },
+    {
+      "slug": "mens-merino-wool-socks",
+      "query": "mens merino wool socks",
+      "products": 30
+    },
+    {
+      "slug": "mechanical-keyboard",
+      "query": "mechanical keyboard",
+      "products": 30
+    },
+    {
+      "slug": "yoga-mat",
+      "query": "yoga mat",
+      "products": 30
+    },
+    {
+      "slug": "stainless-steel-water-bottle",
+      "query": "stainless steel water bottle",
+      "products": 30
+    },
+    {
+      "slug": "office-desk-chair",
+      "query": "office desk chair",
+      "products": 30
+    }
+  ]
+}
