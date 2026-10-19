@@ -1,4 +1,5 @@
 export { ConfirmDialog } from "./components/ConfirmDialog.js";
+export { CopyButton } from "./components/CopyButton.js";
 export { Countdown } from "./components/Countdown.js";
 export { GapScale } from "./components/GapScale.js";
 export {

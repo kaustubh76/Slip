@@ -33,6 +33,29 @@ test("the rejected receipt reads in five seconds, with every offer behind it", a
   await expect(offers.getByRole("row", { name: /Store A.*CHOSEN/ })).toBeVisible();
 });
 
+test("the ids behind a receipt are whole and can be taken, and the back of it folds", async ({
+  page,
+  context,
+}) => {
+  await context.grantPermissions(["clipboard-write"]);
+  await openDesk(page);
+  await page.getByRole("link", { name: "Your agent tried to pay $58.99 at Store A." }).click();
+  const fold = page.locator("details.slip-fold");
+  // It opens open: Slip's working is not something the reader has to ask for.
+  await expect(fold).toHaveAttribute("open", "");
+  // The receipt's own id, in full rather than the header's abbreviation.
+  const id = new URL(page.url()).pathname.split("/").pop() ?? "";
+  expect(id).not.toBe("");
+  await expect(fold).toContainText(id);
+  await page.getByRole("button", { name: "Copy the receipt id" }).click();
+  await expect(fold.getByText("copied")).toBeVisible();
+  // Folded, what it covers goes with it; unfolded, it is back.
+  await fold.locator("summary").click();
+  await expect(page.getByRole("table")).toBeHidden();
+  await fold.locator("summary").click();
+  await expect(page.getByRole("table")).toBeVisible();
+});
+
 test("approving names the exact amount, and a double click captures once", async ({ page }) => {
   await openDesk(page);
   await page.goto("/holds");

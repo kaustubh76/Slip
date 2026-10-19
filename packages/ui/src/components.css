@@ -936,6 +936,35 @@
     justify-items: start;
   }
 
+  /*
+   * What is behind the receipt folds away. Its handle is written like the rules it covers — [+]
+   * when shut, [–] when open — in place of the browser's triangle. Both markers are in the markup
+   * and hidden from assistive tech, which hears the summary's own open state instead.
+   */
+  .slip-fold > summary {
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .slip-fold > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .slip-fold[open] .slip-fold-shut,
+  .slip-fold:not([open]) .slip-fold-open {
+    display: none;
+  }
+
+  /*
+   * "copy" beside a value, in the row's own type rather than the browser's, and whatever came of
+   * pressing it. The word is spoken by its live region whether or not there is room to show it.
+   */
+  .slip-copy,
+  .slip-copied {
+    font: inherit;
+    margin-inline-start: 1ch;
+  }
+
   /* A key, or a command carrying one, shown once: wide enough to select in one go. */
   .slip-key,
   .slip-command {

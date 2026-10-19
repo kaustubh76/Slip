@@ -5,6 +5,7 @@ import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { heldView, paidView, rejectedView } from "../__fixtures__/views.js";
 import { ConfirmDialog } from "./ConfirmDialog.js";
+import { CopyButton } from "./CopyButton.js";
 import { ApproveDialog, DeclineDialog } from "./HoldDialogs.js";
 import { HoldsTray } from "./HoldsTray.js";
 import { ReportCard, type ReportCardData } from "./ReportCard.js";
@@ -16,6 +17,14 @@ const entry = (view: RollEntry["view"], name = "shopper-1"): RollEntry => ({
   agent: { id: testUuid(), name },
 });
 const hrefFor = (e: RollEntry) => `/receipts/${e.view.receiptId}`;
+
+/** jsdom has no clipboard; each test says what this browser's would do. */
+const clipboardIs = (clipboard: unknown): void => {
+  Object.defineProperty(globalThis.navigator, "clipboard", {
+    value: clipboard,
+    configurable: true,
+  });
+};
 
 describe("Roll", () => {
   it("prints each receipt as a row; a waiting hold sits offset", () => {
@@ -307,5 +316,30 @@ describe("ReportCard", () => {
     expect(
       screen.getByText("Owner-approved follow-ups are not counted as the agent's choices."),
     ).toBeDefined();
+  });
+});
+
+describe("CopyButton", () => {
+  it("takes the whole value, and says it did", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    clipboardIs({ writeText });
+    render(<CopyButton value="8NR12345LK6789012" label="the PayPal order id" />);
+    fireEvent.click(screen.getByRole("button", { name: "Copy the PayPal order id" }));
+    expect(writeText).toHaveBeenCalledWith("8NR12345LK6789012");
+    expect(await screen.findByText("copied")).toBeDefined();
+  });
+
+  it("says so rather than claiming otherwise when the browser refuses", async () => {
+    clipboardIs({ writeText: vi.fn().mockRejectedValue(new Error("denied")) });
+    render(<CopyButton value="8NR1" label="the receipt id" />);
+    fireEvent.click(screen.getByRole("button", { name: "Copy the receipt id" }));
+    expect(await screen.findByText("not copied")).toBeDefined();
+  });
+
+  it("says so where there is no clipboard at all", () => {
+    clipboardIs(undefined);
+    render(<CopyButton value="8NR1" label="the receipt id" />);
+    fireEvent.click(screen.getByRole("button", { name: "Copy the receipt id" }));
+    expect(screen.getByText("not copied")).toBeDefined();
   });
 });

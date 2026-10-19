@@ -1,32 +1,76 @@
 import { type OfferRow, type ReceiptDetail, type ReceiptView, shortNo } from "@slip/receipt";
-import { Leaders } from "@slip/ui";
+import { CopyButton, Leaders } from "@slip/ui";
 import Link from "next/link";
+import type { ReactNode } from "react";
+
+/** An id the owner may have to quote somewhere else, whole and with a way to take it. */
+function Id({ value, label }: { value: string; label: string }): ReactNode {
+  return (
+    <>
+      <span className="slip-mono">{value}</span>
+      <CopyButton value={value} label={label} />
+    </>
+  );
+}
 
 /**
  * Everything behind the five-second receipt, below the tear line: which rules tripped and in what
  * order, the policy version it was decided under, every offer the snapshot listed and why each one
  * was or was not compared, what PayPal was told and answered, the agent's own words (quoted, and
  * labelled as something Slip does not act on), and the payment's moves.
+ *
+ * It folds, but opens that way: this is Slip showing its working, so a reader who has not asked to
+ * put it away still sees all of it.
  */
 export function BehindTheReceipt({ detail }: { detail: ReceiptDetail }) {
   const { view } = detail;
   return (
-    <section aria-label="Behind the receipt">
-      <h3 className="slip-meta">Behind the receipt</h3>
+    <details className="slip-fold" open aria-label="Behind the receipt">
+      <summary>
+        <h3 className="slip-meta">
+          <span className="slip-mono slip-fold-shut" aria-hidden="true">
+            [+]{" "}
+          </span>
+          <span className="slip-mono slip-fold-open" aria-hidden="true">
+            [–]{" "}
+          </span>
+          Behind the receipt
+        </h3>
+      </summary>
       <Leaders
         rows={[
           ["Rule", view.ruleCode],
           ["Policy", `version ${view.policyVersion}`],
           ["Payment", paymentSummary(view)],
+          ["Receipt", <Id key="receipt" value={view.receiptId} label="the receipt id" />],
           ...(view.paypal?.orderId === null || view.paypal === null
             ? []
-            : ([["PayPal order", view.paypal.orderId]] as const)),
+            : ([
+                [
+                  "PayPal order",
+                  <Id key="order" value={view.paypal.orderId} label="the PayPal order id" />,
+                ],
+              ] as const)),
           ...(view.paypal?.authorizationId == null
             ? []
-            : ([["Authorization", view.paypal.authorizationId]] as const)),
+            : ([
+                [
+                  "Authorization",
+                  <Id
+                    key="auth"
+                    value={view.paypal.authorizationId}
+                    label="the authorization id"
+                  />,
+                ],
+              ] as const)),
           ...(view.paypal?.captureId == null
             ? []
-            : ([["Capture", view.paypal.captureId]] as const)),
+            : ([
+                [
+                  "Capture",
+                  <Id key="capture" value={view.paypal.captureId} label="the capture id" />,
+                ],
+              ] as const)),
           ...(view.snapshotId === null
             ? []
             : ([["Prices", `Channel3 snapshot ${shortNo(view.snapshotId)}`]] as const)),
@@ -85,7 +129,7 @@ export function BehindTheReceipt({ detail }: { detail: ReceiptDetail }) {
           </ol>
         </>
       )}
-    </section>
+    </details>
   );
 }
 
