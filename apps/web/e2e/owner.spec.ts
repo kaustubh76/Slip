@@ -94,14 +94,23 @@ test("nothing is readable without a session", async ({ request }) => {
   }
 });
 
-test("the bench says neither study has run, and prints no figures", async ({ page }) => {
+test("the bench prints the market study as measured, and says the benchmark has not run", async ({
+  page,
+}) => {
   await openDesk(page);
   await page.getByRole("link", { name: "Bench" }).click();
-  await expect(page.getByRole("img", { name: "This study has not run yet" })).toBeVisible();
+  const main = page.getByRole("main");
+
+  // The study has run, so the page shows its figures with the sample size and the date on them.
+  await expect(main).toContainText("240 products from 8 searches");
+  await expect(main).toContainText("2026-10-19");
+  await expect(main).toContainText("18.33%");
+  // Including the part that does not flatter us.
+  await expect(main).toContainText("minority of products");
+
+  // The benchmark has not, and says so rather than showing an empty table.
   await expect(page.getByRole("img", { name: "This benchmark has not run yet" })).toBeVisible();
-  await expect(page.getByRole("main")).toContainText("150–200 products");
-  // No measured-looking number until a study has produced one.
-  expect(await page.getByRole("main").textContent()).not.toMatch(/\d%/);
+  await expect(main).toContainText("waiting on a model key");
 });
 
 test("another desk's receipt reads as not found, the same as no receipt at all", async ({

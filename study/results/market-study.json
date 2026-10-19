@@ -1,0 +1,155 @@
+{
+  "sampledAt": "2026-10-19T12:21:23.709Z",
+  "credits": 8,
+  "queries": [
+    {
+      "slug": "trail-running-shoes",
+      "query": "trail running shoes",
+      "products": 30
+    },
+    {
+      "slug": "wireless-noise-cancelling-headphones",
+      "query": "wireless noise cancelling headphones",
+      "products": 30
+    },
+    {
+      "slug": "cast-iron-skillet",
+      "query": "cast iron skillet",
+      "products": 30
+    },
+    {
+      "slug": "mens-merino-wool-socks",
+      "query": "mens merino wool socks",
+      "products": 30
+    },
+    {
+      "slug": "mechanical-keyboard",
+      "query": "mechanical keyboard",
+      "products": 30
+    },
+    {
+      "slug": "yoga-mat",
+      "query": "yoga mat",
+      "products": 30
+    },
+    {
+      "slug": "stainless-steel-water-bottle",
+      "query": "stainless steel water bottle",
+      "products": 30
+    },
+    {
+      "slug": "office-desk-chair",
+      "query": "office desk chair",
+      "products": 30
+    }
+  ],
+  "numbers": {
+    "products": 240,
+    "offersListed": 321,
+    "offersMapped": 321,
+    "offersComparable": 318,
+    "excluded": {
+      "noPrice": 0,
+      "notUsd": 0,
+      "notInStock": 0,
+      "notNew": 3,
+      "duplicate": 0
+    },
+    "countsByComparable": [
+      {
+        "comparable": 1,
+        "products": 196
+      },
+      {
+        "comparable": 2,
+        "products": 27
+      },
+      {
+        "comparable": 3,
+        "products": 8
+      },
+      {
+        "comparable": 4,
+        "products": 6
+      },
+      {
+        "comparable": 5,
+        "products": 1
+      },
+      {
+        "comparable": 6,
+        "products": 1
+      },
+      {
+        "comparable": 9,
+        "products": 1
+      }
+    ],
+    "perQuery": [
+      {
+        "slug": "cast-iron-skillet",
+        "products": 30,
+        "withTwoOrMore": 6,
+        "sharePctHundredths": 2000
+      },
+      {
+        "slug": "mechanical-keyboard",
+        "products": 30,
+        "withTwoOrMore": 2,
+        "sharePctHundredths": 667
+      },
+      {
+        "slug": "mens-merino-wool-socks",
+        "products": 30,
+        "withTwoOrMore": 3,
+        "sharePctHundredths": 1000
+      },
+      {
+        "slug": "office-desk-chair",
+        "products": 30,
+        "withTwoOrMore": 8,
+        "sharePctHundredths": 2667
+      },
+      {
+        "slug": "stainless-steel-water-bottle",
+        "products": 30,
+        "withTwoOrMore": 4,
+        "sharePctHundredths": 1333
+      },
+      {
+        "slug": "trail-running-shoes",
+        "products": 30,
+        "withTwoOrMore": 10,
+        "sharePctHundredths": 3333
+      },
+      {
+        "slug": "wireless-noise-cancelling-headphones",
+        "products": 30,
+        "withTwoOrMore": 5,
+        "sharePctHundredths": 1667
+      },
+      {
+        "slug": "yoga-mat",
+        "products": 30,
+        "withTwoOrMore": 6,
+        "sharePctHundredths": 2000
+      }
+    ],
+    "priced": 240,
+    "withTwoOrMore": 44,
+    "shareWithTwoOrMorePctHundredths": 1833,
+    "g1Pass": false,
+    "medianGapPctHundredths": 1702,
+    "medianGapCents": 1231,
+    "widestGapPctHundredths": 149289,
+    "quartileGapPctHundredths": {
+      "lower": 0,
+      "upper": 5003
+    },
+    "suspectGrouping": 3,
+    "medianGapPctHundredthsExcludingSuspect": 1667,
+    "commissionConsidered": 40,
+    "commissionConflicts": 19,
+    "commissionConflictPctHundredths": 4750
+  }
+}

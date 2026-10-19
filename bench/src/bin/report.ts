@@ -29,6 +29,11 @@ const ranAt = runs.map((run) => run.ranAt).sort()[0] ?? new Date().toISOString()
 const out = join(root, "results");
 mkdirSync(out, { recursive: true });
 writeFileSync(join(out, "slipbench.md"), renderBench({ tallies, graded, ranAt }));
+// The same numbers as data, for the app's bench page.
+writeFileSync(
+  join(out, "slipbench.json"),
+  `${JSON.stringify({ ranAt, errands: tallies[0]?.errands ?? 0, tallies }, null, 2)}\n`,
+);
 
 for (const row of tallies) {
   console.log(

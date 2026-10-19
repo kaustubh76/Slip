@@ -31,6 +31,11 @@ const numbers = summarise(measures);
 const out = join(root, "results");
 mkdirSync(out, { recursive: true });
 writeFileSync(join(out, "market-study.md"), renderReport({ manifest, numbers, measures }));
+// The same numbers as data, so the app can show them without parsing prose.
+writeFileSync(
+  join(out, "market-study.json"),
+  `${JSON.stringify({ sampledAt: manifest.sampledAt, credits: manifest.credits, queries: manifest.queries, numbers }, null, 2)}\n`,
+);
 
 console.log(`${numbers.products} products from ${snapshots.length} searches`);
 console.log(
