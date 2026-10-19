@@ -737,3 +737,46 @@ are exactly the population the product holds.
 **What it costs.** A genuine overpay above 100 % is held rather than rejected — slower for the
 owner, but it never pays and never refuses on data this suspect. A property test asserts no market
 with a gap above the line can ever be PAID or REJECTED.
+
+## D69 · 2026-10-19 · Slip searches, and remembers what it showed
+
+D54 made product search a hook the host supplies and left `searchContext` null, on the grounds that
+search was not part of the check. That was right about the check and wrong about the product: with
+no search of its own, Slip could not help an agent find anything outside the demo, and — because a
+Channel3 offer carries no text (D67) — the steering check had nothing to read on real data. This
+supersedes D54's scope. The check still prices every purchase from its own snapshot, whatever a
+search showed.
+
+**Slip searches Channel3** (`@slip/offers/search`, a separate entry point so the adapter itself
+still cannot spend a credit) and shows the agent each product's own words as well as every offer,
+marked untrusted in the same breath as a listing's. Showing it is what makes recording it honest.
+
+**Slip records what it showed**, per `(agent, product)`, in `search_impressions`. At checkout the
+steering classifier is asked about the chosen listing's text *and* that record, so R3_STEERED can
+fire on a real purchase for the first time. Four choices worth stating:
+
+- **Per agent, not per permission.** Two agents can share a permission; one's search is not
+  evidence about the other, and a purchase must not be flagged on words the buying agent never saw.
+- **Operational, not evidence.** It is upserted, forgotten after half an hour of use
+  (`searchContextMaxAgeMs`) and pruned by the write that follows. What was *decided* lives in the
+  attempt, which is append-only. A lost row costs one steering verdict, which R4a holds for the
+  owner — so recording never fails a search and reading never fails a checkout.
+- **Never what the agent sent.** Only what Slip served. A check that read the agent's own words
+  would be asking the suspect for its alibi.
+- **Not read on a replay.** A re-run after a policy change replays the stored verdict rather than
+  re-asking about text that may have changed since.
+
+**A search is budgeted and cached**, in the web app rather than the port: 60 uncached searches an
+hour per permission, and five minutes of caching shared across permissions. Product detail is free
+and search is not, and nothing else in Slip limited searches — the retry limit counts checkouts —
+so a looping agent could have emptied an owner's credits in minutes. Both are per process, so
+several replicas get several allowances: the same trade D66 accepted for resolving, chosen here
+because a shared counter would put a round trip on the agent's critical path.
+
+**The prompt changed with it** (`steer-2`): it sends only the elements that have text and says that
+either may be absent. Before, every real purchase would have sent an empty `<listing-…>` under a
+system prompt claiming the model had been shown the merchant's own words.
+
+**Still not live without a key.** With no `ANTHROPIC_API_KEY` the classifier is the scripted
+stand-in, so in production every verdict this path now asks for would be `NO_ANSWER` → R4a HELD.
+The path is real; the judgement waits on the key.
