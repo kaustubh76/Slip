@@ -24,8 +24,14 @@ const AMOUNT = 1299 as Cents;
  * What every PaymentGateway must do, as Slip relies on it. Runs on the fake now and on the
  * PayPal sandbox adapter once it exists, so the fake cannot drift from PayPal's behaviour.
  */
+/**
+ * Each case makes several calls in a row, which the sandbox answers in seconds rather than the
+ * fake's microseconds: the suite carries its own allowance, so no caller has to remember a flag.
+ */
+const CONTRACT_TIMEOUT_MS = 90_000;
+
 export function describeGatewayContract(label: string, make: () => Promise<GatewayHarness>): void {
-  describe(`PaymentGateway contract · ${label}`, () => {
+  describe(`PaymentGateway contract · ${label}`, { timeout: CONTRACT_TIMEOUT_MS }, () => {
     it("a one-step order pays, and replaying its request id returns the same order", async () => {
       const { gateway, vaultId } = await make();
       const input = {

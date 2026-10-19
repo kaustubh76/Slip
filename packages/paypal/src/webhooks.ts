@@ -94,6 +94,21 @@ interface PayPalResource {
  * One verified delivery, normalised. PayPal's own event names decide; a type Slip has no rule for,
  * or one missing the id its rule needs, is `ignored` — a webhook is never a reason to guess.
  */
+/**
+ * Every event type `interpretWebhook` acts on: what Slip's webhook subscription must include.
+ * A subscription narrower than this loses money events silently.
+ */
+export const SLIP_WEBHOOK_EVENTS = [
+  "PAYMENT.CAPTURE.COMPLETED",
+  "PAYMENT.CAPTURE.PENDING",
+  "PAYMENT.CAPTURE.DENIED",
+  "PAYMENT.CAPTURE.DECLINED",
+  "PAYMENT.AUTHORIZATION.CREATED",
+  "PAYMENT.AUTHORIZATION.VOIDED",
+  "VAULT.PAYMENT-TOKEN.CREATED",
+  "VAULT.PAYMENT-TOKEN.DELETED",
+] as const;
+
 export function interpretWebhook(payload: unknown): GatewayEvent {
   const event = payload as { event_type?: unknown; resource?: PayPalResource } | null;
   const eventType = text(event?.event_type) ?? "UNKNOWN";

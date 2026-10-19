@@ -1,7 +1,7 @@
 import type { Fetch } from "@slip/http";
 import { describe, expect, it } from "vitest";
 import { createPayPalApi } from "./client.js";
-import { createWebhookOperations, interpretWebhook } from "./webhooks.js";
+import { createWebhookOperations, interpretWebhook, SLIP_WEBHOOK_EVENTS } from "./webhooks.js";
 
 /**
  * Verification is a call PayPal must answer SUCCESS; interpretation is pure. The deliveries below
@@ -248,5 +248,15 @@ describe("reading a verified delivery", () => {
   it("is pure: the same payload reads the same way twice", () => {
     const payload = delivery("PAYMENT.CAPTURE.COMPLETED", capture);
     expect(interpretWebhook(payload)).toEqual(interpretWebhook(payload));
+  });
+});
+
+describe("SLIP_WEBHOOK_EVENTS", () => {
+  it.each(SLIP_WEBHOOK_EVENTS)("%s is acted on, never ignored", (eventType) => {
+    const event = interpretWebhook({
+      event_type: eventType,
+      resource: { id: "RES-1", custom_id: "0190a1b2-0000-7000-8000-000000000001" },
+    });
+    expect(event.kind).not.toBe("ignored");
   });
 });

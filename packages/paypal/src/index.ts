@@ -7,4 +7,4 @@ export {
   type PayPalApiOptions,
 } from "./client.js";
 export { createPayPalGateway, type PayPalGatewayOptions } from "./gateway.js";
-export { interpretWebhook } from "./webhooks.js";
+export { interpretWebhook, SLIP_WEBHOOK_EVENTS } from "./webhooks.js";
