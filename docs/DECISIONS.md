@@ -880,3 +880,32 @@ Two constraints shaped the parts:
 Drawings are made by the code that decides: `LimitsPicture` draws through `measureFor`, the
 gap-scale maths lifted out of the receipt's own `measureModel` so both call one function, and its
 verdict comes from `evaluateRules`. A picture therefore cannot promise what a purchase would not do.
+
+## D73 · 2026-10-20 · A key acts on what is in focus, never on something else on the screen
+
+D72's bench put a receipt in a dock beside the roll, and in doing so changed what a page-wide
+selector means. `Shortcuts` found every receipt and hold with `main [data-slip-outcome]`; on the
+receipts screen that had meant "the roll", and now also matched the docked slip, which the
+workbench renders last.
+
+The harmless part was `j`/`k` gaining an extra stop for a receipt the owner was already reading,
+and a ring whose length depended on whether that slip happened to contain a link. The part that
+mattered was `a` and `d`: they fell back to `document.querySelector('main [data-slip-action=…]')`
+whenever the item in focus had no decision button of its own. **A roll row never has one.** So
+pressing `d` with a row in focus opened the decline dialog for whatever was docked — a different
+receipt from the one the owner was looking at. D48's confirmation still stood between that and any
+money moving, and the dialog named the amount and the store, so nothing could be lost silently.
+The key still acted on the wrong thing.
+
+**A key acts on the thing in focus.** Where focus is inside a receipt, `a`/`d` find that receipt's
+decision or nothing at all. The page-wide fallback survives only for focus that is outside every
+receipt, which is how the holds screen is used — and is what the help sheet always claimed.
+
+**A ring is a list, not a screen.** `j`/`k` step through the list pane where a screen has one, and
+through everything on the screen only when the list offers nothing — the case on a phone, where
+the stylesheet hides the list behind the slip being read. Items that cannot take focus, or that
+have no box, are not in the ring, so a key never moves to something invisible.
+
+The general rule, for any shortcut added later: a fallback may widen *where* a key looks only
+while nothing narrower is in focus. Once something is in focus, that is the subject, and a key
+that finds nothing there does nothing.

@@ -84,6 +84,16 @@ modifier is held.
 In `apps/web`, **Keys** in the masthead opens the same sheet. Turning the shortcuts off is
 remembered in that browser.
 
+**What the keys act on** is the list, where a screen has one. `j`/`k` ring through
+`main .slip-listpane [data-slip-outcome]`, skipping anything that cannot take focus or has no box
+on the screen, and fall back to all of `main` when that finds nothing — which is what a phone does
+with the slip it is reading, since the stylesheet hides the list behind it. Without the scoping,
+the slip docked beside the roll was a second stop for a receipt the owner was already reading.
+
+`a`/`d` never reach past the receipt in focus. A roll row carries no decision of its own, so a
+page-wide fallback from one meant deciding about whatever was docked — a different receipt (D73).
+Outside any receipt they still take the first on the page, which is how the holds screen works.
+
 ## The workbench
 
 Each screen an owner works in is laid out as a bench with three slots, so a wide display shows the
@@ -109,9 +119,20 @@ can be linked to or reloaded. The agent filter therefore lives in the bench rath
 address, which now belongs to the open receipt. Older receipts (`?before=`) mark themselves
 `data-archive` and take the whole bench, since a layout cannot read search params.
 
-Two further layouts, both plain grids: `.slip-cards` for self-contained cards that sit side by
-side (waiting holds, agent report cards), and `.slip-twoup` for two sheets read together (the
-limits form and the picture of what it would do).
+The roll says which receipt is open: `Roll` and `HoldsTray` take an `openId`, and the row that
+matches carries the owner's pen down its inside edge (an inset rule, so nothing shifts) with
+`aria-current="page"` on its link. `apps/web` reads the id from the address, which is where it
+already lives.
+
+Two further layouts, both plain grids, carry every screen that is not a bench. `.slip-cards` is
+for self-contained cards that sit side by side — waiting holds, agent report cards, and the
+bench's two pieces of evidence. `.slip-twoup` is for two sheets read together: the limits form and
+the picture of what it would do, the permission slip and the stub that cancels it, the demo
+console and the log of what PayPal was asked. Both lift the 36rem sheet cap on their direct
+children only, so nothing may be stacked inside a `.slip-twoup` column without new CSS.
+
+A bench whose `rail` is left out drops the rail's column too, rather than dealing the list the
+rail's width.
 
 ### Counting honestly
 
@@ -137,6 +158,7 @@ would describe whichever pages happened to be in memory, so nothing does it.
 | `Countdown` | how long is left to decide, as a bar that drains and the same thing in words |
 | `OutcomeBar` | an agent's outcomes in the stamps' inks, hidden from assistive tech because the numbers sit beneath it |
 | `LimitsPicture` | what a draft of the limits would do to one purchase |
+| `CopyButton` | takes one value — an id to quote elsewhere — and says "not copied" where the browser refuses, rather than claiming otherwise |
 | `summariseAgents` · `countByOutcome` · `filterRows` · `dayOf` · `dayStarts` | the pure parts, so a host can filter and group without the components |
 
 `Roll` takes an optional `days` map (from `dayStarts`) and writes each day inside its first row.
