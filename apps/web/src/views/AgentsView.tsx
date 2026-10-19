@@ -29,14 +29,15 @@ export function AgentsView(props: { token: string }) {
             )}
           </div>
         ))}
+        {/* The next card in the same grid, so one agent does not leave a column standing empty. */}
+        <article className="slip-sheet" data-perforated="">
+          <p className="slip-meta">New agent</p>
+          <p className="slip-prose">
+            An agent spends under this mandate, within your limits, using a key of its own.
+          </p>
+          <IssueAgentKey />
+        </article>
       </div>
-      <article className="slip-sheet" data-perforated="">
-        <p className="slip-meta">New agent</p>
-        <p className="slip-prose">
-          An agent spends under this mandate, within your limits, using a key of its own.
-        </p>
-        <IssueAgentKey />
-      </article>
     </>
   );
 }
