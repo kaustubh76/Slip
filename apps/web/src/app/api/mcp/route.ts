@@ -2,7 +2,7 @@ import { createSlipMcpEndpoint } from "@slip/mcp";
 import { isDemo } from "../../../server/demo";
 import { deskSearch } from "../../../server/demo/search";
 import { logApiError } from "../../../server/owner-route";
-import { deps, fakes } from "../../../server/runtime";
+import { deps, fakes, runtime as slipRuntime } from "../../../server/runtime";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -17,8 +17,12 @@ const endpoint = createSlipMcpEndpoint({
   deps,
   // In demo mode an agent can search its desk's stand-in catalogue; Channel3's search comes with
   // the real adapter.
+  // The demo searches the visitor's own desk catalogue; everywhere else, Channel3 itself when
+  // there is a key for it. Either way the endpoint records what it showed this agent (D69).
   search: async (mandateId) =>
-    isDemo() ? deskSearch((await fakes()).offers, mandateId) : undefined,
+    isDemo()
+      ? deskSearch((await fakes()).offers, mandateId)
+      : ((await slipRuntime()).catalogue?.forMandate(mandateId) ?? undefined),
   onError: logApiError,
 });
 

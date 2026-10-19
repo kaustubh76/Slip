@@ -11,6 +11,7 @@ import { DEMO_PRODUCTS, INJECTION_PHRASE } from "./demo/catalogue";
 import { DemoOffers } from "./demo/offers";
 import { DemoPayPal } from "./demo/paypal";
 import { demoLatencyMs } from "./demo/timing";
+import { type CatalogueSearch, createCatalogueSearch } from "./search";
 import type { Services } from "./services";
 
 /**
@@ -33,6 +34,12 @@ export interface Assembled {
   offers: OffersSource;
   gateway: PaymentGateway;
   classifier: SteeringClassifier;
+  /**
+   * The catalogue agents search, when there is a real one. Null with simulated prices: the demo
+   * serves its own desk catalogue, and a stand-in catalogue outside the demo would offer an agent
+   * product ids Channel3 has never heard of.
+   */
+  catalogue: CatalogueSearch | null;
   /** The stand-in behind each simulated service; null where the service is real. */
   standIns: StandIns;
 }
@@ -42,6 +49,7 @@ export function assembleServices(input: {
   env: NodeJS.ProcessEnv;
   store: Store;
   clock: AppDeps["clock"];
+  log: AppDeps["log"];
   demo: boolean;
   publicBaseUrl: string;
 }): Assembled {
@@ -61,6 +69,14 @@ export function assembleServices(input: {
     classifier: services.steering === "simulated" ? simulatedClassifier() : null,
   };
   return {
+    catalogue:
+      services.prices === "channel3"
+        ? createCatalogueSearch({
+            apiKey: required(env, "CHANNEL3_API_KEY"),
+            clock: input.clock,
+            log: input.log,
+          })
+        : null,
     offers: standIns.offers ?? createChannel3Offers({ apiKey: required(env, "CHANNEL3_API_KEY") }),
     gateway:
       standIns.gateway ??

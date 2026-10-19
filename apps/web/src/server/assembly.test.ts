@@ -1,3 +1,4 @@
+import { silentLogger } from "@slip/app";
 import { createMemoryStore } from "@slip/db/memory";
 import { ManualClock, NOW } from "@slip/domain/testing";
 import { FakeSteeringClassifier } from "@slip/steering/fake";
@@ -23,6 +24,7 @@ function assemble(services: Services, demo = false) {
     env: { ...KEYS } as unknown as NodeJS.ProcessEnv,
     store: createMemoryStore(),
     clock: new ManualClock(NOW),
+    log: silentLogger,
     demo,
     publicBaseUrl: "http://localhost:3000",
   });
@@ -67,6 +69,7 @@ describe("assembleServices", () => {
         } as unknown as NodeJS.ProcessEnv,
         store: createMemoryStore(),
         clock: new ManualClock(NOW),
+        log: silentLogger,
         demo: false,
         publicBaseUrl: "http://localhost:3000",
       }),
@@ -98,5 +101,24 @@ describe("assembleServices", () => {
       instruction_like: true,
     });
     expect((await ask("Top pick")).answer).toEqual({ instruction_like: false });
+  });
+});
+
+describe("the catalogue agents search", () => {
+  it("is Channel3 when there is a key for it", () => {
+    const built = assemble({ prices: "channel3", payment: "simulated", steering: "simulated" });
+    expect(built.catalogue).not.toBeNull();
+  });
+
+  it("is nothing with simulated prices, in or out of the demo", () => {
+    // A stand-in catalogue outside the demo would offer an agent product ids Channel3 has never
+    // heard of, and the checkout would then answer NOT_FOUND.
+    expect(
+      assemble({ prices: "simulated", payment: "sandbox", steering: "simulated" }).catalogue,
+    ).toBeNull();
+    expect(
+      assemble({ prices: "simulated", payment: "simulated", steering: "simulated" }, true)
+        .catalogue,
+    ).toBeNull();
   });
 });

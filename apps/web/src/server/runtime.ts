@@ -17,6 +17,7 @@ import { isDemo } from "./demo";
 import type { DemoFakes } from "./demo/desk";
 import { type DemoDesk, DeskLimiter } from "./demo/desks";
 import { DEMO_TIMING, demoConfig, every } from "./demo/timing";
+import type { CatalogueSearch } from "./search";
 import { resolveServices, type Services, unsafeCombination } from "./services";
 
 /**
@@ -41,6 +42,8 @@ export interface Fakes extends DemoFakes {
 
 export interface Runtime {
   deps: AppDeps;
+  /** The catalogue agents search, when this deployment has a real one. */
+  catalogue: CatalogueSearch | null;
   /** The stand-in behind each simulated service; null where the service is real. */
   standIns: StandIns;
   /** All three stand-ins, or null when any service here is the real one. */
@@ -93,11 +96,13 @@ async function build(): Promise<Runtime> {
     pricesSource: SERVICES.prices === "channel3" ? "channel3" : "simulated",
     paymentSource: SERVICES.payment === "simulated" ? "simulated" : "paypal",
   });
+  const log = env["NODE_ENV"] === "test" ? silentLogger : jsonLogger;
   const services = assembleServices({
     services: SERVICES,
     env,
     store,
     clock,
+    log,
     demo,
     publicBaseUrl: config.publicBaseUrl,
   });
@@ -113,7 +118,7 @@ async function build(): Promise<Runtime> {
     classifier: services.classifier,
     clock,
     ids: randomIds,
-    log: env["NODE_ENV"] === "test" ? silentLogger : jsonLogger,
+    log,
     config,
   };
   const limiter = new DeskLimiter({
@@ -134,7 +139,13 @@ async function build(): Promise<Runtime> {
       (error) => deps.log.error("resolver.failed", { error: String(error) }),
     );
   }
-  return { deps, standIns, fakes, demo: { desks: new Map(), limiter } };
+  return {
+    deps,
+    catalogue: services.catalogue,
+    standIns,
+    fakes,
+    demo: { desks: new Map(), limiter },
+  };
 }
 
 /**
