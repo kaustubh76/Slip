@@ -810,3 +810,40 @@ with the two `aid`s that differ.
 still missed this, because they compared an offer's *facts* — domain, price, availability,
 condition, commission — and never its url. One end-to-end purchase found in a minute what the whole
 suite could not.
+
+## D71 · 2026-10-19 · An owner's way back in is an email and a password, hashed here
+
+Until now the only credential was a signed session cookie. Lose the browser and the kill switch,
+the receipts and the holds were gone for good — which is why D65 refused to open an owner at all
+while PayPal was live, and why a real deployment had no onboarding.
+
+**A password, because it is the only credential Slip can issue by itself.** A magic link needs an
+email service; a passkey needs a domain and a ceremony; an OAuth provider needs an account
+somewhere else. `scrypt` from Node's own crypto with a per-owner salt needs nothing — no dependency
+to audit, no third party in the loop, no key to go and fetch. The stored string carries its
+parameters (`scrypt$N$r$p$salt$key`) so the cost can be raised later without invalidating anyone.
+
+**What it does not do: a reset.** Slip cannot send email, so a forgotten password cannot be
+recovered, and the sign-up page says so where the field is rather than leaving it to be discovered.
+That is the honest shape of a credential issued by a service with no mail.
+
+**The cookie is unchanged.** Signing in issues the same session as before; this is a second way to
+obtain one, not a new scheme, so an existing session survives the change.
+
+**One answer for every failure.** A wrong password, an unknown address and an owner who never set
+one all answer the same, and all do the same scrypt work, so neither the message nor the timing
+tells a visitor which addresses have Slip accounts. Attempts share the limiter that caps openings.
+
+**D65's live refusal becomes conditional**, not removed: starting against live PayPal is refused
+unless a credential is set. An anonymous visitor still cannot open an owner over real money.
+
+`MandateRepo.findByOwner` came with it — active first, then newest — because a signing-in owner has
+to be handed a permission to carry and nothing could look one up.
+
+**Found while testing it in a browser:** the stand-in approval page redirected into
+`/mandates/<id>/return`, a Route Handler, so the client router navigated to something answering
+with a 307 and no RSC payload, and an owner saw Slip's error page instead of their permission. The
+action now completes the setup itself; the route remains for PayPal's own redirect, which is a
+top-level GET. It survived because the browser suite only ran in demo mode, where sign-in seeds an
+already-active mandate — so there is now a second Playwright server without `SLIP_DEMO`, the shape
+a real owner meets.
