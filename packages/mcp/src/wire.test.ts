@@ -84,6 +84,7 @@ describe("toolReceipt — every rule, payment status and hold", () => {
         replay,
         followUpId: null,
         receiptUrl: `https://slip.example/receipts/${view.receiptId}`,
+        paymentSimulated: false,
       });
       expect(ToolReceiptSchema.parse(wire)).toEqual(wire);
       expect(snakeCaseKeys(wire)).toEqual([]);
@@ -214,5 +215,42 @@ describe("refusalText and toolReport", () => {
       report: view.lines,
     });
     expect(snakeCaseKeys(wire)).toEqual([]);
+  });
+});
+
+describe("what an agent is told about what was real", () => {
+  const view = renderReceipt(
+    { attempt: decided("R4_OVERPAID"), payment: null, hold: null },
+    { policy: DEFAULT_POLICY, child: null },
+  );
+  const wire = (over: { simulated?: boolean; paymentSimulated: boolean }) =>
+    toolReceipt(
+      { ...view, simulated: over.simulated ?? false },
+      {
+        replay: null,
+        followUpId: null,
+        receiptUrl: "https://slip.example/receipts/x",
+        paymentSimulated: over.paymentSimulated,
+      },
+    );
+
+  it("tells the prices and the payment apart", () => {
+    // The likely state (D63): real Channel3 prices, a stand-in PayPal. One flag for both would
+    // have to lie about one of them.
+    const mixed = wire({ simulated: false, paymentSimulated: true });
+    expect(mixed.simulated).toBe(false);
+    expect(mixed.payment_simulated).toBe(true);
+  });
+
+  it("a sandbox payment is not a simulated one", () => {
+    // No real money moves in the sandbox either, but PayPal did take the order.
+    expect(wire({ paymentSimulated: false }).payment_simulated).toBe(false);
+  });
+
+  it("the description of `simulated` claims only what it knows", () => {
+    const described = ToolReceiptSchema.shape.simulated.description ?? "";
+    expect(described).toContain("Channel3");
+    expect(described).not.toContain("PayPal");
+    expect(ToolReceiptSchema.shape.payment_simulated.description ?? "").toContain("PayPal");
   });
 });

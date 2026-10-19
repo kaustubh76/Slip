@@ -112,6 +112,7 @@ export function createSlipServer(options: SlipServerOptions): McpServer {
           replay: result.status === "replayed" ? result.reason : null,
           followUpId: null,
           receiptUrl: receiptUrl(result.view.receiptId),
+          paymentSimulated: deps.config.paymentSource === "simulated",
         });
         return {
           content: [{ type: "text", text: receiptText(receipt) }],
@@ -140,6 +141,7 @@ export function createSlipServer(options: SlipServerOptions): McpServer {
           replay: null,
           followUpId: found.followUp?.view.receiptId ?? null,
           receiptUrl: receiptUrl(found.view.receiptId),
+          paymentSimulated: deps.config.paymentSource === "simulated",
         });
         return {
           content: [{ type: "text", text: receiptText(receipt) }],

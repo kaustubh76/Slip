@@ -91,6 +91,7 @@ async function build(): Promise<Runtime> {
     ...(demo ? demoConfig() : {}),
     ...(env["SLIP_BASE_URL"] ? { publicBaseUrl: env["SLIP_BASE_URL"] } : {}),
     pricesSource: SERVICES.prices === "channel3" ? "channel3" : "simulated",
+    paymentSource: SERVICES.payment === "simulated" ? "simulated" : "paypal",
   });
   const services = assembleServices({
     services: SERVICES,

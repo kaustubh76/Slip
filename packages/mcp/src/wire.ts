@@ -65,7 +65,18 @@ export const ToolReceiptSchema = z.object({
     .string()
     .nullable()
     .describe("When the owner approved a hold that had nothing reserved: the purchase that paid."),
-  simulated: z.boolean().describe("True in the demo: stores, prices and PayPal are stand-ins."),
+  simulated: z
+    .boolean()
+    .describe(
+      "True when the stores and prices came from a stand-in catalogue rather than Channel3. It" +
+        " says nothing about the payment: see `payment_simulated`.",
+    ),
+  payment_simulated: z
+    .boolean()
+    .describe(
+      "True when no money moved through PayPal at all, because the gateway was a stand-in." +
+        " A real sandbox payment is false here: no real money moves there either, but PayPal did.",
+    ),
   next_step: z.string().describe("What to do next."),
 });
 export type ToolReceipt = z.infer<typeof ToolReceiptSchema>;
@@ -100,7 +111,13 @@ function toolOffer(offer: OfferSummary | null): ToolOffer | null {
 
 export function toolReceipt(
   view: ReceiptView,
-  options: { replay: ReplayReason | null; followUpId: string | null; receiptUrl: string },
+  options: {
+    replay: ReplayReason | null;
+    followUpId: string | null;
+    receiptUrl: string;
+    /** From `config.paymentSource`: whether PayPal was a stand-in. */
+    paymentSimulated: boolean;
+  },
 ): ToolReceipt {
   return {
     receipt_id: view.receiptId,
@@ -122,6 +139,7 @@ export function toolReceipt(
     hold: view.hold === null ? null : { status: view.hold.status, expires_at: view.hold.expiresAt },
     follow_up_receipt_id: options.followUpId,
     simulated: view.simulated,
+    payment_simulated: options.paymentSimulated,
     next_step: nextStep(view, options.replay),
   };
 }

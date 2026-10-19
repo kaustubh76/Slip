@@ -50,6 +50,12 @@ export const AppConfigSchema = z
      * which, so a demo never presents made-up stores as Channel3 listings.
      */
     pricesSource: z.enum(["channel3", "simulated"]).default("channel3"),
+    /**
+     * Whether a payment really went to PayPal. Separate from `pricesSource` because the mixed
+     * state is the likely one (D63): an agent told one thing about both would be told something
+     * false about one of them.
+     */
+    paymentSource: z.enum(["paypal", "simulated"]).default("paypal"),
   })
   .refine((c) => c.leaseTtlMs > c.offersTimeoutMs + c.classifierTimeoutMs + c.paypalTimeoutMs, {
     message: "leaseTtlMs must outlast the Channel3, classifier and PayPal deadlines together",

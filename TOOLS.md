@@ -117,7 +117,8 @@ The answer (`checkout` and `get_receipt` return the same shape):
 | `receipt` | the receipt the owner reads, line by line |
 | `hold` | `{ status, expires_at }` for a held purchase |
 | `follow_up_receipt_id` | when the owner approved a hold with nothing reserved, the purchase that paid |
-| `simulated` | true in the demo |
+| `simulated` | the stores and prices came from a stand-in catalogue, not Channel3 |
+| `payment_simulated` | no money moved through PayPal at all, because the gateway was a stand-in |
 | `next_step` | what to do now |
 
 `next_step` only says what to do; the receipt says what happened. It never contradicts the
@@ -179,7 +180,11 @@ logged, never sent to the agent.
 | Payments | stand-in PayPal in the web process | PayPal sandbox; Slip is the seller; no real money moves |
 | Steering classifier | scripted stand-in | Claude (`claude-opus-5-5`, D11) |
 
-Every demo page and every demo answer says it is simulated (`simulated: true`).
+Each of the three is decided on its own (D63), so a receipt carries two flags rather than one:
+`simulated` is about the prices and `payment_simulated` about the money. The likely state while a
+PayPal sandbox is being set up is real Channel3 prices with a stand-in payment — one flag for both
+would have to lie about one of them. A real sandbox payment is `payment_simulated: false`: no real
+money moves there either, but PayPal did take the order.
 
 ## PayPal
 
