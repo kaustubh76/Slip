@@ -186,6 +186,9 @@ importers:
 
   bench:
     dependencies:
+      '@anthropic-ai/sdk':
+        specifier: 'catalog:'
+        version: 0.135.0(zod@4.6.5)
       '@slip/check':
         specifier: workspace:*
         version: link:../packages/check

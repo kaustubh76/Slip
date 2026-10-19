@@ -20,6 +20,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "catalog:",
     "@slip/check": "workspace:*",
     "@slip/domain": "workspace:*",
     "@slip/study": "workspace:*"
