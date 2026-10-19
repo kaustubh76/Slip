@@ -102,6 +102,8 @@ interface SnapshotRecord {
 
 export function createMemoryStore(): Store {
   const owners = new Map<string, Owner>();
+  /** Owner id → stored password hash, for those who have one. */
+  const credentials = new Map<string, string>();
   const mandates = new Map<string, MandateRecord>();
   const policies = new Map<string, Policy[]>();
   const agents = new Map<string, AgentRecord>();
@@ -416,11 +418,26 @@ export function createMemoryStore(): Store {
         }
         const owner: Owner = { id: input.id, email: input.email, createdAt: input.now };
         owners.set(owner.id, copy(owner));
+        // The hash is kept beside the owner, never on it: `Owner` travels into views and logs.
+        if (input.passwordHash !== undefined && input.passwordHash !== null) {
+          credentials.set(owner.id, input.passwordHash);
+        }
         return copy(owner);
       },
       async get(id) {
         const owner = owners.get(id);
         return owner === undefined ? null : copy(owner);
+      },
+      async findByEmail(email) {
+        const found = [...owners.values()].find((owner) => owner.email === email);
+        return found === undefined ? null : copy(found);
+      },
+      async credentialFor(email) {
+        const found = [...owners.values()].find((owner) => owner.email === email);
+        const hash = found === undefined ? undefined : credentials.get(found.id);
+        return found === undefined || hash === undefined
+          ? null
+          : { ownerId: found.id, passwordHash: hash };
       },
     },
 

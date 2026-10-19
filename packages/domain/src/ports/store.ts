@@ -108,8 +108,26 @@ export interface LiveRepo {
 }
 
 export interface OwnerRepo {
-  create(input: { id: OwnerId; email: string | null; now: Date }): Promise<Owner>;
+  /**
+   * `passwordHash` is how a returning owner gets back in (D71). Without one the only credential is
+   * the browser's session cookie, which the demo is content with and a real deployment is not.
+   */
+  create(input: {
+    id: OwnerId;
+    email: string | null;
+    passwordHash?: string | null;
+    now: Date;
+  }): Promise<Owner>;
   get(id: OwnerId): Promise<Owner | null>;
+  /** By the address they signed up with, already normalised by the caller. */
+  findByEmail(email: string): Promise<Owner | null>;
+  /**
+   * The stored hash for an address, or null when there is no such owner or they have no password.
+   *
+   * Separate from `findByEmail` for the reason `vaultIdForCharge` is separate from `get`: a secret
+   * is handed out only where it is needed, so it cannot ride along into a log or a view.
+   */
+  credentialFor(email: string): Promise<{ ownerId: OwnerId; passwordHash: string } | null>;
 }
 
 export interface MandateRepo {

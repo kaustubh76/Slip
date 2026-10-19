@@ -46,6 +46,11 @@ const RULE_CODE_SQL = inList(RULE_CODES);
 export const owners = pgTable("owners", {
   id: uuid("id").primaryKey(),
   email: text("email").unique("owners_email_unique"),
+  /**
+   * `scrypt$N$r$p$salt$key`, or null for an owner whose only credential is their session cookie
+   * (every demo desk, and every owner opened before D71).
+   */
+  passwordHash: text("password_hash"),
   createdAt: ts("created_at").notNull(),
 });
 

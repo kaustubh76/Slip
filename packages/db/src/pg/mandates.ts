@@ -10,6 +10,7 @@ import {
   type OwnerRepo,
   PolicyChangedError,
   PolicySchema,
+  ownerId as toOwnerId,
 } from "@slip/domain";
 import { and, asc, desc, eq, gt, isNotNull, isNull, lt, or } from "drizzle-orm";
 import type { Db } from "../client.js";
@@ -25,7 +26,12 @@ export function pgOwners(db: Db): OwnerRepo {
       guarded(async () => {
         const [row] = await db
           .insert(owners)
-          .values({ id: input.id, email: input.email, createdAt: input.now })
+          .values({
+            id: input.id,
+            email: input.email,
+            passwordHash: input.passwordHash ?? null,
+            createdAt: input.now,
+          })
           .returning();
         return toOwner(row as typeof owners.$inferSelect);
       }),
@@ -33,6 +39,21 @@ export function pgOwners(db: Db): OwnerRepo {
       guarded(async () => {
         const [row] = await db.select().from(owners).where(eq(owners.id, id));
         return row === undefined ? null : toOwner(row);
+      }),
+    findByEmail: (email) =>
+      guarded(async () => {
+        const [row] = await db.select().from(owners).where(eq(owners.email, email));
+        return row === undefined ? null : toOwner(row);
+      }),
+    credentialFor: (email) =>
+      guarded(async () => {
+        const [row] = await db
+          .select({ id: owners.id, passwordHash: owners.passwordHash })
+          .from(owners)
+          .where(eq(owners.email, email));
+        return row === undefined || row.passwordHash === null
+          ? null
+          : { ownerId: toOwnerId(row.id), passwordHash: row.passwordHash };
       }),
   };
 }

@@ -89,6 +89,41 @@ export function describeStoreContract(label: string, make: () => Promise<Harness
           Conflict.EMAIL_IN_USE,
         );
       });
+
+      it("finds an owner by the address they signed up with", async () => {
+        const id = ownerId(randomUUID());
+        const email = `${randomUUID()}@example.com`;
+        await store.owners.create({ id, email, now: NOW });
+        expect(await store.owners.findByEmail(email)).toMatchObject({ id, email });
+        expect(await store.owners.findByEmail(`${randomUUID()}@example.com`)).toBeNull();
+      });
+
+      it("hands out a stored password only to whoever asks for it by address", async () => {
+        const id = ownerId(randomUUID());
+        const email = `${randomUUID()}@example.com`;
+        const owner = await store.owners.create({
+          id,
+          email,
+          passwordHash: "scrypt$16384$8$1$c2FsdA$a2V5",
+          now: NOW,
+        });
+        // Never on the owner itself: `Owner` travels into views and logs.
+        expect(owner).toEqual({ id, email, createdAt: NOW });
+        expect(JSON.stringify(owner)).not.toContain("scrypt");
+        expect(await store.owners.credentialFor(email)).toEqual({
+          ownerId: id,
+          passwordHash: "scrypt$16384$8$1$c2FsdA$a2V5",
+        });
+      });
+
+      it("has no credential for an owner who never set one, or for an unknown address", async () => {
+        // Every demo desk, and every owner opened before passwords existed.
+        const id = ownerId(randomUUID());
+        const email = `${randomUUID()}@example.com`;
+        await store.owners.create({ id, email, now: NOW });
+        expect(await store.owners.credentialFor(email)).toBeNull();
+        expect(await store.owners.credentialFor(`${randomUUID()}@example.com`)).toBeNull();
+      });
     });
 
     describe("mandates", () => {
