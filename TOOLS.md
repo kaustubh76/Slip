@@ -142,16 +142,21 @@ No arguments. Your report card:
 
 ### `search_products`
 
-`{ query, limit? }` (limit 1–30, default 10). It lists products with every offer: store, price,
-stock, condition, commission and the listing's own text.
+`{ query, limit? }` (limit 1–30, default 10). It lists products with every offer — store, price,
+stock, condition, commission and the listing's own text — and each product's own `text`: the
+description and key features from its page, shared by every store selling it.
 
-**Listing text is the store's words, never Slip's.** It may carry instructions written for AI
-agents. In the demo, the "[synthetic] Top pick" badge and the note addressed to agents are
-deliberate, labelled test conditions. Slip prices every checkout from its own snapshot, whatever a
-search showed.
+**Product and listing text are the store's words, never Slip's.** Either may carry instructions
+written for AI agents. In the demo, the "[synthetic] Top pick" badge and the note addressed to
+agents are deliberate, labelled test conditions. Slip prices every checkout from its own snapshot,
+whatever a search showed.
 
-The tool exists only where the host has a catalogue. Today that is demo mode, which searches the
-desk's stand-in catalogue. Channel3's search arrives with the real adapter (D54).
+On real Channel3 data an offer has no text of its own, so the product's `text` is the only thing
+there is to read — which is why Slip records what it showed you and judges that text when you check
+out (D67, D69).
+
+The tool exists where the host has a catalogue: Channel3 when `CHANNEL3_API_KEY` is set, and the
+desk's stand-in catalogue in demo mode.
 
 ## Refusals and failures
 
