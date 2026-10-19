@@ -780,3 +780,33 @@ system prompt claiming the model had been shown the merchant's own words.
 **Still not live without a key.** With no `ANTHROPIC_API_KEY` the classifier is the scripted
 stand-in, so in production every verdict this path now asks for would be `NO_ANSWER` → R4a HELD.
 The path is real; the judgement waits on the key.
+
+## D70 · 2026-10-19 · An offer is identified without its attribution id, and a store by name
+
+Found by running one real purchase end to end rather than by reading code. With Channel3 wired and
+D69's search in place, an agent searched, chose an offer and was **refused as OFFER_NOT_FOUND**.
+
+Channel3's offer urls are redirects through its own host:
+`https://buy.trychannel3.com/<offer>?o=<offer id>&aid=<attribution>`. The `aid` is **regenerated on
+every call**, so the url a search hands an agent is never byte-identical to the url in the snapshot
+the checkout prices from. `normalizeOfferUrl` dropped `affid` and `ref` but not `aid`, so the
+normalised match failed too — and the domain fallback could not save it, because every offer for a
+product shares `buy.trychannel3.com`, which made the match ambiguous rather than wrong.
+
+Two changes, both about identifying an offer:
+
+- **`aid` joins the dropped query keys.** Only the *match* ignores it; the url Slip stores and shows
+  keeps its attribution intact, so a click-through is still attributed.
+- **`offerDomain` prefers the catalogue's `domain` field** and falls back to the url's host only
+  when there is none. A url's host is not always a store, and when it is a redirect every offer
+  looks like the same shop. This reverses a deliberate earlier choice, whose test said "a redirect
+  URL does not match by name" — that was right about synthetic data and wrong about Channel3's.
+
+Both are in the pure check rather than the adapter, because they are about what makes two urls the
+same listing, which every catalogue needs an answer to. A regression test uses the real url shape,
+with the two `aid`s that differ.
+
+**The lesson, recorded because it will recur:** the offline fixtures were taken from the live API and
+still missed this, because they compared an offer's *facts* — domain, price, availability,
+condition, commission — and never its url. One end-to-end purchase found in a minute what the whole
+suite could not.

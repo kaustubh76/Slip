@@ -85,18 +85,44 @@ describe("locateChosen", () => {
     expect(locateChosen(offers, "https://store-c.example/p/3")).toBeNull();
   });
 
-  it("uses Channel3's domain field when the offer URL is not parseable as that domain", () => {
+  it("names the store from the catalogue's domain field, not from a redirect host", () => {
+    // Measured, not supposed: Channel3's offer urls are redirects through its own host, so a
+    // url's host is often not a store at all. The domain fallback has to compare the store.
     const odd = offer({
       price: 9,
       url: "https://cdn-redirect.example/go?x=1",
       domain: "www.store-d.example",
     });
-    expect(locateChosen([...offers, odd], "https://store-d.example/anything")).toBeNull();
-    // The domain fallback compares the URL's host, so a redirect URL does not match by name.
-    expect(locateChosen([...offers, odd], "https://cdn-redirect.example/other")).toEqual({
+    expect(locateChosen([...offers, odd], "https://store-d.example/anything")).toEqual({
       offer: odd,
       matchedBy: "domain",
     });
+    // And the redirect host is nobody's store: matching it would be guessing.
+    expect(locateChosen([...offers, odd], "https://cdn-redirect.example/other")).toBeNull();
+  });
+
+  it("finds the offer a Channel3 search showed, whose attribution id has since changed", () => {
+    // The bug this prevents: Channel3 regenerates `aid` on every call, so the url an agent is
+    // given by a search is never byte-identical to the one in the snapshot the checkout prices
+    // from. Before `aid` was dropped from the match, every real purchase was refused as
+    // OFFER_NOT_FOUND — and the domain fallback could not save it, because both offers share
+    // Channel3's redirect host.
+    const shown = "https://buy.trychannel3.com/t1SLQyj-fdOw-CNrACL?o=01KXK7E&aid=01M59ZKXTBYQDH";
+    const snapshot = [
+      offer({
+        price: 149.99,
+        domain: "dickssportinggoods.com",
+        url: "https://buy.trychannel3.com/t1SLQyj-fdOw-CNrACL?o=01KXK7E&aid=01M5A1BD25G798",
+      }),
+      offer({
+        price: 118.97,
+        domain: "publiclands.com",
+        url: "https://buy.trychannel3.com/t1SLQyj-2Msk-CNrACL?o=01M2TJC&aid=01M5A1BD25G798",
+      }),
+    ];
+    const found = locateChosen(snapshot, shown);
+    expect(found?.matchedBy).toBe("normalized");
+    expect(found?.offer.domain).toBe("dickssportinggoods.com");
   });
 
   it("returns null for an unknown store and for garbage input", () => {

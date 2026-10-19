@@ -8,9 +8,17 @@ export interface Located {
   matchedBy: MatchedBy;
 }
 
-/** The domain an offer is sold on: from its URL, else Channel3's `domain` field. */
+/**
+ * The domain an offer is sold on — the catalogue's own `domain` field first, and the url's host
+ * only when there is none.
+ *
+ * That order matters because a url's host is not always a store: Channel3's offer urls are
+ * redirects through `buy.trychannel3.com`, so every offer for a product would share one host and
+ * the domain fallback below could never tell them apart. The `domain` field is the merchant.
+ */
 export function offerDomain(offer: Offer): string {
-  return domainOf(offer.url) ?? normalizeDomain(offer.domain);
+  const stated = normalizeDomain(offer.domain);
+  return stated === "" ? (domainOf(offer.url) ?? "") : stated;
 }
 
 /**

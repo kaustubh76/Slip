@@ -1,7 +1,17 @@
-/** Tracking and affiliate query keys that never identify a listing. */
+/**
+ * Tracking and affiliate query keys that never identify a listing.
+ *
+ * `aid` earns its place from measured behaviour, not a guess: Channel3's offer urls are redirects
+ * through its own host and carry `?o=<offer>&aid=<attribution>`, and **the `aid` is regenerated on
+ * every call**. The same offer fetched twice differs only there, so without dropping it an agent
+ * could never buy what a search had just shown it — the url it was given would not match the url
+ * in the snapshot the checkout prices from, and the purchase would be refused as OFFER_NOT_FOUND.
+ * Only the match ignores it; the url Slip stores and shows keeps its attribution intact.
+ */
 const DROPPED_QUERY_KEYS: ReadonlySet<string> = new Set([
   "ref",
   "tag",
+  "aid",
   "affid",
   "clickid",
   "fbclid",
