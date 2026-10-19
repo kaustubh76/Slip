@@ -2,6 +2,24 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { openDesk } from "./helpers";
 
+// The way in is the one page a visitor meets before anything else, and the only one with no
+// session, so it is audited on its own rather than after a desk is opened.
+for (const theme of ["original", "carbon"] as const) {
+  test(`the way in has no serious accessibility problem (${theme})`, async ({ page, context }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await context.addCookies([{ name: "slip-theme", value: theme, url: "http://localhost:3100" }]);
+    await page.goto("/sign-in");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    const results = await new AxeBuilder({ page }).analyze();
+    expect(
+      results.violations
+        .filter((v) => v.impact === "serious" || v.impact === "critical")
+        .map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`),
+      `/sign-in (${theme})`,
+    ).toEqual([]);
+  });
+}
+
 for (const theme of ["original", "carbon"] as const) {
   test(`every page has no serious accessibility problem (${theme})`, async ({ page, context }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });

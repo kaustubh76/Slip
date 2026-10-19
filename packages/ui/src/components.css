@@ -963,6 +963,27 @@
   }
 
   /*
+   * A stamp and what it means, for a page with no receipts on it yet. All three rows share one
+   * grid — the pairs only group them for assistive tech — so the stamp column is as wide as the
+   * widest stamp and every line of text starts in the same place.
+   */
+  .slip-legend {
+    display: grid;
+    grid-template-columns: max-content auto;
+    gap: 12px;
+    align-items: start;
+    margin: 12px 0 0;
+  }
+
+  .slip-legend > div {
+    display: contents;
+  }
+
+  .slip-legend dd {
+    margin: 0;
+  }
+
+  /*
    * What is behind the receipt folds away. Its handle is written like the rules it covers — [+]
    * when shut, [–] when open — in place of the browser's triangle. Both markers are in the markup
    * and hidden from assistive tech, which hears the summary's own open state instead.

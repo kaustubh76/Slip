@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { WhatSlipDecides } from "../../components/WhatSlipDecides";
 import { demoRefused, isDemo } from "../../server/demo";
 import { currentOwner } from "../../server/owner";
 import { SERVICES } from "../../server/runtime";
@@ -30,130 +31,138 @@ export default async function SignIn(props: { searchParams: Promise<{ refused?: 
     redirect("/receipts");
   }
   const refused = REFUSALS[(await props.searchParams).refused ?? ""];
+  const returning = !isDemo() && !demoRefused();
   return (
-    <article className="slip-sheet" data-perforated="">
-      <p className="slip-meta">Slip</p>
-      <h1 className="slip-title">Every purchase your agent tries, checked first</h1>
-      <p className="slip-prose">
-        Slip compares the offer your agent chose with every other offer listed for the same item,
-        then pays, rejects, or holds the purchase for you — before PayPal moves any money.
-      </p>
-      {isDemo() ? (
-        <form action={signInToDemo}>
-          <p className="slip-prose">
-            This demo gives you your own owner, a PayPal mandate approved against a stand-in for
-            PayPal, one agent, and four purchases it has already tried.
-          </p>
-          <button type="submit" className="slip-button" data-variant="ink">
-            Open a demo desk →
-          </button>
-          {refused === undefined ? null : (
-            <p className="slip-note slip-pen" role="status">
-              {refused}
-            </p>
-          )}
-        </form>
-      ) : demoRefused() ? (
-        <p className="slip-note slip-pen">
-          The demo needs one long-lived server: its stand-in for PayPal keeps everything in memory,
-          which a serverless deployment would split across instances.
+    // What Slip is and the way in on one side; on the other, what it answers — or, for an owner
+    // who has been here before, the way back in.
+    <div className="slip-twoup">
+      <article className="slip-sheet" data-perforated="">
+        <p className="slip-meta">Slip</p>
+        <h1 className="slip-title">Every purchase your agent tries, checked first</h1>
+        <p className="slip-prose">
+          Slip compares the offer your agent chose with every other offer listed for the same item,
+          then pays, rejects, or holds the purchase for you — before PayPal moves any money.
         </p>
-      ) : (
-        <form action={startWithPayPal}>
-          <p className="slip-prose">
-            {SERVICES.payment === "live"
-              ? "Slip opens your permission and sends you to PayPal to approve saving a payment method. Real money moves when your agent buys."
-              : START[SERVICES.payment]}
-          </p>
-          <div className="slip-fields">
-            <div className="slip-field">
-              <label htmlFor="start-email" className="slip-field-label">
-                Email
-              </label>
-              <input
-                id="start-email"
-                name="email"
-                className="slip-blank"
-                type="email"
-                autoComplete="username"
-                required={SERVICES.payment === "live"}
-              />
-              <p className="slip-caption">
-                {SERVICES.payment === "live"
-                  ? "Needed while PayPal is live: your browser carries this session, and this is the only way back in if it forgets."
-                  : "Optional. Your browser carries this session; an email and password are the only way back in if it forgets."}
-              </p>
-            </div>
-            <div className="slip-field">
-              <label htmlFor="start-password" className="slip-field-label">
-                Password
-              </label>
-              <input
-                id="start-password"
-                name="password"
-                className="slip-blank"
-                type="password"
-                autoComplete="new-password"
-                minLength={12}
-                required={SERVICES.payment === "live"}
-              />
-              <p className="slip-caption">
-                At least 12 characters. Slip cannot send email, so a forgotten password cannot be
-                reset — keep it somewhere.
-              </p>
-            </div>
-          </div>
-          <button type="submit" className="slip-button" data-variant="ink">
-            Start with PayPal →
-          </button>
-          {refused === undefined ? null : (
-            <p className="slip-note slip-pen" role="status">
-              {refused}
+        {isDemo() ? (
+          <form action={signInToDemo}>
+            <p className="slip-prose">
+              This demo gives you your own owner, a PayPal mandate approved against a stand-in for
+              PayPal, one agent, and four purchases it has already tried.
             </p>
-          )}
-        </form>
-      )}
-      {isDemo() || demoRefused() ? null : (
-        <form action={signInWithPassword}>
-          <hr className="slip-rule" />
-          <p className="slip-meta">Been here before?</p>
-          <p className="slip-caption">
-            Sign in with the email and password you started with. This is the same session your
-            browser would have carried.
+            <button type="submit" className="slip-button" data-variant="ink">
+              Open a demo desk →
+            </button>
+            {refused === undefined ? null : (
+              <p className="slip-note slip-pen" role="status">
+                {refused}
+              </p>
+            )}
+          </form>
+        ) : demoRefused() ? (
+          <p className="slip-note slip-pen">
+            The demo needs one long-lived server: its stand-in for PayPal keeps everything in
+            memory, which a serverless deployment would split across instances.
           </p>
-          <div className="slip-fields">
-            <div className="slip-field">
-              <label htmlFor="return-email" className="slip-field-label">
-                Email
-              </label>
-              <input
-                id="return-email"
-                name="email"
-                className="slip-blank"
-                type="email"
-                autoComplete="username"
-                required
-              />
+        ) : (
+          <form action={startWithPayPal}>
+            <p className="slip-prose">
+              {SERVICES.payment === "live"
+                ? "Slip opens your permission and sends you to PayPal to approve saving a payment method. Real money moves when your agent buys."
+                : START[SERVICES.payment]}
+            </p>
+            <div className="slip-fields">
+              <div className="slip-field">
+                <label htmlFor="start-email" className="slip-field-label">
+                  Email
+                </label>
+                <input
+                  id="start-email"
+                  name="email"
+                  className="slip-blank"
+                  type="email"
+                  autoComplete="username"
+                  required={SERVICES.payment === "live"}
+                />
+                <p className="slip-caption">
+                  {SERVICES.payment === "live"
+                    ? "Needed while PayPal is live: your browser carries this session, and this is the only way back in if it forgets."
+                    : "Optional. Your browser carries this session; an email and password are the only way back in if it forgets."}
+                </p>
+              </div>
+              <div className="slip-field">
+                <label htmlFor="start-password" className="slip-field-label">
+                  Password
+                </label>
+                <input
+                  id="start-password"
+                  name="password"
+                  className="slip-blank"
+                  type="password"
+                  autoComplete="new-password"
+                  minLength={12}
+                  required={SERVICES.payment === "live"}
+                />
+                <p className="slip-caption">
+                  At least 12 characters. Slip cannot send email, so a forgotten password cannot be
+                  reset — keep it somewhere.
+                </p>
+              </div>
             </div>
-            <div className="slip-field">
-              <label htmlFor="return-password" className="slip-field-label">
-                Password
-              </label>
-              <input
-                id="return-password"
-                name="password"
-                className="slip-blank"
-                type="password"
-                autoComplete="current-password"
-                required
-              />
+            <button type="submit" className="slip-button" data-variant="ink">
+              Start with PayPal →
+            </button>
+            {refused === undefined ? null : (
+              <p className="slip-note slip-pen" role="status">
+                {refused}
+              </p>
+            )}
+          </form>
+        )}
+      </article>
+      {returning ? (
+        <article className="slip-sheet">
+          <form action={signInWithPassword}>
+            <p className="slip-meta">Been here before?</p>
+            <p className="slip-caption">
+              Sign in with the email and password you started with. This is the same session your
+              browser would have carried.
+            </p>
+            <div className="slip-fields">
+              <div className="slip-field">
+                <label htmlFor="return-email" className="slip-field-label">
+                  Email
+                </label>
+                <input
+                  id="return-email"
+                  name="email"
+                  className="slip-blank"
+                  type="email"
+                  autoComplete="username"
+                  required
+                />
+              </div>
+              <div className="slip-field">
+                <label htmlFor="return-password" className="slip-field-label">
+                  Password
+                </label>
+                <input
+                  id="return-password"
+                  name="password"
+                  className="slip-blank"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                />
+              </div>
             </div>
-          </div>
-          <button type="submit" className="slip-button">
-            Sign in →
-          </button>
-        </form>
+            <button type="submit" className="slip-button">
+              Sign in →
+            </button>
+          </form>
+        </article>
+      ) : (
+        <WhatSlipDecides />
       )}
-    </article>
+    </div>
   );
 }
