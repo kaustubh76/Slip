@@ -17,6 +17,7 @@ export { Stamp, type StampKind } from "./components/Stamp.js";
 export { StatusLine } from "./components/StatusLine.js";
 export { clockTime, printedAt, withAmounts } from "./components/text.js";
 export { timeLeft } from "./components/time.js";
+export { Workbench } from "./components/Workbench.js";
 export {
   createSlipClient,
   type ReceiptsQuery,

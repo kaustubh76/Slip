@@ -80,6 +80,10 @@
     --slip-motion-stamp: 160ms;
     --slip-motion-press: 120ms;
     --slip-slip-max: 36rem;
+    /* The workbench: how wide the page may grow, and the two columns beside the open slip. */
+    --slip-page-max: 96rem;
+    --slip-rail: 17rem;
+    --slip-list: 28rem;
     --slip-target: 44px;
   }
 

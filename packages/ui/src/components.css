@@ -351,6 +351,100 @@
     display: grid;
     gap: 24px;
     justify-items: start;
+    inline-size: 100%;
+    max-inline-size: var(--slip-page-max);
+    margin-inline: auto;
+  }
+
+  /* ---------- the workbench: what is waiting, the list, and the slip that is open ---------- */
+
+  /*
+   * A screen the owner reads and works in at once. One column on a phone; the list and the open
+   * slip side by side from 900px; the rail joins them at 1280px. Nothing is hidden by width alone,
+   * the same parts are only rearranged, and stretching undoes the page's habit of hugging the
+   * left edge for this one child.
+   */
+  .slip-workbench {
+    display: grid;
+    gap: 24px 32px;
+    align-items: start;
+    inline-size: 100%;
+    justify-self: stretch;
+  }
+
+  .slip-rail {
+    display: grid;
+    gap: 16px;
+    align-content: start;
+  }
+
+  /* Either pane may be narrower than its content asks for, so one long word cannot widen it. */
+  .slip-listpane,
+  .slip-dock {
+    min-inline-size: 0;
+  }
+
+  /* Docked, a slip may run wider than it does alone, but never past a readable line. */
+  .slip-dock .slip-sheet {
+    max-inline-size: min(100%, 42rem);
+  }
+
+  .slip-dock-empty {
+    color: var(--slip-ink-faint);
+    padding-block: 8px;
+  }
+
+  @media (min-width: 900px) {
+    .slip-workbench {
+      grid-template-columns: minmax(20rem, var(--slip-list)) minmax(0, 1fr);
+    }
+
+    /* Until the rail has a column of its own, it lies across the top. */
+    .slip-workbench > .slip-rail {
+      grid-column: 1 / -1;
+      grid-auto-flow: column;
+      gap: 24px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .slip-workbench {
+      grid-template-columns: var(--slip-rail) minmax(20rem, var(--slip-list)) minmax(0, 1fr);
+    }
+
+    .slip-workbench > .slip-rail {
+      grid-column: auto;
+      grid-auto-flow: row;
+      gap: 16px;
+    }
+  }
+
+  /* A page of older receipts is a page, not something docked: it takes the whole workbench. */
+  .slip-workbench:has([data-archive]) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .slip-workbench:has([data-archive]) > .slip-rail,
+  .slip-workbench:has([data-archive]) > .slip-listpane {
+    display: none;
+  }
+
+  /*
+   * Beside the roll there is nothing to go back to; the link is for a screen that hid it. The
+   * header's own rule sets `display`, so this one names both classes to settle it.
+   */
+  @media (min-width: 900px) {
+    .slip-roll-head.slip-dock-back {
+      display: none;
+    }
+  }
+
+  /* Too narrow for both: the slip being read replaces the list it was opened from. */
+  @media (max-width: 899px) {
+    .slip-workbench:has(.slip-dock .slip-receipt) > .slip-listpane,
+    .slip-workbench:has(.slip-dock .slip-receipt) > .slip-rail {
+      display: none;
+    }
   }
 
   /* The rule under the tabs is the masthead's; the open tab covers it. */
