@@ -95,72 +95,102 @@ export function DemoConsole(props: {
 
   return (
     <>
-      <article className="slip-sheet" data-perforated="">
-        <p className="slip-meta">Demo console · simulated agent and PayPal</p>
-        <h1 className="slip-title">Send the agent shopping</h1>
-        <div className="slip-field">
-          <label htmlFor="paypal-script" className="slip-field-label">
-            When Slip pays
-          </label>
-          <select
-            id="paypal-script"
-            className="slip-select"
-            value={script}
-            onChange={(event) => setScript(event.target.value as typeof script)}
-          >
-            {SCRIPTS.map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
+      {/* What the agent is told to do, and what PayPal was asked as a result, read together. */}
+      <div className="slip-twoup">
+        <article className="slip-sheet" data-perforated="">
+          <p className="slip-meta">Demo console · simulated agent and PayPal</p>
+          <h1 className="slip-title">Send the agent shopping</h1>
+          <div className="slip-field">
+            <label htmlFor="paypal-script" className="slip-field-label">
+              When Slip pays
+            </label>
+            <select
+              id="paypal-script"
+              className="slip-select"
+              value={script}
+              onChange={(event) => setScript(event.target.value as typeof script)}
+            >
+              {SCRIPTS.map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="slip-stack" data-choices="">
+            {props.errands.map((errand) => (
+              <button
+                key={errand.name}
+                type="button"
+                className="slip-button"
+                disabled={busy}
+                onClick={() => void run(errand.label, () => runConsoleErrand(errand.name, script))}
+              >
+                {errand.label}
+              </button>
             ))}
-          </select>
-        </div>
-        <div className="slip-stack">
-          {props.errands.map((errand) => (
+          </div>
+          <div className="slip-dialog-actions">
             <button
-              key={errand.name}
               type="button"
               className="slip-button"
               disabled={busy}
-              onClick={() => void run(errand.label, () => runConsoleErrand(errand.name, script))}
+              onClick={() => void run("Settle pending", settleConsolePending)}
             >
-              {errand.label}
+              Settle pending payments
             </button>
-          ))}
-        </div>
-        <div className="slip-dialog-actions">
-          <button
-            type="button"
-            className="slip-button"
-            disabled={busy}
-            onClick={() => void run("Settle pending", settleConsolePending)}
-          >
-            Settle pending payments
-          </button>
-          <button
-            type="button"
-            className="slip-button"
-            disabled={busy}
-            onClick={() => void run("Reprice", raiseStandingDeskPrice)}
-          >
-            Raise the standing desk's price by $8
-          </button>
-        </div>
-        {log.length === 0 ? null : (
-          <ol className="slip-timeline slip-mono" aria-live="polite">
-            {log.map((line) => (
-              <li key={line.n}>
-                {line.label}: {line.text}{" "}
-                {line.receiptId === null ? null : (
-                  <Link className="slip-link" href={`/receipts/${line.receiptId}`}>
-                    Open the receipt
-                  </Link>
-                )}
-              </li>
-            ))}
-          </ol>
-        )}
-      </article>
+            <button
+              type="button"
+              className="slip-button"
+              disabled={busy}
+              onClick={() => void run("Reprice", raiseStandingDeskPrice)}
+            >
+              Raise the standing desk's price by $8
+            </button>
+          </div>
+          {log.length === 0 ? null : (
+            <ol className="slip-timeline slip-mono" aria-live="polite">
+              {log.map((line) => (
+                <li key={line.n}>
+                  {line.label}: {line.text}{" "}
+                  {line.receiptId === null ? null : (
+                    <Link className="slip-link" href={`/receipts/${line.receiptId}`}>
+                      Open the receipt
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ol>
+          )}
+        </article>
+        <article className="slip-sheet">
+          <p className="slip-meta">Simulated PayPal · what it was asked</p>
+          {props.calls.length === 0 ? (
+            <p className="slip-caption">No PayPal calls yet.</p>
+          ) : (
+            <table className="slip-offers">
+              <thead>
+                <tr>
+                  <th scope="col">Time</th>
+                  <th scope="col">Call</th>
+                  <th scope="col">Receipt</th>
+                  <th scope="col">Answer</th>
+                </tr>
+              </thead>
+              <tbody>
+                {props.calls.map((call) => (
+                  <tr key={`${call.at}-${call.call}-${call.receipt}-${call.detail}`}>
+                    <td className="slip-mono">{call.at.slice(11, 19)}</td>
+                    <th scope="row">{call.detail}</th>
+                    <td className="slip-mono">{call.receipt ?? "—"}</td>
+                    <td>{call.answer ?? "waiting…"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </article>
+      </div>
 
       <article className="slip-sheet">
         <p className="slip-meta">Connect an agent</p>
@@ -195,34 +225,6 @@ export function DemoConsole(props: {
               Copy them now. Slip keeps only the key's hash, so it is shown this once.
             </p>
           </>
-        )}
-      </article>
-
-      <article className="slip-sheet">
-        <p className="slip-meta">Simulated PayPal · what it was asked</p>
-        {props.calls.length === 0 ? (
-          <p className="slip-caption">No PayPal calls yet.</p>
-        ) : (
-          <table className="slip-offers">
-            <thead>
-              <tr>
-                <th scope="col">Time</th>
-                <th scope="col">Call</th>
-                <th scope="col">Receipt</th>
-                <th scope="col">Answer</th>
-              </tr>
-            </thead>
-            <tbody>
-              {props.calls.map((call) => (
-                <tr key={`${call.at}-${call.call}-${call.receipt}-${call.detail}`}>
-                  <td className="slip-mono">{call.at.slice(11, 19)}</td>
-                  <th scope="row">{call.detail}</th>
-                  <td className="slip-mono">{call.receipt ?? "—"}</td>
-                  <td>{call.answer ?? "waiting…"}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         )}
       </article>
     </>

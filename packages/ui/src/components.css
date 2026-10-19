@@ -604,6 +604,17 @@
     }
   }
 
+  /*
+   * A bench with nothing waiting has no rail, and must not leave the rail's column standing open:
+   * the list would be dealt the rail's width and the open slip the list's, with the rest of the
+   * page empty — the one thing a bench exists to stop.
+   */
+  @media (min-width: 1280px) {
+    .slip-workbench:not(:has(> .slip-rail)) {
+      grid-template-columns: minmax(20rem, var(--slip-list)) minmax(0, 1fr);
+    }
+  }
+
   /* A page of older receipts is a page, not something docked: it takes the whole workbench. */
   .slip-workbench:has([data-archive]) {
     grid-template-columns: minmax(0, 1fr);
@@ -934,6 +945,21 @@
     display: grid;
     gap: 8px;
     justify-items: start;
+  }
+
+  /*
+   * A stack of choices rather than a stack of things: each takes the column's width, so the list
+   * reads as one set and not as an accident of how long each label happens to be. Stretched, not
+   * sized to 100% — nothing here is border-box, so a width would put the padding outside the
+   * column. The words stay at the start; a full-width button with centred words reads like a
+   * phone, not like a list of errands on paper.
+   */
+  .slip-stack[data-choices] {
+    justify-items: stretch;
+  }
+
+  .slip-stack[data-choices] > .slip-button {
+    text-align: start;
   }
 
   /*

@@ -37,85 +37,94 @@ export function MandateView(props: { token: string; note: string | null }) {
     );
   }
   return (
-    <article className="slip-sheet" data-perforated="">
-      <header className="slip-receipt-head">
-        <p className="slip-meta">Permission slip · no. {summary.id.slice(0, 8)}</p>
-        {summary.status === "REVOKED" ? (
-          <Stamp kind="VOID" label="CANCELLED" describedAs="This permission was cancelled" />
-        ) : summary.status === "ACTIVE" ? (
-          <Stamp kind="VOID" label="IN FORCE" describedAs="This permission is in force" />
-        ) : (
-          <Stamp
-            kind="HELD"
-            label="AWAITING PAYPAL"
-            describedAs="This permission is waiting for PayPal"
-          />
-        )}
-        <LiveBadge initialToken={props.token} />
-      </header>
-      <hr className="slip-rule" />
-      <p className="slip-sentence">
-        I allow agents under this permission to pay through Slip, within these limits:
-      </p>
-      <Leaders
-        rows={[
-          [
-            "Reject above",
-            `${formatPct(current.maxOverpayPctHundredths)} and ${formatUsd(current.maxOverpayAbsCents as Policy["maxOverpayAbsCents"])}`,
-          ],
-          ["Hold orders above", formatUsd(current.orderCapCents as Policy["orderCapCents"])],
-          ["Limits version", `${current.version}`],
-          ["Agents", `${summary.agents}`],
-          ["Waiting for you", `${summary.pendingHolds}`],
-          ["Signed", summary.activatedAt === null ? "not yet" : printedAt(summary.activatedAt)],
-          ...(summary.revokedAt === null
-            ? []
-            : ([["Cancelled", printedAt(summary.revokedAt)]] as const)),
-        ]}
-      />
-      <p className="slip-caption">
-        <Link href="/limits" className="slip-link">
-          Change the limits →
-        </Link>
-      </p>
-      {props.note === null ? null : (
-        <p className="slip-note slip-pen" role="status">
-          {props.note}
+    // The slip on one side — what it is, what it allows, where it stands — and on the other the
+    // one thing there is to do about it, on a stub of its own. The stub's own bitten top edge is
+    // the tear the slip's foot used to draw.
+    <div className="slip-twoup">
+      <article className="slip-sheet" data-perforated="">
+        <header className="slip-receipt-head">
+          <p className="slip-meta">Permission slip · no. {summary.id.slice(0, 8)}</p>
+          {summary.status === "REVOKED" ? (
+            <Stamp kind="VOID" label="CANCELLED" describedAs="This permission was cancelled" />
+          ) : summary.status === "ACTIVE" ? (
+            <Stamp kind="VOID" label="IN FORCE" describedAs="This permission is in force" />
+          ) : (
+            <Stamp
+              kind="HELD"
+              label="AWAITING PAYPAL"
+              describedAs="This permission is waiting for PayPal"
+            />
+          )}
+          <LiveBadge initialToken={props.token} />
+        </header>
+        <hr className="slip-rule" />
+        <p className="slip-sentence">
+          I allow agents under this permission to pay through Slip, within these limits:
         </p>
-      )}
-      {summary.status === "PENDING" ? (
-        <>
-          <hr className="slip-rule" />
-          <p className="slip-prose">
-            {summary.awaitingPayPal
-              ? "Slip has asked PayPal to save your payment method. Approve it at PayPal, and this slip comes into force."
-              : "Approve this at PayPal once, and Slip can pay within your limits without asking again."}
+        <Leaders
+          rows={[
+            [
+              "Reject above",
+              `${formatPct(current.maxOverpayPctHundredths)} and ${formatUsd(current.maxOverpayAbsCents as Policy["maxOverpayAbsCents"])}`,
+            ],
+            ["Hold orders above", formatUsd(current.orderCapCents as Policy["orderCapCents"])],
+            ["Limits version", `${current.version}`],
+            ["Agents", `${summary.agents}`],
+            ["Waiting for you", `${summary.pendingHolds}`],
+            ["Signed", summary.activatedAt === null ? "not yet" : printedAt(summary.activatedAt)],
+            ...(summary.revokedAt === null
+              ? []
+              : ([["Cancelled", printedAt(summary.revokedAt)]] as const)),
+          ]}
+        />
+        <p className="slip-caption">
+          <Link href="/limits" className="slip-link">
+            Change the limits →
+          </Link>
+        </p>
+        {props.note === null ? null : (
+          <p className="slip-note slip-pen" role="status">
+            {props.note}
           </p>
-          <BeginSetup
-            label={summary.awaitingPayPal ? "Sign with PayPal again →" : "Sign with PayPal →"}
-          />
-        </>
-      ) : null}
-      {summary.status === "ACTIVE" ? (
-        <>
-          <hr className="slip-tear" />
+        )}
+        {summary.status === "REVOKED" ? (
+          <>
+            <hr className="slip-rule" />
+            <p className="slip-prose">
+              This permission was cancelled
+              {summary.savedMethodDeletedAt === null
+                ? "; Slip is still waiting for PayPal to confirm the saved method was deleted."
+                : ", and PayPal confirmed the saved payment method was deleted."}{" "}
+              Your receipts stay.
+            </p>
+          </>
+        ) : null}
+      </article>
+      <article className="slip-sheet" data-perforated="">
+        {summary.status === "PENDING" ? (
+          <>
+            <p className="slip-meta">Sign this permission</p>
+            <p className="slip-prose">
+              {summary.awaitingPayPal
+                ? "Slip has asked PayPal to save your payment method. Approve it at PayPal, and this slip comes into force."
+                : "Approve this at PayPal once, and Slip can pay within your limits without asking again."}
+            </p>
+            <BeginSetup
+              label={summary.awaitingPayPal ? "Sign with PayPal again →" : "Sign with PayPal →"}
+            />
+          </>
+        ) : null}
+        {summary.status === "ACTIVE" ? (
           <KillSwitch pendingHolds={summary.pendingHolds} onRevoked={setRevoked} />
-        </>
-      ) : null}
-      {summary.status === "REVOKED" ? (
-        <>
-          <hr className="slip-rule" />
-          {revoked === null ? null : <RevokeSummary result={revoked} />}
-          <p className="slip-prose">
-            This permission was cancelled
-            {summary.savedMethodDeletedAt === null
-              ? "; Slip is still waiting for PayPal to confirm the saved method was deleted."
-              : ", and PayPal confirmed the saved payment method was deleted."}{" "}
-            Your receipts stay.
-          </p>
-          <BeginSetup label="Start a new permission →" />
-        </>
-      ) : null}
-    </article>
+        ) : null}
+        {summary.status === "REVOKED" ? (
+          <>
+            {revoked === null ? null : <RevokeSummary result={revoked} />}
+            <p className="slip-meta">A new permission</p>
+            <BeginSetup label="Start a new permission →" />
+          </>
+        ) : null}
+      </article>
+    </div>
   );
 }

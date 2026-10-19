@@ -28,7 +28,8 @@ function gap(): string {
 
 export default function Bench() {
   return (
-    <>
+    // Two independent pieces of evidence, read side by side where there is room for both.
+    <div className="slip-cards">
       <article className="slip-sheet" data-perforated="" aria-labelledby="market-study">
         <header className="slip-receipt-head">
           <p className="slip-meta" id="market-study">
@@ -190,6 +191,6 @@ export default function Bench() {
           </table>
         )}
       </article>
-    </>
+    </div>
   );
 }

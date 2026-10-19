@@ -12,17 +12,16 @@ const SETUP_NOTES: Record<string, string> = {
   active: "PayPal has saved your payment method. Slip can now pay within your limits.",
   pending:
     "PayPal has your approval but has not issued the payment method yet. Slip keeps asking; this page will say so once it has.",
-  "not-approved":
-    "PayPal has not recorded an approval for this setup. You can send it again below.",
+  "not-approved": "PayPal has not recorded an approval for this setup. You can send it again.",
   cancelled: "Nothing was saved at PayPal, so there is nothing to undo.",
-  setup_failed: "PayPal could not confirm the saved payment method. You can try again below.",
-  revoked: "This permission was cancelled. Start a new one below.",
+  setup_failed: "PayPal could not confirm the saved payment method. You can try again.",
+  revoked: "This permission was cancelled. Start a new one.",
   not_found: "That setup does not belong to this account.",
 };
 
 /**
- * The permission slip: what the owner allowed, which limits are in force, and — at its foot, as a
- * tear-off — the one control that stops everything.
+ * The permission slip: what the owner allowed, which limits are in force, and — on a stub beside
+ * it — the one control that stops everything.
  */
 export default async function Mandate({
   searchParams,
