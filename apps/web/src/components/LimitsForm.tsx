@@ -1,19 +1,32 @@
 "use client";
 
-import type { Policy } from "@slip/domain";
 import { type LimitsInput, useUpdateLimits } from "@slip/ui";
 import { useState } from "react";
-import { workedExample } from "../lib/limits-example";
+import { policyFrom, workedExample } from "../lib/limits-example";
 
 /**
  * The limits, as blanks on a numbered form. Each one says which decision it makes, in the owner's
  * own units — percent and dollars, not hundredths and cents. As the owner types, a worked purchase
  * says what the new limits would do to it, decided by the rules themselves. Saving issues the
  * next version, based on the version this form was showing, so a tab left open cannot overwrite a
- * newer one.
+ * newer one. `onDraft` lets whatever is beside the form follow the same numbers as they are typed.
  */
-export function LimitsForm({ version, initial }: { version: number; initial: LimitsInput }) {
+export function LimitsForm({
+  version,
+  initial,
+  onDraft,
+}: {
+  version: number;
+  initial: LimitsInput;
+  onDraft?: (values: LimitsInput) => void;
+}) {
   const [values, setValues] = useState(initial);
+  const change = (next: LimitsInput) => {
+    setValues(next);
+    if (usable(next)) {
+      onDraft?.(next);
+    }
+  };
   const { save, status, answer: result } = useUpdateLimits();
   const busy = status === "busy";
   const example = exampleFor(values);
@@ -34,7 +47,7 @@ export function LimitsForm({ version, initial }: { version: number; initial: Lim
         step={step}
         value={String(values[key])}
         onChange={(event) =>
-          setValues({ ...values, [key]: Number.parseFloat(event.target.value || "0") })
+          change({ ...values, [key]: Number.parseFloat(event.target.value || "0") })
         }
       />
       <p className="slip-caption">{help}</p>
@@ -100,7 +113,7 @@ export function LimitsForm({ version, initial }: { version: number; initial: Lim
           {busy ? `Issuing version ${version + 1}…` : `Issue version ${version + 1}`}
         </button>
         {changed ? (
-          <button type="button" className="slip-button" onClick={() => setValues(initial)}>
+          <button type="button" className="slip-button" onClick={() => change(initial)}>
             Put it back
           </button>
         ) : null}
@@ -120,16 +133,10 @@ export function LimitsForm({ version, initial }: { version: number; initial: Lim
 
 /** What these typed limits would do to the worked purchase; null while a blank is not a number. */
 function exampleFor(values: LimitsInput): ReturnType<typeof workedExample> | null {
-  const numbers = Object.values(values);
-  if (numbers.some((n) => !Number.isFinite(n) || n < 0)) {
-    return null;
-  }
-  return workedExample({
-    version: 1,
-    maxOverpayPctHundredths: Math.round(values.maxOverpayPct * 100),
-    maxOverpayAbsCents: Math.round(values.maxOverpayDollars * 100),
-    flagPctHundredths: Math.round(values.flagPct * 100),
-    orderCapCents: Math.round(values.orderCapDollars * 100),
-    snapshotMaxAgeMs: Math.round(values.snapshotMaxAgeMinutes * 60_000),
-  } as Policy);
+  return usable(values) ? workedExample(policyFrom(values)) : null;
+}
+
+/** Every blank holds a number that a limit could actually be. */
+function usable(values: LimitsInput): boolean {
+  return Object.values(values).every((n) => Number.isFinite(n) && n >= 0);
 }

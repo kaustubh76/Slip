@@ -9,6 +9,7 @@ export {
 } from "./components/HoldDialogs.js";
 export { HoldsTray } from "./components/HoldsTray.js";
 export { Leaders } from "./components/Leaders.js";
+export { LimitsPicture } from "./components/LimitsPicture.js";
 export { type LinkLike, PlainLink } from "./components/Link.js";
 export { LiveBadge } from "./components/LiveBadge.js";
 export { OutcomeFilter } from "./components/OutcomeFilter.js";

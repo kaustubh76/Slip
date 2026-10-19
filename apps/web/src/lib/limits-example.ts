@@ -6,26 +6,52 @@ import { type Cents, formatUsd, type Policy, RULE_OUTCOME } from "@slip/domain";
  * (`evaluateRules`) rather than by a sentence written here that could drift from them.
  */
 
-/** The illustration: the same item at two stores, $11.00 apart. */
-const CHOSEN = 5_899 as Cents;
-const BEST = 4_799 as Cents;
+/** Where the illustration starts: the same item at two stores, $11.00 apart. */
+export const EXAMPLE_CHOSEN = 5_899;
+export const EXAMPLE_BEST = 4_799;
+
+/** The limits as the owner types them: percents and dollars, not hundredths and cents. */
+export interface LimitsDraft {
+  maxOverpayPct: number;
+  maxOverpayDollars: number;
+  flagPct: number;
+  orderCapDollars: number;
+  snapshotMaxAgeMinutes: number;
+}
+
+/** Those numbers as the rules want them. The version is never read by a rule, only recorded. */
+export function policyFrom(draft: LimitsDraft): Policy {
+  return {
+    version: 1,
+    maxOverpayPctHundredths: Math.round(draft.maxOverpayPct * 100),
+    maxOverpayAbsCents: Math.round(draft.maxOverpayDollars * 100),
+    flagPctHundredths: Math.round(draft.flagPct * 100),
+    orderCapCents: Math.round(draft.orderCapDollars * 100),
+    snapshotMaxAgeMs: Math.round(draft.snapshotMaxAgeMinutes * 60_000),
+  } as Policy;
+}
 
 export interface WorkedExample {
   sentence: string;
   outcome: "PAID" | "REJECTED" | "HELD";
 }
 
-export function workedExample(policy: Policy): WorkedExample {
+export function workedExample(
+  policy: Policy,
+  prices: { chosenCents?: number; bestCents?: number } = {},
+): WorkedExample {
+  const chosen = Math.max(1, Math.round(prices.chosenCents ?? EXAMPLE_CHOSEN)) as Cents;
+  const best = Math.min(chosen, Math.max(1, Math.round(prices.bestCents ?? EXAMPLE_BEST))) as Cents;
   const { ruleCode } = evaluateRules({
     policy,
-    chosenPriceCents: CHOSEN,
-    bestPriceCents: BEST,
-    gapAbsCents: (CHOSEN - BEST) as Cents,
+    chosenPriceCents: chosen,
+    bestPriceCents: best,
+    gapAbsCents: (chosen - best) as Cents,
     conflict: false,
     classifier: { instruction_like: false },
   });
   const outcome = RULE_OUTCOME[ruleCode];
-  const start = `With these limits, an agent paying ${formatUsd(CHOSEN)} where the same item is listed at ${formatUsd(BEST)}`;
+  const start = `With these limits, an agent paying ${formatUsd(chosen)} where the same item is listed at ${formatUsd(best)}`;
   const ending =
     outcome === "PAID"
       ? "would be paid."

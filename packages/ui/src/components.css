@@ -486,6 +486,30 @@
     color: var(--slip-stamp-rejected);
   }
 
+  /* Two sheets that are read together: a form and what it would do, a card and its shape. */
+  .slip-twoup {
+    display: grid;
+    gap: 24px 32px;
+    align-items: start;
+    inline-size: 100%;
+    justify-self: stretch;
+  }
+
+  @media (min-width: 1100px) {
+    .slip-twoup {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .slip-twoup > .slip-sheet {
+      max-inline-size: none;
+    }
+  }
+
+  /* A drawing and the sentence that says the same thing in words. */
+  .slip-picture {
+    margin-block-start: 16px;
+  }
+
   /* Waiting purchases sit side by side where there is room; each keeps its own decision. */
   .slip-holds {
     display: grid;

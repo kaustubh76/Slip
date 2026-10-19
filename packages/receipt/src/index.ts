@@ -1,5 +1,5 @@
 export { shortNo, utcDateTime, utcDay, utcDayTime, utcTime } from "./format.js";
-export { MEASURE_WIDTH, measureModel } from "./measure.js";
+export { MEASURE_WIDTH, type MeasureInput, measureFor, measureModel } from "./measure.js";
 export { offerRows } from "./offers.js";
 export { gapPercent, percentFromHundredths } from "./percent.js";
 export {
