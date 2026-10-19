@@ -122,6 +122,7 @@ export {
   type TaskCount,
 } from "./resolver.js";
 export { jsonLogger, randomIds, silentLogger, systemClock } from "./runtime.js";
+export { type SignInResult, signIn } from "./sign-in.js";
 export { deleteVaultToken } from "./vault.js";
 export { createViewer, type Viewer, viewOf } from "./views.js";
 export { processWebhook, receiveWebhook, type WebhookOutcome } from "./webhooks.js";

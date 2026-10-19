@@ -139,6 +139,12 @@ export interface MandateRepo {
     now: Date;
   }): Promise<{ mandate: Mandate; policy: Policy }>;
   get(id: MandateId): Promise<Mandate | null>;
+  /**
+   * The permission to carry for an owner who has just signed in: the active one, else the most
+   * recently created. An owner accumulates revoked mandates over time, and none of those is the
+   * one they are coming back to.
+   */
+  findByOwner(ownerId: OwnerId): Promise<Mandate | null>;
   findBySetupOrderId(orderId: string): Promise<Mandate | null>;
   /** For VAULT.PAYMENT-TOKEN.* webhooks; looks up a keyed hash, never the plaintext. */
   findByVaultId(vaultId: string): Promise<Mandate | null>;

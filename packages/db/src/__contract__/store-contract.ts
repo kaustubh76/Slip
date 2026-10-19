@@ -90,6 +90,26 @@ export function describeStoreContract(label: string, make: () => Promise<Harness
         );
       });
 
+      it("finds the permission a returning owner should carry", async () => {
+        // Active first, then newest: not whichever they revoked last.
+        const w = await world(store);
+        expect(await store.mandates.findByOwner(w.ownerId)).toMatchObject({
+          id: w.mandateId,
+          status: "ACTIVE",
+        });
+        await store.mandates.revoke(w.mandateId, at(1));
+        const second = mandateId(randomUUID());
+        const { version: _version, ...limits } = DEFAULT_POLICY;
+        await store.mandates.create({ id: second, ownerId: w.ownerId, limits, now: at(2) });
+        expect(await store.mandates.findByOwner(w.ownerId)).toMatchObject({
+          id: second,
+          status: "PENDING",
+        });
+        await store.mandates.activate(second, { vaultId: "V2", paypalCustomerId: "C2" }, at(3));
+        expect(await store.mandates.findByOwner(w.ownerId)).toMatchObject({ id: second });
+        expect(await store.mandates.findByOwner(ownerId(randomUUID()))).toBeNull();
+      });
+
       it("finds an owner by the address they signed up with", async () => {
         const id = ownerId(randomUUID());
         const email = `${randomUUID()}@example.com`;

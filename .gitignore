@@ -17,3 +17,6 @@ test-results/
 .DS_Store
 *.log
 .data/
+
+# The owner e2e server keeps its own throwaway database.
+apps/web/.data/

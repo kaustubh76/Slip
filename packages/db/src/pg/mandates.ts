@@ -12,7 +12,7 @@ import {
   PolicySchema,
   ownerId as toOwnerId,
 } from "@slip/domain";
-import { and, asc, desc, eq, gt, isNotNull, isNull, lt, or } from "drizzle-orm";
+import { and, asc, desc, eq, gt, isNotNull, isNull, lt, or, sql } from "drizzle-orm";
 import type { Db } from "../client.js";
 import { Conflict } from "../codes.js";
 import type { VaultCipher } from "../crypto.js";
@@ -112,6 +112,23 @@ export function pgMandates(db: Db, cipher: VaultCipher): MandateRepo {
     get: (id) =>
       guarded(async () => {
         const [row] = await db.select().from(mandates).where(eq(mandates.id, id));
+        return row === undefined ? null : toMandate(row);
+      }),
+
+    findByOwner: (owner) =>
+      guarded(async () => {
+        // Active first, then newest: a returning owner comes back to the permission in force, not
+        // to whichever they revoked last year.
+        const rows = await db
+          .select()
+          .from(mandates)
+          .where(eq(mandates.ownerId, owner))
+          .orderBy(
+            sql`case when ${mandates.status} = 'ACTIVE' then 0 else 1 end`,
+            desc(mandates.createdAt),
+          )
+          .limit(1);
+        const [row] = rows;
         return row === undefined ? null : toMandate(row);
       }),
 

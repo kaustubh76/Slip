@@ -475,6 +475,19 @@ export function createMemoryStore(): Store {
         return record === undefined ? null : copy(record.mandate);
       },
 
+      async findByOwner(owner) {
+        // Active first, then newest: a returning owner comes back to the permission in force.
+        const mine = [...mandates.values()]
+          .map((record) => record.mandate)
+          .filter((mandate) => mandate.ownerId === owner)
+          .sort((a, b) => {
+            const active = Number(b.status === "ACTIVE") - Number(a.status === "ACTIVE");
+            return active !== 0 ? active : b.createdAt.getTime() - a.createdAt.getTime();
+          });
+        const [first] = mine;
+        return first === undefined ? null : copy(first);
+      },
+
       async findBySetupOrderId(orderId) {
         const record = [...mandates.values()].find((r) => r.mandate.setupOrderId === orderId);
         return record === undefined ? null : copy(record.mandate);

@@ -20,6 +20,7 @@ import { z } from "zod";
 import type { AppDeps } from "./deps.js";
 import { closeHold } from "./holds.js";
 import { derivedUuid } from "./keys.js";
+import { hashPassword, MIN_PASSWORD_LENGTH } from "./passwords.js";
 import { callPayPal } from "./payments.js";
 import { deleteVaultToken } from "./vault.js";
 
@@ -37,6 +38,7 @@ export type OwnerRefusalReason =
   | "NOT_FOUND"
   | "INVALID_EMAIL"
   | "EMAIL_IN_USE"
+  | "WEAK_PASSWORD"
   | "INVALID_LIMITS"
   | "INVALID_NAME"
   | "STALE_LIMITS"
@@ -102,17 +104,29 @@ const EmailSchema = z.email().max(254);
  */
 export async function registerOwner(
   deps: AppDeps,
-  input: { email: string | null },
+  input: { email: string | null; password?: string | null },
 ): Promise<{ status: "registered"; owner: Owner } | OwnerRefusal> {
   const raw = input.email?.trim().toLowerCase() ?? "";
   const email = raw === "" ? null : raw;
   if (email !== null && !EmailSchema.safeParse(email).success) {
     return refuse("INVALID_EMAIL", "That does not look like an email address.");
   }
+  const password = input.password ?? null;
+  if (password !== null && email === null) {
+    // A password with nothing to look it up by could never be used again.
+    return refuse("INVALID_EMAIL", "An email address is needed to sign in again later.");
+  }
+  if (password !== null && password.length < MIN_PASSWORD_LENGTH) {
+    return refuse(
+      "WEAK_PASSWORD",
+      `A password needs at least ${MIN_PASSWORD_LENGTH} characters, so it is worth hashing.`,
+    );
+  }
   try {
     const owner = await deps.store.owners.create({
       id: toOwnerId(deps.ids.uuid()),
       email,
+      ...(password === null ? {} : { passwordHash: await hashPassword(password) }),
       now: deps.clock.now(),
     });
     deps.log.info("owner.registered", { ownerId: owner.id });

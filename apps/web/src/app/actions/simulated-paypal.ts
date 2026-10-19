@@ -1,9 +1,10 @@
 "use server";
 
+import { completeMandateSetup } from "@slip/app";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { isDemo } from "../../server/demo";
-import { requireOwner } from "../../server/owner";
+import { requireOwner, startSession } from "../../server/owner";
 import { runtime, SERVICES } from "../../server/runtime";
 import { approveSimulatedSetup, findSimulatedSetup } from "../../server/simulated-approval";
 
@@ -31,10 +32,19 @@ export async function approveOnSimulatedPayPal(form: FormData): Promise<void> {
     ownerId,
     reference,
   );
+  if (result.status === "not-found") {
+    redirect("/mandate?setup=not_found");
+  }
+  // Finish the setup here rather than bouncing through `/mandates/<id>/return`. That route exists
+  // for PayPal's own redirect, which is a top-level browser GET; a server action redirecting into
+  // it makes the client router navigate to a route handler, which answers with a 307 and no RSC
+  // payload — and the owner sees Slip's error page instead of their permission.
+  const completed = await completeMandateSetup(deps, ownerId, result.mandateId);
+  if (completed.status === "active") {
+    await startSession(ownerId, result.mandateId);
+  }
   redirect(
-    result.status === "not-found"
-      ? "/mandate?setup=not_found"
-      : `/mandates/${result.mandateId}/return`,
+    `/mandate?setup=${completed.status === "refused" ? completed.reason.toLowerCase() : completed.status}`,
   );
 }
 
