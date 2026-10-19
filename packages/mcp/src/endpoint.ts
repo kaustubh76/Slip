@@ -5,7 +5,7 @@ import {
   originValidationResponse,
 } from "@modelcontextprotocol/server";
 import { type AppDeps, apiKeyFromHeader, hashApiKey } from "@slip/app";
-import type { ProductSearch } from "./search.js";
+import { type ProductSearch, recordingSearch } from "./search.js";
 import { createSlipServer } from "./server.js";
 
 /**
@@ -51,10 +51,19 @@ export function createSlipMcpEndpoint(
           throw new Error("an unauthenticated request reached the MCP handler");
         }
         const mandateId = String(authInfo.extra?.["mandateId"] ?? "");
+        const deps = await options.deps();
+        const catalogue =
+          options.search === undefined ? undefined : await options.search(mandateId);
         return createSlipServer({
-          deps: await options.deps(),
+          deps,
           apiKey: authInfo.token,
-          search: options.search === undefined ? undefined : await options.search(mandateId),
+          // Whatever the host's catalogue is, Slip remembers what it showed this agent, so the
+          // checkout that follows can have the steering check read it (D69). `clientId` is the
+          // agent the key authenticated as, set below.
+          search:
+            catalogue === undefined
+              ? undefined
+              : recordingSearch(deps, String(authInfo.clientId ?? ""), catalogue),
         });
       },
       {

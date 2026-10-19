@@ -51,6 +51,12 @@ export const AppConfigSchema = z
      */
     pricesSource: z.enum(["channel3", "simulated"]).default("channel3"),
     /**
+     * How long after a search its results still describe what an agent is buying. Older than this
+     * and the text Slip showed it is not what this purchase was chosen from, so the steering check
+     * is not told about it (D69).
+     */
+    searchContextMaxAgeMs: ms(30 * MINUTE),
+    /**
      * Whether a payment really went to PayPal. Separate from `pricesSource` because the mixed
      * state is the likely one (D63): an agent told one thing about both would be told something
      * false about one of them.

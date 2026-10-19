@@ -1,3 +1,4 @@
+import { type AppDeps, recordShown } from "@slip/app";
 import { formatUsd, type Offer, type OffersFailure } from "@slip/domain";
 import { percentFromHundredths, storeName } from "@slip/receipt";
 import { z } from "zod";
@@ -152,4 +153,34 @@ export function searchText(result: ToolSearch): string {
     }
   }
   return lines.join("\n");
+}
+
+/**
+ * A catalogue that remembers what it showed. Every hit carrying the product's own words is
+ * recorded against the agent that asked, so the checkout that follows can ask the steering
+ * classifier about the text this agent actually read (D67, D69).
+ *
+ * Wrapping rather than building it in: the demo's stand-in catalogue and Channel3's search are
+ * recorded the same way, and a catalogue that carries no product text records nothing at all.
+ *
+ * A failed write never fails the search — `recordShown` swallows its own errors. An agent that
+ * searched and got results has been served; losing the row costs a steering verdict on one
+ * checkout, which R4a then holds for the owner.
+ */
+export function recordingSearch(deps: AppDeps, agent: string, inner: ProductSearch): ProductSearch {
+  return {
+    simulated: inner.simulated,
+    async search(query, options, signal) {
+      const answer = await inner.search(query, options, signal);
+      if (answer.ok) {
+        await recordShown(
+          deps,
+          agent,
+          answer.hits.map((hit) => ({ productId: hit.productId, text: hit.text ?? null })),
+          deps.clock.now(),
+        );
+      }
+      return answer;
+    },
+  };
 }

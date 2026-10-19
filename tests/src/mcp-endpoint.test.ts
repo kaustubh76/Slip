@@ -4,6 +4,7 @@ import { offer } from "@slip/domain/testing";
 import {
   createSlipMcpEndpoint,
   type ProductSearch,
+  type SearchHit,
   ToolReceiptSchema,
   ToolReportSchema,
 } from "@slip/mcp";
@@ -25,7 +26,7 @@ describe("the MCP endpoint", () => {
   let endpoint: (request: Request) => Promise<Response>;
   const clients: Client[] = [];
 
-  const catalogue: ProductSearch = {
+  const catalogue: { simulated: boolean; search: ProductSearch["search"] } = {
     simulated: true,
     search: async () => ({ ok: true, hits: [] }),
   };
@@ -112,6 +113,36 @@ describe("the MCP endpoint", () => {
       expect(searchedFor.length).toBeGreaterThan(0);
     });
   }
+
+  it("remembers what it showed this agent, and nothing for a catalogue with no text", async () => {
+    // The point of recording: on real Channel3 data a chosen offer has no text, so what the agent
+    // read is the product's — and the checkout that follows asks the steering check about it.
+    const client = await connect("modern");
+    const shown: SearchHit[] = [
+      { productId: "lamp", title: "Lamp", text: "A lamp with a brass base.", offers: [] },
+      { productId: "mat", title: "Mat", text: null, offers: [] },
+    ];
+    catalogue.search = async () => ({ ok: true, hits: shown });
+    await client.callTool({ name: "search_products", arguments: { query: "lamp" } });
+
+    const recorded = await w.deps.store.impressions.latest(agent.agentId, "lamp");
+    expect(recorded).toMatchObject({ text: "A lamp with a brass base." });
+    // A product the catalogue said nothing about leaves no row: there is nothing to judge.
+    expect(await w.deps.store.impressions.latest(agent.agentId, "mat")).toBeNull();
+  });
+
+  it("records against the agent that asked, not the permission", async () => {
+    const mine = await connect("modern");
+    const other = await seedAgent(w);
+    catalogue.search = async () => ({
+      ok: true,
+      hits: [{ productId: "lamp", title: "Lamp", text: "Brass.", offers: [] }],
+    });
+    await mine.callTool({ name: "search_products", arguments: { query: "lamp" } });
+    expect(await w.deps.store.impressions.latest(agent.agentId, "lamp")).not.toBeNull();
+    // Two agents can share one permission; one's search is not the other's evidence.
+    expect(await w.deps.store.impressions.latest(other.agentId, "lamp")).toBeNull();
+  });
 
   it("answers a 2025-era client's raw initialize and tools/list", async () => {
     const init = await post({

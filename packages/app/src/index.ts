@@ -20,6 +20,7 @@ export {
   type ReplayReason,
   refuse,
 } from "./checkout/gate.js";
+export { recordShown, type ShownProduct, searchContextFor } from "./checkout/search-context.js";
 export { type AppConfig, type AppConfigInput, AppConfigSchema, appConfig } from "./config.js";
 export { type Deadlined, withDeadline } from "./deadline.js";
 export type { AppDeps } from "./deps.js";

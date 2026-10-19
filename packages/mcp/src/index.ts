@@ -9,6 +9,7 @@ export {
   type ListedOffer,
   ListedOfferSchema,
   type ProductSearch,
+  recordingSearch,
   SEARCH_LIMIT,
   type SearchAnswer,
   type SearchHit,
