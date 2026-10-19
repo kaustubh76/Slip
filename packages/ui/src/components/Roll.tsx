@@ -23,6 +23,8 @@ export function RollRow(props: {
    * between rows, so the roll stays a list of receipts and nothing else.
    */
   day?: string;
+  /** This is the receipt open beside the roll: the row carries the pen's mark. */
+  open?: boolean;
 }) {
   const { view, agent } = props.entry;
   const Link = props.Link ?? PlainLink;
@@ -32,6 +34,7 @@ export function RollRow(props: {
     <li
       className={props.fresh ? "slip-row slip-print" : "slip-row"}
       data-cocked={waiting ? "" : undefined}
+      data-open={props.open === true ? "" : undefined}
       data-slip-outcome={view.outcome}
     >
       {props.day === undefined ? null : <p className="slip-day">{props.day}</p>}
@@ -41,7 +44,11 @@ export function RollRow(props: {
       <div>
         <p className="slip-meta">{agent.name}</p>
         <p>
-          <Link href={props.href} className="slip-link">
+          <Link
+            href={props.href}
+            className="slip-link"
+            {...(props.open === true ? { "aria-current": "page" as const } : {})}
+          >
             {withAmounts(view.opening[0] ?? view.verdict)}
           </Link>{" "}
           {view.opening[0] === undefined ? null : withAmounts(view.verdict)}
@@ -71,10 +78,12 @@ export function Roll(props: {
   /** Receipt ids that just printed, to animate. */
   fresh?: ReadonlySet<string>;
   /**
-   * Where the day changes, by the id of the first receipt of each day (see `dayStarts`). The
-   * separator is marked as presentation, so the roll still counts one item per receipt.
+   * Where the day changes, by the id of the first receipt of each day (see `dayStarts`). Each day
+   * is written inside its own first row, so the roll still counts one item per receipt.
    */
   days?: ReadonlyMap<string, string>;
+  /** The receipt open beside the roll, if one is: its row is marked. */
+  openId?: string;
 }) {
   const Link = props.Link ?? PlainLink;
   const newAbove = props.newAbove ?? 0;
@@ -101,6 +110,7 @@ export function Roll(props: {
                 entry={entry}
                 href={props.hrefFor(entry)}
                 fresh={props.fresh?.has(entry.view.receiptId) ?? false}
+                open={entry.view.receiptId === props.openId}
                 {...(day === undefined ? {} : { day })}
                 {...(props.Link === undefined ? {} : { Link: props.Link })}
               />

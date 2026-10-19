@@ -41,6 +41,30 @@ test("the keyboard gets around and opens a hold's dialog without sending it, unt
   await expect(again.getByLabel("Use these shortcuts")).not.toBeChecked();
 });
 
+test("beside a docked slip the keys stay on the roll, and decide nothing of their own", async ({
+  page,
+}) => {
+  await openDesk(page);
+  const roll = page.getByRole("region", { name: "Receipts" });
+  await roll.getByRole("link").first().click();
+  await page.waitForURL(/\/receipts\/.+/);
+  await expect(page.locator("main .slip-dock .slip-receipt")).toBeVisible();
+  // The roll says which one is open, once.
+  await expect(roll.locator("li.slip-row[data-open]")).toHaveCount(1);
+  // j walks the roll and never steps into the dock, however many times it is pressed.
+  await expect(async () => {
+    await page.keyboard.press("j");
+    await expect(roll.locator(":focus")).toHaveCount(1, { timeout: 1_000 });
+  }).toPass();
+  for (let i = 0; i < 6; i += 1) {
+    await page.keyboard.press("j");
+    await expect(roll.locator(":focus")).toHaveCount(1);
+  }
+  // A row carries no decision of its own, and d does not reach past it to the docked slip.
+  await page.keyboard.press("d");
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+});
+
 test("t switches the theme, and More contrast is remembered across a reload", async ({ page }) => {
   await openDesk(page);
   const html = page.locator("html");

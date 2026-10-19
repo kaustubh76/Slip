@@ -701,7 +701,8 @@
     display: flex;
     flex-wrap: wrap;
     gap: 4px 12px;
-    padding: 8px 0;
+    /* The inside gutter is always there, so marking a row open moves nothing. */
+    padding: 8px 0 8px 6px;
     border-block-end: 1px dotted var(--slip-ink-ghost);
   }
 
@@ -725,6 +726,16 @@
   .slip-row > .slip-stamp {
     align-self: start;
     justify-self: end;
+  }
+
+  /*
+   * The row whose receipt is open beside the roll, marked in the owner's pen down its inside edge
+   * — the same rule a row that has just printed wears without motion, since both mean "this one".
+   * An inset shadow costs no layout, so nothing shifts as the reader moves down the roll.
+   */
+  .slip-row[data-open],
+  .slip-tray-row[data-open] {
+    box-shadow: inset 2px 0 0 0 var(--slip-pen);
   }
 
   /* A held receipt sits offset in the roll until it is decided. */

@@ -18,6 +18,7 @@ import {
   Workbench,
 } from "@slip/ui";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 import { ErrorSlip } from "../components/Slips";
@@ -38,6 +39,8 @@ export function ReceiptsWorkbench(props: {
 }) {
   const [agent, setAgent] = useState<string | null>(null);
   const [outcome, setOutcome] = useState<Outcome | null>(null);
+  // Which receipt is docked is in the address, not in state: the dock is this layout's child.
+  const openId = usePathname()?.match(/^\/receipts\/([^/]+)/)?.[1];
   const receipts = useReceipts({ agent });
   const holds = useHolds();
   const agents = useAgents();
@@ -57,6 +60,7 @@ export function ReceiptsWorkbench(props: {
             hrefFor={receiptHref}
             now={now}
             Link={Link}
+            {...(openId === undefined ? {} : { openId })}
           />
           <RollSummary totals={totals} />
           <OutcomeFilter value={outcome} counts={counts} onChange={setOutcome} />
@@ -92,6 +96,7 @@ export function ReceiptsWorkbench(props: {
             days={days}
             hrefFor={receiptHref}
             Link={Link}
+            {...(openId === undefined ? {} : { openId })}
             newAbove={receipts.newAbove}
             onRevealNew={receipts.revealNew}
             hasOlder={receipts.hasOlder || olderHref !== undefined}

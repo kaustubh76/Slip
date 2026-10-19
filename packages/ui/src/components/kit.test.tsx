@@ -29,6 +29,24 @@ describe("Roll", () => {
     ).toHaveProperty("href", expect.stringContaining(`/receipts/${rows[0]?.view.receiptId}`));
   });
 
+  it("marks the row whose receipt is open beside it, and only that one", () => {
+    const rows = [entry(rejectedView()), entry(heldView(), "shopper-2"), entry(paidView())];
+    const openId = rows[1]?.view.receiptId;
+    const { container } = render(<Roll entries={rows} hrefFor={hrefFor} openId={openId ?? ""} />);
+    const items = container.querySelectorAll("li.slip-row");
+    expect([...items].map((li) => li.hasAttribute("data-open"))).toEqual([false, true, false]);
+    expect(container.querySelectorAll('a[aria-current="page"]')).toHaveLength(1);
+    expect(container.querySelector('a[aria-current="page"]')?.getAttribute("href")).toBe(
+      `/receipts/${openId}`,
+    );
+  });
+
+  it("marks nothing when no receipt is open", () => {
+    const { container } = render(<Roll entries={[entry(paidView())]} hrefFor={hrefFor} />);
+    expect(container.querySelector("[data-open]")).toBeNull();
+    expect(container.querySelector('[aria-current="page"]')).toBeNull();
+  });
+
   it("never pushes new receipts in above the reader: they wait behind a pill", () => {
     const reveal = vi.fn();
     render(

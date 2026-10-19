@@ -22,6 +22,8 @@ export function HoldsTray(props: {
   /** The client's clock, for the countdowns. */
   now: number;
   Link?: LinkLike;
+  /** The receipt open beside the tray, if one is: its row is marked, as the roll's is. */
+  openId?: string;
 }) {
   const Link = props.Link ?? PlainLink;
   const n = props.entries.length;
@@ -45,8 +47,13 @@ export function HoldsTray(props: {
         <ul className="slip-roll">
           {props.entries.map((entry) => {
             const { view, agent } = entry;
+            const open = view.receiptId === props.openId;
             return (
-              <li key={view.receiptId} className="slip-tray-row slip-mono">
+              <li
+                key={view.receiptId}
+                className="slip-tray-row slip-mono"
+                data-open={open ? "" : undefined}
+              >
                 <time dateTime={view.createdAt}>{clockTime(view.createdAt)}</time>{" "}
                 <span>{agent.name}</span>{" "}
                 <span>
@@ -56,7 +63,11 @@ export function HoldsTray(props: {
                 </span>{" "}
                 <span className="slip-caption">{WHY[view.ruleCode] ?? "held"}</span>{" "}
                 <span>{view.hold === null ? "" : timeLeft(view.hold.expiresAt, props.now)}</span>{" "}
-                <Link href={props.hrefFor(entry)} className="slip-link">
+                <Link
+                  href={props.hrefFor(entry)}
+                  className="slip-link"
+                  {...(open ? { "aria-current": "page" as const } : {})}
+                >
                   Decide →
                 </Link>
               </li>

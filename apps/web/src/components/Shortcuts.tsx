@@ -37,18 +37,33 @@ function Keys({ keys }: { keys: readonly string[] }) {
   ));
 }
 
-/** Each receipt or hold on the page: roll rows and slips alike carry their outcome. */
-function items(): HTMLElement[] {
-  return [...document.querySelectorAll<HTMLElement>("main [data-slip-outcome]")];
-}
-
 function firstControl(item: HTMLElement): HTMLElement | null {
   return item.querySelector<HTMLElement>("a[href], button:not([disabled])");
 }
 
+/** A key can only move to something that can take focus and is actually on the screen. */
+function reachable(item: HTMLElement): boolean {
+  return firstControl(item) !== null && item.getClientRects().length > 0;
+}
+
+const found = (selector: string): HTMLElement[] =>
+  [...document.querySelectorAll<HTMLElement>(selector)].filter(reachable);
+
+/**
+ * Each receipt or hold the keys step through: roll rows and slips alike carry their outcome. On a
+ * bench the ring is the *list*, not the whole screen — otherwise the slip docked beside the roll
+ * is a second stop for a receipt the owner is already reading. Where the list has nothing to offer
+ * (a screen that is not a bench, or one too narrow to show the list beside the slip), the ring
+ * falls back to everything on the screen, so the keys never go dead.
+ */
+function items(): HTMLElement[] {
+  const list = found("main .slip-listpane [data-slip-outcome]");
+  return list.length > 0 ? list : found("main [data-slip-outcome]");
+}
+
 /** j and k: focus the next or previous receipt or hold, wrapping at the ends. */
 function step(by: 1 | -1): void {
-  const all = items().filter((item) => firstControl(item) !== null);
+  const all = items();
   if (all.length === 0) {
     return;
   }
@@ -60,13 +75,19 @@ function step(by: 1 | -1): void {
   control?.scrollIntoView({ block: "nearest" });
 }
 
-/** a and d: open the dialog for the hold in focus, or the first on the page. Never confirms. */
+/**
+ * a and d: open the dialog for the hold in focus, or — only when the focus is not on a receipt at
+ * all — the first on the page. The key never reaches past the receipt in focus to a different one:
+ * with a roll beside a docked slip, a row carries no decision of its own, and falling back from it
+ * would decide about the slip instead. Never confirms; the dialog still asks (D48).
+ */
 function open(action: "approve" | "decline"): void {
   const selector = `[data-slip-action="${action}"]:not([disabled])`;
   const focused = document.activeElement?.closest<HTMLElement>("[data-slip-outcome]");
   const button =
-    focused?.querySelector<HTMLElement>(selector) ??
-    document.querySelector<HTMLElement>(`main ${selector}`);
+    focused === null || focused === undefined
+      ? document.querySelector<HTMLElement>(`main ${selector}`)
+      : focused.querySelector<HTMLElement>(selector);
   button?.click();
 }
 
