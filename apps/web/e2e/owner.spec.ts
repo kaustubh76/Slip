@@ -5,7 +5,11 @@ test("a new desk shows the four purchases its agent tried, and says the demo is 
   page,
 }) => {
   await openDesk(page);
-  await expect(page.getByText(/^Simulated demo: PayPal and Channel3 are stand-ins/)).toBeVisible();
+  await expect(
+    page.getByText(
+      /^Stores and prices are stand-ins made up in this server\. PayPal is a stand-in running in this server; no real money moves\./,
+    ),
+  ).toBeVisible();
   const roll = page.getByRole("region", { name: "Receipts" });
   await expect(roll.getByRole("img", { name: "Outcome: paid" })).toHaveCount(1);
   await expect(roll.getByRole("img", { name: "Outcome: rejected" })).toHaveCount(1);

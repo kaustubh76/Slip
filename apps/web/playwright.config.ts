@@ -33,6 +33,15 @@ export default defineConfig({
       SLIP_DEMO_MAX_DESKS: "1000",
       // Every test opens a desk, all from one address.
       SLIP_DEMO_DESKS_PER_ADDRESS: "1000",
+      // Next fills only unset variables from a developer's apps/web/.env.local; set to empty here,
+      // the tests never reach their local database or a real service's keys.
+      DATABASE_URL: "",
+      SLIP_ENCRYPTION_KEY: "",
+      CHANNEL3_API_KEY: "",
+      PAYPAL_CLIENT_ID: "",
+      PAYPAL_CLIENT_SECRET: "",
+      PAYPAL_WEBHOOK_ID: "",
+      ANTHROPIC_API_KEY: "",
     },
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
