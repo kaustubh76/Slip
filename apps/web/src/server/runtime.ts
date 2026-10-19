@@ -17,7 +17,7 @@ import { isDemo } from "./demo";
 import type { DemoFakes } from "./demo/desk";
 import { type DemoDesk, DeskLimiter } from "./demo/desks";
 import { DEMO_TIMING, demoConfig, every } from "./demo/timing";
-import { resolveServices, type Services } from "./services";
+import { resolveServices, type Services, unsafeCombination } from "./services";
 
 /**
  * Where the application is assembled: one `AppDeps` per server process, built once and reused by
@@ -78,6 +78,12 @@ export async function fakes(): Promise<Fakes> {
 
 async function build(): Promise<Runtime> {
   const env = process.env;
+  const unsafe = unsafeCombination(SERVICES);
+  if (unsafe !== null) {
+    // Refused here rather than at the first checkout: by then an agent is waiting and a real card
+    // is one call away. A deployment that cannot be trusted does not start.
+    throw new Error(unsafe);
+  }
   const clock = systemClock;
   const demo = isDemo(env);
   const store = await openStore(env);

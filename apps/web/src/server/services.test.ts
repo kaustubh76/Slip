@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveServices } from "./services";
+import { resolveServices, type Services, unsafeCombination } from "./services";
 
 /** Keys decide, one service at a time — except in the shared demo, which is always stand-ins. */
 
@@ -68,4 +68,46 @@ describe("which services are real", () => {
     );
     expect(demo).toEqual({ prices: "simulated", payment: "simulated", steering: "simulated" });
   });
+});
+
+describe("combinations a deployment must not run", () => {
+  const live = (over: Partial<Services> = {}): Services => ({
+    prices: "channel3",
+    payment: "live",
+    steering: "claude",
+    ...over,
+  });
+
+  it("allows live money only when nothing else is invented", () => {
+    expect(unsafeCombination(live())).toBeNull();
+  });
+
+  it("refuses live money against the stand-in catalogue", () => {
+    // The sign-up page refuses to start a new owner under live PayPal, but a key issued before the
+    // keys changed would keep working — so the refusal has to be at the deployment.
+    const refusal = unsafeCombination(live({ prices: "simulated" }));
+    expect(refusal).toContain("real money");
+    expect(refusal).toContain("stand-in catalogue");
+    expect(refusal).toContain("CHANNEL3_API_KEY");
+  });
+
+  it("refuses live money with a scripted steering check", () => {
+    // A receipt would say the listing was checked when one hard-coded phrase was matched.
+    expect(unsafeCombination(live({ steering: "simulated" }))).toContain("scripted stand-in");
+  });
+
+  it("names both when both are invented", () => {
+    const refusal = unsafeCombination(live({ prices: "simulated", steering: "simulated" })) ?? "";
+    expect(refusal).toContain("stand-in catalogue");
+    expect(refusal).toContain("scripted stand-in");
+  });
+
+  it.each(["simulated", "sandbox"] as const)(
+    "refuses nothing when the payment is %s: no real money is at stake",
+    (payment) => {
+      expect(
+        unsafeCombination(live({ payment, prices: "simulated", steering: "simulated" })),
+      ).toBeNull();
+    },
+  );
 });

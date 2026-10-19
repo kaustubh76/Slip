@@ -54,4 +54,34 @@ function paymentMode(env: NodeJS.ProcessEnv): PaymentMode {
   return env["PAYPAL_ENV"]?.trim().toLowerCase() === "live" ? "live" : "sandbox";
 }
 
+/**
+ * Combinations a deployment must not run, as a sentence or null.
+ *
+ * Only one is forbidden, and it is the one that costs someone money: **live PayPal with anything
+ * else simulated.** `PAYPAL_ENV=live` moves real funds, and the stand-in catalogue's stores and
+ * prices are invented — so a checkout would compare an agent's purchase against a made-up market
+ * and then charge a real card for it. The sign-up page already refuses to start a *new* owner
+ * under live PayPal (D65), but a key issued before the keys changed would keep working, so the
+ * refusal has to be at the deployment, not at the door.
+ *
+ * A simulated steering check is the same kind of lie about the same money: receipts would say the
+ * listing was checked when one hard-coded phrase was matched.
+ *
+ * Nothing else is refused. Real prices with a stand-in payment is the state D63 was written for,
+ * and it moves no money.
+ */
+export function unsafeCombination(services: Services): string | null {
+  if (services.payment !== "live") {
+    return null;
+  }
+  const invented = [
+    services.prices === "simulated" ? "prices come from the stand-in catalogue" : null,
+    services.steering === "simulated" ? "the steering check is the scripted stand-in" : null,
+  ].filter((part): part is string => part !== null);
+  return invented.length === 0
+    ? null
+    : `PAYPAL_ENV=live moves real money, but ${invented.join(" and ")}.` +
+        " Set CHANNEL3_API_KEY and ANTHROPIC_API_KEY, or use the PayPal sandbox.";
+}
+
 const set = (value: string | undefined): boolean => value !== undefined && value.trim() !== "";
