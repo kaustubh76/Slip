@@ -84,6 +84,69 @@ modifier is held.
 In `apps/web`, **Keys** in the masthead opens the same sheet. Turning the shortcuts off is
 remembered in that browser.
 
+## The workbench
+
+Each screen an owner works in is laid out as a bench with three slots, so a wide display shows the
+list and the thing open at once instead of leaving half the window empty:
+
+```tsx
+<Workbench
+  rail={<>what is waiting, the totals, the filters</>}
+  list={<Roll … />}
+  dock={children}
+/>
+```
+
+The arrangement is the stylesheet's: one column below 900 px, list and dock from 900 px, the rail
+joining them at 1280 px. Nothing is hidden by width alone — the same parts are only rearranged —
+and below 900 px a slip being read replaces the list it was opened from, which is the only place a
+way back is shown (`.slip-dock-back`).
+
+**Receipts use a route layout**, `app/receipts/layout.tsx`, holding the rail and the roll with
+`{children}` as the dock. Next keeps a layout mounted while its children change, so opening a
+receipt leaves the roll scrolled, filtered and live, while the address still names the receipt and
+can be linked to or reloaded. The agent filter therefore lives in the bench rather than the
+address, which now belongs to the open receipt. Older receipts (`?before=`) mark themselves
+`data-archive` and take the whole bench, since a layout cannot read search params.
+
+Two further layouts, both plain grids: `.slip-cards` for self-contained cards that sit side by
+side (waiting holds, agent report cards), and `.slip-twoup` for two sheets read together (the
+limits form and the picture of what it would do).
+
+### Counting honestly
+
+Two kinds of number appear on the roll and they are labelled apart, because mixing them would be a
+claim Slip cannot stand behind:
+
+| | Where it comes from | What it covers |
+|---|---|---|
+| **All time** (`summariseAgents`) | the agents' report cards, counted by the server | every attempt ever recorded |
+| **On this roll** (`countByOutcome`) | the rows loaded in the browser | the newest three pages, and what the outcome filter narrows |
+
+**No total of money spent exists anywhere in Slip** — not in the database, the API or the kit.
+`AgentReport.captured` is a count of completed payments, not an amount. Adding the loaded rows up
+would describe whichever pages happened to be in memory, so nothing does it.
+
+### What the kit adds for it
+
+| Export | |
+|---|---|
+| `Workbench` | the three slots above |
+| `RollSummary` | the desk's all-time totals |
+| `OutcomeFilter` | buttons, not a menu, so the one menu in `main` is still the agent filter the `/` shortcut reaches |
+| `Countdown` | how long is left to decide, as a bar that drains and the same thing in words |
+| `OutcomeBar` | an agent's outcomes in the stamps' inks, hidden from assistive tech because the numbers sit beneath it |
+| `LimitsPicture` | what a draft of the limits would do to one purchase |
+| `summariseAgents` · `countByOutcome` · `filterRows` · `dayOf` · `dayStarts` | the pure parts, so a host can filter and group without the components |
+
+`Roll` takes an optional `days` map (from `dayStarts`) and writes each day inside its first row.
+A separator *between* rows would be an item of the list that is not a receipt, which both lies to
+a screen reader and fails axe's list rule.
+
+`LimitsPicture` draws through `measureFor` in `@slip/receipt` — the gap-scale maths lifted out of
+the receipt's own `measureModel`, so both call one function and a drawing cannot promise what a
+real purchase would not do. The verdict beside it comes from `evaluateRules`, the rules themselves.
+
 ## The data layer
 
 ### Client

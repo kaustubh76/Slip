@@ -847,3 +847,36 @@ action now completes the setup itself; the route remains for PayPal's own redire
 top-level GET. It survived because the browser suite only ran in demo mode, where sign-in seeds an
 already-active mandate — so there is now a second Playwright server without `SLIP_DEMO`, the shape
 a real owner meets.
+
+## D72 · 2026-10-20 · The owner's screens are a bench, and two kinds of number are kept apart
+
+Every page was a 576 px column against the left edge: `.slip-main` hugged the start, every sheet
+capped at `--slip-slip-max`, and no `min-width` query existed anywhere. More than half a laptop
+screen was empty, and opening a receipt replaced the roll rather than sitting beside it as the
+design intended (§1.7).
+
+The owner's screens are now a bench of three slots — what is waiting, the list, and the one thing
+open — rearranged by width rather than hidden by it. Receipts get theirs from a route layout, so
+the roll stays mounted, scrolled and live while only the dock changes and the address still names
+the receipt. Holds and agent cards sit side by side; the limits form sits beside a picture of what
+its numbers would do.
+
+**The totals and the roll's own counts are labelled apart.** "All time" comes from the agents'
+report cards, which the server counts over every attempt; "on this roll" counts the rows loaded in
+the browser, which is the newest three pages and what the outcome filter narrows. **No total of
+money spent is shown at all**: none exists at any layer, `AgentReport.captured` is a count rather
+than an amount, and summing whichever rows happen to be loaded would be a claim Slip cannot stand
+behind.
+
+Two constraints shaped the parts:
+
+- **A list contains only its items.** The day a run of receipts opens is written inside that
+  receipt's row, not between rows. A separator element in the `<ol>` is an item that is not a
+  receipt, which lies to a screen reader and fails axe's list rule.
+- **The one menu in `main` is the agent filter**, because the `/` shortcut focuses the first
+  select it finds. The outcome filter is buttons, and a pressed one thickens its border rather
+  than only changing colour.
+
+Drawings are made by the code that decides: `LimitsPicture` draws through `measureFor`, the
+gap-scale maths lifted out of the receipt's own `measureModel` so both call one function, and its
+verdict comes from `evaluateRules`. A picture therefore cannot promise what a purchase would not do.
