@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { OfferSchema } from "@slip/domain";
 import { describe, expect, it } from "vitest";
 import { createChannel3Offers } from "./channel3.js";
+import { channel3SearchHits, createChannel3Search } from "./search.js";
 
 /**
  * Channel3 for real (`CHANNEL3_API_KEY=… pnpm test:live:channel3`). Skipped otherwise, so this file
@@ -31,6 +32,39 @@ if (apiKey === undefined || apiKey === "") {
       const result = await offers.fetchProduct("slip_no_such_product_000", deadline());
       expect(result).toMatchObject({ ok: false, reason: "NOT_FOUND" });
     }, 20_000);
+
+    /**
+     * Search costs a credit, so it is opt-in twice over: the key, and `CHANNEL3_LIVE_SEARCH=1`.
+     * Running the whole suite with a key in the environment must never spend one by accident.
+     */
+    it.skipIf(process.env["CHANNEL3_LIVE_SEARCH"] !== "1")(
+      "a real search returns products the domain accepts, with the text an agent would read",
+      async () => {
+        const outcome = await createChannel3Search({ apiKey }).search(
+          "trail running shoes",
+          5,
+          deadline(),
+        );
+        expect(outcome.ok).toBe(true);
+        if (!outcome.ok) {
+          return;
+        }
+        const hits = channel3SearchHits(outcome.result.body);
+        expect(hits.length).toBeGreaterThan(0);
+        for (const hit of hits) {
+          expect(hit.productId).not.toBe("");
+          for (const offer of hit.offers) {
+            // The same bar a checkout holds an offer to: a search must not show a price the
+            // check would read differently.
+            expect(OfferSchema.parse(offer)).toEqual(offer);
+          }
+        }
+        // The point of D69: on real data this text is the only thing an agent can read, and the
+        // steering check is asked about exactly it.
+        expect(hits.some((hit) => (hit.text ?? "") !== "")).toBe(true);
+      },
+      30_000,
+    );
 
     it.skipIf(productId === "")(
       "returns offers the domain itself accepts",
