@@ -29,6 +29,13 @@
       "when": 1791743251011,
       "tag": "0003_vault_deletion_guard",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792425489416,
+      "tag": "0004_classy_timeslip",
+      "breakpoints": true
     }
   ]
 }

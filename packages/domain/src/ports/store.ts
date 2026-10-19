@@ -35,6 +35,7 @@ export interface Store {
   holds: HoldRepo;
   webhooks: WebhookRepo;
   leases: LeaseRepo;
+  impressions: ImpressionRepo;
   reports: ReportRepo;
 }
 
@@ -384,6 +385,38 @@ export interface LeaseRepo {
   acquire(key: LeaseKey, holder: string, ttlMs: number, now: Date): Promise<boolean>;
   /** Releases only if `holder` still holds it. */
   release(key: LeaseKey, holder: string): Promise<void>;
+}
+
+/** What Slip's own search last showed one agent about one product. */
+export interface Shown {
+  agentId: AgentId;
+  productId: string;
+  text: string;
+  shownAt: Date;
+}
+
+/**
+ * What Slip showed an agent, so a later checkout can ask the steering classifier about the text
+ * the agent actually read (D67, D69).
+ *
+ * Operational, not evidence: no attempt or receipt points at it, it is overwritten by the next
+ * search and forgotten after half an hour, and a decision never depends on it being there. That
+ * is why it is upserted and pruned rather than append-only like `snapshots` — a receipt's record
+ * of what was decided lives in the attempt, which is append-only and does not move.
+ */
+export interface ImpressionRepo {
+  /**
+   * Records what one search showed. The newest text for a product wins, and the same write forgets
+   * this agent's rows older than `keepSince`, so the table cannot grow without bound.
+   */
+  show(
+    agentId: AgentId,
+    shown: readonly { productId: string; text: string }[],
+    now: Date,
+    keepSince: Date,
+  ): Promise<void>;
+  /** What this agent was last shown for this product, whenever that was. */
+  latest(agentId: AgentId, productId: string): Promise<Shown | null>;
 }
 
 export interface ReportRepo {

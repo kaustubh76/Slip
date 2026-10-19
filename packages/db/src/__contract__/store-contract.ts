@@ -1503,6 +1503,108 @@ export function describeStoreContract(label: string, make: () => Promise<Harness
       });
     });
 
+    describe("impressions: what a search showed an agent", () => {
+      it("keeps the newest text per product, and keeps each product apart", async () => {
+        const w = await world(store);
+        const shoe = newProductId();
+        const mat = newProductId();
+        await store.impressions.show(
+          w.agentId,
+          [
+            { productId: shoe, text: "A trail shoe." },
+            { productId: mat, text: "A yoga mat." },
+          ],
+          NOW,
+          at(-30),
+        );
+        expect(await store.impressions.latest(w.agentId, shoe)).toEqual({
+          agentId: w.agentId,
+          productId: shoe,
+          text: "A trail shoe.",
+          shownAt: NOW,
+        });
+        // A later search replaces what was shown: the classifier must judge the current text.
+        await store.impressions.show(
+          w.agentId,
+          [{ productId: shoe, text: "Now on sale." }],
+          at(5),
+          at(-25),
+        );
+        expect(await store.impressions.latest(w.agentId, shoe)).toMatchObject({
+          text: "Now on sale.",
+          shownAt: at(5),
+        });
+        expect(await store.impressions.latest(w.agentId, mat)).toMatchObject({
+          text: "A yoga mat.",
+        });
+      });
+
+      it("is null for a product this agent was never shown", async () => {
+        const w = await world(store);
+        expect(await store.impressions.latest(w.agentId, newProductId())).toBeNull();
+      });
+
+      it("never shows one agent what another was shown", async () => {
+        // The text is evidence about what *this* agent read; attributing a sibling's search to it
+        // would flag a purchase on words it never saw.
+        const mine = await world(store);
+        const theirs = await world(store);
+        const product = newProductId();
+        await store.impressions.show(
+          mine.agentId,
+          [{ productId: product, text: "Mine." }],
+          NOW,
+          at(-30),
+        );
+        expect(await store.impressions.latest(theirs.agentId, product)).toBeNull();
+        expect(await store.impressions.latest(mine.agentId, product)).toMatchObject({
+          text: "Mine.",
+        });
+      });
+
+      it("forgets rows older than the window, in the same write that records a search", async () => {
+        const w = await world(store);
+        const old = newProductId();
+        const fresh = newProductId();
+        await store.impressions.show(
+          w.agentId,
+          [{ productId: old, text: "Long ago." }],
+          NOW,
+          at(-30),
+        );
+        // An hour later, keeping only the last 30 minutes: the old row goes, the new one stays.
+        await store.impressions.show(
+          w.agentId,
+          [{ productId: fresh, text: "Just now." }],
+          at(60),
+          at(30),
+        );
+        expect(await store.impressions.latest(w.agentId, old)).toBeNull();
+        expect(await store.impressions.latest(w.agentId, fresh)).toMatchObject({
+          text: "Just now.",
+        });
+      });
+
+      it("prunes with nothing new to record", async () => {
+        const w = await world(store);
+        const product = newProductId();
+        await store.impressions.show(
+          w.agentId,
+          [{ productId: product, text: "Shown." }],
+          NOW,
+          at(-30),
+        );
+        await store.impressions.show(w.agentId, [], at(60), at(30));
+        expect(await store.impressions.latest(w.agentId, product)).toBeNull();
+      });
+
+      it("refuses to record against an agent that does not exist", async () => {
+        await expect(
+          store.impressions.show(agentId(randomUUID()), [{ productId: "p", text: "x" }], NOW, NOW),
+        ).rejects.toBeInstanceOf(InvariantError);
+      });
+    });
+
     describe("reports", () => {
       it("counts decisions, price gaps, steering and conflicts; ignores owner follow-ups", async () => {
         const w = await world(store);

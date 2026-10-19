@@ -112,6 +112,8 @@ export function createMemoryStore(): Store {
   const holds = new Map<string, Hold>();
   const webhooks = new Map<string, WebhookEvent>();
   const leases = new Map<string, { holder: string; expiresAt: Date }>();
+  /** `agentId|productId` → the text that agent was last shown for it. */
+  const impressions = new Map<string, { text: string; shownAt: Date }>();
 
   // ---------- helpers ----------
 
@@ -1037,6 +1039,30 @@ export function createMemoryStore(): Store {
         if (leases.get(id)?.holder === holder) {
           leases.delete(id);
         }
+      },
+    },
+
+    impressions: {
+      async show(agentId, shown, now, keepSince) {
+        if (!agents.has(agentId)) {
+          throw new InvariantError(`agent ${agentId} does not exist`);
+        }
+        for (const row of shown) {
+          impressions.set(`${agentId}|${row.productId}`, { text: row.text, shownAt: now });
+        }
+        // The write that records a search also forgets this agent's older rows.
+        for (const [key, value] of impressions) {
+          if (key.startsWith(`${agentId}|`) && value.shownAt.getTime() < keepSince.getTime()) {
+            impressions.delete(key);
+          }
+        }
+      },
+
+      async latest(agentId, productId) {
+        const held = impressions.get(`${agentId}|${productId}`);
+        return held === undefined
+          ? null
+          : { agentId, productId, text: held.text, shownAt: held.shownAt };
       },
     },
 

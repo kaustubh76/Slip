@@ -376,6 +376,30 @@ export const webhookEvents = pgTable(
   ],
 );
 
+/**
+ * What Slip's own search last showed an agent about a product, for the steering check to read at
+ * checkout (D69). Keyed like a lease rather than appended like a snapshot, because it is
+ * operational and not evidence: the next search overwrites it, the write that follows forgets
+ * anything older than half an hour, and no attempt or receipt points at it. Nothing here may be
+ * append-only — a table that is pruned cannot carry `slip_append_only()`.
+ */
+export const searchImpressions = pgTable(
+  "search_impressions",
+  {
+    agentId: uuid("agent_id")
+      .notNull()
+      .references(() => agents.id),
+    productId: text("product_id").notNull(),
+    /** The product's own words as the agent was shown them. */
+    text: text("text").notNull(),
+    shownAt: ts("shown_at").notNull(),
+  },
+  (t) => [
+    primaryKey({ name: "search_impressions_pk", columns: [t.agentId, t.productId] }),
+    index("search_impressions_shown_at_idx").on(t.shownAt),
+  ],
+);
+
 export const checkoutLeases = pgTable(
   "checkout_leases",
   {

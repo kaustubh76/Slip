@@ -1,15 +1,16 @@
 import {
   type AgentReport,
   cents,
+  type ImpressionRepo,
   type LeaseRepo,
   NotFoundError,
   type ReportRepo,
   agentId as toAgentId,
   type WebhookRepo,
 } from "@slip/domain";
-import { and, asc, eq, isNull, sql } from "drizzle-orm";
+import { and, asc, eq, isNull, lt, sql } from "drizzle-orm";
 import type { Db } from "../client.js";
-import { attempts, checkoutLeases, payments, webhookEvents } from "../schema.js";
+import { attempts, checkoutLeases, payments, searchImpressions, webhookEvents } from "../schema.js";
 import { guarded } from "./errors.js";
 
 export function pgWebhooks(db: Db): WebhookRepo {
@@ -71,6 +72,54 @@ export function pgWebhooks(db: Db): WebhookRepo {
           receivedAt: row.receivedAt,
           processedAt: row.processedAt,
         }));
+      }),
+  };
+}
+
+/**
+ * What was shown, upserted per (agent, product). The same statement that records a search also
+ * forgets this agent's older rows, so nothing has to sweep the table on a schedule.
+ */
+export function pgImpressions(db: Db): ImpressionRepo {
+  return {
+    show: (agentId, shown, now, keepSince) =>
+      guarded(async () => {
+        if (shown.length > 0) {
+          await db
+            .insert(searchImpressions)
+            .values(
+              shown.map((row) => ({
+                agentId,
+                productId: row.productId,
+                text: row.text,
+                shownAt: now,
+              })),
+            )
+            .onConflictDoUpdate({
+              target: [searchImpressions.agentId, searchImpressions.productId],
+              set: { text: sql`excluded.text`, shownAt: sql`excluded.shown_at` },
+            });
+        }
+        await db
+          .delete(searchImpressions)
+          .where(
+            and(eq(searchImpressions.agentId, agentId), lt(searchImpressions.shownAt, keepSince)),
+          );
+      }),
+
+    latest: (agentId, productId) =>
+      guarded(async () => {
+        const rows = await db
+          .select()
+          .from(searchImpressions)
+          .where(
+            and(eq(searchImpressions.agentId, agentId), eq(searchImpressions.productId, productId)),
+          )
+          .limit(1);
+        const row = rows[0];
+        return row === undefined
+          ? null
+          : { agentId, productId: row.productId, text: row.text, shownAt: row.shownAt };
       }),
   };
 }

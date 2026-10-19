@@ -6,6 +6,7 @@ import {
   PAYMENT_INTENTS,
   PAYMENT_STATUSES,
   PAYMENT_TRANSITIONS,
+  RULE_CODES,
   type Store,
 } from "@slip/domain";
 import { eq, sql } from "drizzle-orm";
@@ -88,6 +89,22 @@ export function describeSqlGuards(label: string, make: () => Promise<SqlHarness>
       await refused(() =>
         exec(`insert into slip_hold_transitions values ('DECLINED', 'APPROVED')`),
       );
+    });
+
+    it("the rule-code check accepts every rule the domain can decide", async () => {
+      // A rule added to the domain without regenerating the migration passes every in-memory test
+      // and then fails in Postgres the first time that rule decides something. That is exactly
+      // what happened to R2A_GAP_IMPLAUSIBLE (D68), so the constraint is held to the domain here
+      // the way the transition tables are.
+      const [row] = await exec(
+        `select pg_get_constraintdef(oid) as def from pg_constraint
+         where conname = 'attempts_rule_codes_valid'`,
+      );
+      const definition = String(row?.["def"] ?? "");
+      expect(definition).not.toBe("");
+      for (const code of RULE_CODES) {
+        expect(definition, `${code} is missing from attempts_rule_codes_valid`).toContain(code);
+      }
     });
 
     it("payments: illegal moves, immutable amounts and deletes are refused", async () => {
