@@ -1,3 +1,4 @@
+import { randomBytes } from "node:crypto";
 import type {
   AuthorizationResult,
   AuthorizationStatus,
@@ -120,6 +121,12 @@ export class FakePaymentGateway implements PaymentGateway {
     lookup: [] as LookupBehaviour[],
     delete: [] as DeleteBehaviour[],
   };
+  /**
+   * PayPal's ids are unique for all time; a counter is unique only inside one process. This tag,
+   * minted once per gateway, makes each one's ids its own, so a process that starts again over a
+   * database holding the last one's rows cannot hand out an id those rows already carry.
+   */
+  readonly #tag = randomBytes(6).toString("hex").toUpperCase();
   #counter = 0;
 
   constructor(options: { clock: Clock }) {
@@ -496,9 +503,9 @@ export class FakePaymentGateway implements PaymentGateway {
 
   // ---------- internals ----------
 
-  #next(): number {
+  #next(): string {
     this.#counter += 1;
-    return this.#counter;
+    return `${this.#tag}-${this.#counter}`;
   }
 
   #log(method: keyof PaymentGateway, input: unknown): void {

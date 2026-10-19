@@ -110,6 +110,20 @@ describe("startMandate", () => {
     const id = line?.fields?.["mandateId"] as Mandate["id"];
     expect((await h.store.mandates.get(id))?.status).toBe("REVOKED");
   });
+
+  it("the next owner after a restart is not refused an id the last process used", async () => {
+    const before = harness();
+    const one = await started(before);
+    // A new process over the database the old one left behind: nothing in memory, every row still
+    // there. The stand-in used to number its setups from one again here, so this owner's setup
+    // order collided with the one above and startMandate threw SETUP_ORDER_IN_USE at them.
+    const after = harness({ store: before.store });
+    const result = await startMandate(after.deps, await owner(after));
+    if (result.status !== "started") {
+      throw new Error(JSON.stringify(result));
+    }
+    expect(result.mandate.setupOrderId).not.toBe(one.reference);
+  });
 });
 
 describe("completeMandateSetup", () => {

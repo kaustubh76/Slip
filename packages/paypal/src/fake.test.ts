@@ -245,3 +245,43 @@ describe("FakePaymentGateway — vault setup and webhooks", () => {
     expect(gateway.callsTo("captureAuthorization")).toHaveLength(0);
   });
 });
+
+/**
+ * PayPal's own ids are unique for all time. The stand-in's were unique only within one gateway, so
+ * a process that started again against a database holding the earlier rows minted `SETUP-1` and
+ * `ORDER-1` a second time — colliding on `mandates_setup_order_unique`, and on the first purchase
+ * on `payments_paypal_order_unique`. A stand-in is only useful if it cannot be told apart from the
+ * real thing in the ways that matter, and this was one of them.
+ */
+describe("FakePaymentGateway — a second gateway mints nothing the first one did", () => {
+  const setupInput = () => ({
+    mandateId: randomUUID() as never,
+    requestId: requestId(randomUUID()),
+    returnUrl: "https://slip.test/return",
+    cancelUrl: "https://slip.test/cancel",
+  });
+
+  const reference = async (gateway: FakePaymentGateway) => {
+    const started = await gateway.startVaultSetup(setupInput(), live());
+    return started.kind === "started" ? started.reference : "";
+  };
+
+  it("gives its setup references their own names", async () => {
+    const first = await reference(setup().gateway);
+    const second = await reference(setup().gateway);
+    expect(first).not.toBe("");
+    expect(second).not.toBe(first);
+  });
+
+  it("gives its order and capture ids their own names too", async () => {
+    const ids = async () => {
+      const { gateway, order } = setup();
+      const created = await gateway.createOrder(order(), live());
+      return created.kind === "captured" ? [created.orderId, created.captureId] : [];
+    };
+    const [first, second] = [await ids(), await ids()];
+    expect(first).toHaveLength(2);
+    expect(second).toHaveLength(2);
+    expect(new Set([...first, ...second]).size).toBe(4);
+  });
+});
