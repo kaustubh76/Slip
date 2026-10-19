@@ -1,0 +1,22 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/.tsbuildinfo"
+  },
+  "include": ["src"],
+  "exclude": ["src/**/*.test.ts", "src/**/__fixtures__/**"],
+  "references": [
+    {
+      "path": "../packages/domain"
+    },
+    {
+      "path": "../packages/check"
+    },
+    {
+      "path": "../study"
+    }
+  ]
+}

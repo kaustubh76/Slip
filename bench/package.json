@@ -1,0 +1,33 @@
+{
+  "name": "@slip/bench",
+  "version": "0.0.1",
+  "private": true,
+  "description": "SlipBench: how shopping agents behave on real offers, clean, endorsed and injected.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "@slip/source": "./src/index.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@slip/check": "workspace:*",
+    "@slip/domain": "workspace:*",
+    "@slip/study": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
