@@ -28,8 +28,16 @@ Sign up at <https://trychannel3.com> and take the key from the dashboard. Slip a
 id at a time, in USD, and keeps the whole response for the receipt's audit trail.
 
 ```sh
-CHANNEL3_API_KEY=… pnpm test:live:channel3
+CHANNEL3_API_KEY=… CHANNEL3_TEST_PRODUCT_ID=… pnpm test:live:channel3
 ```
+
+**Verified live on 19 Oct 2026**, both tests green against a real key, with
+`CHANNEL3_TEST_PRODUCT_ID=t1SLQyj` (a trail shoe with two merchant offers; look another up if that
+id has gone). What that confirmed: the base url, the path, the `x-api-key` header, `currency=USD`,
+and the whole status table — a rejected key really does answer 401 and map to `UNAVAILABLE`, a
+missing product 404 and `NOT_FOUND`. Every offer the adapter produced satisfied the domain's own
+`OfferSchema`. It also turned up the thing the offline tests could not: **a Channel3 offer carries
+no text of its own**, so the steering check has nothing to read on real data (D67).
 
 Two tests. The first asks for a product id that cannot exist and requires `NOT_FOUND`, which proves
 the base url, the path, the header and the key at once — a rejected key answers `UNAVAILABLE`

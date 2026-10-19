@@ -619,3 +619,34 @@ and its injected listing is written for a classifier that will certainly flag it
 would break the isolation between visitors and spend one account's credits on every passer-by. To
 see the real services, run without `SLIP_DEMO`. That also means the stand-ins are built only when
 *every* service is one: the demo machinery they exist for is coherent only as a set.
+
+## D67 · 2026-10-19 · The steering check has no input from a Channel3 offer
+
+Verified against the live API with a real key: a Channel3 `ProductOffer` carries exactly `url`,
+`domain`, `price`, `availability`, `condition`, `max_commission_rate` and `dimensions` — in its
+published schema and in real data for three products. **An offer has no text of its own.** Only the
+*product* has `title`, `description` and `key_features` (7–10 bullets in the data sampled), and
+those are shared by every merchant offering it.
+
+So D60 — "a listing's text comes only from the offer itself" — is right about blame and wrong about
+availability. On real Channel3 data `listingText` is always null, `checkOffers` never asks the
+classifier, and **R3_STEERED cannot fire**. The Claude adapter is verified but has no input in
+production. Nothing is wrongly held: `classify` treats empty text as "not instruction-like", so
+R4a does not fire either. The check simply has nothing to read.
+
+D60's reasoning still holds — rejecting a purchase over text that every offer shares would blame
+whichever merchant the agent happened to choose — so the product description is not repurposed as
+the listing's text.
+
+**What closes it** is the input the port already has and D54 left null: `searchContext`, "what
+Slip's own search showed this agent". That is also where the danger actually is — an agent reads
+search results, and Channel3's search returns whole products, text and all. Recording what
+`search_products` returned and passing it as `searchContext` gives the check a real input,
+attributable to the search Slip performed rather than to one merchant's listing. Until that is
+wired, Slip's prompt-injection resistance is demonstrated on SlipBench's synthetic listings only,
+and the README and SPEC must not claim more than that.
+
+Two smaller facts from the same check: every product sampled had `variants: null`, so
+`selectedOptions` is empty and variant matching is a no-op for them; and `max_commission_rate`
+arrives as `0.0` where a merchant pays nothing, which `commissionToBps` correctly reads as a known
+zero rather than a missing one.
