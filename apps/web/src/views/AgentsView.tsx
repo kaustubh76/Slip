@@ -14,20 +14,22 @@ export function AgentsView(props: { token: string }) {
         <LiveBadge initialToken={props.token} />
       </header>
       {agents.isError ? <ErrorSlip what="your agents" error={agents.error} /> : null}
-      {(agents.data ?? []).map((card) => (
-        <div key={card.agent.id} className="slip-stack">
-          <ReportCard card={card} />
-          {card.agent.revokedAt === null ? (
-            <div className="slip-dialog-actions">
-              <RevokeAgentKey agentId={card.agent.id} name={card.agent.name} />
-            </div>
-          ) : (
-            <p className="slip-caption">
-              This key was revoked. The agent's receipts stay; it can no longer spend.
-            </p>
-          )}
-        </div>
-      ))}
+      <div className="slip-cards">
+        {(agents.data ?? []).map((card) => (
+          <div key={card.agent.id} className="slip-stack">
+            <ReportCard card={card} />
+            {card.agent.revokedAt === null ? (
+              <div className="slip-dialog-actions">
+                <RevokeAgentKey agentId={card.agent.id} name={card.agent.name} />
+              </div>
+            ) : (
+              <p className="slip-caption">
+                This key was revoked. The agent's receipts stay; it can no longer spend.
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
       <article className="slip-sheet" data-perforated="">
         <p className="slip-meta">New agent</p>
         <p className="slip-prose">

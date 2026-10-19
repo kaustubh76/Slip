@@ -59,7 +59,7 @@ export function HoldsView(props: { token: string; serverNow: number }) {
           </p>
         </article>
       ) : (
-        <div className="slip-holds">
+        <div className="slip-cards">
           {shown.map(({ view, agent }) => (
             <ReceiptSlip key={view.receiptId} view={view} agentName={agent.name}>
               {view.hold === null || view.hold.status !== "PENDING" ? null : (

@@ -508,13 +508,38 @@
     }
   }
 
+  /* What became of what an agent tried, in the stamps' inks. The numbers are written below it. */
+  .slip-outcomes {
+    display: flex;
+    gap: 2px;
+    block-size: 8px;
+    margin-block: 12px;
+  }
+
+  .slip-outcome-part {
+    display: block;
+    border-radius: var(--slip-radius-control);
+  }
+
+  .slip-outcome-part[data-outcome="PAID"] {
+    background: var(--slip-stamp-paid);
+  }
+
+  .slip-outcome-part[data-outcome="REJECTED"] {
+    background: var(--slip-stamp-rejected);
+  }
+
+  .slip-outcome-part[data-outcome="HELD"] {
+    background: var(--slip-stamp-held);
+  }
+
   /* A drawing and the sentence that says the same thing in words. */
   .slip-picture {
     margin-block-start: 16px;
   }
 
-  /* Waiting purchases sit side by side where there is room; each keeps its own decision. */
-  .slip-holds {
+  /* Self-contained cards sit side by side where there is room: waiting holds, agents. */
+  .slip-cards {
     display: grid;
     gap: 24px;
     align-items: start;
@@ -523,11 +548,12 @@
   }
 
   @media (min-width: 1100px) {
-    .slip-holds {
+    .slip-cards {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .slip-holds > .slip-sheet {
+    .slip-cards > .slip-sheet,
+    .slip-cards > .slip-stack > .slip-sheet {
       max-inline-size: none;
     }
   }

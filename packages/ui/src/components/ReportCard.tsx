@@ -1,6 +1,7 @@
 import { type Cents, formatUsd } from "@slip/domain";
 import { type AgentCard, percentFromHundredths } from "@slip/receipt";
 import { Leaders } from "./Leaders.js";
+import { OutcomeBar } from "./OutcomeBar.js";
 import { Stamp } from "./Stamp.js";
 import { printedAt } from "./text.js";
 
@@ -25,6 +26,7 @@ export function ReportCard({ card }: { card: ReportCardData }) {
         <p className="slip-meta">since {printedAt(card.agent.createdAt)}</p>
       </header>
       <hr className="slip-rule" />
+      <OutcomeBar paid={r.paid} rejected={r.rejected} held={r.held} />
       {card.report.lines.map((line) => (
         <p key={line} className="slip-prose">
           {line}

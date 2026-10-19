@@ -12,6 +12,7 @@ export { Leaders } from "./components/Leaders.js";
 export { LimitsPicture } from "./components/LimitsPicture.js";
 export { type LinkLike, PlainLink } from "./components/Link.js";
 export { LiveBadge } from "./components/LiveBadge.js";
+export { OutcomeBar } from "./components/OutcomeBar.js";
 export { OutcomeFilter } from "./components/OutcomeFilter.js";
 export { ReceiptSlip, stampOf } from "./components/ReceiptSlip.js";
 export { ReportCard, type ReportCardData } from "./components/ReportCard.js";
