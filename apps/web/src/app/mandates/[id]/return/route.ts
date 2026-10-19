@@ -1,6 +1,8 @@
 import { completeMandateSetup } from "@slip/app";
 import { NextResponse } from "next/server";
 import { currentOwner, startSession } from "../../../../server/owner";
+import { publicUrl } from "../../../../server/public-url";
+import { deps } from "../../../../server/runtime";
 
 /**
  * Where PayPal sends the owner after they approve saving their payment method (the address
@@ -9,12 +11,13 @@ import { currentOwner, startSession } from "../../../../server/owner";
  * poll are one request however often the owner reloads.
  */
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
   const owner = await currentOwner();
   const { id } = await params;
-  const to = (path: string) => NextResponse.redirect(new URL(path, request.url));
+  const base = (await deps()).config.publicBaseUrl;
+  const to = (path: string) => NextResponse.redirect(publicUrl(base, path));
   if (owner === null) {
     return to("/sign-in");
   }
