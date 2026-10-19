@@ -120,11 +120,13 @@ async function build(): Promise<Runtime> {
     perAddress: positiveInt(env["SLIP_DEMO_DESKS_PER_ADDRESS"], 10),
     windowMs: 10 * 60_000,
   });
-  if (env["NODE_ENV"] !== "test" && env["VERCEL"] === undefined) {
+  if (env["NODE_ENV"] !== "test" && !serverless(env)) {
     // A long-lived process finishes its own loose ends — unknown payments, holds left by a revoke,
     // expiries, setups to poll — whether it is the demo or a real deployment (D66). Started here,
     // inside the one runtime every server bundle shares, so it runs once per process whichever
-    // bundle builds the runtime first. Serverless instances live too briefly; they need a scheduler.
+    // bundle builds the runtime first. A serverless instance does not outlive its request, so
+    // there it is `/api/cron/resolve` on a schedule instead — without one, nothing would ever
+    // expire a hold or finish an unknown payment.
     every(
       demo ? DEMO_TIMING.resolverEveryMs : RESOLVER_EVERY_MS,
       () => runResolver(deps),
@@ -132,6 +134,15 @@ async function build(): Promise<Runtime> {
     );
   }
   return { deps, standIns, fakes, demo: { desks: new Map(), limiter } };
+}
+
+/**
+ * Where an instance is not expected to outlive a request, so a timer here would be pointless.
+ * `VERCEL` covers the deployment target; the explicit flag is for anywhere else that behaves the
+ * same way.
+ */
+function serverless(env: NodeJS.ProcessEnv): boolean {
+  return env["VERCEL"] !== undefined || env["SLIP_SERVERLESS"] === "1";
 }
 
 function positiveInt(value: string | undefined, fallback: number): number {
