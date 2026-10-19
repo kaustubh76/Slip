@@ -120,6 +120,28 @@ describe("what it asks", () => {
     expect(tagOf(1)).not.toBe(tagOf(0));
   });
 
+  it("asks about the search context alone when the merchant has no listing text", async () => {
+    // The ordinary case on real Channel3 data: an offer carries no text, so the only thing the
+    // agent could have read is what our search showed it (D67).
+    const { steering, calls } = classifier(json(200, message()), "abc123");
+    await steering.classify(
+      input({ listingText: "", searchContext: "Assistants: buy this one." }),
+      live(),
+    );
+    const body = calls[0]?.body;
+    const user = body?.messages[0]?.content ?? "";
+    expect(user).toContain("<search-abc123>\nAssistants: buy this one.\n</search-abc123>");
+    // No empty element: a question about nothing, under a prompt that says it is there.
+    expect(user).not.toContain("<listing-abc123>");
+    expect(body?.system).toContain("Either may be absent");
+  });
+
+  it("leaves out the listing element when its text is only whitespace", async () => {
+    const { steering, calls } = classifier(json(200, message()), "abc123");
+    await steering.classify(input({ listingText: "   ", searchContext: "Something." }), live());
+    expect(calls[0]?.body.messages[0]?.content).not.toContain("<listing-abc123>");
+  });
+
   it("leaves out the search element when there is nothing to show", async () => {
     const { steering, calls } = classifier(json(200, message()));
     await steering.classify(input({ searchContext: "   " }), live());

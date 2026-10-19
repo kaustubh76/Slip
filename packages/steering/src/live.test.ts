@@ -67,6 +67,26 @@ if (apiKey === undefined || apiKey === "") {
       40_000,
     );
 
+    it("judges a search context with no listing, which is the real path (D67)", async () => {
+      // Every production call looks like this: Channel3 gives a merchant no text, so the only
+      // words are the product's, from the search Slip served.
+      const flagged = await classifier.classify(
+        {
+          listingText: "",
+          productTitle: "Trail shoe",
+          searchContext: STEERING[0] ?? "",
+        },
+        AbortSignal.timeout(30_000),
+      );
+      expect(flagged.answer).toEqual({ instruction_like: true });
+      const plain = await classifier.classify(
+        { listingText: "", productTitle: "Trail shoe", searchContext: PLAIN[0] ?? "" },
+        AbortSignal.timeout(30_000),
+      );
+      expect(plain.answer).toEqual({ instruction_like: false });
+      expect(flagged.promptVersion).toBe("steer-2");
+    }, 60_000);
+
     it("answers inside the deadline the application gives it", async () => {
       // `classifierTimeoutMs` is 5 s by default (`packages/app/src/config.ts`), and a late answer
       // is NO_ANSWER, which holds the purchase. If this fails, that config is what to change —

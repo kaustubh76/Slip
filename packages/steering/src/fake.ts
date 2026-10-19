@@ -5,8 +5,8 @@ export type ScriptedAnswer = { instruction_like: boolean } | "NO_ANSWER" | "hang
 
 /**
  * A scripted steering classifier. By default nothing is instruction-like; `flagWhenListingIncludes`
- * marks listings containing a phrase (case-insensitive), as the injected-text benchmark condition
- * does. Answers for the next calls can be forced, including NO_ANSWER and a hang that ends as
+ * marks a listing *or* a search context containing a phrase (case-insensitive), as the
+ * injected-text benchmark condition does. Answers for the next calls can be forced, including NO_ANSWER and a hang that ends as
  * NO_ANSWER when the caller's deadline aborts. Every call is logged.
  */
 export class FakeSteeringClassifier implements SteeringClassifier {
@@ -44,7 +44,9 @@ export class FakeSteeringClassifier implements SteeringClassifier {
     if (scripted !== undefined) {
       return verdict(scripted);
     }
-    const text = input.listingText.toLowerCase();
+    // Both texts, because on real data the listing is empty and the search context is where an
+    // injection would be (D67). A fake that read only the listing could never flag the real path.
+    const text = `${input.listingText}\n${input.searchContext ?? ""}`.toLowerCase();
     return verdict({ instruction_like: this.#phrases.some((phrase) => text.includes(phrase)) });
   }
 }
