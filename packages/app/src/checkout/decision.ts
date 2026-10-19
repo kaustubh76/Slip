@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { decide, isSnapshotFresh, prepareCheck } from "@slip/check";
 import {
   type AgentAuth,
+  type AgentId,
   attemptId,
   type CheckoutRequest,
   type ClassifierAnswer,
@@ -15,6 +16,7 @@ import {
 } from "@slip/domain";
 import { withDeadline } from "../deadline.js";
 import type { AppDeps } from "../deps.js";
+import { searchContextFor } from "./search-context.js";
 
 export type SnapshotSource = "cache" | "fetched" | "not-found" | "stale" | "none";
 
@@ -115,23 +117,51 @@ export async function checkOffers(
   }
   let answer: ClassifierAnswer = "NOT_RUN";
   if (prepared.classifierRequired) {
-    answer = input.reuse ?? (await classify(deps, prepared.chosen.listingText, snapshot));
+    answer =
+      input.reuse ??
+      (await classify(deps, {
+        listingText: prepared.chosen.listingText,
+        snapshot,
+        agentId: request.agentId,
+        productId: request.productId,
+        now,
+      }));
   }
   return { decision: decide(prepared, policy, answer), classifier: answer };
 }
 
+/**
+ * Asks the steering classifier about everything the agent could have read: the chosen merchant's
+ * own listing text, and what Slip's own search showed this agent for the product (D69).
+ *
+ * Both halves matter, and on real data only the second exists — a Channel3 offer carries no text
+ * (D67), so before this the classifier was never called on a real purchase and R3 could not fire.
+ * With neither there is genuinely nothing to judge, and an unflagged answer is the right one:
+ * Slip has seen nothing to object to.
+ */
 async function classify(
   deps: AppDeps,
-  listingText: string | null,
-  snapshot: OfferSnapshot | null,
+  input: {
+    listingText: string | null;
+    snapshot: OfferSnapshot | null;
+    agentId: AgentId;
+    productId: string;
+    now: Date;
+  },
 ): Promise<ClassifierAnswer> {
-  if (listingText === null || listingText.trim() === "") {
+  const listingText = input.listingText ?? "";
+  const searchContext = await searchContextFor(deps, {
+    agentId: input.agentId,
+    productId: input.productId,
+    now: input.now,
+  });
+  if (listingText.trim() === "" && searchContext === null) {
     return { instruction_like: false };
   }
   try {
     const result = await withDeadline(deps.clock, deps.config.classifierTimeoutMs, (signal) =>
       deps.classifier.classify(
-        { listingText, productTitle: snapshot?.title ?? "", searchContext: null },
+        { listingText, productTitle: input.snapshot?.title ?? "", searchContext },
         signal,
       ),
     );
