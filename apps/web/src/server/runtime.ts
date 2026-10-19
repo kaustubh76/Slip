@@ -49,6 +49,9 @@ export interface Runtime {
   demo: { desks: Map<string, DemoDesk>; limiter: DeskLimiter };
 }
 
+/** How often a deployment outside the demo looks for loose ends (the demo looks every 5 s). */
+const RESOLVER_EVERY_MS = 30_000;
+
 const KEY = Symbol.for("slip.web.runtime");
 const holder = globalThis as typeof globalThis & { [KEY]?: Promise<Runtime> };
 
@@ -111,14 +114,15 @@ async function build(): Promise<Runtime> {
     perAddress: positiveInt(env["SLIP_DEMO_DESKS_PER_ADDRESS"], 10),
     windowMs: 10 * 60_000,
   });
-  if (demo && env["NODE_ENV"] !== "test") {
-    // A demo has no scheduler, so it finishes its own loose ends: unknown payments, holds left by a
-    // revoke, expiries, setups to poll. Started here, inside the one runtime every server bundle
-    // shares, so it runs once per process whichever bundle builds the runtime first.
+  if (env["NODE_ENV"] !== "test" && env["VERCEL"] === undefined) {
+    // A long-lived process finishes its own loose ends — unknown payments, holds left by a revoke,
+    // expiries, setups to poll — whether it is the demo or a real deployment (D66). Started here,
+    // inside the one runtime every server bundle shares, so it runs once per process whichever
+    // bundle builds the runtime first. Serverless instances live too briefly; they need a scheduler.
     every(
-      DEMO_TIMING.resolverEveryMs,
+      demo ? DEMO_TIMING.resolverEveryMs : RESOLVER_EVERY_MS,
       () => runResolver(deps),
-      (error) => deps.log.error("demo.resolver_failed", { error: String(error) }),
+      (error) => deps.log.error("resolver.failed", { error: String(error) }),
     );
   }
   return { deps, standIns, fakes, demo: { desks: new Map(), limiter } };

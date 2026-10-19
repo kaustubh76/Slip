@@ -656,6 +656,29 @@ Starting answers only on the host of `SLIP_BASE_URL`. A local run that tunnels P
 in must not let tunnel visitors open owners there. Openings are rate-limited per address with the
 demo's limiter; the demo and this path never run in one process.
 
+## D66 · 2026-10-19 · Every long-lived process runs the resolver
+
+The resolver finishes Slip's loose ends:
+- payments PayPal left unknown or pending;
+- holds past their 48 hours;
+- revokes that stopped half-way;
+- setups to poll, and failed webhooks to re-run.
+
+It ran only in the demo, so a real deployment never resolved anything without webhooks. It now
+runs in every long-lived process: every 5 s in the demo and every 30 s otherwise, from the shared
+runtime, so once per process.
+
+It does not run under tests, and not on Vercel: a serverless instance lives too briefly and needs a
+scheduler instead.
+
+With several replicas, every replica resolves. Leases and compare-and-set writes make that safe,
+but it multiplies PayPal reads, which is why the interval stays modest.
+
+Open question: the setup poll (after 5 minutes) uses the same PayPal-Request-Id as the owner's
+return from PayPal. If PayPal keeps its "not approved yet" answer for that id, an approval given
+after the first poll could never complete. Until that is checked against the sandbox, an owner
+should approve within 5 minutes.
+
 ## D67 · 2026-10-19 · The steering check has no input from a Channel3 offer
 
 Verified against the live API with a real key: a Channel3 `ProductOffer` carries exactly `url`,
