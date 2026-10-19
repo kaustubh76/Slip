@@ -12,9 +12,10 @@ async function setup() {
   const seeded = await seedAgent(h);
   const cheap = offer({ price: 10 });
   market(h, "p1", [cheap, offer({ price: 11 })]);
-  // 150 % and $15 over the best offer: rejected as overpaid.
-  const pricey = offer({ price: 25 });
-  market(h, "p3", [offer({ price: 10 }), pricey]);
+  // 20 % and $20 over the best offer: rejected as overpaid. Kept under the implausible-gap
+  // ceiling (D68), above which a gap is treated as a catalogue error and held instead.
+  const pricey = offer({ price: 120 });
+  market(h, "p3", [offer({ price: 100 }), pricey]);
   const buy = async (url: string, productId = "p1") => {
     const result = await runCheckout(h.deps, seeded.apiKey, {
       productId,

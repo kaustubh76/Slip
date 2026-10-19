@@ -2,6 +2,7 @@ import {
   type Attempt,
   formatPct,
   formatUsd,
+  IMPLAUSIBLE_GAP_PCT_HUNDREDTHS,
   type Offer,
   type OfferSnapshot,
   type Policy,
@@ -103,6 +104,11 @@ export function verdict(input: {
       return `${unverified(input.chosenOffer)} ${HELD}`;
     case "R2_TOO_FEW_OFFERS":
       return `No other comparable offer was listed, so the price could not be checked. ${HELD}`;
+    case "R2A_GAP_IMPLAUSIBLE":
+      return (
+        "The cheapest listing for this item is so much cheaper that it may not be the same" +
+        ` item, so the comparison could not be trusted. ${HELD}`
+      );
     case "R4A_NO_CLASSIFIER_ANSWER":
       return `The steering check gave no answer in time. ${HELD}`;
     case "R5_COMMISSION_CONFLICT":
@@ -166,6 +172,13 @@ export function ruleSentence(code: RuleCode, policy: Policy | undefined): string
       return "Slip could not confirm the chosen listing's condition, currency or price.";
     case "R2_TOO_FEW_OFFERS":
       return "Fewer than two comparable listings were found, so the price could not be compared.";
+    case "R2A_GAP_IMPLAUSIBLE":
+      return (
+        "The cheapest listing was more than" +
+        ` ${formatPct(IMPLAUSIBLE_GAP_PCT_HUNDREDTHS)} below this one, which usually means the` +
+        " catalogue has filed two different items together rather than that one store is that" +
+        " much cheaper."
+      );
     case "R3_STEERED":
       return "The listing contained text aimed at shopping agents, and a cheaper listing existed.";
     case "R4_OVERPAID":

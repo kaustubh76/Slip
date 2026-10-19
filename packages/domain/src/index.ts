@@ -84,6 +84,7 @@ export {
   formatUsd,
   gapExceedsPct,
   gapPctHundredthsFloor,
+  IMPLAUSIBLE_GAP_PCT_HUNDREDTHS,
   MAX_PCT_HUNDREDTHS,
   MAX_PRICE_CENTS,
   type PctHundredths,

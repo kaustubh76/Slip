@@ -2,6 +2,7 @@ import {
   type Cents,
   type ClassifierAnswer,
   gapExceedsPct,
+  IMPLAUSIBLE_GAP_PCT_HUNDREDTHS,
   type Policy,
   type RuleCode,
 } from "@slip/domain";
@@ -35,11 +36,18 @@ function noClassifierAnswer(ctx: RuleContext): boolean {
 }
 
 /**
- * Rules R3–R7, in order. The earlier steps (R1, variant, locate, R2) run in `prepareCheck`
+ * Rules R2a–R7, in order. The earlier steps (R1, variant, locate, R2) run in `prepareCheck`
  * because they decide whether there is anything to compare at all. First match wins; R7 is the
  * fallback and always matches.
  */
 export const DECISION_RULES: readonly Rule[] = [
+  {
+    // First, because every rule below it reasons about a gap this one says not to trust. A
+    // purchase here is held, not rejected: the comparison is suspect, the agent's choice is not.
+    code: "R2A_GAP_IMPLAUSIBLE",
+    when: (ctx) =>
+      gapExceedsPct(ctx.gapAbsCents, ctx.bestPriceCents, IMPLAUSIBLE_GAP_PCT_HUNDREDTHS),
+  },
   {
     code: "R3_STEERED",
     when: (ctx) => aboveFlagLine(ctx) && instructionLike(ctx),

@@ -98,6 +98,17 @@ export function formatUsd(value: Cents): string {
   return `$${dollars.toLocaleString("en-US")}.${String(rest).padStart(2, "0")}`;
 }
 
+/**
+ * A gap this wide is more likely bad data than a bargain, and is not an owner's preference to set.
+ *
+ * Slip compares the offers Channel3 files under one product id. Measured on 240 real products
+ * (19 Oct 2026, `study/results/market-study.md`), about one comparable product in fifteen is
+ * mis-filed — one puts a $40 skillet beside a $637 one. Rejecting a purchase against a "cheapest
+ * offer" that is a different item would refuse a correct payment, so above this line the
+ * comparison is treated as untrustworthy and the purchase is held for a person instead (D68).
+ */
+export const IMPLAUSIBLE_GAP_PCT_HUNDREDTHS = pctHundredths(10_000);
+
 /** `500` → `"5%"`, `750` → `"7.5%"`, `1234` → `"12.34%"`. */
 export function formatPct(value: number): string {
   const whole = Math.floor(value / 100);

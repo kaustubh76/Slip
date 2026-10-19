@@ -227,8 +227,10 @@ describe.each<StoreKind>(["memory", "pglite"])("the MCP tools on the %s store", 
     });
     expect(textOf(busy)).toMatch(/^Refused \(BUSY\): /);
 
-    const pricey = [30, 31, 32, 33, 34].map((price) => offer({ price }));
-    market(w, "lamp", [offer({ price: 10 }), ...pricey]);
+    // Each is 30 % or so over the best offer — enough to reject, under the implausible-gap
+    // ceiling (D68) that would otherwise hold them as a suspected catalogue error.
+    const pricey = [130, 131, 132, 133, 134].map((price) => offer({ price }));
+    market(w, "lamp", [offer({ price: 100 }), ...pricey]);
     let last = "";
     for (const chosen of pricey) {
       const result = await checkout(client, {

@@ -1,4 +1,4 @@
-import { DEFAULT_POLICY, policyWith } from "@slip/domain";
+import { DEFAULT_POLICY, policyWith, RULE_OUTCOME } from "@slip/domain";
 import { describe, expect, it } from "vitest";
 import { minutesFromNow, NOW, offer, runCheck, snapshot } from "./__fixtures__/builders.js";
 import { isSnapshotFresh } from "./freshness.js";
@@ -9,6 +9,51 @@ function market(bestPrice: number, chosenPrice: number) {
   const chosen = offer({ price: chosenPrice });
   return { snapshot: snapshot({ offers: [best, chosen] }), chosen: chosen.url };
 }
+
+describe("R2a the implausible gap: the catalogue is doubted, not the agent", () => {
+  it("exactly 100 % below does not trip: a half-price store is possible", () => {
+    // Strictly above, like every other threshold in the check.
+    expect(runCheck(market(100.0, 200.0)).ruleCode).toBe("R4_OVERPAID");
+  });
+
+  it("one cent past 100 % holds instead of rejecting", () => {
+    const check = runCheck(market(100.0, 200.01));
+    expect(check.ruleCode).toBe("R2A_GAP_IMPLAUSIBLE");
+    expect(RULE_OUTCOME[check.ruleCode]).toBe("HELD");
+  });
+
+  it("the skillet from the market study: $39.99 against $637 is held, not rejected", () => {
+    // study/results/market-study.md — Channel3 filed two different pans under one product id.
+    // Rejecting here would refuse a correct purchase of the item the agent actually chose.
+    const check = runCheck(market(39.99, 637.0));
+    expect(check.ruleCode).toBe("R2A_GAP_IMPLAUSIBLE");
+  });
+
+  it("still reports that the overpay rule tripped, so the receipt shows the whole picture", () => {
+    const check = runCheck(market(39.99, 637.0));
+    expect(check.checkResult.ruleCodes).toContain("R2A_GAP_IMPLAUSIBLE");
+    expect(check.checkResult.ruleCodes).toContain("R4_OVERPAID");
+    // The deciding rule comes first (D9).
+    expect(check.checkResult.ruleCodes[0]).toBe("R2A_GAP_IMPLAUSIBLE");
+  });
+
+  it("decides before the steering rule, whose gap it does not trust either", () => {
+    const check = runCheck({
+      ...market(10.0, 500.0),
+      classifier: { instruction_like: true },
+    });
+    expect(check.ruleCode).toBe("R2A_GAP_IMPLAUSIBLE");
+  });
+
+  it("leaves an ordinary market alone, however wide the gap is below the line", () => {
+    // 99.9 %: implausible is a high bar, not a second overpay threshold.
+    expect(runCheck(market(100.0, 199.9)).ruleCode).toBe("R4_OVERPAID");
+  });
+
+  it("never fires when the chosen offer is the cheapest", () => {
+    expect(runCheck(market(637.0, 39.99)).ruleCode).toBe("R7_WITHIN_LIMITS");
+  });
+});
 
 describe("R4 overpaid: both halves must exceed, strictly", () => {
   it("exactly 5 % and exactly $8 does not trip", () => {

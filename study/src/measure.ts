@@ -2,7 +2,9 @@ import { comparableOffers } from "@slip/check";
 import {
   type Cents,
   cents,
+  gapExceedsPct,
   gapPctHundredthsFloor,
+  IMPLAUSIBLE_GAP_PCT_HUNDREDTHS,
   lowerMedian,
   type Offer,
   type ProductOffers,
@@ -51,6 +53,8 @@ export interface ProductMeasure {
   excluded: Excluded;
   /** Cheapest against priciest, when there are two or more comparable offers. */
   spread: Spread | null;
+  /** True when the gap is wide enough that the grouping, not the price, is the likely cause. */
+  suspectGrouping: boolean;
   /** How many comparable offers stated a commission rate, and whether the top payer is dearer. */
   commissionKnown: number;
   topCommissionIsDearer: boolean | null;
@@ -101,12 +105,17 @@ export interface StudyNumbers {
 export const G1_SHARE_PCT_HUNDREDTHS = 6_000;
 
 /**
- * A gap this wide says more about the catalogue than the market. Channel3 groups each merchant's
- * offer under one product id, and where that grouping is wrong — a $40 skillet filed under a $637
- * one — the "cheapest offer" is a different item. Above this line the study reports a product as a
- * *suspected* grouping error rather than a bargain, and says so instead of parading the number.
+ * A gap this wide says more about the catalogue than the market: where Channel3's grouping is
+ * wrong — a $40 skillet filed under a $637 one — the "cheapest offer" is a different item. The
+ * study flags those as *suspected* grouping errors rather than bargains.
+ *
+ * It is the same line, and the same comparison, that the check now holds a purchase at (D68), so
+ * the study reports exactly the population the product treats as untrustworthy.
  */
-export const SUSPECT_GAP_PCT_HUNDREDTHS = 10_000;
+export const SUSPECT_GAP_PCT_HUNDREDTHS = IMPLAUSIBLE_GAP_PCT_HUNDREDTHS;
+
+const isSuspect = (spread: Spread): boolean =>
+  gapExceedsPct(spread.gapCents, spread.cheapest, SUSPECT_GAP_PCT_HUNDREDTHS);
 
 /**
  * Every product in the sample, each counted once. A product found by two queries is one product;
@@ -186,6 +195,7 @@ export function measureOne(product: ProductOffers, foundBy: string): ProductMeas
     comparable: comparable.length,
     excluded,
     spread,
+    suspectGrouping: spread !== null && isSuspect(spread),
     commissionKnown: withCommission.length,
     topCommissionIsDearer: topPaysMore(withCommission),
     domains: comparable.map((offer) => offer.domain),
@@ -257,7 +267,7 @@ export function summarise(measures: readonly ProductMeasure[]): StudyNumbers {
     pcts.length === 0
       ? null
       : (pcts[Math.min(pcts.length - 1, Math.floor(pcts.length * fraction))] ?? null);
-  const sober = spreads.filter((s) => s.gapPctHundredths < SUSPECT_GAP_PCT_HUNDREDTHS);
+  const sober = spreads.filter((spread) => !isSuspect(spread));
   const byQuery = new Map<string, { products: number; withTwoOrMore: number }>();
   for (const measure of measures) {
     const seen = byQuery.get(measure.foundBy) ?? { products: 0, withTwoOrMore: 0 };

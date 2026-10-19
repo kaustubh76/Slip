@@ -709,3 +709,31 @@ Two smaller facts from the same check: every product sampled had `variants: null
 `selectedOptions` is empty and variant matching is a no-op for them; and `max_commission_rate`
 arrives as `0.0` where a merchant pays nothing, which `commissionToBps` correctly reads as a known
 zero rather than a missing one.
+
+## D68 · 2026-10-19 · A gap too wide to believe is held, not rejected
+
+The market study (19 Oct, 240 real products) found that about one comparable product in fifteen is
+mis-filed by Channel3: one product id holds a $39.99 skillet and a $637 one, and two different ids
+both titled "Yoga Mat" carry identical prices. Slip compares only within one product id, so where
+that grouping is wrong the "cheapest comparable offer" is **a different item** — and the agent's
+purchase of the dearer one, which is the item it meant to buy, would be REJECTED against it.
+
+So a new rule, `R2A_GAP_IMPLAUSIBLE`, decides first: when the gap exceeds
+`IMPLAUSIBLE_GAP_PCT_HUNDREDTHS` (100 %, strictly, like every other threshold in the check) the
+comparison is treated as untrustworthy and the purchase is **HELD** for the owner. It sits ahead of
+R3, R4 and R5 because each of those reasons about a gap this rule says not to trust.
+
+Held rather than rejected, because the doubt is about the catalogue and not about the agent. A hold
+moves no money and asks a person; a rejection would refuse a correct payment and tell the owner
+their agent overpaid, which would be false. Both the deciding rule and R4 are recorded in
+`ruleCodes`, so the receipt still shows that the price looked wrong as well as why Slip would not
+act on it.
+
+**Not an owner setting.** The overpay thresholds are the owner's to edit; this one is a data-quality
+guard, and an owner who could lower it could turn a catalogue error back into an automatic refusal.
+The study and the check read the same constant, so the "suspected grouping errors" the report lists
+are exactly the population the product holds.
+
+**What it costs.** A genuine overpay above 100 % is held rather than rejected — slower for the
+owner, but it never pays and never refuses on data this suspect. A property test asserts no market
+with a gap above the line can ever be PAID or REJECTED.

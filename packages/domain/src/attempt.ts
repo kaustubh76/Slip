@@ -11,7 +11,7 @@ import { CentsSchema } from "./money.js";
 import { OfferSchema, type SelectedOption, SelectedOptionSchema } from "./offer.js";
 
 /**
- * Every rule that can decide an attempt. The first twelve are the check's rules in evaluation
+ * Every rule that can decide an attempt. The first thirteen are the check's rules in evaluation
  * order: first match wins; the deciding rule is `ruleCode`, every rule that tripped is
  * `ruleCodes` (D9). `OWNER_APPROVED` is never produced by the check: it marks the follow-up
  * attempt created when an owner approves a hold that had no PayPal order (D21).
@@ -23,6 +23,7 @@ export const RULE_CODES = [
   "CHOSEN_UNAVAILABLE",
   "CHOSEN_UNVERIFIED",
   "R2_TOO_FEW_OFFERS",
+  "R2A_GAP_IMPLAUSIBLE",
   "R3_STEERED",
   "R4_OVERPAID",
   "R4A_NO_CLASSIFIER_ANSWER",
@@ -46,6 +47,7 @@ export const RULE_OUTCOME: Readonly<Record<RuleCode, Outcome>> = {
   CHOSEN_UNAVAILABLE: "REJECTED",
   CHOSEN_UNVERIFIED: "HELD",
   R2_TOO_FEW_OFFERS: "HELD",
+  R2A_GAP_IMPLAUSIBLE: "HELD",
   R3_STEERED: "REJECTED",
   R4_OVERPAID: "REJECTED",
   R4A_NO_CLASSIFIER_ANSWER: "HELD",

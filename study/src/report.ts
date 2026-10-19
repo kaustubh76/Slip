@@ -93,11 +93,7 @@ export function renderReport(input: {
       "| Suspected gap | Cheapest → priciest | Product | Stores |",
       "|---|---|---|---|",
       ...input.measures
-        .filter(
-          (measure) =>
-            measure.spread !== null &&
-            measure.spread.gapPctHundredths >= SUSPECT_GAP_PCT_HUNDREDTHS,
-        )
+        .filter((measure) => measure.spread !== null && measure.suspectGrouping)
         .sort((a, b) => (b.spread?.gapPctHundredths ?? 0) - (a.spread?.gapPctHundredths ?? 0))
         .map((measure) => {
           const spread = measure.spread;

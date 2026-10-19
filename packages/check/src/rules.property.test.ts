@@ -2,6 +2,8 @@ import {
   type ClassifierAnswer,
   DEFAULT_POLICY,
   type Decision,
+  gapExceedsPct,
+  IMPLAUSIBLE_GAP_PCT_HUNDREDTHS,
   type Offer,
   type Policy,
   policyWith,
@@ -107,6 +109,27 @@ describe("check properties", () => {
         const gap = decision.checkResult.gapAbsCents;
         if (gap !== null) {
           expect(gap).toBeGreaterThanOrEqual(0);
+        }
+      }),
+    );
+  });
+
+  it("a gap too wide to believe never takes money, whatever else is true of the market", () => {
+    // The reason this rule exists: Channel3 files two different items under one id about once in
+    // fifteen comparable products (study/results/market-study.md), and the dearer one is then the
+    // item the agent actually meant to buy. No market shaped like that may be rejected or paid on
+    // the strength of that comparison — a person decides (D68).
+    fc.assert(
+      fc.property(arbMarket, (market) => {
+        const decision = run(market);
+        const result = decision.checkResult;
+        const best = result.best?.priceCents ?? null;
+        if (result.gapAbsCents === null || best === null) {
+          return;
+        }
+        if (gapExceedsPct(result.gapAbsCents, best, IMPLAUSIBLE_GAP_PCT_HUNDREDTHS)) {
+          expect(decision.outcome).toBe("HELD");
+          expect(decision.ruleCode).toBe("R2A_GAP_IMPLAUSIBLE");
         }
       }),
     );
