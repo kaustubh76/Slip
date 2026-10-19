@@ -56,7 +56,10 @@ export default defineConfig({
       },
     },
     {
-      command: `pnpm exec next start -p ${OWNER_PORT}`,
+      // A fresh database each time the server starts. It is kept on disk for the run, but the
+      // stand-in PayPal numbers its setups from one again on every start, so a database left by
+      // an earlier run makes the second owner collide with the first on the setup order's id.
+      command: `rm -rf .data/e2e-owner && pnpm exec next start -p ${OWNER_PORT}`,
       url: `${OWNER_BASE}/sign-in`,
       reuseExistingServer: !process.env["CI"],
       timeout: 120_000,
