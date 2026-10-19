@@ -157,6 +157,39 @@ only Anthropic's SDK is wired, so the second provider is one file against `Bench
 
 ---
 
+## Running it for real, not as a demo
+
+`SLIP_DEMO=1` is the shared sandbox: per-visitor desks, a stand-in catalogue, a stand-in approval
+page. Without it, Slip is the thing itself, and these are the parts that only exist there.
+
+**An agent can find products.** `search_products` searches Channel3 when `CHANNEL3_API_KEY` is set
+— it never existed outside the demo before, so an agent had to be handed product ids. Search costs
+a credit where product detail is free, so Slip caches identical queries for five minutes (shared
+across permissions) and allows 60 uncached searches an hour per permission before answering
+`RATE_LIMITED`. Both are per process, so several replicas get several allowances.
+
+**The steering check has something to read.** Slip records what its search showed each agent and
+asks the classifier about that text at checkout (D69), which is what lets R3_STEERED fire on real
+data — a Channel3 offer carries no text of its own (D67). Without `ANTHROPIC_API_KEY` the scripted
+stand-in answers instead, so in production every verdict this path asks for is `NO_ANSWER` → the
+purchase is held for the owner. The path is real; the judgement waits on the key.
+
+**An owner can get back in.** Starting offers an email and a password (`scrypt`, hashed here, no
+mail service involved). It is required where `PAYPAL_ENV=live`, because losing the cookie would
+otherwise lose the kill switch over real money. There is no reset — Slip cannot send email.
+
+**Housekeeping runs.** A long-lived process resolves on a timer; a serverless one needs
+`SLIP_CRON_SECRET` and the `/api/cron/resolve` schedule in `vercel.json`. Without one of those,
+nothing expires a hold or finishes an unknown payment.
+
+**Two combinations are refused outright.** `PAYPAL_ENV=live` with simulated prices, or with a
+simulated steering check, does not boot: real money against an invented market, or a receipt
+claiming a listing was checked when one hard-coded phrase was matched.
+
+Browser coverage follows the same split: `pnpm web:e2e` runs the demo suite on :3100 and
+`owner-start.spec.ts` on :3101 without `SLIP_DEMO`, which is where starting, signing out and coming
+back are tested.
+
 ## Running with the real services
 
 ```sh
