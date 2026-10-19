@@ -638,6 +638,24 @@ example `trail-shoe`), so a run with real PayPal and stand-in prices has somethi
 demo never stocks plain ids: each desk gets its own copies, so no visitor's catalogue reaches
 another.
 
+## D65 · 2026-10-19 · Outside the demo an owner starts with PayPal, and only on Slip's own address
+
+Outside the demo there was no way to become an owner, so PayPal's real approval page could not be
+reached. The sign-in page now offers **Start with PayPal**:
+1. It creates an owner and starts a permission at PayPal.
+2. It starts the session.
+3. It sends the browser to PayPal's approval link.
+
+PayPal returns the owner to the mandate's return route, which activates the permission.
+
+There is no returning-owner sign-in yet: the session cookie is the only way back. That is
+acceptable in the sandbox, so starting is refused where PayPal is live. An owner who lost the
+cookie would lose the kill switch over real money.
+
+Starting answers only on the host of `SLIP_BASE_URL`. A local run that tunnels PayPal's webhooks
+in must not let tunnel visitors open owners there. Openings are rate-limited per address with the
+demo's limiter; the demo and this path never run in one process.
+
 ## D67 · 2026-10-19 · The steering check has no input from a Channel3 offer
 
 Verified against the live API with a real key: a Channel3 `ProductOffer` carries exactly `url`,
