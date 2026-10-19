@@ -32,7 +32,9 @@
     "web:e2e": "pnpm --filter @slip/web e2e",
     "demo:agent": "tsx apps/web/scripts/demo-agent.ts",
     "paypal:webhook": "tsx apps/web/scripts/paypal-webhook.ts",
-    "paypal:vault-id": "tsx apps/web/scripts/paypal-vault-id.ts"
+    "paypal:vault-id": "tsx apps/web/scripts/paypal-vault-id.ts",
+    "study:sample": "tsx --conditions=@slip/source study/src/bin/sample.ts",
+    "study:report": "tsx --conditions=@slip/source study/src/bin/report.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
