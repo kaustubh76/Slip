@@ -1,5 +1,4 @@
 import type { ReceiptView } from "@slip/receipt";
-import { Fragment } from "react";
 import { type LinkLike, PlainLink } from "./Link.js";
 import { stampOf } from "./ReceiptSlip.js";
 import { Stamp } from "./Stamp.js";

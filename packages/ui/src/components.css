@@ -453,6 +453,58 @@
     font-family: var(--slip-font-mono);
   }
 
+  /* ---------- how long is left to decide ---------- */
+
+  .slip-countdown {
+    display: grid;
+    gap: 4px;
+    margin: 12px 0 0;
+  }
+
+  .slip-countdown-track {
+    display: block;
+    block-size: 4px;
+    background: var(--slip-edge);
+    border-radius: var(--slip-radius-control);
+    overflow: hidden;
+  }
+
+  .slip-countdown-bar {
+    display: block;
+    block-size: 100%;
+    background: var(--slip-stamp-held);
+  }
+
+  .slip-countdown-words {
+    font-family: var(--slip-font-mono);
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--slip-ink-faint);
+  }
+
+  .slip-countdown[data-spent] .slip-countdown-words {
+    color: var(--slip-stamp-rejected);
+  }
+
+  /* Waiting purchases sit side by side where there is room; each keeps its own decision. */
+  .slip-holds {
+    display: grid;
+    gap: 24px;
+    align-items: start;
+    inline-size: 100%;
+    justify-self: stretch;
+  }
+
+  @media (min-width: 1100px) {
+    .slip-holds {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .slip-holds > .slip-sheet {
+      max-inline-size: none;
+    }
+  }
+
   /*
    * The day a run of receipts opens, written inside its first row and spanning every column, so
    * the roll remains a list whose items are all receipts.

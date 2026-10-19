@@ -1,6 +1,6 @@
 "use client";
 
-import { LiveBadge, ReceiptSlip, Roll, useHolds } from "@slip/ui";
+import { Countdown, LiveBadge, ReceiptSlip, Roll, useClock, useHolds } from "@slip/ui";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import { HoldDecision } from "../components/HoldDecision";
@@ -12,8 +12,9 @@ import { receiptHref } from "./links";
  * decided most recently. A hold whose dialog is open stays on screen even if it is decided
  * elsewhere meanwhile, so the dialog can say so instead of disappearing.
  */
-export function HoldsView(props: { token: string }) {
+export function HoldsView(props: { token: string; serverNow: number }) {
   const holds = useHolds();
+  const now = useClock(1_000, props.serverNow);
   const [open, setOpen] = useState<ReadonlySet<string>>(new Set());
   const watch = useCallback(
     (id: string) => (isOpen: boolean) =>
@@ -58,11 +59,16 @@ export function HoldsView(props: { token: string }) {
           </p>
         </article>
       ) : (
-        shown.map(({ view, agent }) => (
-          <ReceiptSlip key={view.receiptId} view={view} agentName={agent.name}>
-            <HoldDecision view={view} onOpenChange={watch(view.receiptId)} />
-          </ReceiptSlip>
-        ))
+        <div className="slip-holds">
+          {shown.map(({ view, agent }) => (
+            <ReceiptSlip key={view.receiptId} view={view} agentName={agent.name}>
+              {view.hold === null || view.hold.status !== "PENDING" ? null : (
+                <Countdown expiresAt={view.hold.expiresAt} now={now} />
+              )}
+              <HoldDecision view={view} onOpenChange={watch(view.receiptId)} />
+            </ReceiptSlip>
+          ))}
+        </div>
       )}
       {past.length === 0 ? null : (
         <section aria-labelledby="decided-title">

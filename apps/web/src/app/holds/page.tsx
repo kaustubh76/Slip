@@ -18,7 +18,7 @@ export default async function Holds() {
   }
   return (
     <SlipHydrate state={seedSlipQueries({ holds })}>
-      <HoldsView token={token} />
+      <HoldsView token={token} serverNow={Date.now()} />
     </SlipHydrate>
   );
 }
