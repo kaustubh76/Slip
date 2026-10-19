@@ -351,7 +351,10 @@
     display: grid;
     gap: 24px;
     justify-items: start;
-    inline-size: 100%;
+    /*
+     * No `inline-size`: a block already fills its container, and asking for 100% would add the
+     * side padding on top of it, since nothing here sets border-box sizing.
+     */
     max-inline-size: var(--slip-page-max);
     margin-inline: auto;
   }
@@ -1202,6 +1205,9 @@
       order: -1;
       flex-basis: 100%;
       box-sizing: border-box;
+      /* Signed in there are five controls here, which together are wider than a phone. */
+      flex-wrap: wrap;
+      gap: 4px 12px;
       justify-content: flex-end;
       padding-block: 8px 0;
     }
