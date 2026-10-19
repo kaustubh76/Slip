@@ -1,7 +1,7 @@
+import type { Channel3Search, SearchOutcome } from "@slip/offers/search";
 import { describe, expect, it } from "vitest";
 import type { SampleQuery } from "./queries.js";
 import { runSample } from "./sample.js";
-import type { Channel3Search, SearchOutcome } from "./search.js";
 import { hashOf, isIntact, type Snapshot } from "./snapshots.js";
 
 /** The sampler spends the owner's credits, so what it does with a refusal is the point. */

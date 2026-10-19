@@ -1,5 +1,5 @@
+import type { Channel3Search } from "@slip/offers/search";
 import type { SampleQuery } from "./queries.js";
-import type { Channel3Search } from "./search.js";
 import { hashOf, type Manifest, type Snapshot } from "./snapshots.js";
 
 /**

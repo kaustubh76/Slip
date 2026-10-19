@@ -46,7 +46,7 @@ const maybe = z.unknown().optional();
 
 const PriceSchema = z.object({ price: maybe, currency: maybe }).loose();
 
-const RawOfferSchema = z
+export const RawOfferSchema = z
   .object({
     url: maybe,
     domain: maybe,
@@ -70,7 +70,7 @@ const VariantsSchema = z
   .loose();
 
 /** The envelope must be a product with a list of offers; anything else is not an answer. */
-const ProductSchema = z
+export const ProductSchema = z
   .object({
     id: maybe,
     title: maybe,
@@ -171,7 +171,7 @@ function toProductOffers(
 ): ProductOffers {
   const offers: Offer[] = [];
   for (const candidate of product.offers) {
-    const offer = toOffer(candidate);
+    const offer = channel3Offer(candidate);
     if (offer !== null) {
       offers.push(offer);
     }
@@ -190,8 +190,11 @@ function toProductOffers(
  * One merchant's offer, or null when it cannot take part in a price comparison. A missing URL,
  * domain or availability is not something to guess: an offer Slip kept with invented values could
  * become the "cheapest" one it tells an agent to buy.
+ *
+ * Exported because `./search` must read an offer exactly as a checkout does — one mapping, so a
+ * search can never show an agent a price the check would then read differently.
  */
-function toOffer(raw: z.infer<typeof RawOfferSchema>): Offer | null {
+export function channel3Offer(raw: z.infer<typeof RawOfferSchema>): Offer | null {
   const url = typeof raw.url === "string" ? raw.url.trim() : "";
   const domain = typeof raw.domain === "string" ? raw.domain.trim().toLowerCase() : "";
   if (url === "" || domain === "" || !isHttpUrl(url)) {

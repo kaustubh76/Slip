@@ -8,9 +8,9 @@
 import { mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createChannel3Search } from "@slip/offers/search";
 import { RESULTS_PER_QUERY, SAMPLE_QUERIES } from "../queries.js";
 import { runSample } from "../sample.js";
-import { createChannel3Search } from "../search.js";
 import { SNAPSHOT_DIR, writeManifest, writeSnapshot } from "../snapshots.js";
 
 const apiKey = process.env["CHANNEL3_API_KEY"]?.trim();
