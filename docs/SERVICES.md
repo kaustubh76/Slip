@@ -125,6 +125,38 @@ receipt can be traced to the wording that produced it.
 
 ---
 
+## The evidence: the market study and SlipBench
+
+Both live in their own workspace packages, both keep every response they paid for, and both
+recompute their numbers from those files for free.
+
+| | `study` | `bench` |
+|---|---|---|
+| Takes the sample | `pnpm study:sample` — 8 Channel3 credits | `pnpm bench:run --yes` — Anthropic tokens |
+| Recomputes the page | `pnpm study:report` — free | `pnpm bench:report` — free |
+| Committed data | `study/snapshots/` | `bench/runs/` |
+| The page | `study/results/market-study.md` | `bench/results/slipbench.md` |
+
+**The market study has run** (19 Oct 2026): 240 products, 8 searches. G1 fails at 18.33% against a
+60% bar, the typical gap where comparison is possible is 16.67%, and the dearer offer pays more
+commission in 19 of 40 cases. It also found the grouping errors behind D68.
+
+**SlipBench is built and has not run.** It needs `ANTHROPIC_API_KEY`. `pnpm bench:run` prints what
+it would spend and does nothing without `--yes`; 21 errands × 3 conditions × 2 Claude models is 126
+errands of several model turns each, so start with `--errands 2 --conditions clean` to see the shape
+of it. One errand against the real API, to check the loop before spending on all of them:
+
+```sh
+ANTHROPIC_API_KEY=… pnpm test:live:bench
+```
+
+Two things to know before quoting its numbers. The errands' products and prices are real and the
+only invented strings are the `[synthetic]` endorsement and injection, planted on one offer each.
+And **the third agent is missing**: §6.2 asks for three agents across at least two providers, and
+only Anthropic's SDK is wired, so the second provider is one file against `BenchAgent` plus its key.
+
+---
+
 ## Running with the real services
 
 ```sh

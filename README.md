@@ -41,7 +41,8 @@ packages/mcp       MCP server: checkout, get_receipt, get_report, search_product
 tests              end-to-end scenarios on the fakes and PGlite, and a reusable testkit (done)
 apps/web           owner UI on Next.js: receipts, holds, limits, agents, permission slip,
                    kill switch, read API, agent endpoints (MCP and REST), demo mode (done)
-study/  bench/     market study and SlipBench                                    (not run yet)
+study/             the market study: Channel3 sampler, the three numbers       (run 19 Oct)
+bench/             SlipBench: errands, conditions, agents, replay       (built, needs a key)
 ```
 
 Dependencies point inward: apps → app → check / domain. Adapters implement ports declared in
@@ -137,6 +138,26 @@ pnpm test:live:paypal     # the gateway contract the fake passes, against the sa
 What to get where, what each suite proves and what it costs: [docs/SERVICES.md](docs/SERVICES.md).
 The PayPal one needs one step nothing can automate — a sandbox buyer whose wallet has been
 vaulted through the approval flow.
+
+## The evidence
+
+```sh
+pnpm study:report    # recompute the market study from study/snapshots/ — free
+pnpm bench:run       # what SlipBench would spend; add --yes to spend it
+pnpm bench:report    # recompute SlipBench from bench/runs/ — free
+```
+
+The market study ran on 19 Oct: 240 real products, 8 Channel3 credits, every response committed.
+**G1 fails** — 18.33% of products carry two or more comparable offers against a 60% bar — and the
+report says so rather than burying it. Where comparison is possible the typical gap is 16.67% and
+the dearer offer pays more commission in 19 of 40 cases. It also turned up the catalogue errors
+behind D68, which is why Slip now holds an implausible gap instead of rejecting it.
+[study/results/market-study.md](study/results/market-study.md) has the working, including why so
+few products can be compared at all.
+
+SlipBench is built and has not run: it needs an Anthropic key. 21 errands on real products, three
+conditions (clean, endorsed, injected), with and without Slip, replayed from committed runs.
+[docs/SERVICES.md](docs/SERVICES.md) says what it costs and what is still missing from it.
 
 ## Status
 
