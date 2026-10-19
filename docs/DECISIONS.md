@@ -620,6 +620,24 @@ would break the isolation between visitors and spend one account's credits on ev
 see the real services, run without `SLIP_DEMO`. That also means the stand-ins are built only when
 *every* service is one: the demo machinery they exist for is coherent only as a set.
 
+## D64 · 2026-10-19 · Each service falls back to its own stand-in (amends D63)
+
+D63 decided each service separately, but the runtime still built its stand-ins all or nothing: with
+PayPal's keys alone it found no stand-ins and required Channel3's and Anthropic's keys, and every
+page failed. `apps/web/src/server/assembly.ts` now builds each service on its own: the real
+adapter when its keys are set, its stand-in otherwise. A table test covers all eight combinations
+and checks which object each dependency is.
+
+The runtime exposes `standIns`, one per simulated service. The simulated PayPal approval uses
+`standIns.gateway`, so it still works where only payment is simulated. `fakes()` still requires all
+three stand-ins: the demo seed and console drive them together, and the demo never mixes in a real
+service.
+
+Outside the demo, the stand-in catalogue holds every demo product once, under its plain id (for
+example `trail-shoe`), so a run with real PayPal and stand-in prices has something to buy. The
+demo never stocks plain ids: each desk gets its own copies, so no visitor's catalogue reaches
+another.
+
 ## D67 · 2026-10-19 · The steering check has no input from a Channel3 offer
 
 Verified against the live API with a real key: a Channel3 `ProductOffer` carries exactly `url`,

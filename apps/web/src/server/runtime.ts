@@ -10,20 +10,13 @@ import {
 } from "@slip/app";
 import { createPgStore, openDatabase, VaultCipher } from "@slip/db";
 import { createMemoryStore } from "@slip/db/memory";
-import type { OffersSource, PaymentGateway, SteeringClassifier, Store } from "@slip/domain";
-import { createChannel3Offers } from "@slip/offers";
-import { FakeOffersSource } from "@slip/offers/fake";
-import { createPayPalGateway, PAYPAL_LIVE_BASE_URL, PAYPAL_SANDBOX_BASE_URL } from "@slip/paypal";
-import { FakePaymentGateway } from "@slip/paypal/fake";
-import { createClaudeSteeringClassifier } from "@slip/steering";
-import { FakeSteeringClassifier } from "@slip/steering/fake";
+import type { Store } from "@slip/domain";
+import type { FakeSteeringClassifier } from "@slip/steering/fake";
+import { assembleServices, type StandIns } from "./assembly";
 import { isDemo } from "./demo";
-import { INJECTION_PHRASE } from "./demo/catalogue";
 import type { DemoFakes } from "./demo/desk";
 import { type DemoDesk, DeskLimiter } from "./demo/desks";
-import { DemoOffers } from "./demo/offers";
-import { DemoPayPal } from "./demo/paypal";
-import { DEMO_TIMING, demoConfig, demoLatencyMs, every } from "./demo/timing";
+import { DEMO_TIMING, demoConfig, every } from "./demo/timing";
 import { resolveServices, type Services } from "./services";
 
 /**
@@ -32,11 +25,11 @@ import { resolveServices, type Services } from "./services";
  * instance hangs off `globalThis` rather than a module variable.
  *
  * Each of Channel3, PayPal and the steering classifier is the real adapter when its keys are set
- * and the in-memory stand-in otherwise, service by service (`./services`, D63). The stand-ins are
- * wrapped so many visitors can share one process: outcomes, outages and call logs are kept per desk
- * (`DemoPayPal`, `DemoOffers`). That is why `fakes` is exposed: the demo seed and console stock a
- * catalogue and approve a PayPal setup, which only a fake can do — and which is why the shared demo
- * always runs on the stand-ins.
+ * and the in-memory stand-in otherwise, service by service (`./assembly`, D63, D64). The stand-ins
+ * are wrapped so many visitors can share one process: outcomes, outages and call logs are kept per
+ * desk (`DemoPayPal`, `DemoOffers`). `standIns` exposes each one for the simulated PayPal page;
+ * `fakes` exposes the whole set, which the demo seed and console need — and which is why the shared
+ * demo always runs on the stand-ins.
  */
 
 /** What this process really talks to. Read at import time, so a page can say so without awaiting. */
@@ -48,7 +41,9 @@ export interface Fakes extends DemoFakes {
 
 export interface Runtime {
   deps: AppDeps;
-  /** Null when any service here is the real one: there is then nothing to stand in for. */
+  /** The stand-in behind each simulated service; null where the service is real. */
+  standIns: StandIns;
+  /** All three stand-ins, or null when any service here is the real one. */
   fakes: Fakes | null;
   /** Demo desks opened by this process, by mandate, and the limits on opening more. */
   demo: { desks: Map<string, DemoDesk>; limiter: DeskLimiter };
@@ -88,18 +83,24 @@ async function build(): Promise<Runtime> {
     ...(env["SLIP_BASE_URL"] ? { publicBaseUrl: env["SLIP_BASE_URL"] } : {}),
     pricesSource: SERVICES.prices === "channel3" ? "channel3" : "simulated",
   });
-  const everythingSimulated =
-    SERVICES.prices === "simulated" &&
-    SERVICES.payment === "simulated" &&
-    SERVICES.steering === "simulated";
-  const fakes: Fakes | null = everythingSimulated
-    ? standIns({ store, clock, demo, env, publicBaseUrl: config.publicBaseUrl })
-    : null;
+  const services = assembleServices({
+    services: SERVICES,
+    env,
+    store,
+    clock,
+    demo,
+    publicBaseUrl: config.publicBaseUrl,
+  });
+  const { standIns } = services;
+  const fakes: Fakes | null =
+    standIns.offers !== null && standIns.gateway !== null && standIns.classifier !== null
+      ? { offers: standIns.offers, gateway: standIns.gateway, classifier: standIns.classifier }
+      : null;
   const deps: AppDeps = {
     store,
-    offers: fakes?.offers ?? realOffers(env),
-    gateway: fakes?.gateway ?? realGateway(env, config.publicBaseUrl),
-    classifier: fakes?.classifier ?? realClassifier(env),
+    offers: services.offers,
+    gateway: services.gateway,
+    classifier: services.classifier,
     clock,
     ids: randomIds,
     log: env["NODE_ENV"] === "test" ? silentLogger : jsonLogger,
@@ -120,65 +121,7 @@ async function build(): Promise<Runtime> {
       (error) => deps.log.error("demo.resolver_failed", { error: String(error) }),
     );
   }
-  return { deps, fakes, demo: { desks: new Map(), limiter } };
-}
-
-/**
- * The stand-ins, built only where every service is one. A deployment with some real and some
- * simulated keeps no stand-in at all: the demo machinery those objects exist for (per-desk
- * catalogues, a hand-driven PayPal approval) is only coherent when the whole set is simulated.
- */
-function standIns(input: {
-  store: Store;
-  clock: AppDeps["clock"];
-  demo: boolean;
-  env: NodeJS.ProcessEnv;
-  publicBaseUrl: string;
-}): Fakes {
-  const classifier = new FakeSteeringClassifier();
-  // The demo's steered listing carries this note; the stand-in classifier calls it instruction-like.
-  classifier.flagWhenListingIncludes(INJECTION_PHRASE);
-  return {
-    offers: new DemoOffers(new FakeOffersSource()),
-    gateway: new DemoPayPal({
-      inner: new FakePaymentGateway({ clock: input.clock }),
-      store: input.store,
-      clock: input.clock,
-      latencyMs: input.demo ? demoLatencyMs(input.env["SLIP_DEMO_LATENCY_MS"]) : 0,
-      publicBaseUrl: input.publicBaseUrl,
-    }),
-    classifier,
-  };
-}
-
-function realOffers(env: NodeJS.ProcessEnv): OffersSource {
-  return createChannel3Offers({ apiKey: required(env, "CHANNEL3_API_KEY") });
-}
-
-function realGateway(env: NodeJS.ProcessEnv, publicBaseUrl: string): PaymentGateway {
-  return createPayPalGateway({
-    clientId: required(env, "PAYPAL_CLIENT_ID"),
-    clientSecret: required(env, "PAYPAL_CLIENT_SECRET"),
-    webhookId: required(env, "PAYPAL_WEBHOOK_ID"),
-    baseUrl: SERVICES.payment === "live" ? PAYPAL_LIVE_BASE_URL : PAYPAL_SANDBOX_BASE_URL,
-    brandName: new URL(publicBaseUrl).hostname,
-  });
-}
-
-function realClassifier(env: NodeJS.ProcessEnv): SteeringClassifier {
-  return createClaudeSteeringClassifier({ apiKey: required(env, "ANTHROPIC_API_KEY") });
-}
-
-/**
- * A service is only ever built because `resolveServices` saw its keys, so a missing one here is a
- * bug rather than a deployment mistake — but it must still not reach a payment as an empty string.
- */
-function required(env: NodeJS.ProcessEnv, name: string): string {
-  const value = env[name]?.trim();
-  if (value === undefined || value === "") {
-    throw new Error(`${name} is needed for this deployment's services but is not set`);
-  }
-  return value;
+  return { deps, standIns, fakes, demo: { desks: new Map(), limiter } };
 }
 
 function positiveInt(value: string | undefined, fallback: number): number {

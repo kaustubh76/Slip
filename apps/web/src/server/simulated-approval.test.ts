@@ -24,7 +24,14 @@ describe("the simulated PayPal approval", () => {
     expect(approveUrl.startsWith("http://localhost:3100/demo/paypal/approve/")).toBe(true);
     const found = await findSimulatedSetup(world.deps, ownerId, reference);
     expect(found).toMatchObject({ status: "pending", mandateId });
-    expect(await approveSimulatedSetup(world.deps, world.fakes, ownerId, reference)).toMatchObject({
+    expect(
+      await approveSimulatedSetup(
+        world.deps,
+        { gateway: world.fakes.gateway, stock: world.fakes.offers },
+        ownerId,
+        reference,
+      ),
+    ).toMatchObject({
       status: "pending",
       mandateId,
     });
@@ -51,7 +58,14 @@ describe("the simulated PayPal approval", () => {
     expect(await findSimulatedSetup(world.deps, mine.ownerId, reference)).toEqual({
       status: "not-found",
     });
-    expect(await approveSimulatedSetup(world.deps, world.fakes, mine.ownerId, reference)).toEqual({
+    expect(
+      await approveSimulatedSetup(
+        world.deps,
+        { gateway: world.fakes.gateway, stock: world.fakes.offers },
+        mine.ownerId,
+        reference,
+      ),
+    ).toEqual({
       status: "not-found",
     });
     expect(await findSimulatedSetup(world.deps, mine.ownerId, "SETUP-999999")).toEqual({

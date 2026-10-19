@@ -2,8 +2,9 @@
 
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { isDemo } from "../../server/demo";
 import { requireOwner } from "../../server/owner";
-import { fakes, runtime, SERVICES } from "../../server/runtime";
+import { runtime, SERVICES } from "../../server/runtime";
 import { approveSimulatedSetup, findSimulatedSetup } from "../../server/simulated-approval";
 
 const ReferenceSchema = z.string().trim().min(1).max(100);
@@ -20,8 +21,16 @@ export async function approveOnSimulatedPayPal(form: FormData): Promise<void> {
     redirect("/mandate?setup=not_found");
   }
   const { ownerId } = await requireOwner();
-  const { deps } = await runtime();
-  const result = await approveSimulatedSetup(deps, await fakes(), ownerId, reference);
+  const { deps, standIns } = await runtime();
+  if (standIns.gateway === null) {
+    redirect("/mandate?setup=not_found");
+  }
+  const result = await approveSimulatedSetup(
+    deps,
+    { gateway: standIns.gateway, stock: isDemo() ? standIns.offers : null },
+    ownerId,
+    reference,
+  );
   redirect(
     result.status === "not-found"
       ? "/mandate?setup=not_found"
