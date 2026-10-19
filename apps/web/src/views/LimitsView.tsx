@@ -42,7 +42,6 @@ export function LimitsView(props: { token: string }) {
   }
   // The wire carries plain numbers; the rules take the same numbers.
   const policy = current as Policy;
-  const example = workedExample(policy);
   // What the form holds right now, falling back to the version in force before anything is typed.
   const drafted = draft === null ? policy : policyFrom(draft);
   const trialExample = workedExample(drafted, {
@@ -58,9 +57,7 @@ export function LimitsView(props: { token: string }) {
             <LiveBadge initialToken={props.token} />
           </header>
           <h1 className="slip-title">What your agents may do</h1>
-          <p className="slip-sentence" data-slip-outcome={example.outcome}>
-            {example.sentence}
-          </p>
+          {/* What these numbers would do is said once, beside the drawing of it. */}
           <p className="slip-caption">{capSentence(policy)}</p>
           <hr className="slip-rule" />
           <LimitsForm
