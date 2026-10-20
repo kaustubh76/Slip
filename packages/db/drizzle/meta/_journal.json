@@ -43,6 +43,13 @@
       "when": 1792427828622,
       "tag": "0005_wakeful_randall",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792472301232,
+      "tag": "0006_jazzy_gauntlet",
+      "breakpoints": true
     }
   ]
 }

@@ -1,4 +1,4 @@
-import { RULE_CODES } from "@slip/domain";
+import { OUTCOMES, RULE_CODES, RULE_OUTCOME } from "@slip/domain";
 import { sql } from "drizzle-orm";
 import {
   bigint,
@@ -42,6 +42,22 @@ export const PAYMENT_STATUS_SQL = inList([
 ]);
 
 const RULE_CODE_SQL = inList(RULE_CODES);
+
+/**
+ * The outcome each rule code must carry, as CASE branches built from the domain's own map rather
+ * than written out by hand. A rule code left out of the CASE makes it `null`, `outcome = null` is
+ * `null`, and a `null` CHECK **passes** — so a hand-written list does not fail loudly when a rule
+ * is added, it just stops enforcing that rule. That is what happened to `R2A_GAP_IMPLAUSIBLE`
+ * between D68 and D74; generating the branches is what stops it happening again.
+ */
+const RULE_OUTCOME_SQL = sql.raw(
+  OUTCOMES.map(
+    (outcome) =>
+      `when rule_code in (${RULE_CODES.filter((code) => RULE_OUTCOME[code] === outcome)
+        .map((code) => `'${code}'`)
+        .join(", ")}) then '${outcome}'`,
+  ).join(" "),
+);
 
 export const owners = pgTable("owners", {
   id: uuid("id").primaryKey(),
@@ -224,14 +240,7 @@ export const attempts = pgTable(
       sql`cardinality(${t.ruleCodes}) >= 1 and ${t.ruleCodes} <@ array[${RULE_CODE_SQL}]::text[]`,
     ),
     check("attempts_rule_first", sql`${t.ruleCode} = ${t.ruleCodes}[1]`),
-    check(
-      "attempts_outcome_matches_rule",
-      sql`${t.outcome} = case
-        when ${t.ruleCode} in ('R7_WITHIN_LIMITS', 'OWNER_APPROVED') then 'PAID'
-        when ${t.ruleCode} in ('VARIANT_MISMATCH', 'OFFER_NOT_FOUND', 'CHOSEN_UNAVAILABLE', 'R3_STEERED', 'R4_OVERPAID') then 'REJECTED'
-        when ${t.ruleCode} in ('R1_STALE_SNAPSHOT', 'CHOSEN_UNVERIFIED', 'R2_TOO_FEW_OFFERS', 'R4A_NO_CLASSIFIER_ANSWER', 'R5_COMMISSION_CONFLICT', 'R6_ABOVE_ORDER_CAP') then 'HELD'
-      end`,
-    ),
+    check("attempts_outcome_matches_rule", sql`${t.outcome} = case ${RULE_OUTCOME_SQL} end`),
     check(
       "attempts_owner_approved_origin",
       sql`${t.ruleCode} <> 'OWNER_APPROVED' or ${t.origin} = 'OWNER_APPROVAL'`,

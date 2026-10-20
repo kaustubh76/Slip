@@ -7,6 +7,7 @@ import {
   PAYMENT_STATUSES,
   PAYMENT_TRANSITIONS,
   RULE_CODES,
+  RULE_OUTCOME,
   type Store,
 } from "@slip/domain";
 import { eq, sql } from "drizzle-orm";
@@ -104,6 +105,40 @@ export function describeSqlGuards(label: string, make: () => Promise<SqlHarness>
       expect(definition).not.toBe("");
       for (const code of RULE_CODES) {
         expect(definition, `${code} is missing from attempts_rule_codes_valid`).toContain(code);
+      }
+    });
+
+    it("the outcome check agrees with the domain about every rule, one rule at a time", async () => {
+      // The sibling of the test above, and the one that was missed. A rule code absent from this
+      // constraint's CASE does not fail loudly: the CASE yields null, `outcome = null` is null,
+      // and a null CHECK passes — so the database quietly stops enforcing that rule's outcome.
+      // Reading the branches back one code at a time is the only way to see it (D74).
+      const [row] = await exec(
+        `select pg_get_constraintdef(oid) as def from pg_constraint
+         where conname = 'attempts_outcome_matches_rule'`,
+      );
+      const definition = String(row?.["def"] ?? "");
+      expect(definition).not.toBe("");
+      // Postgres prints the CASE back in its own words — `in (…)` becomes `= ANY (ARRAY[…])` —
+      // so the branches are read by shape rather than matched literally.
+      const decides = new Map<string, string>();
+      for (const branch of definition.split(/\bWHEN\b/).slice(1)) {
+        const outcome = /\bTHEN\s+'(PAID|REJECTED|HELD)'/.exec(branch)?.[1];
+        if (outcome === undefined) {
+          continue;
+        }
+        for (const [, code] of branch
+          .slice(0, branch.indexOf("THEN"))
+          .matchAll(/'([A-Z0-9_]+)'/g)) {
+          if (code !== undefined) {
+            decides.set(code, outcome);
+          }
+        }
+      }
+      for (const code of RULE_CODES) {
+        expect(decides.get(code), `${code} is in no branch of attempts_outcome_matches_rule`).toBe(
+          RULE_OUTCOME[code],
+        );
       }
     });
 
