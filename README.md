@@ -133,7 +133,12 @@ Each adapter also has a live suite that skips itself until its keys exist:
 pnpm test:live:channel3   # the key, the path, and offers the domain accepts
 pnpm test:live:steering   # the prompt's boundary: injected text flagged, loud sales copy not
 pnpm test:live:paypal     # the gateway contract the fake passes, against the sandbox
+pnpm test:live:bench      # SlipBench's grader against a real model answer
 ```
+
+Only one case anywhere spends a Channel3 credit, and it is opt-in twice: a key, then
+`CHANNEL3_LIVE_SEARCH=1`. A deployment that will run on serverless also needs `SLIP_CRON_SECRET`,
+because nothing resolves holds or unknown payments there without the schedule in `vercel.json`.
 
 What to get where, what each suite proves and what it costs: [docs/SERVICES.md](docs/SERVICES.md).
 The PayPal one needs one step nothing can automate — a sandbox buyer whose wallet has been
@@ -161,10 +166,17 @@ conditions (clean, endorsed, injected), with and without Slip, replayed from com
 
 ## Status
 
-Done: the check, the domain model, persistence, every use case, the owner UI, the MCP server, and
-the adapters for all three outside services. What is left is to run each live suite against a real
-key — the offline tests are written from PayPal's and Channel3's own documented payloads, which is
-not the same as traffic from a live account.
+Done: the check, the domain model, persistence, every use case, the owner UI, the MCP server, the
+adapters for all three outside services, and the wiring a deployment outside the demo needs — an
+agent that can find products, a steering check with something to read, a resolver that runs where
+there is no long-lived process, and a way back in for an owner whose browser forgot the session.
+
+Channel3 is verified against a live key. What is left needs a key or an account that cannot be
+issued from here: the Anthropic key SlipBench and the steering suite wait on, an OpenAI key for the
+benchmark's second provider, a sandbox buyer whose wallet has been vaulted through PayPal's own
+approval flow, and `pnpm test:pg` against a real Postgres — PGlite runs the identical contract and
+migrations, so only the concurrency suite is missed. The offline tests are written from PayPal's and
+Channel3's own documented payloads, which is not the same as traffic from a live account.
 
 - **Checkout** — key, ACTIVE mandate and request checked; one checkout per agent and product at a
   time; repeats replayed rather than paid twice; prices refreshed from Channel3 within their
@@ -176,11 +188,24 @@ not the same as traffic from a live account.
   in one step only at the price shown. Declining releases the reservation.
 - **Resolver** — expires holds, finishes half-done revokes, re-sends orders, captures and voids
   with their original request ids within 30 minutes, then looks them up; releases authorizations
-  that arrive after their hold closed; polls mandate setups; re-runs webhooks that failed.
+  that arrive after their hold closed; polls mandate setups; re-runs webhooks that failed. A
+  long-lived process runs it on a timer; a serverless one runs the same pass from
+  `/api/cron/resolve` every five minutes, authorised by `SLIP_CRON_SECRET`.
 - **Webhooks** — verified, stored once, and applied through the same state machines, so late,
   repeated and out-of-order deliveries converge.
 - **Mandates and agents** — setup at PayPal, the kill switch, limit changes as new policy
   versions, API keys shown once and stored hashed, and agent-scoped receipts and report card.
+- **Search, and what an agent read** — outside the demo `search_products` searches Channel3 itself,
+  shows the agent each product's own words, and records what it showed per agent and product. The
+  checkout that follows hands that text to the steering check, which on real catalogue data is the
+  only thing there is to judge: a Channel3 offer carries no text of its own (D67, D69). Cached five
+  minutes, with a ceiling of 60 uncached searches an hour per permission.
+- **Getting in, and back in** — an owner starts with PayPal and may set an email and a password,
+  which is the only way back in if the browser forgets the session; where PayPal is live it is
+  required, because losing the cookie would mean losing the kill switch over real money. There is no
+  reset, because Slip sends no mail, and the sign-in says one thing whether the address or the
+  password was wrong (D71). A deployment that would move real money against invented prices or a
+  scripted steering stand-in refuses to start at all.
 
 Every write that can move money is atomic, fenced by the checkout lease, refused once the mandate
 is revoked, and guarded twice: by shared pure rules in code and by constraints and triggers in
