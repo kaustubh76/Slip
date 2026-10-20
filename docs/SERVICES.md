@@ -72,8 +72,13 @@ those values. Only the search case spends a credit, and only when asked for.
    **Vault** under *Accept payments → Advanced options*. Without it, vaulting a wallet is refused.
 2. Copy the client id and secret. Leave `PAYPAL_ENV=sandbox`: only `live` sends real money, and
    only `live` makes the disclosure band stop saying "no real money moves".
-3. Add a webhook pointing at `${SLIP_BASE_URL}/api/webhooks/paypal` and copy its **webhook id**.
-   Slip treats PayPal as unready without it: verification needs it, and a deployment that took
+3. Point the app's webhook at Slip and keep its **webhook id**. `pnpm paypal:webhook
+   https://<public host> --save` does the whole step — it creates the webhook the first time,
+   re-points the same one afterwards (a quick tunnel's address changes on every run; the id does
+   not), subscribes to every event Slip acts on, and writes `PAYPAL_WEBHOOK_ID` into
+   `apps/web/.env.local`. Drop `--save` to print the id without touching the file, or do it by hand
+   in the dashboard against `${SLIP_BASE_URL}/api/webhooks/paypal`. PayPal requires https.
+   Slip treats PayPal as unready without the id: verification needs it, and a deployment that took
    payments without being able to verify a delivery would never hear what became of them.
 
 All three values or none — Slip falls back to the stand-in rather than running half-configured.
@@ -90,8 +95,16 @@ SLIP_BASE_URL=http://localhost:3000 DATABASE_URL=pglite://.data/slip pnpm web:de
 
 Open the app, go to **Mandate**, start a permission, and approve it as a sandbox buyer (the test
 accounts are under *Testing tools → Sandbox accounts*). Slip stores the payment token; read it back
-with `psql`/`pnpm db:*` or the mandate page, and put it in `PAYPAL_TEST_VAULT_ID`. It stays usable
-until the sandbox account is reset.
+with `pnpm -s paypal:vault-id <mandate id>`, which prints the token alone so the suite can take it
+without it ever being shown:
+
+```sh
+PAYPAL_TEST_VAULT_ID=$(pnpm -s paypal:vault-id <mandate id>) pnpm test:live:paypal
+```
+
+Stop the web app first — PGlite takes no lock on its directory, and two processes on one database
+can corrupt it, so the script refuses while the app is answering. The token stays usable until the
+sandbox account is reset.
 
 ```sh
 PAYPAL_CLIENT_ID=… PAYPAL_CLIENT_SECRET=… PAYPAL_TEST_VAULT_ID=… pnpm test:live:paypal
