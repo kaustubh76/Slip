@@ -165,6 +165,16 @@ That is the whole of it: demo mode needs no database and no keys. Point any host
 container at the [Dockerfile](Dockerfile) — the image serves `/sign-in` and answers its own
 healthcheck once it is listening.
 
+**On Render**, [render.yaml](render.yaml) declares the service: connect this repo, then **New →
+Blueprint**. Slip works out its own address from `RENDER_EXTERNAL_URL`, so there is nothing to
+set.
+
+Two things to know about the free plan it asks for. The service **sleeps after 15 minutes**
+without traffic and takes about a minute to wake, so load it once before showing it to anyone. And
+because a demo desk lives in the process, **a sleep throws away whatever desk was open** — a fresh
+visitor never notices, someone returning after lunch finds their receipts gone. Change `plan: free`
+to `plan: 0.5c-512mb` in `render.yaml` to stop both.
+
 **Running the real thing instead** means leaving `SLIP_DEMO` unset, passing the keys above, and
 two more things. Migrate first — `pnpm db:migrate` against your `DATABASE_URL`, because the server
 does not migrate Postgres itself. And give housekeeping a way to run: a long-lived process does it

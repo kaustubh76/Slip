@@ -1,0 +1,37 @@
+# Slip's hosted demo.
+#
+# Demo mode keeps its stand-ins for Channel3 and PayPal in the process and gives every visitor a
+# throwaway desk, so it needs a server that outlives a request — `isDemo()` refuses wherever
+# `VERCEL` is set (D74). Render sets no such variable, which is why the demo lives here.
+#
+# To deploy: connect this repo in Render, then New → Blueprint. Nothing else is needed. Demo mode
+# uses the in-memory store, so there is no database to provision and no key to set.
+#
+# On the free plan the service sleeps after 15 minutes without traffic and takes about a minute to
+# wake, and because a desk lives in the process, a sleep throws away whatever desk someone had
+# open. To stop that, change `plan: free` below to `plan: 0.5c-512mb` (or larger) and redeploy.
+services:
+  - type: web
+    name: slip-demo
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    branch: main
+    # The one page that renders with no session, no database and no keys — which is exactly what
+    # a health check should prove about this deployment.
+    healthCheckPath: /sign-in
+    autoDeployTrigger: commit
+    envVars:
+      - key: SLIP_DEMO
+        value: "1"
+      - key: NODE_ENV
+        value: production
+      # Pinned rather than left to Render's port detection, so the image and the host agree.
+      - key: PORT
+        value: "3000"
+      # The image sets 250ms of pretend latency, so a local demo does not answer suspiciously
+      # faster than a real checkout. A free instance has 0.1 CPU and supplies all the latency
+      # anyone could want; adding a quarter-second per call to a judged demo helps nobody.
+      - key: SLIP_DEMO_LATENCY_MS
+        value: "0"

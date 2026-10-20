@@ -79,6 +79,22 @@ describe("the session token", () => {
 });
 
 describe("the session cookie", () => {
+  it("is Secure where the host says Slip is on https, with no base URL set", () => {
+    // A deployment that never set SLIP_BASE_URL used to get its cookie decided by NODE_ENV alone.
+    // Where the host names the address — Render does — the scheme is known, so use it.
+    const mine = session();
+    const onRender = sessionCookie(mine, KEY, NOW, {
+      RENDER_EXTERNAL_URL: "https://slip-demo.onrender.com",
+    });
+    expect(onRender.secure).toBe(true);
+    // And what the operator set still wins over the host.
+    const tunnelled = sessionCookie(mine, KEY, NOW, {
+      SLIP_BASE_URL: "http://localhost:3000",
+      RENDER_EXTERNAL_URL: "https://slip-demo.onrender.com",
+    });
+    expect(tunnelled.secure).toBe(false);
+  });
+
   it("is HttpOnly, Lax and lasts as long as the session", () => {
     const mine = session();
     const cookie = sessionCookie(mine, KEY, NOW, { SLIP_BASE_URL: "http://localhost:3000" });

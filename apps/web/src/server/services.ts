@@ -1,5 +1,6 @@
 import "server-only";
 import { isDemo } from "./demo";
+import { publicBaseUrl } from "./public-url";
 
 /**
  * Which of the three outside services this deployment really talks to. Each is decided on its own,
@@ -93,7 +94,7 @@ export function unsafeCombination(
   if (services.payment !== "live") {
     return null;
   }
-  const base = env["SLIP_BASE_URL"]?.trim() ?? "";
+  const base = publicBaseUrl(env);
   const wrong = [
     services.prices === "simulated"
       ? ["prices come from the stand-in catalogue", "Set CHANNEL3_API_KEY"]

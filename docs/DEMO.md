@@ -18,6 +18,11 @@ leave it visible, it is the honest part of the pitch.
 One desk per recording. If you restart the server, open a new desk: the stand-ins keep their state
 in the process.
 
+**Filming the hosted demo instead?** Load the URL once and wait for it before you start recording.
+A free Render instance sleeps after 15 minutes and takes about a minute to wake, and that minute
+should not be on the tape. The same spin-down discards any desk that was open, so open yours after
+it is awake, not before.
+
 ---
 
 ## The shots

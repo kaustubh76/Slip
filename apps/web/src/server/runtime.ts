@@ -17,6 +17,7 @@ import { isDemo } from "./demo";
 import type { DemoFakes } from "./demo/desk";
 import { type DemoDesk, DeskLimiter } from "./demo/desks";
 import { DEMO_TIMING, demoConfig, every } from "./demo/timing";
+import { publicBaseUrl } from "./public-url";
 import type { CatalogueSearch } from "./search";
 import { resolveServices, type Services, unsafeCombination } from "./services";
 
@@ -94,7 +95,7 @@ async function build(): Promise<Runtime> {
   const store = await openStore(env);
   const config = appConfig({
     ...(demo ? demoConfig() : {}),
-    ...(env["SLIP_BASE_URL"] ? { publicBaseUrl: env["SLIP_BASE_URL"] } : {}),
+    ...(publicBaseUrl(env) === "" ? {} : { publicBaseUrl: publicBaseUrl(env) }),
     pricesSource: SERVICES.prices === "channel3" ? "channel3" : "simulated",
     paymentSource: SERVICES.payment === "simulated" ? "simulated" : "paypal",
   });

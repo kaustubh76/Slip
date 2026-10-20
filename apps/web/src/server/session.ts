@@ -2,6 +2,7 @@ import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { deriveKey, type Env, KEY_PURPOSES, masterKeyFromEnv } from "@slip/db";
 import { isUuid } from "@slip/domain";
 import { isDemo } from "./demo";
+import { publicBaseUrl } from "./public-url";
 
 /**
  * Who is reading the owner's pages, in a cookie the browser cannot forge: the owner id and the
@@ -83,12 +84,13 @@ export interface CookieSpec {
 
 /**
  * Whether the browser will be on HTTPS, which decides `Secure` and the `__Host-` prefix. It
- * follows `SLIP_BASE_URL` — the address Slip tells PayPal to send the owner back to, so it is the
- * one place that already knows the scheme. A production build with no base URL set assumes HTTPS:
- * a cookie that then fails to arrive is a loud error, where a silently insecure one would not be.
+ * follows Slip's own address — what PayPal is told to send the owner back to, so it is the one
+ * place that already knows the scheme — and that is the operator's `SLIP_BASE_URL` or, failing
+ * that, whatever the host says it is. A production build with neither assumes HTTPS: a cookie
+ * that then fails to arrive is a loud error, where a silently insecure one would not be.
  */
 export function secureCookies(env: Env = process.env): boolean {
-  const base = env["SLIP_BASE_URL"]?.trim() ?? "";
+  const base = publicBaseUrl(env as NodeJS.ProcessEnv);
   if (base.startsWith("https://")) {
     return true;
   }
