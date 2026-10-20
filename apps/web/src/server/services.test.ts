@@ -78,14 +78,70 @@ describe("combinations a deployment must not run", () => {
     ...over,
   });
 
+  /** A deployment with nothing wrong with it, passed explicitly so no test reads the real env. */
+  const sound = (over: Record<string, string | undefined> = {}): NodeJS.ProcessEnv =>
+    ({
+      DATABASE_URL: "postgres://slip@db/slip",
+      SLIP_BASE_URL: "https://slip.example",
+      SLIP_CRON_SECRET: "s3cret",
+      ...over,
+    }) as unknown as NodeJS.ProcessEnv;
+
+  const refusal = (over: Record<string, string | undefined> = {}) =>
+    unsafeCombination(live(), sound(over)) ?? "";
+
   it("allows live money only when nothing else is invented", () => {
-    expect(unsafeCombination(live())).toBeNull();
+    expect(unsafeCombination(live(), sound())).toBeNull();
+  });
+
+  it("refuses live money on a single-process file store", () => {
+    // PGlite takes no lock on its own directory, so two processes corrupt it — which is why the
+    // vault-id script refuses to run beside the server. Not somewhere real money belongs.
+    const said = refusal({ DATABASE_URL: "pglite://.data/slip" });
+    expect(said).toContain("single-process file store");
+    expect(said).toContain("Postgres server");
+  });
+
+  it("refuses live money where Slip is not served over https", () => {
+    // The base URL is the only place Slip knows its own scheme: the session cookie carrying the
+    // kill switch would go out without Secure, and PayPal would brand the checkout "localhost".
+    const said = refusal({ SLIP_BASE_URL: "http://localhost:3000" });
+    expect(said).toContain("not https");
+    expect(said).toContain("Secure");
+  });
+
+  it("refuses live money where nothing would ever expire a hold", () => {
+    // Serverless: no instance outlives its request, so the resolver's timer never starts. Without
+    // a cron secret the endpoint stays shut too, and real authorizations sit on real cards.
+    const said = refusal({ SLIP_SERVERLESS: "1", SLIP_CRON_SECRET: undefined });
+    expect(said).toContain("expire a hold");
+    expect(said).toContain("/api/cron/resolve");
+    // Vercel's own name for the secret counts, and so does the platform marker on its own.
+    expect(
+      unsafeCombination(
+        live(),
+        sound({ SLIP_CRON_SECRET: undefined, CRON_SECRET: "x", VERCEL: "1" }),
+      ),
+    ).toBeNull();
+    expect(unsafeCombination(live(), sound({ VERCEL: "1" }))).toBeNull();
+  });
+
+  it("says every fault at once, and each fix only once", () => {
+    const said =
+      unsafeCombination(
+        live({ prices: "simulated" }),
+        sound({ DATABASE_URL: "pglite://.data/slip", SLIP_BASE_URL: "http://x" }),
+      ) ?? "";
+    expect(said).toContain("stand-in catalogue");
+    expect(said).toContain("file store");
+    expect(said).toContain("not https");
+    expect(said.match(/Set CHANNEL3_API_KEY/g)).toHaveLength(1);
   });
 
   it("refuses live money against the stand-in catalogue", () => {
     // The sign-up page refuses to start a new owner under live PayPal, but a key issued before the
     // keys changed would keep working — so the refusal has to be at the deployment.
-    const refusal = unsafeCombination(live({ prices: "simulated" }));
+    const refusal = unsafeCombination(live({ prices: "simulated" }), sound());
     expect(refusal).toContain("real money");
     expect(refusal).toContain("stand-in catalogue");
     expect(refusal).toContain("CHANNEL3_API_KEY");
@@ -93,11 +149,14 @@ describe("combinations a deployment must not run", () => {
 
   it("refuses live money with a scripted steering check", () => {
     // A receipt would say the listing was checked when one hard-coded phrase was matched.
-    expect(unsafeCombination(live({ steering: "simulated" }))).toContain("scripted stand-in");
+    expect(unsafeCombination(live({ steering: "simulated" }), sound())).toContain(
+      "scripted stand-in",
+    );
   });
 
   it("names both when both are invented", () => {
-    const refusal = unsafeCombination(live({ prices: "simulated", steering: "simulated" })) ?? "";
+    const refusal =
+      unsafeCombination(live({ prices: "simulated", steering: "simulated" }), sound()) ?? "";
     expect(refusal).toContain("stand-in catalogue");
     expect(refusal).toContain("scripted stand-in");
   });
@@ -106,7 +165,7 @@ describe("combinations a deployment must not run", () => {
     "refuses nothing when the payment is %s: no real money is at stake",
     (payment) => {
       expect(
-        unsafeCombination(live({ payment, prices: "simulated", steering: "simulated" })),
+        unsafeCombination(live({ payment, prices: "simulated", steering: "simulated" }), sound()),
       ).toBeNull();
     },
   );

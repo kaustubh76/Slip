@@ -81,10 +81,12 @@ export async function fakes(): Promise<Fakes> {
 
 async function build(): Promise<Runtime> {
   const env = process.env;
-  const unsafe = unsafeCombination(SERVICES);
+  const unsafe = unsafeCombination(SERVICES, env);
   if (unsafe !== null) {
     // Refused here rather than at the first checkout: by then an agent is waiting and a real card
-    // is one call away. A deployment that cannot be trusted does not start.
+    // is one call away. Nothing reaches PayPal without coming through here, so a deployment this
+    // refuses can move no money — though it does start, and a page that needs none of this (the
+    // bench) still answers.
     throw new Error(unsafe);
   }
   const clock = systemClock;

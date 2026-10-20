@@ -57,31 +57,74 @@ function paymentMode(env: NodeJS.ProcessEnv): PaymentMode {
 /**
  * Combinations a deployment must not run, as a sentence or null.
  *
- * Only one is forbidden, and it is the one that costs someone money: **live PayPal with anything
- * else simulated.** `PAYPAL_ENV=live` moves real funds, and the stand-in catalogue's stores and
- * prices are invented — so a checkout would compare an agent's purchase against a made-up market
- * and then charge a real card for it. The sign-up page already refuses to start a *new* owner
+ * Everything here hangs on one condition: `PAYPAL_ENV=live` moves real funds. Nothing is refused
+ * below it — real prices with a stand-in payment is the state D63 was written for, and it moves
+ * no money.
+ *
+ * Two of these are lies about the money. The stand-in catalogue's stores and prices are invented,
+ * so a checkout would compare an agent's purchase against a made-up market and then charge a real
+ * card for it; a scripted steering check is the same lie, a receipt saying the listing was checked
+ * when one hard-coded phrase was matched. The sign-up page already refuses to start a *new* owner
  * under live PayPal (D65), but a key issued before the keys changed would keep working, so the
  * refusal has to be at the deployment, not at the door.
  *
- * A simulated steering check is the same kind of lie about the same money: receipts would say the
- * listing was checked when one hard-coded phrase was matched.
+ * Three are about the deployment itself, and need more than the services to see (D74):
  *
- * Nothing else is refused. Real prices with a stand-in payment is the state D63 was written for,
- * and it moves no money.
+ * - **A file store.** PGlite is one process and takes no lock on its own directory, so two of
+ *   them corrupt it — which is why the vault-id script refuses to run beside the server. Real
+ *   money does not belong on a database that cannot be shared or backed up.
+ * - **A base URL that is not https.** It is the only place Slip knows its own scheme, so PayPal
+ *   is handed its hostname as the brand name on a real checkout, and the session cookie carrying
+ *   the kill switch over real money is issued without `Secure`.
+ * - **Nowhere for housekeeping to run.** Where an instance does not outlive its request the
+ *   resolver's timer never starts, so without a cron secret nothing expires a hold or finishes an
+ *   unknown payment: real authorizations would sit on real cards until PayPal dropped them.
+ *
+ * **Where this bites.** `build()` calls it, so the refusal lands on the first request that needs
+ * the app rather than at import. That is late enough to be visible and early enough to matter:
+ * nothing can reach PayPal without going through `build()`, so no money can move from a
+ * deployment this refuses — but the process does start, and `/bench`, which needs none of it,
+ * still renders.
  */
-export function unsafeCombination(services: Services): string | null {
+export function unsafeCombination(
+  services: Services,
+  env: NodeJS.ProcessEnv = process.env,
+): string | null {
   if (services.payment !== "live") {
     return null;
   }
-  const invented = [
-    services.prices === "simulated" ? "prices come from the stand-in catalogue" : null,
-    services.steering === "simulated" ? "the steering check is the scripted stand-in" : null,
-  ].filter((part): part is string => part !== null);
-  return invented.length === 0
-    ? null
-    : `PAYPAL_ENV=live moves real money, but ${invented.join(" and ")}.` +
-        " Set CHANNEL3_API_KEY and ANTHROPIC_API_KEY, or use the PayPal sandbox.";
+  const base = env["SLIP_BASE_URL"]?.trim() ?? "";
+  const wrong = [
+    services.prices === "simulated"
+      ? ["prices come from the stand-in catalogue", "Set CHANNEL3_API_KEY"]
+      : null,
+    services.steering === "simulated"
+      ? ["the steering check is the scripted stand-in", "Set ANTHROPIC_API_KEY"]
+      : null,
+    (env["DATABASE_URL"] ?? "").trim().startsWith("pglite://")
+      ? ["the database is a single-process file store", "Point DATABASE_URL at a Postgres server"]
+      : null,
+    base !== "" && !base.startsWith("https://")
+      ? ["SLIP_BASE_URL is not https, so the session cookie is not Secure", "Serve Slip over https"]
+      : null,
+    serverlessEnv(env) && !set(env["SLIP_CRON_SECRET"]) && !set(env["CRON_SECRET"])
+      ? [
+          "nothing would expire a hold or finish an unknown payment here",
+          "Set SLIP_CRON_SECRET and schedule /api/cron/resolve",
+        ]
+      : null,
+  ].filter((part): part is [string, string] => part !== null);
+  if (wrong.length === 0) {
+    return null;
+  }
+  const faults = wrong.map(([fault]) => fault).join("; ");
+  const fixes = [...new Set(wrong.map(([, fix]) => fix))].join(". ");
+  return `PAYPAL_ENV=live moves real money, but ${faults}. ${fixes}, or use the PayPal sandbox.`;
+}
+
+/** Mirrors `runtime.ts`: where an instance does not outlive its request, no timer runs. */
+function serverlessEnv(env: NodeJS.ProcessEnv): boolean {
+  return env["VERCEL"] !== undefined || env["SLIP_SERVERLESS"] === "1";
 }
 
 const set = (value: string | undefined): boolean => value !== undefined && value.trim() !== "";
