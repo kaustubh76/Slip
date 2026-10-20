@@ -130,13 +130,22 @@ describe("what it makes of the records", () => {
       json(
         200,
         page([
-          record({ invoice_id: "another-attempt" }),
+          record({ invoice_id: "another-attempt", custom_field: "another-attempt" }),
           record({ transaction_amount: { currency_code: "USD", value: "19.99" } }),
           record({ transaction_amount: { currency_code: "EUR", value: "12.99" } }),
         ]),
       ),
     );
     expect(await paypal.findOrderByInvoice(input, live())).toEqual({ kind: "not-found" });
+  });
+
+  it("finds the attempt when PayPal carried its id in the custom field instead", async () => {
+    // Slip sends the attempt id as both `invoice_id` and `custom_id`, so a record may come back
+    // with either. Reading only one makes an unrecognised record a "not found", and a "not found"
+    // a day after the decision writes the payment off as FAILED — telling the owner nothing was
+    // charged while PayPal has their money (D76).
+    const { paypal } = gateway(json(200, page([record({ invoice_id: undefined })])));
+    expect(await paypal.findOrderByInvoice(input, live())).toMatchObject({ kind: "found" });
   });
 
   it("recognises a reversal of the same payment, which is reported as its negative", async () => {
@@ -157,7 +166,7 @@ describe("what it makes of the records", () => {
 
   it("walks the pages until it finds the attempt", async () => {
     const { paypal, searches } = gateway(
-      json(200, page([record({ invoice_id: "other" })], { total_pages: 2 })),
+      json(200, page([record({ invoice_id: "other", custom_field: "other" })], { total_pages: 2 })),
       json(200, page([record()], { page: 2, total_pages: 2 })),
       json(200, capturedOrder),
     );
@@ -208,7 +217,10 @@ describe("what it refuses to conclude", () => {
   it("more pages than it will read is unknown, not an answer", async () => {
     // Saying "not found" with pages unread is what could cost a second charge.
     const pages = Array.from({ length: 10 }, () =>
-      json(200, page([record({ invoice_id: "other" })], { total_pages: 99 })),
+      json(
+        200,
+        page([record({ invoice_id: "other", custom_field: "other" })], { total_pages: 99 }),
+      ),
     );
     const { paypal, searches } = gateway(...pages);
     const result = await paypal.findOrderByInvoice(input, live());

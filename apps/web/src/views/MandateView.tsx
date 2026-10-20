@@ -76,7 +76,7 @@ export function MandateView(props: { token: string; note: string | null }) {
             // nobody earned. PayPal's own record lags, so this is yesterday's news by design.
             ...(summary.reconciledAt === null
               ? []
-              : ([["Checked against PayPal", printedAt(summary.reconciledAt)]] as const)),
+              : ([["Recent records checked", printedAt(summary.reconciledAt)]] as const)),
             ...(summary.reconcileUnmatched === 0
               ? []
               : ([["Unaccounted for", `${summary.reconcileUnmatched}`]] as const)),
@@ -90,6 +90,12 @@ export function MandateView(props: { token: string; note: string | null }) {
             Change the limits →
           </Link>
         </p>
+        {summary.reconciledAt === null ? null : (
+          <p className="slip-caption">
+            Each day Slip compares the last few days of PayPal&rsquo;s own records with what it
+            decided. It says what it checked, not that everything ever paid has been checked.
+          </p>
+        )}
         {summary.reconcileUnmatched === 0 ? null : (
           <p className="slip-note slip-pen" role="status">
             PayPal recorded {summary.reconcileUnmatched}{" "}

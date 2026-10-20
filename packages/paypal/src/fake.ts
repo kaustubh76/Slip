@@ -116,6 +116,8 @@ export class FakePaymentGateway implements PaymentGateway {
   readonly #requests = new Map<string, RequestRecord>();
   readonly #setups = new Map<string, FakeSetup>();
   readonly #vaults = new Set<string>();
+  /** Records PayPal has that no order here explains; see `addSettlement`. */
+  readonly #extraSettlements: { at: Date; record: SettlementRecord }[] = [];
   readonly #script = {
     order: [] as OrderBehaviour[],
     capture: [] as CaptureBehaviour[],
@@ -160,6 +162,21 @@ export class FakePaymentGateway implements PaymentGateway {
   /** A vaulted payment method that can be charged (normally created by the setup flow). */
   addVault(vaultId: string): void {
     this.#vaults.add(vaultId);
+  }
+
+  /**
+   * A transaction in PayPal's records that no order of Slip's explains: a second capture of one
+   * invoice, a refund raised at PayPal, a charge Slip never made. Every other record this
+   * stand-in reports is derived from an order it was asked to create, so without this it can only
+   * ever agree with Slip — which makes the one feature that exists to find disagreement
+   * untestable (D76). Dated now, so the reporting lag applies to it like anything else.
+   */
+  addSettlement(record: Omit<SettlementRecord, "transactionId">): void {
+    this.#counter += 1;
+    this.#extraSettlements.push({
+      at: this.#clock.now(),
+      record: { ...record, transactionId: `${this.#tag}-X${this.#counter}` },
+    });
   }
 
   hasVault(vaultId: string): boolean {
@@ -386,6 +403,12 @@ export class FakePaymentGateway implements PaymentGateway {
           kind,
           transactionId: order.capture?.id ?? order.authorization?.id ?? null,
         });
+      }
+    }
+    for (const extra of this.#extraSettlements) {
+      const at = extra.at.getTime();
+      if (at <= visibleBefore && at >= window.from.getTime() && at <= window.to.getTime()) {
+        records.push(extra.record);
       }
     }
     return { kind: "listed", records };

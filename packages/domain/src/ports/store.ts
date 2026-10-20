@@ -170,11 +170,17 @@ export interface MandateRepo {
   /** REVOKED mandates whose PayPal token still has to be deleted, oldest revoke first. */
   listAwaitingVaultDeletion(limit: number): Promise<Mandate[]>;
   /**
-   * ACTIVE mandates not checked against PayPal since `before`, never-checked ones first (D75).
+   * Mandates not checked against PayPal since `before`, never-checked ones first (D75).
+   *
+   * ACTIVE ones, and ones **revoked since `revokedAfter`** — a charge arriving after an owner
+   * pulled the kill switch is the most alarming thing this check can find, and it was the one
+   * case the first version dropped (D76). Bounded by that date rather than by status alone, so a
+   * permission revoked last year is not re-examined for ever.
+   *
    * The stored time is both the answer an owner reads and what decides when to look again, so
    * there is no second schedule to keep running.
    */
-  listDueForReconcile(before: Date, limit: number): Promise<Mandate[]>;
+  listDueForReconcile(before: Date, revokedAfter: Date, limit: number): Promise<Mandate[]>;
   /**
    * What the last check found. Rewritten every pass, unlike every other timestamp on a mandate:
    * it is operational, and losing it costs nothing but an older answer.

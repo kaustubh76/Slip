@@ -12,7 +12,7 @@ import {
   PolicySchema,
   ownerId as toOwnerId,
 } from "@slip/domain";
-import { and, asc, desc, eq, gt, isNotNull, isNull, lt, or, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gt, gte, isNotNull, isNull, lt, or, sql } from "drizzle-orm";
 import type { Db } from "../client.js";
 import { Conflict } from "../codes.js";
 import type { VaultCipher } from "../crypto.js";
@@ -273,14 +273,19 @@ export function pgMandates(db: Db, cipher: VaultCipher): MandateRepo {
         }),
       ),
 
-    listDueForReconcile: (before, limit) =>
+    listDueForReconcile: (before, revokedAfter, limit) =>
       guarded(async () => {
         const rows = await db
           .select()
           .from(mandates)
           .where(
             and(
-              eq(mandates.status, "ACTIVE"),
+              // Still in force, or revoked recently enough that a late settlement could still
+              // surface under it — which is the case most worth seeing (D76).
+              or(
+                eq(mandates.status, "ACTIVE"),
+                and(isNotNull(mandates.revokedAt), gte(mandates.revokedAt, revokedAfter)),
+              ),
               or(isNull(mandates.reconciledAt), lt(mandates.reconciledAt, before)),
             ),
           )

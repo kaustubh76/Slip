@@ -105,15 +105,18 @@ export function unsafeCombination(
     (env["DATABASE_URL"] ?? "").trim().startsWith("pglite://")
       ? ["the database is a single-process file store", "Point DATABASE_URL at a Postgres server"]
       : null,
-    base !== "" && !base.startsWith("https://")
-      ? ["SLIP_BASE_URL is not https, so the session cookie is not Secure", "Serve Slip over https"]
-      : null,
-    serverlessEnv(env) && !set(env["SLIP_CRON_SECRET"]) && !set(env["CRON_SECRET"])
-      ? [
-          "nothing would expire a hold or finish an unknown payment here",
-          "Set SLIP_CRON_SECRET and schedule /api/cron/resolve",
-        ]
-      : null,
+    // Not `base !== "" && …`: unset is the dangerous case, not the exempt one. With no address at
+    // all the config falls back to `http://localhost:3000`, which is then handed to PayPal as the
+    // brand name on a real checkout and used to build the approval's return URL (D76).
+    base.startsWith("https://")
+      ? null
+      : [
+          base === ""
+            ? "Slip does not know its own address, so it would tell PayPal it is at localhost"
+            : "SLIP_BASE_URL is not https, so the session cookie is not Secure",
+          "Set SLIP_BASE_URL to the https address Slip is served at",
+        ],
+    ...housekeeping(env),
   ].filter((part): part is [string, string] => part !== null);
   if (wrong.length === 0) {
     return null;
@@ -126,6 +129,37 @@ export function unsafeCombination(
 /** Mirrors `runtime.ts`: where an instance does not outlive its request, no timer runs. */
 function serverlessEnv(env: NodeJS.ProcessEnv): boolean {
   return env["VERCEL"] !== undefined || env["SLIP_SERVERLESS"] === "1";
+}
+
+/**
+ * Whether anything would ever expire a hold here, and under which name the secret has to be set.
+ *
+ * On Vercel the distinction is not pedantry: its scheduler sends a bearer token only for an
+ * environment variable named exactly `CRON_SECRET`. A deployment that set Slip's own name instead
+ * answers 401 to its own cron for ever, which looks like nothing at all until an authorization
+ * has been sitting on a real card for a week (D76).
+ */
+function housekeeping(env: NodeJS.ProcessEnv): [string, string][] {
+  if (!serverlessEnv(env)) {
+    return [];
+  }
+  if (env["VERCEL"] !== undefined && !set(env["CRON_SECRET"])) {
+    return [
+      [
+        "nothing would expire a hold or finish an unknown payment here — Vercel's scheduler sends" +
+          " a bearer token only for a variable named CRON_SECRET",
+        "Set CRON_SECRET (not SLIP_CRON_SECRET) and schedule /api/cron/resolve",
+      ],
+    ];
+  }
+  return set(env["SLIP_CRON_SECRET"]) || set(env["CRON_SECRET"])
+    ? []
+    : [
+        [
+          "nothing would expire a hold or finish an unknown payment here",
+          "Set SLIP_CRON_SECRET and schedule /api/cron/resolve",
+        ],
+      ];
 }
 
 const set = (value: string | undefined): boolean => value !== undefined && value.trim() !== "";

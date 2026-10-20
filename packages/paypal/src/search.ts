@@ -113,12 +113,20 @@ function allowed(window: { from: Date; to: Date }): { from: Date; to: Date } {
 /**
  * What a record says became of the money. The per-order lookup deliberately treats a reversal as
  * proof the money moved; a reconcile has to keep them apart, or a refund is invisible to it.
+ *
+ * **A refund is a success, not a reversal.** PayPal reports one as its own transaction with
+ * `transaction_status: "S"` and a *negative* amount; `"V"` is for reversals and chargebacks. So
+ * the sign decides, not the status — reading `kind === "reversed"` to find refunds would find
+ * none of them (D76).
+ *
+ * A record in another currency is not skipped. Slip is USD-only by constraint, so a transaction
+ * in anything else under a Slip invoice id is an anomaly, and dropping it silently would hide
+ * exactly the kind of thing this exists to surface.
  */
 function settlement(info: TransactionInfo): SettlementRecord | null {
   const invoiceId = text(info.invoice_id) ?? text(info.custom_field);
-  const money = info.transaction_amount;
-  const value = text(money?.value);
-  if (invoiceId === null || value === null || text(money?.currency_code) !== "USD") {
+  const value = text(info.transaction_amount?.value);
+  if (invoiceId === null || value === null) {
     return null;
   }
   let amountCents: number;
@@ -127,20 +135,25 @@ function settlement(info: TransactionInfo): SettlementRecord | null {
   } catch {
     return null;
   }
+  const negative = value.trimStart().startsWith("-");
   const status = text(info.transaction_status);
   const kind =
-    status === "S"
-      ? "settled"
-      : status === "P"
-        ? "pending"
-        : status === "V"
+    text(info.transaction_amount?.currency_code) !== "USD"
+      ? "other"
+      : status === "S"
+        ? negative
           ? "reversed"
-          : status === "D"
-            ? "denied"
-            : "other";
+          : "settled"
+        : status === "P"
+          ? "pending"
+          : status === "V"
+            ? "reversed"
+            : status === "D"
+              ? "denied"
+              : "other";
   return {
     invoiceId,
-    amountCents: value.trimStart().startsWith("-") ? -amountCents : amountCents,
+    amountCents: negative ? -amountCents : amountCents,
     kind,
     transactionId: text(info.transaction_id),
   };
@@ -208,9 +221,15 @@ export function createOrderLookup(
  * The record is Slip's attempt when the invoice id *and* the amount agree. The amount is compared
  * as an absolute value: a reversal of the same payment is reported as a negative of it, and both
  * mean the money moved.
+ *
+ * Slip sends the attempt id as **both** `invoice_id` and `custom_id`, so the record may carry it
+ * in either field, and this reads both. Reading only one is not a near miss here: a record that
+ * went unrecognised is a "not found", and a "not found" a day after the decision is what writes
+ * the payment off as FAILED — telling the owner nothing was charged while PayPal has their money
+ * (D76). The webhook path learned the same lesson from the other side.
  */
 function matches(info: TransactionInfo, invoiceId: string, amount: Cents): boolean {
-  if (text(info.invoice_id) !== invoiceId) {
+  if (text(info.invoice_id) !== invoiceId && text(info.custom_field) !== invoiceId) {
     return false;
   }
   const money = info.transaction_amount;

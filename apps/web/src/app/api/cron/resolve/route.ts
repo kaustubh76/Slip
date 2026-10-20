@@ -1,5 +1,5 @@
 import { runResolver } from "@slip/app";
-import { authoriseCron, cronSecret } from "../../../../server/cron";
+import { authoriseCron, cronSecrets } from "../../../../server/cron";
 import { answer, jsonRoute } from "../../../../server/json";
 import { logApiError } from "../../../../server/owner-route";
 import { deps } from "../../../../server/runtime";
@@ -22,7 +22,7 @@ export const maxDuration = 60;
 const resolve = jsonRoute(async (request: Request) => {
   const verdict = authoriseCron({
     authorization: request.headers.get("authorization"),
-    secret: cronSecret(),
+    secrets: cronSecrets(),
   });
   if (verdict === "unconfigured") {
     return answer(503, {

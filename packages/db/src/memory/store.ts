@@ -592,12 +592,13 @@ export function createMemoryStore(): Store {
         return { value: copy(record.mandate), result: "applied" };
       },
 
-      async listDueForReconcile(before, limit) {
+      async listDueForReconcile(before, revokedAfter, limit) {
         return (
           [...mandates.values()]
             .filter(
               (r) =>
-                r.mandate.status === "ACTIVE" &&
+                (r.mandate.status === "ACTIVE" ||
+                  (r.mandate.revokedAt !== null && r.mandate.revokedAt >= revokedAfter)) &&
                 (r.mandate.reconciledAt === null || r.mandate.reconciledAt < before),
             )
             // Never checked first: a permission nobody has ever looked at is the one to look at.

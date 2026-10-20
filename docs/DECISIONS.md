@@ -998,3 +998,53 @@ this one is rewritten every pass, and losing it costs nothing but an older answe
 does not run where an instance does not outlive its request, so the task rides the resolver's tick
 and does nothing until the stored "as of" is a day old. The answer an owner reads is the same
 value that decides when to look again.
+
+## D76 · 2026-10-20 · What a reconcile must compare, and the two names a cron secret has
+
+D75's reconcile, D74's endpoints and the Render blueprint were all written in one afternoon and
+reviewed by nobody but their author. An adversarial read found that green tests had proved only
+the cases the author thought of. These are the corrections, and the rules behind them.
+
+**A reconcile compares amounts, or it is theatre.** The first version reduced each invoice to a
+boolean — did money net out positive — so Slip's books saying $10 while PayPal settled $510 under
+the same id read as agreement, and the permission slip said everything was accounted for. It is
+now one comparison: **what PayPal's records net to, against what Slip believes moved** — the
+captured amount, zero when the payment is absent, FAILED or VOIDED, and *nothing* while it is in
+flight, because arguing about those is the resolver's other tasks' work. That single rule catches
+what the first could not: an overcharge, an undercharge, a refund Slip never recorded, and a
+second capture of one invoice — which is the only place a double charge can ever surface, since
+Slip's payments table holds one row per attempt.
+
+**A charge after the kill switch is the case most worth seeing, and it was the one dropped.**
+Unmatched transactions were bucketed by mandate but only written for ACTIVE ones, so a settlement
+under a revoked permission was counted and then discarded, with no log line either. The due list
+now takes ACTIVE mandates **and** ones revoked recently enough that a late settlement could still
+appear — bounded by the window, so a permission revoked last year is not examined for ever.
+
+**A record may carry the attempt id in either field.** Slip sends it as both `invoice_id` and
+`custom_id`, and the transaction search matched only the first. A record that went unrecognised is
+a "not found", and a "not found" a day after the decision writes the payment off as FAILED —
+**telling the owner nothing was charged while PayPal has their money.** Both fields are read now.
+The webhook path had already learned this from the other side; the money-critical path had not.
+
+**A refund is a success with a minus sign.** PayPal reports one as `transaction_status: "S"` with
+a negative amount; `"V"` is reversals and chargebacks. Mapping on status alone made every refund a
+settlement, so a consumer filtering for reversals would find none. The sign decides.
+
+**A cron secret has two names and either must work.** Vercel injects a bearer token only for an
+environment variable named exactly `CRON_SECRET`. Preferring Slip's own `SLIP_CRON_SECRET` meant a
+deployment that followed Slip's own documentation answered 401 to its own scheduler for ever —
+nothing expiring a hold, real authorizations sitting on real cards, and no sign of it anywhere.
+Both names are accepted now, and `unsafeCombination` refuses a live Vercel deployment that set
+only the name Vercel will never send.
+
+**An unset address is the dangerous case, not the exempt one.** The live-money guard skipped its
+https check when no base URL was set at all — which is exactly when the config falls back to
+`http://localhost:3000`, hands PayPal `localhost` as the brand name on a real checkout, and builds
+the approval's return URL against a machine that is not there.
+
+**Known limits, written down rather than discovered.** The window is the last few days, so the
+permission slip says "recent records checked" and not that everything ever paid has been checked.
+A window wider than ten pages of PayPal's reporting answers `unknown` and stamps nothing, which is
+correct — Slip has not looked — but it is visible only as a `reconcile.unanswered` log line, so a
+deployment at that scale should alert on it.

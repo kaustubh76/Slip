@@ -249,6 +249,39 @@ export function describeStoreContract(label: string, make: () => Promise<Harness
         expect(late.value.status).toBe("REVOKED");
       });
 
+      it("reconciliation: who is due, in what order, and what the last answer was", async () => {
+        // Both stores implement this and nothing compared them until now. They reach the same
+        // ordering by different means — one maps a null to the epoch and sorts, the other says
+        // `nulls first` — so the behaviour is pinned here rather than left to coincidence (D76).
+        const w = await world(store);
+        const due = async (before: Date, revokedAfter: Date) =>
+          (await store.mandates.listDueForReconcile(before, revokedAfter, 100)).map((m) => m.id);
+
+        // Never checked is always due, and is the first thing in the list.
+        expect(await due(at(10), at(0))).toContain(w.mandateId);
+        const fresh = await store.mandates.get(w.mandateId);
+        expect(fresh?.reconciledAt).toBeNull();
+        expect(fresh?.reconcileUnmatched).toBe(0);
+
+        // What the last check found, and that it overwrites rather than accumulates.
+        await store.mandates.recordReconcile(w.mandateId, { at: at(5), unmatched: 2 });
+        const checked = await store.mandates.get(w.mandateId);
+        expect(checked?.reconciledAt).toEqual(at(5));
+        expect(checked?.reconcileUnmatched).toBe(2);
+        await store.mandates.recordReconcile(w.mandateId, { at: at(6), unmatched: 0 });
+        expect((await store.mandates.get(w.mandateId))?.reconcileUnmatched).toBe(0);
+
+        // Checked after the cutoff: not due. Checked before it: due again.
+        expect(await due(at(5), at(0))).not.toContain(w.mandateId);
+        expect(await due(at(7), at(0))).toContain(w.mandateId);
+
+        // Revoked recently is still due — a charge after the kill switch is the case most worth
+        // seeing. Revoked before the window reaches back, and it stops being examined.
+        await store.mandates.revoke(w.mandateId, at(8));
+        expect(await due(at(10), at(7))).toContain(w.mandateId);
+        expect(await due(at(10), at(9))).not.toContain(w.mandateId);
+      });
+
       it("after a revoke the vault id is available for deletion until PayPal confirms it", async () => {
         const w = await world(store);
         expect(await store.mandates.vaultIdForDeletion(w.mandateId)).toBeNull();

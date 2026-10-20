@@ -102,6 +102,22 @@ describe("combinations a deployment must not run", () => {
     expect(said).toContain("Postgres server");
   });
 
+  it("refuses live money when Slip does not know its own address at all", () => {
+    // The dangerous case is the unset one, not the http one: with no address the config falls
+    // back to localhost, PayPal is handed "localhost" as the brand name on a real checkout, and
+    // the approval's return URL points at a machine that is not there (D76).
+    const said = unsafeCombination(live(), sound({ SLIP_BASE_URL: undefined })) ?? "";
+    expect(said).toContain("does not know its own address");
+    expect(said).toContain("SLIP_BASE_URL");
+    // The host naming it is enough, which is how the hosted demo gets this right for free.
+    expect(
+      unsafeCombination(
+        live(),
+        sound({ SLIP_BASE_URL: undefined, RENDER_EXTERNAL_URL: "https://slip.onrender.com" }),
+      ),
+    ).toBeNull();
+  });
+
   it("refuses live money where Slip is not served over https", () => {
     // The base URL is the only place Slip knows its own scheme: the session cookie carrying the
     // kill switch would go out without Secure, and PayPal would brand the checkout "localhost".
@@ -116,14 +132,23 @@ describe("combinations a deployment must not run", () => {
     const said = refusal({ SLIP_SERVERLESS: "1", SLIP_CRON_SECRET: undefined });
     expect(said).toContain("expire a hold");
     expect(said).toContain("/api/cron/resolve");
-    // Vercel's own name for the secret counts, and so does the platform marker on its own.
+    // Off a serverless host, either name is a configured secret.
     expect(
       unsafeCombination(
         live(),
-        sound({ SLIP_CRON_SECRET: undefined, CRON_SECRET: "x", VERCEL: "1" }),
+        sound({ SLIP_SERVERLESS: "1", SLIP_CRON_SECRET: undefined, CRON_SECRET: "x" }),
       ),
     ).toBeNull();
-    expect(unsafeCombination(live(), sound({ VERCEL: "1" }))).toBeNull();
+  });
+
+  it("refuses live money on Vercel under a secret Vercel will never send", () => {
+    // Vercel injects a bearer token only for a variable named exactly CRON_SECRET. Slip's own
+    // name is accepted by the endpoint, but Vercel's scheduler cannot present it — so a
+    // deployment that set only SLIP_CRON_SECRET 401s its own cron for ever and nothing says so.
+    const said = refusal({ VERCEL: "1" });
+    expect(said).toContain("CRON_SECRET");
+    expect(said).toContain("not SLIP_CRON_SECRET");
+    expect(unsafeCombination(live(), sound({ VERCEL: "1", CRON_SECRET: "x" }))).toBeNull();
   });
 
   it("says every fault at once, and each fix only once", () => {

@@ -84,8 +84,13 @@ const paymentKey = (p: Payment): string => p.attemptId;
 async function reconcile(deps: AppDeps, run: Run, limit: number): Promise<void> {
   const now = deps.clock.now();
   const dueBefore = new Date(now.getTime() - deps.config.reconcileEveryMs);
+  // A permission revoked longer ago than the window reaches back cannot acquire a new settlement
+  // Slip has not already seen, so it stops being examined rather than being examined for ever.
+  const revokedAfter = new Date(
+    now.getTime() - deps.config.reportingLagMs - deps.config.reconcileWindowMs,
+  );
   // Asked once, before PayPal: there is no point spending a call on nobody.
-  if ((await deps.store.mandates.listDueForReconcile(dueBefore, 1)).length === 0) {
+  if ((await deps.store.mandates.listDueForReconcile(dueBefore, revokedAfter, 1)).length === 0) {
     return;
   }
   const to = new Date(now.getTime() - deps.config.reportingLagMs);
@@ -102,35 +107,43 @@ async function reconcile(deps: AppDeps, run: Run, limit: number): Promise<void> 
     return;
   }
 
+  const byInvoice = [...netByInvoice(listed.records)];
+  const mine = byInvoice.filter(([invoiceId]) => isUuid(invoiceId));
+  const strangers = byInvoice.length - mine.length;
   const unmatched = new Map<string, number>();
-  let strangers = 0;
-  for (const [invoiceId, moved] of settledByInvoice(listed.records)) {
-    if (!moved || !isUuid(invoiceId)) {
-      strangers += moved ? 1 : 0;
-      continue;
-    }
+  let orphans = 0;
+  // Bounded, and in parallel: a window can hold MAX_PAGES x PAGE_SIZE records, and one
+  // round-trip each in series would outlast the pass that called this.
+  await inParallel(mine, deps.config.resolverConcurrency, async ([invoiceId, paypalCents]) => {
     const receipt = await deps.store.attempts.get(attemptId(invoiceId));
     if (receipt === null) {
       // Another application on the same merchant account, or a record Slip never made. Not this
       // owner's business, and not a number to put in front of them.
-      strangers += 1;
-      continue;
+      orphans += 1;
+      return;
     }
-    if (accountedFor(receipt.payment)) {
-      continue;
+    const slipCents = slipBelieves(receipt.payment);
+    if (slipCents === null || slipCents === paypalCents) {
+      return;
     }
     const mandate = receipt.attempt.mandateId as string;
     unmatched.set(mandate, (unmatched.get(mandate) ?? 0) + 1);
-  }
-  if (strangers > 0) {
-    deps.log.warn("reconcile.unknown_transactions", { count: strangers });
+    deps.log.error("reconcile.disagreed", {
+      attemptId: invoiceId,
+      mandateId: mandate,
+      slipCents,
+      paypalCents,
+    });
+  });
+  if (strangers + orphans > 0) {
+    deps.log.warn("reconcile.unknown_transactions", { count: strangers + orphans });
   }
 
   // Stamped through `drain`, so one permission that throws is counted and the rest still get
   // their answer; each leaves the list as its own "as of" moves forward.
   await run.drain(
     "reconcile",
-    () => deps.store.mandates.listDueForReconcile(dueBefore, limit),
+    () => deps.store.mandates.listDueForReconcile(dueBefore, revokedAfter, limit),
     (mandate) => mandate.id,
     async (mandate) => {
       const count = unmatched.get(mandate.id as string) ?? 0;
@@ -143,23 +156,40 @@ async function reconcile(deps: AppDeps, run: Run, limit: number): Promise<void> 
   );
 }
 
-/** Net of reversals: an invoice with a settlement and a refund for it had its money given back. */
-function settledByInvoice(records: readonly SettlementRecord[]): Map<string, boolean> {
+/**
+ * What PayPal's records add up to, per invoice, in cents. Settlements and reversals both count,
+ * with their signs: a capture and its refund net to zero, a partial refund to the difference, and
+ * two captures of the same invoice to twice the amount — which is the only place a double charge
+ * could ever surface, since Slip's own payments table holds one row per attempt.
+ *
+ * Pending records are left out. They are PayPal still deciding, and disagreeing with that is the
+ * resolver's other tasks' work, not this one's.
+ */
+function netByInvoice(records: readonly SettlementRecord[]): Map<string, number> {
   const net = new Map<string, number>();
   for (const record of records) {
     if (record.kind === "settled" || record.kind === "reversed") {
       net.set(record.invoiceId, (net.get(record.invoiceId) ?? 0) + record.amountCents);
     }
   }
-  return new Map([...net].map(([invoiceId, cents]) => [invoiceId, cents > 0]));
+  return net;
 }
 
 /**
- * Slip's side agrees that money moved, or is still deciding. Anything in flight belongs to the
- * resolver's other tasks; only a payment that says no money moved disagrees with PayPal.
+ * What Slip's books say moved, in cents — or null while it cannot say.
+ *
+ * Captured means the amount; absent, failed or voided means nothing moved. Everything else is in
+ * flight, and a payment in flight is the resolver's other tasks' argument with PayPal, not this
+ * one's: counting it here would flag the same purchase every day until it settled.
  */
-function accountedFor(payment: Payment | null): boolean {
-  return payment !== null && payment.status !== "FAILED" && payment.status !== "VOIDED";
+function slipBelieves(payment: Payment | null): number | null {
+  if (payment === null) {
+    return 0;
+  }
+  if (payment.status === "CAPTURED") {
+    return payment.amountCents;
+  }
+  return payment.status === "FAILED" || payment.status === "VOIDED" ? 0 : null;
 }
 
 /** Searching from a little before the decision, in case PayPal's clock runs behind ours. */
@@ -357,24 +387,39 @@ class Run {
     handle: (item: T) => Promise<Handled>,
   ): Promise<void> {
     const count = this.#report[task];
-    let next = 0;
-    const worker = async () => {
-      for (let item = items[next++]; item !== undefined; item = items[next++]) {
-        try {
-          count[await handle(item)] += 1;
-        } catch (error) {
-          count.failed += 1;
-          this.#deps.log.error("resolver.item_failed", {
-            task,
-            id: key(item),
-            error: String(error),
-          });
-        }
+    await inParallel(items, this.#deps.config.resolverConcurrency, async (item) => {
+      try {
+        count[await handle(item)] += 1;
+      } catch (error) {
+        count.failed += 1;
+        this.#deps.log.error("resolver.item_failed", {
+          task,
+          id: key(item),
+          error: String(error),
+        });
       }
-    };
-    const workers = Math.min(this.#deps.config.resolverConcurrency, items.length);
-    await Promise.all(Array.from({ length: workers }, worker));
+    });
   }
+}
+
+/**
+ * Up to `limit` items at once, in order, each one's turn taken as a worker frees up. The one
+ * bounded loop in this file: the resolver's tasks use it through `Run`, and the reconcile uses it
+ * directly for the lookups it does outside a task.
+ */
+async function inParallel<T>(
+  items: readonly T[],
+  limit: number,
+  handle: (item: T) => Promise<void>,
+): Promise<void> {
+  let next = 0;
+  const worker = async () => {
+    for (let item = items[next++]; item !== undefined; item = items[next++]) {
+      await handle(item);
+    }
+  };
+  const workers = Math.min(limit, items.length);
+  await Promise.all(Array.from({ length: workers }, worker));
 }
 
 /**

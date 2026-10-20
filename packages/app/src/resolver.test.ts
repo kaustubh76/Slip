@@ -8,6 +8,7 @@ import { type Harness, harness, market, type Seeded, seedAgent } from "./__fixtu
 import { runCheckout } from "./checkout/checkout.js";
 import type { AppConfigInput } from "./config.js";
 import { approveHold, declineHold } from "./holds.js";
+import { revokeMandate } from "./mandates.js";
 import { runResolver } from "./resolver.js";
 
 const MINUTE = 60_000;
@@ -406,6 +407,48 @@ describe("checking Slip's books against PayPal's own", () => {
     await resolve(h);
     const mandate = await mandateOf(h, seeded);
     expect(mandate.reconciledAt).not.toBeNull();
+    expect(mandate.reconcileUnmatched).toBe(1);
+  });
+
+  it("PayPal settling more than Slip recorded is a disagreement, not a match", async () => {
+    // The first version reduced each invoice to "did money move", so Slip saying $10 and PayPal
+    // saying $510 under the same id read as agreement. An amount disagreement is the one thing a
+    // reconcile is uniquely placed to see, and it is real money (D76). A second capture of one
+    // invoice is also the only place a double charge could ever surface: Slip's payments table
+    // holds one row per attempt, so it cannot represent two.
+    const { h, seeded } = await setup();
+    const id = await buy(h, seeded, "paid");
+    h.gateway.addSettlement({ invoiceId: id, amountCents: 50_000, kind: "settled" });
+    h.clock.advance(25 * HOUR);
+    await resolve(h);
+    expect((await mandateOf(h, seeded)).reconcileUnmatched).toBe(1);
+  });
+
+  it("a refund Slip never recorded is a disagreement too", async () => {
+    // Netting to zero used to be dropped: Slip's receipt still says paid while the money went
+    // back. Good news for the owner, and still a book that does not match.
+    const { h, seeded } = await setup();
+    const id = await buy(h, seeded, "paid");
+    const paid = (await h.store.payments.get(id))?.amountCents ?? 0;
+    expect(paid).toBeGreaterThan(0);
+    h.gateway.addSettlement({ invoiceId: id, amountCents: -paid, kind: "reversed" });
+    h.clock.advance(25 * HOUR);
+    await resolve(h);
+    expect((await mandateOf(h, seeded)).reconcileUnmatched).toBe(1);
+  });
+
+  it("a charge that lands after the kill switch is still reported", async () => {
+    // The worst case this can find, and the one the first version silently dropped: the due list
+    // took ACTIVE permissions only, so a settlement under a revoked one was counted into a bucket
+    // nobody read, with no log line either (D76).
+    const { h, seeded } = await setup();
+    const id = await buy(h, seeded, "paid");
+    h.gateway.addSettlement({ invoiceId: id, amountCents: 50_000, kind: "settled" });
+    await revokeMandate(h.deps, seeded.ownerId, seeded.mandateId);
+    h.clock.advance(25 * HOUR);
+    await resolve(h);
+    const mandate = await mandateOf(h, seeded);
+    expect(mandate.status).toBe("REVOKED");
     expect(mandate.reconcileUnmatched).toBe(1);
   });
 
