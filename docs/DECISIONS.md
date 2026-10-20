@@ -542,6 +542,12 @@ port method.
 - **Classifier.** `searchContext`, meant to carry what Slip's search showed the agent, stays
   `null` until searches are recorded. Recording them belongs with the Channel3 adapter.
 
+<!--
+D55–D59 were never written. The numbering jumped when the adapters landed as one batch and each
+was given a number before it was clear which of them needed a decision at all; the five that did
+not are simply absent. Nothing is missing and nothing was withdrawn.
+-->
+
 ## D60 · 2026-10-18 · A listing's text comes only from the offer itself
 
 Channel3 gives a product one shared `description` and each merchant's offer its own `title` and
@@ -909,3 +915,47 @@ have no box, are not in the ring, so a key never moves to something invisible.
 The general rule, for any shortcut added later: a fallback may widen *where* a key looks only
 while nothing narrower is in focus. Once something is in focus, that is the subject, and a key
 that finds nothing there does nothing.
+
+## D74 · 2026-10-20 · Proof, not presence: what may move money, and where the demo runs
+
+A pass over the whole product against §14's must-ship list, before anyone outside sees it. Four
+things it found are settled here; the rest were documentation catching up with the code.
+
+**A guard that is off looks exactly like a guard that passes.** `attempts_outcome_matches_rule`
+spelled out which rule codes mean which outcome, and never got `R2A_GAP_IMPLAUSIBLE` when D68
+added it. That does not fail loudly: the CASE returns null for an unlisted code, `outcome = null`
+is null, and a null CHECK **passes**. So for the rule that holds a purchase whose gap is too wide
+to believe, the database would have accepted any outcome at all. The branches are generated from
+`RULE_OUTCOME` now, and read back out of `pg_get_constraintdef` one rule at a time by a test. The
+general rule: **a constraint that enumerates domain values is generated from the domain and
+drift-tested against it.** Writing the list twice is how it goes quietly wrong.
+
+**A door is only shut if something checks.** Two endpoints took proof anyone could offer.
+`/api/webhooks/paypal` promised in its own docstring that every delivery is verified with PayPal —
+true with real keys, and with the payment stand-in the verifier is a string comparison against a
+header anyone can type. It answers 404 where payment is simulated: nothing is delivering, because
+the stand-in runs in this process, so the door does not need to exist. `/api/cron/resolve` took
+`x-vercel-cron` as its only credential when no secret was set — a forgeable header in front of the
+pass that captures holds and voids authorizations — and 401'd Vercel's own scheduler when a secret
+*was* set, because Vercel injects a bearer only for `CRON_SECRET`. It takes a bearer token now,
+always, under either name, and says 503 when there is none. **Housekeeping that silently does not
+run is worse than an endpoint that says it is not configured**, and a long-lived process does the
+same pass on a timer anyway (D66).
+
+**One road back to a payment is not enough.** A delivery was matched only by the attempt id in
+`custom_id`; an event without a readable one was logged as being about a payment Slip never made,
+and a capture that really happened was dropped. The order id is the other road, and
+`payments.findByPaypalOrderId` was already built and contract-tested with nothing calling it.
+Neither road is trusted more than the other: both end at a row Slip wrote, or at nothing.
+
+**The demo is a container, not a serverless deployment.** It keeps its stand-ins in the process
+and gives each visitor a throwaway desk, so it needs a server that outlives a request; `isDemo()`
+has always refused where `VERCEL` is set. That refusal was honest and left the hosted demo with
+nowhere to go, so there is a Dockerfile: no database, no keys, one process. The serverless path
+stays supported for the real thing, which is what the cron endpoint is for.
+
+**What this pass did not fix, on purpose.** SlipBench has not run and needs a model key, so the
+claims were changed rather than the code: the `/bench` card says two agents, both Anthropic,
+against §6.2's three across two providers, and §18's submission copy drops the sentence about
+three agents until there are results to put in it. **Saying less is the only honest edit when the
+evidence is not there** — the alternative is a number nobody measured.

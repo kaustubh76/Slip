@@ -12,6 +12,7 @@ export {
   recordingSearch,
   SEARCH_LIMIT,
   type SearchAnswer,
+  SearchArgs,
   type SearchHit,
   searchText,
   type ToolSearch,

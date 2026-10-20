@@ -12,7 +12,20 @@ import { type ExistingWebhook, paypalApi, planWebhook, WEBHOOK_PATH } from "./pa
  */
 
 const ENV_FILE = fileURLToPath(new URL("../.env.local", import.meta.url));
-process.loadEnvFile(ENV_FILE);
+loadEnv(ENV_FILE);
+
+/** The keys live in apps/web/.env.local; on a fresh clone there is no such file yet. */
+function loadEnv(file: string): void {
+  try {
+    process.loadEnvFile(file);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+      throw error;
+    }
+    console.error(`No ${file}. Copy .env.example there and fill in the PayPal values first.`);
+    process.exit(2);
+  }
+}
 
 const [publicBase] = process.argv.slice(2).filter((a) => !a.startsWith("--"));
 const save = process.argv.includes("--save");

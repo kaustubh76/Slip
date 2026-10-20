@@ -13,7 +13,20 @@ import type { MandateId } from "@slip/domain";
  * processes on one PGlite database can corrupt it.
  */
 
-process.loadEnvFile(fileURLToPath(new URL("../.env.local", import.meta.url)));
+loadEnv(fileURLToPath(new URL("../.env.local", import.meta.url)));
+
+/** The keys live in apps/web/.env.local; on a fresh clone there is no such file yet. */
+function loadEnv(file: string): void {
+  try {
+    process.loadEnvFile(file);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+      throw error;
+    }
+    console.error(`No ${file}. Copy .env.example there and fill in the PayPal values first.`);
+    process.exit(2);
+  }
+}
 const [mandateId] = process.argv.slice(2);
 if (mandateId === undefined) {
   console.error(
