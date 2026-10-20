@@ -49,6 +49,33 @@ test("an owner who sets a credential can sign out and come back", async ({ page 
   await expect(page.getByRole("button", { name: /Sign out/ })).toBeVisible();
 });
 
+test("the leg PayPal redirects into lands on the permission, not an error page", async ({
+  page,
+}) => {
+  await page.goto("/sign-in");
+  await page.locator("#start-email").fill(someone());
+  await page.locator("#start-password").fill(PASSWORD);
+  await page.getByRole("button", { name: /Start with PayPal/ }).click();
+  await page.getByRole("button", { name: /Approve/ }).click();
+  await expect(page).toHaveURL(/\/mandate/);
+
+  // `/mandates/<id>/return` is the address Slip hands PayPal, and PayPal arrives at it as a
+  // top-level browser GET. The stand-in cannot: a server action redirecting into a route handler
+  // answers 307 with no RSC payload and the owner would see an error page, so the demo finishes
+  // the setup in process instead. `page.goto` is that shape, and this is the only place the real
+  // redirect leg is exercised — the one the owner's own PayPal approval will take.
+  const summary = (await (await page.request.get("/api/v1/mandate")).json()) as { id: string };
+  expect(summary.id).toMatch(/^[0-9a-f-]{36}$/);
+  await page.goto(`/mandates/${summary.id}/return`);
+  await expect(page).toHaveURL(/\/mandate\?setup=/);
+  await expect(page.getByRole("main")).toContainText(/in force/i);
+
+  // PayPal can deliver a redirect more than once and an owner can reload it: the request id for
+  // the call behind this is derived from the mandate, so every arrival is the same one request.
+  await page.goto(`/mandates/${summary.id}/return`);
+  await expect(page.getByRole("main")).toContainText(/in force/i);
+});
+
 test("a wrong password says the same thing as an unknown owner", async ({ page }) => {
   const email = someone();
   await page.goto("/sign-in");
