@@ -959,3 +959,42 @@ claims were changed rather than the code: the `/bench` card says two agents, bot
 against §6.2's three across two providers, and §18's submission copy drops the sentence about
 three agents until there are results to put in it. **Saying less is the only honest edit when the
 evidence is not there** — the alternative is a number nobody measured.
+
+## D75 · 2026-10-20 · One direction of reconciliation, and the lag that decides what counts
+
+The diagram's box 4·A2 and §4.4 both ask Slip to check its books against PayPal's own, daily, and
+show the owner when it last looked. Nothing implemented it. What follows is what the feature is
+*not*, because that is where the value is.
+
+**It checks one direction: money PayPal moved that Slip cannot account for.** A transaction
+settled under one of a permission's attempts where Slip has no payment, or has one that says
+FAILED or VOIDED. The opposite direction — Slip believes a payment moved and PayPal has not
+listed it — is already the resolver's own work, which reads the order, re-sends it inside the
+window, searches the records after the lag, and declares it FAILED a day on. Building a second
+mechanism for that would mean two things disagreeing about the same payment.
+
+**The lag decides what counts, and it is the whole design.** PayPal's reporting runs up to three
+hours behind, so the window ends three hours ago: a "no" from a fresh window means nothing, which
+the per-order lookup has always known. A payment still in flight is never counted either, because
+every in-flight status is a disagreement the resolver owns. **A reconcile that fires on either of
+those is not a safeguard, it is a daily false alarm, and an owner learns to ignore it.** That is
+why the stand-in models the lag and why the test that matters is the one asserting a purchase
+PayPal has not listed yet is *not* money gone missing.
+
+**An unanswered search stamps nothing.** No "as of", no count. Slip has not looked, so it may not
+say it did — the same rule the transaction search already states about "not found".
+
+**The per-order lookup could not be reused.** It matches invoice id *and* amount, so a wrong
+amount is indistinguishable from a missing record, and it maps a reversal to "captured" because
+for its purpose either proves the money moved. A reconcile needs the opposite: amounts compared
+rather than required, and a refund visible as a refund. Hence a second port method over the same
+window scan, rather than N calls to the first.
+
+**It is stored on the mandate, and it is operational.** Every other timestamp there is set once;
+this one is rewritten every pass, and losing it costs nothing but an older answer. What was
+*decided* stays in the append-only attempt. That is D69's distinction, applied again.
+
+**No new schedule.** Nothing in Slip ran daily. A second timer would have been a second thing that
+does not run where an instance does not outlive its request, so the task rides the resolver's tick
+and does nothing until the stored "as of" is a day old. The answer an owner reads is the same
+value that decides when to look again.
