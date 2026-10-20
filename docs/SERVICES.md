@@ -21,14 +21,16 @@ what closes that gap, and they are the gate before any demo that claims to be re
 |---|---|
 | Keys | `CHANNEL3_API_KEY` |
 | Slip calls | `GET /v1/products/{id}` with `x-api-key`, one product per checkout |
-| Cost | Product detail is free. **Search costs a credit, so the adapter never searches.** |
-| Adapter | `packages/offers/src/channel3.ts` |
+| Cost | Product detail is free. **Search costs a credit**, so the adapter never searches. |
+| Adapter | `packages/offers/src/channel3.ts`, and `packages/offers/src/search.ts` for search |
 
 Sign up at <https://trychannel3.com> and take the key from the dashboard. Slip asks for one product
 id at a time, in USD, and keeps the whole response for the receipt's audit trail.
 
 ```sh
 CHANNEL3_API_KEY=… CHANNEL3_TEST_PRODUCT_ID=… pnpm test:live:channel3
+# and, to spend one credit proving the search an agent uses:
+CHANNEL3_API_KEY=… CHANNEL3_LIVE_SEARCH=1 pnpm test:live:channel3
 ```
 
 **Verified live on 19 Oct 2026**, both tests green against a real key, with
@@ -39,11 +41,22 @@ missing product 404 and `NOT_FOUND`. Every offer the adapter produced satisfied 
 `OfferSchema`. It also turned up the thing the offline tests could not: **a Channel3 offer carries
 no text of its own**, so the steering check has nothing to read on real data (D67).
 
-Two tests. The first asks for a product id that cannot exist and requires `NOT_FOUND`, which proves
-the base url, the path, the header and the key at once — a rejected key answers `UNAVAILABLE`
-instead. The second runs only with `CHANNEL3_TEST_PRODUCT_ID` set to a real product id, and
-requires every offer Slip mapped to satisfy the domain's own `OfferSchema`: that is the real
-contract, since the comparison runs on those values. Neither test spends a credit.
+**Search is a separate entry point, and Slip does spend credits there.** `search_products` serves
+an agent from `POST /v1/search` (D69), which the adapter itself cannot reach: it lives behind
+`@slip/offers/search`, so nothing on the checkout path can spend a credit by accident. The web app
+wraps it in `apps/web/src/server/search.ts` with a five-minute cache and a ceiling of 60 uncached
+searches an hour per permission, refused as `RATE_LIMITED`; Channel3's own 402 is `OUT_OF_CREDITS`.
+The allowance is held in memory, so several replicas each get their own — the trade D66 accepted
+for resolving.
+
+Three tests, two of them conditional. The first asks for a product id that cannot exist and
+requires `NOT_FOUND`, which proves the base url, the path, the header and the key at once — a
+rejected key answers `UNAVAILABLE` instead. The second runs only with `CHANNEL3_LIVE_SEARCH=1` and
+is the one that costs anything: a real search, whose mapped offers must satisfy `OfferSchema` and
+whose product text must be what an agent would be shown. The third runs only with
+`CHANNEL3_TEST_PRODUCT_ID` set to a real product id, and requires every offer Slip mapped to
+satisfy the domain's own `OfferSchema`: that is the real contract, since the comparison runs on
+those values. Only the search case spends a credit, and only when asked for.
 
 ---
 
