@@ -136,10 +136,17 @@ async function applyToPayment(
   eventId: string,
   event: PaymentWebhookEvent,
 ): Promise<void> {
-  // `custom_id` is outside data until it matches a payment Slip made.
-  const payment = isUuid(event.attemptId)
+  // `custom_id` is outside data until it matches a payment Slip made. When it is missing or
+  // unreadable — an event PayPal built from something other than our own order, or one whose
+  // custom id a merchant tool overwrote — the order id is the other way back to the payment, and
+  // it is no more trusted: both roads end at a row Slip wrote, or at nothing (D74).
+  const byCustomId = isUuid(event.attemptId)
     ? await deps.store.payments.get(attemptId(event.attemptId))
     : null;
+  const orderId = "orderId" in event ? event.orderId : null;
+  const payment =
+    byCustomId ??
+    (orderId === null ? null : await deps.store.payments.findByPaypalOrderId(orderId));
   if (payment === null) {
     deps.log.warn("webhook.unknown_payment", { eventId, kind: event.kind });
     return;

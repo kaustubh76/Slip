@@ -108,6 +108,26 @@ describe("receiving a webhook", () => {
     });
   });
 
+  it("an event whose custom id was lost is still matched, by the order it names", async () => {
+    // PayPal is not the only thing that writes `custom_id`, and an event can arrive without one.
+    // The order id is the other way back to the payment, and it is no more trusted than the first:
+    // both end at a row Slip wrote, or at nothing (D74). Built with the stores, wired by nothing,
+    // until this test.
+    const { h, seeded, deliver } = await setup();
+    const id = await buy(h, seeded, "paid");
+    const orderId = (await paymentOf(h, id))?.paypalOrderId ?? null;
+    expect(orderId).not.toBeNull();
+    expect(
+      await deliver({
+        kind: "capture-pending",
+        attemptId: "",
+        orderId,
+        captureId: "C-LATE",
+      }),
+    ).toMatchObject({ status: "processed" });
+    expect(h.logs.filter((l) => l.event === "webhook.unknown_payment")).toHaveLength(0);
+  });
+
   it("an event about a payment Slip never made is processed and logged, not retried", async () => {
     const { h, deliver } = await setup();
     for (const attemptId of [randomUUID(), "not-a-uuid"]) {
