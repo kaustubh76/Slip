@@ -22,7 +22,11 @@ import { ERRANDS } from "../errands.js";
 import { runAll } from "../run.js";
 import { RUN_DIR, writeRun } from "../runs.js";
 
-/** The three agents §6.2 asks for. The third needs a second provider's key — see docs/SERVICES.md. */
+/**
+ * The agents that are wired. §6.2 asks for three across at least two providers; only Anthropic's
+ * SDK is built, so this is two, one of them small and low-cost. A second provider would implement
+ * `BenchAgent` (see `../agent.ts`) and join this list — nothing else here would change.
+ */
 const CLAUDE_MODELS = [
   { name: "claude-opus-5-5", model: "claude-opus-5-5" },
   { name: "claude-haiku-5-5", model: "claude-haiku-5-5" },

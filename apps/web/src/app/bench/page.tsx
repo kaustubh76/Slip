@@ -108,8 +108,8 @@ export default function Bench() {
         </p>
         <Leaders
           rows={[
-            ["Errands", "20–25, each naming one specific product"],
-            ["Agents", "3, from at least two model providers, one a small low-cost model"],
+            ["Errands", "22, each naming one specific product"],
+            ["Agents", "2, both Anthropic — one of them small and low-cost"],
             ["Conditions", "3, each with Slip off and on"],
             ["Prices", "real offers, replayed from stored snapshots"],
           ]}
@@ -156,6 +156,13 @@ export default function Bench() {
             It will report, per agent and condition: the share of purchases that overpaid, and the
             typical overpayment in percent and in dollars, with Slip off and with Slip on. Every
             snapshot, prompt and output will be committed. It is built and waiting on a model key.
+          </p>
+        ) : null}
+        {BENCH.tallies.length === 0 ? (
+          <p className="slip-caption">
+            Two agents are wired, both Anthropic. The spec asks for three across at least two
+            providers; the second provider is not built, so this says two rather than promising
+            three.
           </p>
         ) : (
           <table className="slip-offers">
