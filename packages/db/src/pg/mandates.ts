@@ -273,6 +273,31 @@ export function pgMandates(db: Db, cipher: VaultCipher): MandateRepo {
         }),
       ),
 
+    listDueForReconcile: (before, limit) =>
+      guarded(async () => {
+        const rows = await db
+          .select()
+          .from(mandates)
+          .where(
+            and(
+              eq(mandates.status, "ACTIVE"),
+              or(isNull(mandates.reconciledAt), lt(mandates.reconciledAt, before)),
+            ),
+          )
+          // Nulls first: a permission nobody has ever checked is the one to check.
+          .orderBy(sql`${mandates.reconciledAt} asc nulls first`, asc(mandates.id))
+          .limit(limit);
+        return rows.map(toMandate);
+      }),
+
+    recordReconcile: (id, result) =>
+      guarded(async () => {
+        await db
+          .update(mandates)
+          .set({ reconciledAt: result.at, reconcileUnmatched: result.unmatched })
+          .where(eq(mandates.id, id));
+      }),
+
     listAwaitingVaultDeletion: (limit) =>
       guarded(async () => {
         const rows = await db

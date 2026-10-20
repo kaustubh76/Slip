@@ -72,6 +72,14 @@ export function MandateView(props: { token: string; note: string | null }) {
             ["Agents", `${summary.agents}`],
             ["Waiting for you", `${summary.pendingHolds}`],
             ["Signed", summary.activatedAt === null ? "not yet" : printedAt(summary.activatedAt)],
+            // Absent until Slip has actually looked: an owner should never read a reassurance
+            // nobody earned. PayPal's own record lags, so this is yesterday's news by design.
+            ...(summary.reconciledAt === null
+              ? []
+              : ([["Checked against PayPal", printedAt(summary.reconciledAt)]] as const)),
+            ...(summary.reconcileUnmatched === 0
+              ? []
+              : ([["Unaccounted for", `${summary.reconcileUnmatched}`]] as const)),
             ...(summary.revokedAt === null
               ? []
               : ([["Cancelled", printedAt(summary.revokedAt)]] as const)),
@@ -82,6 +90,13 @@ export function MandateView(props: { token: string; note: string | null }) {
             Change the limits →
           </Link>
         </p>
+        {summary.reconcileUnmatched === 0 ? null : (
+          <p className="slip-note slip-pen" role="status">
+            PayPal recorded {summary.reconcileUnmatched}{" "}
+            {summary.reconcileUnmatched === 1 ? "payment" : "payments"} under this permission that
+            Slip has no record of deciding. Check them at PayPal.
+          </p>
+        )}
         {props.note === null ? null : (
           <p className="slip-note slip-pen" role="status">
             {props.note}

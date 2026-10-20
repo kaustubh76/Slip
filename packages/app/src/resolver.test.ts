@@ -1,5 +1,7 @@
+import { randomUUID } from "node:crypto";
 import { createMemoryStore } from "@slip/db/memory";
 import type { AttemptId, Cents, PaymentGateway, Store } from "@slip/domain";
+import { requestId } from "@slip/domain";
 import { driveUntilSettled, offer } from "@slip/domain/testing";
 import { describe, expect, it } from "vitest";
 import { type Harness, harness, market, type Seeded, seedAgent } from "./__fixtures__/harness.js";
@@ -316,5 +318,103 @@ describe("running at scale", () => {
       expect(await statusOf(h, id)).toBe("CAPTURED");
       expect(h.gateway.ordersFor(id)).toHaveLength(1);
     }
+  });
+});
+
+describe("checking Slip's books against PayPal's own", () => {
+  /** The mandate the harness seeds, which is the one every payment below belongs to. */
+  const mandateOf = async (h: Harness, seeded: Seeded) => {
+    const mandate = await h.store.mandates.get(seeded.mandateId);
+    if (mandate === null) {
+      throw new Error("no mandate");
+    }
+    return mandate;
+  };
+
+  it("checks a new permission at once, then leaves it alone for a day", async () => {
+    const { h, seeded } = await setup();
+    await buy(h, seeded, "paid");
+    await resolve(h);
+    const first = (await mandateOf(h, seeded)).reconciledAt;
+    expect(first).not.toBeNull();
+    // Due daily: the next few passes cost PayPal nothing and move the answer not at all.
+    h.clock.advance(HOUR);
+    await resolve(h);
+    expect((await mandateOf(h, seeded)).reconciledAt).toEqual(first);
+    expect(sent(h, "listSettlements")).toHaveLength(1);
+  });
+
+  it("a payment PayPal has not listed yet is not money gone missing", async () => {
+    const { h, seeded } = await setup();
+    await buy(h, seeded, "paid");
+    // A day on, the permission is due — but the purchase is still inside the reporting lag, so
+    // PayPal lists nothing for it. Agreeing to disagree here would be a false alarm every day.
+    h.clock.advance(25 * HOUR);
+    await resolve(h);
+    const mandate = await mandateOf(h, seeded);
+    expect(mandate.reconciledAt).not.toBeNull();
+    expect(mandate.reconcileUnmatched).toBe(0);
+  });
+
+  it("a settled purchase, once PayPal lists it, agrees", async () => {
+    const { h, seeded } = await setup();
+    await buy(h, seeded, "paid");
+    h.clock.advance(4 * HOUR);
+    // Past the lag: the stand-in now reports it, and Slip's own payment says the same.
+    h.clock.advance(21 * HOUR);
+    await resolve(h);
+    expect((await mandateOf(h, seeded)).reconcileUnmatched).toBe(0);
+    expect(sent(h, "listSettlements")).toHaveLength(1);
+  });
+
+  it("money PayPal moved that Slip has no payment for is unaccounted for", async () => {
+    const { h, seeded } = await setup();
+    // A purchase Slip rejected: no order was ever created, so there is no payment at all.
+    product += 1;
+    const productId = `product-${product}`;
+    // 25% and $20 over: rejected outright. (A wider gap would be held as implausible — D68.)
+    const chosen = offer({ price: 100 });
+    market(h, productId, [chosen, offer({ price: 80 })]);
+    const decided = await driveUntilSettled(
+      h.clock,
+      runCheckout(h.deps, seeded.apiKey, { productId, chosenOfferUrl: chosen.url, reason: "" }),
+      { stepMs: 5_000 },
+    );
+    if (decided.status !== "decided") {
+      throw new Error("expected a decision");
+    }
+    const id = decided.receipt.attempt.id;
+    expect(decided.receipt.attempt.decision.outcome).toBe("REJECTED");
+    expect(await h.store.payments.get(id)).toBeNull();
+
+    // PayPal nonetheless has a settled transaction carrying that attempt's id: money moved that
+    // Slip never decided. This is the direction no other check in Slip can see.
+    h.gateway.addVault("VAULT-RECON");
+    await h.gateway.createOrder(
+      {
+        intent: "CAPTURE",
+        vaultId: "VAULT-RECON",
+        amountCents: 10_000 as Cents,
+        requestId: requestId(randomUUID()),
+        invoiceId: id,
+        description: "not Slip's doing",
+      },
+      new AbortController().signal,
+    );
+
+    h.clock.advance(25 * HOUR);
+    await resolve(h);
+    const mandate = await mandateOf(h, seeded);
+    expect(mandate.reconciledAt).not.toBeNull();
+    expect(mandate.reconcileUnmatched).toBe(1);
+  });
+
+  it("an unanswered search stamps nothing: Slip has not looked", async () => {
+    const { h, seeded } = await setup();
+    await buy(h, seeded, "paid");
+    h.clock.advance(25 * HOUR);
+    h.gateway.nextLookup("unknown");
+    await resolve(h);
+    expect((await mandateOf(h, seeded)).reconciledAt).toBeNull();
   });
 });

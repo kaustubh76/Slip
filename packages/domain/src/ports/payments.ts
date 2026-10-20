@@ -53,6 +53,27 @@ export interface FindOrderInput {
   to: Date;
 }
 
+/**
+ * One line of PayPal's own transaction record, normalised. Everything here is outside data: the
+ * invoice id is whatever PayPal carried back, and means nothing until it matches a payment Slip
+ * made.
+ *
+ * `amountCents` keeps its sign, and `kind` keeps the difference between a settlement and a
+ * reversal, because a reconcile that collapsed the two — as the per-order lookup deliberately
+ * does, where either answers "the money moved" — could not see a refund at all.
+ */
+export interface SettlementRecord {
+  invoiceId: string;
+  amountCents: number;
+  kind: "settled" | "pending" | "reversed" | "denied" | "other";
+  transactionId: string | null;
+}
+
+/** Listed, or not looked at. Never an empty list standing in for "PayPal did not answer". */
+export type SettlementsResult =
+  | { kind: "listed"; records: readonly SettlementRecord[] }
+  | { kind: "unknown"; reason: string };
+
 export const AUTHORIZATION_STATUSES = [
   "CREATED",
   "PENDING",
@@ -158,6 +179,15 @@ export interface PaymentGateway {
   getOrder(orderId: string, signal: AbortSignal): Promise<OrderResult>;
   /** For an order whose request id PayPal no longer remembers: scans its transaction records. */
   findOrderByInvoice(input: FindOrderInput, signal: AbortSignal): Promise<OrderLookupResult>;
+  /**
+   * Every transaction PayPal recorded in a window, for checking Slip's books against PayPal's own
+   * (D75). The other direction from `findOrderByInvoice`, which can only ask after a payment Slip
+   * already knows about — this is what can see one Slip has no record of at all.
+   */
+  listSettlements(
+    window: { from: Date; to: Date },
+    signal: AbortSignal,
+  ): Promise<SettlementsResult>;
   captureAuthorization(
     input: CaptureAuthorizationInput,
     signal: AbortSignal,

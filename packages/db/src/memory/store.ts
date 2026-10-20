@@ -464,6 +464,8 @@ export function createMemoryStore(): Store {
           activatedAt: null,
           revokedAt: null,
           vaultDeletedAt: null,
+          reconciledAt: null,
+          reconcileUnmatched: 0,
         };
         mandates.set(mandate.id, { mandate: copy(mandate), vaultId: null });
         policies.set(mandate.id, [copy(policy.data)]);
@@ -588,6 +590,35 @@ export function createMemoryStore(): Store {
         }
         record.mandate = { ...record.mandate, vaultDeletedAt: now };
         return { value: copy(record.mandate), result: "applied" };
+      },
+
+      async listDueForReconcile(before, limit) {
+        return (
+          [...mandates.values()]
+            .filter(
+              (r) =>
+                r.mandate.status === "ACTIVE" &&
+                (r.mandate.reconciledAt === null || r.mandate.reconciledAt < before),
+            )
+            // Never checked first: a permission nobody has ever looked at is the one to look at.
+            .sort(
+              (a, b) =>
+                (a.mandate.reconciledAt?.getTime() ?? 0) -
+                  (b.mandate.reconciledAt?.getTime() ?? 0) ||
+                (a.mandate.id < b.mandate.id ? -1 : 1),
+            )
+            .slice(0, limit)
+            .map((r) => copy(r.mandate))
+        );
+      },
+
+      async recordReconcile(id, result) {
+        const record = mandates.get(id);
+        if (record === undefined) {
+          return;
+        }
+        record.mandate.reconciledAt = result.at;
+        record.mandate.reconcileUnmatched = result.unmatched;
       },
 
       async listAwaitingVaultDeletion(limit) {

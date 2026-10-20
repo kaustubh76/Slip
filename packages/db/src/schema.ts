@@ -89,9 +89,18 @@ export const mandates = pgTable(
     revokedAt: ts("revoked_at"),
     /** When PayPal confirmed the vaulted method was deleted after a revoke; set once. */
     vaultDeletedAt: ts("vault_deleted_at"),
+    /**
+     * When Slip last checked its payments against PayPal's own record, and how many it could not
+     * account for then (D75). Operational, not evidence: it is rewritten every pass, unlike every
+     * other timestamp here, and losing it costs nothing but an older answer. What was *decided*
+     * lives in the append-only attempt.
+     */
+    reconciledAt: ts("reconciled_at"),
+    reconcileUnmatched: integer("reconcile_unmatched").notNull().default(0),
   },
   (t) => [
     check("mandates_status_valid", sql`${t.status} in ('PENDING', 'ACTIVE', 'REVOKED')`),
+    check("mandates_reconcile_unmatched_non_negative", sql`${t.reconcileUnmatched} >= 0`),
     check(
       "mandates_vault_deleted_after_revoke",
       sql`${t.vaultDeletedAt} is null or (${t.status} = 'REVOKED' and ${t.vaultIdCiphertext} is not null)`,

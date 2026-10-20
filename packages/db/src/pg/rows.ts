@@ -80,6 +80,8 @@ export function toMandate(row: Row<typeof mandates>): Mandate {
     activatedAt: row.activatedAt,
     revokedAt: row.revokedAt,
     vaultDeletedAt: row.vaultDeletedAt,
+    reconciledAt: row.reconciledAt,
+    reconcileUnmatched: row.reconcileUnmatched,
   };
 }
 

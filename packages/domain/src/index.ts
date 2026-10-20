@@ -167,6 +167,8 @@ export {
   type OrderLookupResult,
   type OrderResult,
   type PaymentGateway,
+  type SettlementRecord,
+  type SettlementsResult,
   type StartVaultSetupInput,
   type StartVaultSetupResult,
   type VoidAuthorizationInput,

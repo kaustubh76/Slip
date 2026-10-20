@@ -1,9 +1,12 @@
 import {
+  attemptId,
   type Cursor,
+  isUuid,
   type Payment,
   type PaymentStatus,
   type Receipt,
   requestId,
+  type SettlementRecord,
   type StaleCursor,
   SYSTEM_DECIDER,
 } from "@slip/domain";
@@ -42,6 +45,7 @@ export const RESOLVER_TASKS = [
   "holdOperations",
   "setups",
   "closedHolds",
+  "reconcile",
 ] as const;
 export type ResolverTask = (typeof RESOLVER_TASKS)[number];
 
@@ -61,6 +65,102 @@ const paymentCursor = (p: Payment): StaleCursor => ({
   attemptId: p.attemptId,
 });
 const paymentKey = (p: Payment): string => p.attemptId;
+
+/**
+ * Slip's books against PayPal's own, once a day per permission (D75).
+ *
+ * Only one direction is checked, and it is the one nothing else can see: a transaction PayPal
+ * recorded under one of this permission's attempts that Slip cannot account for. The other
+ * direction — Slip believes a payment moved and PayPal has not listed it — is what the resolver's
+ * own order lookup already chases, down to declaring it FAILED after a day.
+ *
+ * Two things keep it from crying wolf. The window ends `reportingLagMs` ago, because reporting
+ * lags and a fresh "no" means nothing; and a payment still in flight is never counted, because
+ * disagreeing with PayPal is the resolver's job, not this one's. Only a payment that is absent,
+ * FAILED or VOIDED while PayPal settled money is unaccounted for.
+ *
+ * PayPal is asked once per pass, not once per permission: one merchant account serves them all.
+ */
+async function reconcile(deps: AppDeps, run: Run, limit: number): Promise<void> {
+  const now = deps.clock.now();
+  const dueBefore = new Date(now.getTime() - deps.config.reconcileEveryMs);
+  // Asked once, before PayPal: there is no point spending a call on nobody.
+  if ((await deps.store.mandates.listDueForReconcile(dueBefore, 1)).length === 0) {
+    return;
+  }
+  const to = new Date(now.getTime() - deps.config.reportingLagMs);
+  const listed = await callPayPal(deps, "settlement list", (signal) =>
+    deps.gateway.listSettlements(
+      { from: new Date(to.getTime() - deps.config.reconcileWindowMs), to },
+      signal,
+    ),
+  );
+  if (listed.kind !== "listed") {
+    // Slip has not looked, so it may not conclude anything — and must not stamp an "as of" that
+    // would tell an owner it had.
+    deps.log.error("reconcile.unanswered", { reason: listed.reason });
+    return;
+  }
+
+  const unmatched = new Map<string, number>();
+  let strangers = 0;
+  for (const [invoiceId, moved] of settledByInvoice(listed.records)) {
+    if (!moved || !isUuid(invoiceId)) {
+      strangers += moved ? 1 : 0;
+      continue;
+    }
+    const receipt = await deps.store.attempts.get(attemptId(invoiceId));
+    if (receipt === null) {
+      // Another application on the same merchant account, or a record Slip never made. Not this
+      // owner's business, and not a number to put in front of them.
+      strangers += 1;
+      continue;
+    }
+    if (accountedFor(receipt.payment)) {
+      continue;
+    }
+    const mandate = receipt.attempt.mandateId as string;
+    unmatched.set(mandate, (unmatched.get(mandate) ?? 0) + 1);
+  }
+  if (strangers > 0) {
+    deps.log.warn("reconcile.unknown_transactions", { count: strangers });
+  }
+
+  // Stamped through `drain`, so one permission that throws is counted and the rest still get
+  // their answer; each leaves the list as its own "as of" moves forward.
+  await run.drain(
+    "reconcile",
+    () => deps.store.mandates.listDueForReconcile(dueBefore, limit),
+    (mandate) => mandate.id,
+    async (mandate) => {
+      const count = unmatched.get(mandate.id as string) ?? 0;
+      await deps.store.mandates.recordReconcile(mandate.id, { at: now, unmatched: count });
+      if (count > 0) {
+        deps.log.error("reconcile.unmatched", { mandateId: mandate.id, count });
+      }
+      return "settled";
+    },
+  );
+}
+
+/** Net of reversals: an invoice with a settlement and a refund for it had its money given back. */
+function settledByInvoice(records: readonly SettlementRecord[]): Map<string, boolean> {
+  const net = new Map<string, number>();
+  for (const record of records) {
+    if (record.kind === "settled" || record.kind === "reversed") {
+      net.set(record.invoiceId, (net.get(record.invoiceId) ?? 0) + record.amountCents);
+    }
+  }
+  return new Map([...net].map(([invoiceId, cents]) => [invoiceId, cents > 0]));
+}
+
+/**
+ * Slip's side agrees that money moved, or is still deciding. Anything in flight belongs to the
+ * resolver's other tasks; only a payment that says no money moved disagrees with PayPal.
+ */
+function accountedFor(payment: Payment | null): boolean {
+  return payment !== null && payment.status !== "FAILED" && payment.status !== "VOIDED";
+}
 
 /** Searching from a little before the decision, in case PayPal's clock runs behind ours. */
 const LOOKUP_SKEW_MS = 10 * 60_000;
@@ -176,6 +276,10 @@ export async function runResolver(deps: AppDeps): Promise<ResolverReport> {
       return released.status === "VOIDING" ? "waiting" : "settled";
     },
   );
+
+  // After everything else, so what this run settled is already in Slip's books before they are
+  // compared with PayPal's.
+  await reconcile(deps, run, limit);
 
   deps.log.info("resolver.finished", {
     ms: deps.clock.now().getTime() - started.getTime(),

@@ -35,6 +35,10 @@ export interface Mandate {
   revokedAt: Date | null;
   /** When PayPal confirmed the vaulted method was deleted after the revoke. */
   vaultDeletedAt: Date | null;
+  /** When Slip last checked this permission's payments against PayPal's own record (D75). */
+  reconciledAt: Date | null;
+  /** Transactions PayPal recorded under it that Slip could not account for, as of then. */
+  reconcileUnmatched: number;
 }
 
 /** The thresholds an owner can edit; the version is assigned by the store. */

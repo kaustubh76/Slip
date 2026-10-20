@@ -1,4 +1,11 @@
-import type { Cents, FindOrderInput, OrderLookupResult, OrderResult } from "@slip/domain";
+import type {
+  Cents,
+  FindOrderInput,
+  OrderLookupResult,
+  OrderResult,
+  SettlementRecord,
+  SettlementsResult,
+} from "@slip/domain";
 import { parseUsdStringToCents } from "@slip/domain";
 import type { PayPalApi } from "./client.js";
 import { text } from "./map.js";
@@ -41,6 +48,102 @@ interface TransactionInfo {
 
 export interface OrderLookup {
   findOrderByInvoice(input: FindOrderInput, signal: AbortSignal): Promise<OrderLookupResult>;
+  listSettlements(
+    window: { from: Date; to: Date },
+    signal: AbortSignal,
+  ): Promise<SettlementsResult>;
+}
+
+/** One page of the window, or the reason Slip has not seen it. Never a short page standing in. */
+type Page =
+  | { kind: "page"; records: TransactionInfo[]; last: boolean }
+  | { kind: "unknown"; reason: string };
+
+/**
+ * The window scan both callers share: PayPal's reporting cannot be filtered by invoice id, so
+ * whoever wants one record and whoever wants all of them read the same pages.
+ */
+async function scan(
+  api: PayPalApi,
+  window: { from: Date; to: Date },
+  page: number,
+  signal: AbortSignal,
+): Promise<Page> {
+  const answer = await api.call(
+    {
+      path: "/v1/reporting/transactions",
+      // Dates in ISO 8601 rather than reporting's older format, so a window means one thing.
+      headers: { "paypal-enforce-iso8601-format": "true" },
+      query: {
+        start_date: iso(window.from),
+        end_date: iso(window.to),
+        fields: "transaction_info",
+        // An authorization moves no balance, and a hold is exactly what may be missing.
+        balance_affecting_records_only: "N",
+        page_size: String(PAGE_SIZE),
+        page: String(page),
+      },
+    },
+    signal,
+  );
+  if (answer.outcome !== "ok") {
+    // Unknown, never "not found": Slip has not looked, so it may not conclude anything.
+    return { kind: "unknown", reason: answer.detail };
+  }
+  const body = answer.body as {
+    transaction_details?: { transaction_info?: TransactionInfo }[];
+    total_pages?: unknown;
+  } | null;
+  const details = Array.isArray(body?.transaction_details) ? body.transaction_details : [];
+  const records = details
+    .map((detail) => detail?.transaction_info)
+    .filter((info): info is TransactionInfo => info !== undefined);
+  const totalPages = typeof body?.total_pages === "number" ? body.total_pages : page;
+  return { kind: "page", records, last: details.length === 0 || page >= totalPages };
+}
+
+/** The widest window PayPal will answer, ending where the caller asked. */
+function allowed(window: { from: Date; to: Date }): { from: Date; to: Date } {
+  return {
+    from: new Date(Math.max(window.from.getTime(), window.to.getTime() - MAX_WINDOW_MS)),
+    to: window.to,
+  };
+}
+
+/**
+ * What a record says became of the money. The per-order lookup deliberately treats a reversal as
+ * proof the money moved; a reconcile has to keep them apart, or a refund is invisible to it.
+ */
+function settlement(info: TransactionInfo): SettlementRecord | null {
+  const invoiceId = text(info.invoice_id) ?? text(info.custom_field);
+  const money = info.transaction_amount;
+  const value = text(money?.value);
+  if (invoiceId === null || value === null || text(money?.currency_code) !== "USD") {
+    return null;
+  }
+  let amountCents: number;
+  try {
+    amountCents = parseUsdStringToCents(value.replace("-", ""));
+  } catch {
+    return null;
+  }
+  const status = text(info.transaction_status);
+  const kind =
+    status === "S"
+      ? "settled"
+      : status === "P"
+        ? "pending"
+        : status === "V"
+          ? "reversed"
+          : status === "D"
+            ? "denied"
+            : "other";
+  return {
+    invoiceId,
+    amountCents: value.trimStart().startsWith("-") ? -amountCents : amountCents,
+    kind,
+    transactionId: text(info.transaction_id),
+  };
 }
 
 export function createOrderLookup(
@@ -49,58 +152,53 @@ export function createOrderLookup(
 ): OrderLookup {
   return {
     async findOrderByInvoice(input, signal): Promise<OrderLookupResult> {
-      const to = input.to;
       // Never ask for more than PayPal allows: a refused window would read as "not found".
-      const from = new Date(Math.max(input.from.getTime(), to.getTime() - MAX_WINDOW_MS));
-      if (from.getTime() > to.getTime()) {
+      const window = allowed(input);
+      if (window.from.getTime() > window.to.getTime()) {
         return { kind: "unknown", reason: "the search window ends before it starts" };
       }
-
       for (let page = 1; page <= MAX_PAGES; page += 1) {
-        const answer = await api.call(
-          {
-            path: "/v1/reporting/transactions",
-            // Dates in ISO 8601 rather than reporting's older format, so a window means one thing.
-            headers: { "paypal-enforce-iso8601-format": "true" },
-            query: {
-              start_date: iso(from),
-              end_date: iso(to),
-              fields: "transaction_info",
-              // An authorization moves no balance, and a hold is exactly what may be missing.
-              balance_affecting_records_only: "N",
-              page_size: String(PAGE_SIZE),
-              page: String(page),
-            },
-          },
-          signal,
-        );
-        if (answer.outcome !== "ok") {
-          // Unknown, never "not found": Slip has not looked, so it may not conclude anything.
-          return {
-            kind: "unknown",
-            reason: answer.outcome === "error" ? answer.detail : answer.detail,
-          };
+        const answered = await scan(api, window, page, signal);
+        if (answered.kind === "unknown") {
+          return answered;
         }
-        const body = answer.body as {
-          transaction_details?: { transaction_info?: TransactionInfo }[];
-          total_pages?: unknown;
-        } | null;
-        const details = Array.isArray(body?.transaction_details) ? body.transaction_details : [];
-        const match = details
-          .map((detail) => detail?.transaction_info)
-          .find(
-            (info): info is TransactionInfo =>
-              info !== undefined && matches(info, input.invoiceId, input.amountCents),
-          );
+        const match = answered.records.find((info) =>
+          matches(info, input.invoiceId, input.amountCents),
+        );
         if (match !== undefined) {
           return found(match, readOrder, signal);
         }
-        const totalPages = typeof body?.total_pages === "number" ? body.total_pages : page;
-        if (details.length === 0 || page >= totalPages) {
+        if (answered.last) {
           return { kind: "not-found" };
         }
       }
       // More pages than Slip will read: saying "not found" here could cost a second charge.
+      return { kind: "unknown", reason: `more than ${MAX_PAGES} pages of transactions to scan` };
+    },
+
+    async listSettlements(window, signal): Promise<SettlementsResult> {
+      const asked = allowed(window);
+      if (asked.from.getTime() > asked.to.getTime()) {
+        return { kind: "unknown", reason: "the search window ends before it starts" };
+      }
+      const records: SettlementRecord[] = [];
+      for (let page = 1; page <= MAX_PAGES; page += 1) {
+        const answered = await scan(api, asked, page, signal);
+        if (answered.kind === "unknown") {
+          return answered;
+        }
+        for (const info of answered.records) {
+          const record = settlement(info);
+          if (record !== null) {
+            records.push(record);
+          }
+        }
+        if (answered.last) {
+          return { kind: "listed", records };
+        }
+      }
+      // A window Slip could not read to the end is not a window Slip may draw conclusions from:
+      // the records it did not reach are exactly the ones it would report as missing.
       return { kind: "unknown", reason: `more than ${MAX_PAGES} pages of transactions to scan` };
     },
   };

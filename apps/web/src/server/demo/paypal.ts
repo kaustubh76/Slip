@@ -15,6 +15,7 @@ import {
   type OrderResult,
   type PaymentGateway,
   type RequestId,
+  type SettlementsResult,
   type StartVaultSetupInput,
   type StartVaultSetupResult,
   type Store,
@@ -228,6 +229,13 @@ export class DemoPayPal implements PaymentGateway {
 
   findOrderByInvoice(input: FindOrderInput, signal: AbortSignal): Promise<OrderLookupResult> {
     return this.#inner.findOrderByInvoice(input, signal);
+  }
+
+  listSettlements(
+    window: { from: Date; to: Date },
+    signal: AbortSignal,
+  ): Promise<SettlementsResult> {
+    return this.#inner.listSettlements(window, signal);
   }
 
   getAuthorization(authorizationId: string, signal: AbortSignal): Promise<AuthorizationResult> {

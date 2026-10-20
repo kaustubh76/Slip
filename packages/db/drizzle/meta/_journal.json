@@ -50,6 +50,13 @@
       "when": 1792472301232,
       "tag": "0006_jazzy_gauntlet",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792475445271,
+      "tag": "0007_smart_silver_samurai",
+      "breakpoints": true
     }
   ]
 }

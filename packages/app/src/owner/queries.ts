@@ -247,6 +247,8 @@ export async function mandateSummary(
     policyVersion: policy.version,
     pendingHolds: pending.length,
     agents: agents.length,
+    reconciledAt: owned.reconciledAt?.toISOString() ?? null,
+    reconcileUnmatched: owned.reconcileUnmatched,
   };
 }
 

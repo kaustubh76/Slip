@@ -32,6 +32,14 @@ export const AppConfigSchema = z
     orderResendWindowMs: ms(30 * MINUTE),
     /** Same for a hold's CAPTURE or VOID; afterwards the authorization is read instead. */
     operationResendWindowMs: ms(30 * MINUTE),
+    /**
+     * How often a permission's payments are checked against PayPal's own record (D75). Daily, as
+     * the diagram asks; the stored "as of" is what decides when to look again, so this is the
+     * only place the cadence is written down.
+     */
+    reconcileEveryMs: ms(24 * HOUR),
+    /** How far back a check looks. Wider than the cadence, so a missed day is still covered. */
+    reconcileWindowMs: ms(3 * 24 * HOUR),
     /** PayPal Transaction Search lags this far behind. */
     reportingLagMs: ms(3 * HOUR),
     /** An unknown order is declared FAILED only on a definite "not found" this long after it. */

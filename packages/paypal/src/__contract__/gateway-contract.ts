@@ -51,6 +51,33 @@ export function describeGatewayContract(label: string, make: () => Promise<Gatew
       }
     });
 
+    it("lists a window of its own records, and says so rather than answering an empty one", async () => {
+      const { gateway } = await make();
+      const now = new Date();
+      // A window that ends before it starts is a question Slip got wrong, not an empty answer:
+      // "listed, nothing in it" would read as "PayPal has no record of any of your payments".
+      const backwards = await gateway.listSettlements(
+        { from: now, to: new Date(now.getTime() - 60_000) },
+        live(),
+      );
+      expect(backwards.kind).toBe("unknown");
+
+      // A real window answers with a list. What is in it depends on the account's own history and
+      // on reporting's lag, so the contract is the shape of each record, not which ones appear.
+      const listed = await gateway.listSettlements(
+        { from: new Date(now.getTime() - 7 * 24 * 3_600_000), to: now },
+        live(),
+      );
+      expect(["listed", "unknown"]).toContain(listed.kind);
+      if (listed.kind === "listed") {
+        for (const record of listed.records) {
+          expect(typeof record.invoiceId).toBe("string");
+          expect(Number.isInteger(record.amountCents)).toBe(true);
+          expect(["settled", "pending", "reversed", "denied", "other"]).toContain(record.kind);
+        }
+      }
+    });
+
     it("an authorization is captured once; replaying the capture returns the same capture", async () => {
       const { gateway, vaultId } = await make();
       const order = await gateway.createOrder(

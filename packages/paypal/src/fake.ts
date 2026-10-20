@@ -16,6 +16,8 @@ import type {
   PaymentGateway,
   PaymentIntent,
   RequestId,
+  SettlementRecord,
+  SettlementsResult,
   StartVaultSetupInput,
   StartVaultSetupResult,
   VoidAuthorizationInput,
@@ -351,6 +353,44 @@ export class FakePaymentGateway implements PaymentGateway {
       : { kind: "found", order: this.#orderResult(order) };
   }
 
+  /**
+   * Everything PayPal would have recorded in the window, with the same three-hour lag the real
+   * reporting has: an order younger than that is simply not there yet, which is the case a
+   * reconcile must not mistake for money gone missing.
+   */
+  async listSettlements(
+    window: { from: Date; to: Date },
+    _signal: AbortSignal,
+  ): Promise<SettlementsResult> {
+    this.#log("listSettlements", window);
+    if (window.from.getTime() > window.to.getTime()) {
+      // A list is an answer about the window. An empty one for a window that cannot exist would
+      // read as "PayPal has no record of any of this", which is the opposite of the truth.
+      return { kind: "unknown", reason: "the search window ends before it starts" };
+    }
+    if (this.#script.lookup.shift() === "unknown") {
+      return { kind: "unknown", reason: "Transaction Search unavailable" };
+    }
+    const visibleBefore = this.#clock.now().getTime() - REPORTING_LAG_MS;
+    const records: SettlementRecord[] = [];
+    for (const order of this.#orders.values()) {
+      const at = order.createdAt.getTime();
+      if (at > visibleBefore || at < window.from.getTime() || at > window.to.getTime()) {
+        continue;
+      }
+      const kind = settledAs(order);
+      if (kind !== null) {
+        records.push({
+          invoiceId: order.invoiceId,
+          amountCents: kind === "reversed" ? -order.amountCents : order.amountCents,
+          kind,
+          transactionId: order.capture?.id ?? order.authorization?.id ?? null,
+        });
+      }
+    }
+    return { kind: "listed", records };
+  }
+
   async captureAuthorization(
     input: CaptureAuthorizationInput,
     signal: AbortSignal,
@@ -616,4 +656,26 @@ function untilAborted(signal: AbortSignal): Promise<void> {
   return new Promise((resolve) =>
     signal.addEventListener("abort", () => resolve(), { once: true }),
   );
+}
+
+/**
+ * What PayPal's record would say about one order. An authorization that was voided leaves a
+ * reversal behind; one still open affects no balance but is reported, which is why Slip asks for
+ * `balance_affecting_records_only=N`.
+ */
+function settledAs(order: FakeOrder): SettlementRecord["kind"] | null {
+  if (order.declined) {
+    return "denied";
+  }
+  if (order.capture !== null) {
+    return order.capture.status === "COMPLETED"
+      ? "settled"
+      : order.capture.status === "PENDING"
+        ? "pending"
+        : "denied";
+  }
+  if (order.authorization !== null) {
+    return order.authorization.status === "VOIDED" ? "reversed" : "pending";
+  }
+  return null;
 }

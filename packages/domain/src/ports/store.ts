@@ -170,6 +170,17 @@ export interface MandateRepo {
   /** REVOKED mandates whose PayPal token still has to be deleted, oldest revoke first. */
   listAwaitingVaultDeletion(limit: number): Promise<Mandate[]>;
   /**
+   * ACTIVE mandates not checked against PayPal since `before`, never-checked ones first (D75).
+   * The stored time is both the answer an owner reads and what decides when to look again, so
+   * there is no second schedule to keep running.
+   */
+  listDueForReconcile(before: Date, limit: number): Promise<Mandate[]>;
+  /**
+   * What the last check found. Rewritten every pass, unlike every other timestamp on a mandate:
+   * it is operational, and losing it costs nothing but an older answer.
+   */
+  recordReconcile(id: MandateId, result: { at: Date; unmatched: number }): Promise<void>;
+  /**
    * PENDING mandates with a setup reference created before `createdBefore`, oldest first: the
    * owner may have approved at PayPal without Slip hearing (no webhook announces a vault created
    * from a setup token), so the resolver polls them. The next page starts `after` the last one,
