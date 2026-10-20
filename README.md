@@ -67,7 +67,11 @@ pnpm test:pg       # same store contract + database guards + concurrency races o
 DATABASE_URL=postgres://slip:slip@localhost:54329/slip pnpm db:migrate
 ```
 
-No Docker: `DATABASE_URL=pglite://.data/slip pnpm db:migrate` gives a Postgres on disk.
+No Docker: `DATABASE_URL=pglite://.data/slip pnpm db:migrate` gives a Postgres on disk — but
+that path is relative to wherever the command runs, and `db:migrate` runs in `packages/db` while
+the app runs in `apps/web`. Use an absolute path, or skip it: PGlite migrates itself when the
+server opens it. Real Postgres does not, because a server that migrated on boot would race its
+own replicas.
 
 Schema changes: edit `packages/db/src/schema.ts`, run `pnpm db:generate`, commit the new SQL in
 `packages/db/drizzle/`. Triggers and lookup tables live in hand-written migrations.
@@ -140,6 +144,34 @@ Only one case anywhere spends a Channel3 credit, and it is opt-in twice: a key, 
 `CHANNEL3_LIVE_SEARCH=1`. A deployment that will run on serverless also needs `SLIP_CRON_SECRET`,
 because nothing resolves holds or unknown payments there without the schedule in `vercel.json`.
 
+Every variable is listed in [.env.example](.env.example). Copy it to **`apps/web/.env.local`** —
+that is the file Next loads and the one the operator scripts read; nothing reads a `.env` at the
+repo root.
+
+## Deploy
+
+The demo is a container, not a serverless deployment. Its stand-ins for Channel3 and PayPal keep
+their state in the process, so it needs a server that outlives a request — `SLIP_DEMO=1` refuses
+to turn on wherever `VERCEL` is set, rather than quietly splitting one visitor's desk across
+instances (D74).
+
+```sh
+docker build -t slip .
+docker run -p 3000:3000 -e SLIP_BASE_URL=https://your.host slip
+```
+
+That is the whole of it: demo mode needs no database and no keys. Point any host that runs a
+container at the [Dockerfile](Dockerfile) — the image serves `/sign-in` and answers its own
+healthcheck once it is listening.
+
+**Running the real thing instead** means leaving `SLIP_DEMO` unset, passing the keys above, and
+two more things. Migrate first — `pnpm db:migrate` against your `DATABASE_URL`, because the server
+does not migrate Postgres itself. And give housekeeping a way to run: a long-lived process does it
+on a timer, but anywhere an instance does not outlive a request, set `SLIP_CRON_SECRET` (or
+`CRON_SECRET`, which Vercel injects) and schedule `/api/cron/resolve`. Without it holds never
+expire and authorizations sit on real cards; with it, the endpoint takes a bearer token and
+nothing else.
+
 What to get where, what each suite proves and what it costs: [docs/SERVICES.md](docs/SERVICES.md).
 The PayPal one needs one step nothing can automate — a sandbox buyer whose wallet has been
 vaulted through the approval flow.
@@ -147,10 +179,14 @@ vaulted through the approval flow.
 ## The evidence
 
 ```sh
-pnpm study:report    # recompute the market study from study/snapshots/ — free
-pnpm bench:run       # what SlipBench would spend; add --yes to spend it
-pnpm bench:report    # recompute SlipBench from bench/runs/ — free
+pnpm study:report    # recompute the market study from study/snapshots/ — free, runs today
+pnpm bench:run       # SlipBench; needs ANTHROPIC_API_KEY, prints what it would spend, --yes spends it
+pnpm bench:report    # recompute SlipBench from bench/runs/ — free, once a run exists
 ```
+
+Only the first runs on a fresh clone. **SlipBench has not been run**: it needs a model key, so
+`bench/runs/` does not exist yet and the other two exit non-zero until it does. The `/bench` page
+says the same thing in a stamp rather than quietly showing zeroes.
 
 The market study ran on 19 Oct: 240 real products, 8 Channel3 credits, every response committed.
 **G1 fails** — 18.33% of products carry two or more comparable offers against a 60% bar — and the
@@ -228,4 +264,4 @@ A real MCP client drives every tool path on both stores. See [TOOLS.md](TOOLS.md
 
 Next: the Channel3, PayPal and Claude adapters replace the fakes once API keys are available; then
 the market study and SlipBench. See `docs/SPEC.md` §15 for dates and `docs/DECISIONS.md`
-(D1–D54) for every departure from the written spec.
+(D1–D74) for every departure from the written spec.
