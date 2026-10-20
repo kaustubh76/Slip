@@ -1,5 +1,5 @@
 import { runResolver } from "@slip/app";
-import { authoriseCron } from "../../../../server/cron";
+import { authoriseCron, cronSecret } from "../../../../server/cron";
 import { answer, jsonRoute } from "../../../../server/json";
 import { logApiError } from "../../../../server/owner-route";
 import { deps } from "../../../../server/runtime";
@@ -22,13 +22,12 @@ export const maxDuration = 60;
 const resolve = jsonRoute(async (request: Request) => {
   const verdict = authoriseCron({
     authorization: request.headers.get("authorization"),
-    vercelCron: request.headers.get("x-vercel-cron"),
-    secret: process.env["SLIP_CRON_SECRET"],
+    secret: cronSecret(),
   });
   if (verdict === "unconfigured") {
     return answer(503, {
       status: "error",
-      message: "Set SLIP_CRON_SECRET and call this with it as a bearer token.",
+      message: "Set SLIP_CRON_SECRET (or CRON_SECRET) and call this with it as a bearer token.",
     });
   }
   if (verdict === "unauthorized") {

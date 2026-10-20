@@ -9,25 +9,30 @@ import { timingSafeEqual } from "node:crypto";
  * HTTP, and the resolver captures holds and voids authorizations — so the endpoint needs a
  * credential, not obscurity.
  *
- * Two ways in. `SLIP_CRON_SECRET` as a bearer token is the general one, compared in constant time
- * so the comparison cannot be timed character by character. Vercel's own scheduler cannot send a
- * header of ours, so its `x-vercel-cron` marker is accepted too — but only when no secret is set,
- * because that header is trivially forgeable by anyone who can reach the deployment, and a
- * deployment that has chosen a secret should not also accept a weaker proof.
+ * **One way in: a bearer token, always.** The secret is `SLIP_CRON_SECRET`, or `CRON_SECRET` —
+ * the name Vercel injects into its own scheduled calls — so a serverless deployment can be both
+ * scheduled and authenticated. It is compared in constant time, so it cannot be guessed a
+ * character at a time. With no secret set the endpoint stays shut (503): housekeeping on a
+ * long-lived process runs on a timer instead (D66), and an endpoint that captures holds and voids
+ * authorizations is not left open merely because nobody configured it.
+ *
+ * `x-vercel-cron` used to be accepted when no secret was set. Anyone who can reach the deployment
+ * can type that header, so that was an unauthenticated way to move money, and it is gone (D74).
  */
 
 export type CronVerdict = "ok" | "unauthorized" | "unconfigured";
 
+export function cronSecret(env: NodeJS.ProcessEnv = process.env): string | undefined {
+  return env["SLIP_CRON_SECRET"] ?? env["CRON_SECRET"];
+}
+
 export function authoriseCron(input: {
   authorization: string | null;
-  vercelCron: string | null;
   secret: string | undefined;
 }): CronVerdict {
   const secret = input.secret?.trim() ?? "";
   if (secret === "") {
-    // Nothing to check against. Vercel's scheduler is allowed through so a deployment there works
-    // out of the box; anywhere else this endpoint stays shut until a secret exists.
-    return input.vercelCron === null ? "unconfigured" : "ok";
+    return "unconfigured";
   }
   const offered = (input.authorization ?? "").trim();
   const bearer = offered.toLowerCase().startsWith("bearer ") ? offered.slice(7).trim() : offered;
