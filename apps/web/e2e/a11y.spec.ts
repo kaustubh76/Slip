@@ -70,4 +70,39 @@ for (const theme of ["original", "carbon"] as const) {
       `shortcuts sheet, more contrast (${theme})`,
     ).toEqual([]);
   });
+
+  test(`the states a path list never reaches are clean too (${theme})`, async ({
+    page,
+    context,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await openDesk(page);
+    await context.addCookies([{ name: "slip-theme", value: theme, url: "http://localhost:3100" }]);
+    const serious = async (where: string) => {
+      const results = await new AxeBuilder({ page }).analyze();
+      expect(
+        results.violations
+          .filter((v) => v.impact === "serious" || v.impact === "critical")
+          .map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`),
+        `${where} (${theme})`,
+      ).toEqual([]);
+    };
+
+    // Older receipts: the one layout with neither a rail nor a list, and the only place the
+    // Receipts region renders without them. Any well-formed cursor reaches it (D78).
+    const cursor = Buffer.from(
+      `${new Date(Date.now() + 86_400_000).toISOString()}|00000000-0000-4000-8000-000000000000`,
+      "utf8",
+    ).toString("base64url");
+    await page.goto(`/receipts?before=${cursor}`);
+    await expect(page.getByRole("region", { name: "Receipts" })).toBeVisible();
+    await serious("the older-receipts page");
+
+    // A hold's dialog carries a role="status" refusal, a confirm that can be disabled and an
+    // aria-busy; the only dialog ever audited was the shortcuts sheet.
+    await page.goto("/holds");
+    await page.getByRole("button", { name: "Approve…" }).first().click();
+    await expect(page.getByRole("dialog")).toBeVisible();
+    await serious("a hold's approve dialog");
+  });
 }

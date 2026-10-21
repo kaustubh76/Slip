@@ -1106,3 +1106,40 @@ width:
 **The measurement is the test.** Every layout defect found in three passes over this UI —
 including this one's — was invisible to the eye and obvious to `scrollWidth - clientWidth`. Axe
 does not evaluate layout and Playwright's viewport is 1280 px wide, so neither can find them.
+
+## D78 · 2026-10-21 · Rendering the states nobody had rendered
+
+A survey of this UI's data-dependent branches listed what a demo desk never produces. Several were
+one click from a judge and none had ever been on a screen: a revoked agent key, the older-receipts
+layout, two policy versions, the loading and error states. A branch that has never rendered is a
+branch nothing has checked — no screenshot, no axe run, and no test, because the browser suite
+visits eight paths at one width and axe does not evaluate layout at all.
+
+Constructing them found two defects and disproved three guesses, which is the useful ratio.
+
+**A stamp is the size of its word.** `.slip-receipt-head` is a two-column grid and the second
+column is sized by the widest thing in it. On a report card that is "since 21 Oct 2026 11:15 UTC",
+so the REVOKED stamp stretched to match: a long empty box with the word adrift at one end, unlike
+every other stamp in the product. The roll's rows had always pinned their own stamps to the end of
+their track; the heads had not.
+
+**Having the bench to itself is not a reason to take all of it.** The older-receipts page is the
+only layout with neither a rail nor a list, and its rows ran the full width of the window — a
+sentence stretched across 1,400 pixels with its stamp a thousand away from it. It keeps the same
+measure every sheet keeps.
+
+**Three things turned out not to be wrong**, and not fixing them is part of the work:
+
+- A predicted 18 px dialog overflow at phone width, argued from `calc(100vw - 32px)` against a
+  content box. Browsers give `dialog` a border box of their own; measured, it is 390 in 390.
+- The version list was expected to run its `Leaders` blocks together. With four versions on
+  screen it reads as four.
+- **The loading and error states could not be produced at all**, and that is a property rather
+  than a gap. Every owner route is server-rendered with its queries seeded, so aborting or
+  delaying the browser's fetch changes nothing: the page was already complete. `FeedingPaper` and
+  `ErrorSlip` exist for a deployment under failure, not for a first paint. They remain unrendered
+  and unaudited, and the reason is the architecture working.
+
+**The audit now covers two states a path list cannot reach**: the older-receipts layout, and a
+hold's approve dialog — which carries a `role="status"` refusal, a confirm that can be disabled
+and an `aria-busy`, while the only dialog ever audited was the shortcuts sheet.

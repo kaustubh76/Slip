@@ -632,6 +632,15 @@
   }
 
   /*
+   * Having the bench to itself does not mean taking all of it: a roll is read, and a line of it
+   * running the full width of a wide screen puts the stamp a thousand pixels from the sentence it
+   * belongs to. The same measure every sheet keeps (D78).
+   */
+  .slip-workbench:has([data-archive]) > .slip-dock {
+    max-inline-size: var(--slip-slip-max);
+  }
+
+  /*
    * Beside the roll there is nothing to go back to; the link is for a screen that hid it. The
    * header's own rule sets `display`, so this one names both classes to settle it.
    */
@@ -1179,6 +1188,16 @@
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 2px 16px;
+  }
+
+  /*
+   * A stamp is the size of its word. In a head whose second column is sized by something wider —
+   * a report card's "since 21 Oct 2026 11:15 UTC" beneath it — a stretched stamp becomes a long
+   * empty box with the word adrift at one end, which is how REVOKED looked the first time anyone
+   * rendered it (D78). The roll's rows have always said this about their own stamps.
+   */
+  .slip-receipt-head > .slip-stamp {
+    justify-self: end;
   }
 
   .slip-receipt-head h2,
