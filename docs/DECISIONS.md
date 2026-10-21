@@ -1143,3 +1143,39 @@ measure every sheet keeps.
 **The audit now covers two states a path list cannot reach**: the older-receipts layout, and a
 hold's approve dialog — which carries a `role="status"` refusal, a confirm that can be disabled
 and an `aria-busy`, while the only dialog ever audited was the shortcuts sheet.
+
+*22 Oct 2026.* The third of those is now half wrong. `ErrorSlip` does render — not from a slow
+fetch, which the seeding really does rule out, but from a component throwing under the error
+boundary. The first fresh-clone run put it on screen within three seconds (D79). Nothing a reader
+does produces it; a defect does.
+
+## D79 · 2026-10-22 · What only a stranger's run could find
+
+`docs/SPEC.md` §15 sets one exit criterion for the deploy day: **a stranger can run it**. The
+README had been edited five times this week and executed exactly never — every instruction in it
+had only ever run here, in a tree that already had `node_modules`, a build, an `.env.local`, a warm
+store and 63 bench runs on disk. So it was run from a clone, literally and in order.
+
+Thirteen commands passed, two of them worth saying out loud: `pnpm install --frozen-lockfile` is
+the one path CI takes that nothing here exercises, and `study:report` and `bench:report` recompute
+their committed results byte for byte — the clone was still clean afterwards.
+
+The fourteenth step was the demo, and opening it in a browser rather than curling it is the whole
+reason this was worth doing. **The desk renders, and about two and a half seconds later the page
+replaces itself with "Slip could not show this page just now."** Every automated check passed
+either side of it: 1,793 unit tests, 308 on real Postgres, the browser suite, axe at two themes.
+
+`useClock` passed `useSyncExternalStore` a fresh arrow for each of its three arguments. React
+resubscribes whenever the subscribe function is a new one, and subscribing a ticker that has no
+listeners left starts it from the current time — so every render moved the clock, a moved clock is
+a changed snapshot, and a changed snapshot is another render. React stops that at fifty and
+throws; the boundary above `LiveBadge` caught it and swapped the whole bench for an error slip.
+
+**It is dev-only, and the README's demo is dev.** The built app ran twenty seconds without a
+flicker, because a production React mounts each effect once and the ticker keeps a listener
+throughout. `pnpm web:dev` is what the README gives a visitor, what the video is recorded from,
+and what a judge following the README would see fail. A bug that only the documented path reaches
+is not a lesser bug.
+
+Three of the four tests now in `clock.test.tsx` fail on the old hook, and the one that matters
+reads like the symptom: *a re-render between ticks must not move the clock*.

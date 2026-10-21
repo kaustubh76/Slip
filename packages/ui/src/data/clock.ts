@@ -1,6 +1,6 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 /**
  * One ticking clock per interval for the whole page, however many countdowns read it. During a
@@ -46,11 +46,16 @@ function subscribe(everyMs: number, listener: () => void): () => void {
   };
 }
 
-/** The current time in ms, updated every `everyMs`; `serverNow` is what the server rendered with. */
+/**
+ * The current time in ms, updated every `everyMs`; `serverNow` is what the server rendered with.
+ *
+ * All three arguments keep their identity between renders. React resubscribes whenever the
+ * subscribe function is a new one, and subscribing a ticker that has no listeners left moves its
+ * clock on — so a fresh arrow each render is a loop: resubscribe, time moved, render again (D79).
+ */
 export function useClock(everyMs = 1_000, serverNow?: number): number {
-  return useSyncExternalStore(
-    (listener) => subscribe(everyMs, listener),
-    () => tickerFor(everyMs).now,
-    () => serverNow ?? tickerFor(everyMs).now,
-  );
+  const listen = useCallback((listener: () => void) => subscribe(everyMs, listener), [everyMs]);
+  const read = useCallback(() => tickerFor(everyMs).now, [everyMs]);
+  const readOnServer = useCallback(() => serverNow ?? tickerFor(everyMs).now, [everyMs, serverNow]);
+  return useSyncExternalStore(listen, read, readOnServer);
 }
