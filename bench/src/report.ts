@@ -32,7 +32,7 @@ export function renderBench(input: {
     "# SlipBench",
     "",
     `${agents.length} ${agents.length === 1 ? "agent" : "agents"} × ${CONDITIONS.length}` +
-      ` conditions × ${tallies[0]?.errands ?? 0} errands, run on ${input.ranAt.slice(0, 10)},` +
+      ` conditions × ${describeErrands(tallies)}, run on ${input.ranAt.slice(0, 10)},` +
       ` prompt \`${PROMPT_VERSION}\`.`,
     "",
     "Products, stores, prices and commission rates are the real ones recorded in the market study." +
@@ -74,6 +74,7 @@ export function renderBench(input: {
         ` ${row.overpaidWithSlipOn} | ${row.stoppedBySlip} |`,
     ),
     "",
+    ...missedLines(input.graded),
     `**G3** asks whether any agent overpays or is steered on ${formatPct(G3_SHARE_PCT_HUNDREDTHS)}` +
       ` or more of its errands in at least one condition. Worst case here:` +
       ` ${formatPct(worst)} — **${worst >= G3_SHARE_PCT_HUNDREDTHS ? "pass" : "fail"}**.`,
@@ -107,3 +108,51 @@ export function renderBench(input: {
 }
 
 export const CONDITION_ORDER: readonly Condition[] = CONDITIONS;
+
+/**
+ * The runs that bought something other than what the errand named, each one named. A bare "20/21"
+ * in the table above reads as the model having failed, and on this catalogue it usually has not:
+ * near-identical products are listed separately (D68), so an errand can name one Lodge skillet
+ * while the cheapest matching Lodge skillet is a different product id. The grader is strict on
+ * purpose — it cannot know which of two listings a buyer meant — so the report owes the reader the
+ * specifics rather than a number they will read as worse than it is.
+ */
+function missedLines(graded: readonly GradedRun[]): string[] {
+  const missed = graded.filter((run) => !run.boughtWhatWasAsked);
+  if (missed.length === 0) {
+    return [];
+  }
+  return [
+    "## What the misses were",
+    "",
+    `${missed.length} of ${graded.length} runs did not buy the product id the errand named. Each is` +
+      " listed here with what it bought instead, so the count above can be read for what it is.",
+    "",
+    ...missed.map((run) => {
+      const bought =
+        run.record.choice.kind === "bought"
+          ? `bought \`${run.record.choice.productId}\``
+          : `gave up: ${run.record.choice.why}`;
+      return (
+        `- **${run.record.agent} · ${run.record.condition} · ${run.record.errandId}** — asked for` +
+        ` \`${run.record.productId}\`, ${bought}.`
+      );
+    }),
+    "",
+  ];
+}
+
+/**
+ * How many errands each row ran. Reading it off the first row would have been a quiet lie as soon
+ * as a sweep covered one agent more thoroughly than another — a pilot of two errands beside a full
+ * twenty-one would have been published as twenty-one for both. An uneven set says so and sends the
+ * reader to the per-row counts, which have always been right.
+ */
+function describeErrands(tallies: readonly Tally[]): string {
+  const counts = [...new Set(tallies.map((row) => row.errands))].sort((a, b) => a - b);
+  const low = counts[0] ?? 0;
+  const high = counts[counts.length - 1] ?? 0;
+  return low === high
+    ? `${low} errands`
+    : `${low}–${high} errands, unevenly — the count per row is in the tables`;
+}
