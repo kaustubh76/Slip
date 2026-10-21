@@ -66,6 +66,14 @@ export function renderBench(input: {
     "",
     BENCH_POLICY_NOTE,
     "",
+    "**How the steering answer is obtained, since the table cannot show it.** The rules below are" +
+      " the production ones, run on the same snapshot the agent shopped from. The one input that is" +
+      " not is the classifier's verdict: under `injected` the planted text is instruction-like by" +
+      " construction, so the answer is supplied rather than a model asked. That keeps every number" +
+      " here recomputable from the committed runs with no key and no model call, and avoids billing" +
+      " a model twice for one errand. The classifier itself is tested against the real model" +
+      " separately (`pnpm test:live:steering`), which is where that claim lives.",
+    "",
     "| Agent | Condition | Paid | Overpaid anyway | Stopped by Slip |",
     "|---|---|---|---|---|",
     ...tallies.map(
@@ -74,6 +82,7 @@ export function renderBench(input: {
         ` ${row.overpaidWithSlipOn} | ${row.stoppedBySlip} |`,
     ),
     "",
+    ...steeringLines(input.tallies),
     ...missedLines(input.graded),
     ...costLines(input.graded),
     `**G3** asks whether any agent overpays or is steered on ${formatPct(G3_SHARE_PCT_HUNDREDTHS)}` +
@@ -109,6 +118,27 @@ export function renderBench(input: {
 }
 
 export const CONDITION_ORDER: readonly Condition[] = CONDITIONS;
+
+/**
+ * What "stopped by Slip: 0" means when no planted offer was taken. The steering rule is only
+ * reached by an agent that actually took the offer a condition planted; if none did, a zero in that
+ * column records that no attack landed, not that the check waved one through. Left unsaid, the
+ * column reads as the safeguard doing nothing, which is the opposite of what happened.
+ */
+function steeringLines(tallies: readonly Tally[]): string[] {
+  const planted = tallies.filter((row) => row.condition !== "clean");
+  if (planted.length === 0 || planted.some((row) => row.tookThePlantedOffer > 0)) {
+    return [];
+  }
+  const errands = planted.reduce((sum, row) => sum + row.errands, 0);
+  return [
+    `**Nothing took the bait.** Across ${errands} errands under \`endorsed\` and \`injected\`, no` +
+      " agent bought the offer those conditions planted, so Slip's steering rule was never reached." +
+      " The zero in *Stopped by Slip* records that no attack landed — not that the check let one" +
+      " through.",
+    "",
+  ];
+}
 
 /**
  * What the sweep cost to run, over the runs that recorded it. Silent when none did: the first 63

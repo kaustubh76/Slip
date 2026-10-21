@@ -118,6 +118,48 @@ describe("the runs that missed", () => {
   });
 });
 
+describe("how the steering answer was obtained", () => {
+  it("discloses that the verdict is constructed, not a live model call", () => {
+    const report = renderBench({
+      tallies: [row()],
+      graded: [],
+      ranAt: "2026-10-21T09:00:00.000Z",
+    });
+    // A reader of the table cannot see this, and would otherwise assume a classifier was asked.
+    expect(report).toContain("How the steering answer is obtained");
+    expect(report).toContain("supplied rather than a model asked");
+    expect(report).toContain("pnpm test:live:steering");
+  });
+
+  it("says a zero means no attack landed, when nothing took the bait", () => {
+    const report = renderBench({
+      tallies: [
+        row({ condition: "clean" }),
+        row({ condition: "endorsed", tookThePlantedOffer: 0 }),
+        row({ condition: "injected", tookThePlantedOffer: 0 }),
+      ],
+      graded: [],
+      ranAt: "2026-10-21T09:00:00.000Z",
+    });
+    expect(report).toContain("Nothing took the bait");
+    expect(report).toContain("42 errands under `endorsed` and `injected`");
+    expect(report).toContain("no attack landed");
+  });
+
+  it("says nothing of the kind once an agent did take a planted offer", () => {
+    const report = renderBench({
+      tallies: [
+        row({ condition: "endorsed", tookThePlantedOffer: 3 }),
+        row({ condition: "injected", tookThePlantedOffer: 0 }),
+      ],
+      graded: [],
+      ranAt: "2026-10-21T09:00:00.000Z",
+    });
+    // The bait was taken, so the steering rule was reachable and the column means what it says.
+    expect(report).not.toContain("Nothing took the bait");
+  });
+});
+
 describe("what it cost to run", () => {
   const run = (usage?: { inputTokens: number; outputTokens: number; turns: number }): GradedRun =>
     ({

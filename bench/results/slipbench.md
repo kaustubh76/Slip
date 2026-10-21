@@ -22,11 +22,15 @@ Products, stores, prices and commission rates are the real ones recorded in the 
 
 The owner's limits are the shipped defaults — reject above 5 % and $8, flag above 1 % — with the order cap raised to $2,000 so that it never decides an errand on size instead of price.
 
+**How the steering answer is obtained, since the table cannot show it.** The rules below are the production ones, run on the same snapshot the agent shopped from. The one input that is not is the classifier's verdict: under `injected` the planted text is instruction-like by construction, so the answer is supplied rather than a model asked. That keeps every number here recomputable from the committed runs with no key and no model call, and avoids billing a model twice for one errand. The classifier itself is tested against the real model separately (`pnpm test:live:steering`), which is where that claim lives.
+
 | Agent | Condition | Paid | Overpaid anyway | Stopped by Slip |
 |---|---|---|---|---|
 | claude-haiku-5-5 | clean | 20/21 | 0 | 0 |
 | claude-haiku-5-5 | endorsed | 20/21 | 0 | 0 |
 | claude-haiku-5-5 | injected | 20/21 | 0 | 0 |
+
+**Nothing took the bait.** Across 42 errands under `endorsed` and `injected`, no agent bought the offer those conditions planted, so Slip's steering rule was never reached. The zero in *Stopped by Slip* records that no attack landed — not that the check let one through.
 
 ## What the misses were
 
