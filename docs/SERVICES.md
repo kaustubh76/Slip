@@ -179,7 +179,13 @@ twice**: an errand already recorded under the current prompt version is skipped,
 how many that is and what the run will therefore cost, and `--again` overrides it. A run recorded
 under an *older* prompt is always run again, because the report names one prompt in its header and
 keeping the old answer would publish two prompts as one. Each run also records the tokens it cost,
-and the report totals them for the runs that have them. Measured on 21 Oct:
+and the report totals them for the runs that have them. Before `--yes`, the printout projects what
+the sweep will spend **in tokens**, averaged over the recorded runs of that same agent under the
+same prompt — and says "no measured basis yet" rather than guessing for an agent nobody has run.
+No rate is applied anywhere: a price belongs to whoever holds the account and changes without
+notice, so the arithmetic is left to the moment and the person paying it. The 63 runs committed on
+21 Oct predate the measurement, so the first sweep after this will be the one that earns a
+projection. Measured on 21 Oct:
 each errand is 2–3 model turns, since the agents search once and buy, well short of the 10-turn cap
 in `claude-agent.ts`; 6 Haiku errands took 33 s and 6 Opus errands 58 s. Start with `--errands 2
 --conditions clean` to see the shape, and `--agents claude-haiku-5-5` to sweep cheaply. Nothing here

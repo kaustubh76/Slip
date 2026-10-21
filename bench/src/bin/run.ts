@@ -23,9 +23,10 @@ import { loadCatalogue } from "../catalogue.js";
 import { createClaudeAgent } from "../claude-agent.js";
 import { CONDITIONS, type Condition } from "../conditions.js";
 import { ERRANDS } from "../errands.js";
+import { describeEstimate, estimateSweep } from "../estimate.js";
 import { PROMPT_VERSION } from "../prompt.js";
 import { runAll } from "../run.js";
-import { RUN_DIR, recordedFor, writeRun } from "../runs.js";
+import { RUN_DIR, readRuns, recordedFor, writeRun } from "../runs.js";
 
 /**
  * The agents that are wired. §6.2 asks for three across at least two providers; only Anthropic's
@@ -76,11 +77,15 @@ const recorded = again ? new Set<string>() : recordedFor(dir, PROMPT_VERSION);
 const key = (agent: string, condition: string, errandId: string): string =>
   `${agent}\u0000${condition}\u0000${errandId}`;
 let already = 0;
+/** Errands this sweep will actually run, per agent: what the projection must be multiplied by. */
+const toRun = new Map<string, number>();
 for (const agent of agents) {
   for (const condition of conditions) {
     for (const errand of errands) {
       if (recorded.has(key(agent.name, condition, errand.id))) {
         already += 1;
+      } else {
+        toRun.set(agent.name, (toRun.get(agent.name) ?? 0) + 1);
       }
     }
   }
@@ -98,6 +103,25 @@ if (already > 0) {
   );
 } else if (again) {
   console.log("--again: nothing is skipped, including runs already recorded.");
+}
+if (runs - already > 0) {
+  // Measured, not guessed, and in tokens: a rate belongs to whoever is about to pay it, and this
+  // is the only moment the arithmetic is true.
+  const stored = readRuns(dir);
+  console.log("\nwhat it should cost:");
+  for (const agent of agents) {
+    const errandsLeft = toRun.get(agent.name) ?? 0;
+    if (errandsLeft === 0) {
+      continue;
+    }
+    const estimate = estimateSweep({
+      runs: stored,
+      agent: agent.name,
+      errands: errandsLeft,
+      promptVersion: PROMPT_VERSION,
+    });
+    console.log(`  ${describeEstimate(estimate, agent.name)}`);
+  }
 }
 if (!confirmed) {
   console.log("\nNothing has been run. Add --yes to spend tokens.");
