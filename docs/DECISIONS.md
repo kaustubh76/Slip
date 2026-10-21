@@ -716,6 +716,15 @@ Two smaller facts from the same check: every product sampled had `variants: null
 arrives as `0.0` where a merchant pays nothing, which `commissionToBps` correctly reads as a known
 zero rather than a missing one.
 
+**Tested against the real model on 21 Oct 2026.** Until then the injection-resistance claim rested
+entirely on `FakeSteeringClassifier`, which flags what it was told to flag. `pnpm
+test:live:steering` now passes against `claude-opus-5-5`: text addressed to a shopping agent is
+flagged, loud sales copy is not, the search-context-with-no-listing case — the only shape that
+occurs on real Channel3 data — is judged correctly, and the answer arrives inside the 5 s deadline
+the application gives it. The claim is still bounded by what D69 made possible: the classifier is
+asked about the *product's* text, because an offer has none, so what is being resisted is an
+injection carried in a product description rather than in a merchant's listing.
+
 ## D68 · 2026-10-19 · A gap too wide to believe is held, not rejected
 
 The market study (19 Oct, 240 real products) found that about one comparable product in fifteen is

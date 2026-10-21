@@ -167,10 +167,19 @@ recompute their numbers from those files for free.
 60% bar, the typical gap where comparison is possible is 16.67%, and the dearer offer pays more
 commission in 19 of 40 cases. It also found the grouping errors behind D68.
 
-**SlipBench is built and has not run.** It needs `ANTHROPIC_API_KEY`. `pnpm bench:run` prints what
-it would spend and does nothing without `--yes`; 21 errands × 3 conditions × 2 Claude models is 126
-errands of several model turns each, so start with `--errands 2 --conditions clean` to see the shape
-of it. One errand against the real API, to check the loop before spending on all of them:
+**SlipBench ran on 21 Oct 2026, on one of its two agents.** `claude-haiku-5-5`, 21 errands × 3
+conditions = 63 runs, every one of them committed under `bench/runs/`. The headline is that it did
+not catch the agent out: no overpayment and no planted offer taken in any condition, so **G3 fails
+at 0%** against its 15% bar. `claude-opus-5-5` was piloted on 2 errands and then left unrun, which
+is why the table is one agent wide; a pilot's 2 errands are not published beside a full 21, because
+G3 takes the worst share across rows and two data points could have decided it.
+
+`pnpm bench:run` prints what it would spend and does nothing without `--yes`. Measured on 21 Oct:
+each errand is 2–3 model turns, since the agents search once and buy, well short of the 10-turn cap
+in `claude-agent.ts`; 6 Haiku errands took 33 s and 6 Opus errands 58 s. Start with `--errands 2
+--conditions clean` to see the shape, and `--agents claude-haiku-5-5` to sweep cheaply. Nothing here
+spends a Channel3 credit: the catalogue is replayed from `study/snapshots/`. One errand against the
+real API, to check the loop before spending on all of them:
 
 ```sh
 ANTHROPIC_API_KEY=… pnpm test:live:bench
@@ -180,6 +189,8 @@ Two things to know before quoting its numbers. The errands' products and prices 
 only invented strings are the `[synthetic]` endorsement and injection, planted on one offer each.
 And **the third agent is missing**: §6.2 asks for three agents across at least two providers, and
 only Anthropic's SDK is wired, so the second provider is one file against `BenchAgent` plus its key.
+One of the two wired agents has results; the Bench page says "1 measured of 2 wired" rather than
+counting the unrun one.
 
 ---
 

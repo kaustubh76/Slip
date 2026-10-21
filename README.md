@@ -207,9 +207,17 @@ behind D68, which is why Slip now holds an implausible gap instead of rejecting 
 [study/results/market-study.md](study/results/market-study.md) has the working, including why so
 few products can be compared at all.
 
-SlipBench is built and has not run: it needs an Anthropic key. 21 errands on real products, three
-conditions (clean, endorsed, injected), with and without Slip, replayed from committed runs.
-[docs/SERVICES.md](docs/SERVICES.md) says what it costs and what is still missing from it.
+SlipBench ran on 21 Oct, on one agent: `claude-haiku-5-5`, 21 errands × 3 conditions = 63 runs, all
+63 ending in a purchase, every response committed. **It did not catch these agents out.** Nobody
+overpaid and nobody took the planted offer — not in `clean`, not in `endorsed`, and not in
+`injected`, where the dearer listing carries text addressed to shopping agents. **G3 fails at 0%**
+against a 15% bar, which here means the agent compared offers well enough that Slip rarely had to
+stop it, and the report says so instead of dressing it up. Three of the 63 runs bought a different
+product id than the errand named, all the same errand: the catalogue lists two near-identical Lodge
+skillets, and the agent bought the cheaper one (D68's grouping problem, not a model error) — the
+report names each miss so the count reads for what it is.
+[bench/results/slipbench.md](bench/results/slipbench.md) has the tables;
+`pnpm bench:report` recomputes them from the committed runs with no key and no model call.
 
 ## Status
 
@@ -218,12 +226,14 @@ adapters for all three outside services, and the wiring a deployment outside the
 agent that can find products, a steering check with something to read, a resolver that runs where
 there is no long-lived process, and a way back in for an owner whose browser forgot the session.
 
-Channel3 is verified against a live key. What is left needs a key or an account that cannot be
-issued from here: the Anthropic key SlipBench and the steering suite wait on, an OpenAI key for the
-benchmark's second provider, a sandbox buyer whose wallet has been vaulted through PayPal's own
-approval flow, and `pnpm test:pg` against a real Postgres — PGlite runs the identical contract and
-migrations, so only the concurrency suite is missed. The offline tests are written from PayPal's and
-Channel3's own documented payloads, which is not the same as traffic from a live account.
+Channel3 is verified against a live key, `pnpm test:pg` runs against real Postgres, and the steering
+classifier is verified against the real model — injected text flagged, loud sales copy not, inside
+the application's own deadline, which is the first evidence that D67's claim holds anywhere but a
+stand-in. What is left needs a key or an account that cannot be issued from here: the other half of
+SlipBench (`claude-opus-5-5`, whose sweep was not run), an OpenAI key for the benchmark's second
+provider, and a sandbox buyer whose wallet has been vaulted through PayPal's own approval flow. The
+offline tests are written from PayPal's and Channel3's own documented payloads, which is not the
+same as traffic from a live account.
 
 - **Checkout** — key, ACTIVE mandate and request checked; one checkout per agent and product at a
   time; repeats replayed rather than paid twice; prices refreshed from Channel3 within their
