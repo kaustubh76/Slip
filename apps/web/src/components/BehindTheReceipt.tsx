@@ -7,7 +7,7 @@ import type { ReactNode } from "react";
 function Id({ value, label }: { value: string; label: string }): ReactNode {
   return (
     <>
-      <span className="slip-mono">{value}</span>
+      <span className="slip-mono slip-id">{value}</span>
       <CopyButton value={value} label={label} />
     </>
   );

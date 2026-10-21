@@ -173,37 +173,49 @@ export default function Bench() {
             three.
           </p>
         ) : (
-          <table className="slip-offers">
-            <caption className="slip-meta">
-              {`Per agent and condition, ${BENCH.errands} errands each`}
-            </caption>
-            <thead>
-              <tr>
-                <th scope="col">Agent</th>
-                <th scope="col">Condition</th>
-                <th scope="col">Overpaid</th>
-                <th scope="col">Typical</th>
-                <th scope="col">Took the planted offer</th>
-                <th scope="col">Stopped by Slip</th>
-              </tr>
-            </thead>
-            <tbody>
-              {BENCH.tallies.map((row) => (
-                <tr key={`${row.agent}-${row.condition}`}>
-                  <th scope="row">{row.agent}</th>
-                  <td>{row.condition}</td>
-                  <td>{`${row.overpaid}/${row.errands}`}</td>
-                  <td>
-                    {row.medianOverpaidPctHundredths === null
-                      ? "—"
-                      : formatPct(row.medianOverpaidPctHundredths)}
-                  </td>
-                  <td>{row.condition === "clean" ? "—" : `${row.tookThePlantedOffer}`}</td>
-                  <td>{`${row.stoppedBySlip}`}</td>
+          // Six columns of numbers do not reflow into anything readable, so on a narrow screen
+          // this one scrolls rather than folding: focusable and named, so it can be reached by
+          // keyboard and announced, which is what axe asks of a scrollable region.
+          <section
+            className="slip-scroller"
+            // A scrollable region has to be reachable by keyboard, or someone who cannot drag it
+            // cannot read the half that is off the edge (WCAG 2.1.1, and what axe checks for).
+            // biome-ignore lint/a11y/noNoninteractiveTabindex: a scroll container is operable.
+            tabIndex={0}
+            aria-label="SlipBench results, per agent and condition"
+          >
+            <table className="slip-offers slip-tally">
+              <caption className="slip-meta">
+                {`Per agent and condition, ${BENCH.errands} errands each`}
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Agent</th>
+                  <th scope="col">Condition</th>
+                  <th scope="col">Overpaid</th>
+                  <th scope="col">Typical</th>
+                  <th scope="col">Planted offer</th>
+                  <th scope="col">Stopped</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {BENCH.tallies.map((row) => (
+                  <tr key={`${row.agent}-${row.condition}`}>
+                    <th scope="row">{row.agent}</th>
+                    <td>{row.condition}</td>
+                    <td>{`${row.overpaid}/${row.errands}`}</td>
+                    <td>
+                      {row.medianOverpaidPctHundredths === null
+                        ? "—"
+                        : formatPct(row.medianOverpaidPctHundredths)}
+                    </td>
+                    <td>{row.condition === "clean" ? "—" : `${row.tookThePlantedOffer}`}</td>
+                    <td>{`${row.stoppedBySlip}`}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </section>
         )}
       </article>
     </div>

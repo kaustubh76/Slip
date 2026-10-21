@@ -541,6 +541,12 @@
   /* Self-contained cards sit side by side where there is room: waiting holds, agents. */
   .slip-cards {
     display: grid;
+    /*
+     * Named even for the single column, because an implicit track is `auto` and `auto` sizes to
+     * its widest content — so one card holding a table too wide to fold would push the page
+     * sideways instead of scrolling inside itself (D77).
+     */
+    grid-template-columns: minmax(0, 1fr);
     gap: 24px;
     align-items: start;
     inline-size: 100%;
@@ -871,9 +877,39 @@
     color: var(--slip-ink-faint);
   }
 
-  /* Narrow screens: each offer becomes a small slip of its own; the header stays for readers. */
+  /*
+   * A table too wide to fold scrolls instead, inside something a keyboard can reach and a screen
+   * reader can name. Six columns of numbers reflow into nothing anyone can read, and hiding the
+   * header while laying the values out in pairs — which is what the fold below does — leaves bare
+   * figures with nothing to say what they are (D77).
+   */
+  .slip-scroller {
+    overflow-x: auto;
+    max-inline-size: 100%;
+  }
+
+  /*
+   * The thing a benchmark row is about is which model it was. Left to wrap it breaks at its own
+   * hyphens — "claude-" / "haiku-" / "5-5" down three lines — so it stays whole and the table
+   * scrolls instead, which it is already doing.
+   */
+  .slip-tally tbody th {
+    white-space: nowrap;
+  }
+
+  .slip-scroller:focus-visible {
+    outline: 2px solid var(--slip-pen);
+    outline-offset: 2px;
+  }
+
+  /*
+   * Narrow screens: each offer becomes a small slip of its own; the header stays for readers.
+   * Only the offers table folds this way. The rule knows which of its cells wrap by counting
+   * columns, so it is true of one table's shape and no other's — `.slip-tally` opts out and
+   * scrolls instead.
+   */
   @media (max-width: 480px) {
-    .slip-offers thead {
+    .slip-offers:not(.slip-tally) thead {
       position: absolute;
       inline-size: 1px;
       block-size: 1px;
@@ -881,7 +917,7 @@
       clip-path: inset(50%);
     }
 
-    .slip-offers tr {
+    .slip-offers:not(.slip-tally) tr {
       display: grid;
       grid-template-columns: 1fr auto;
       gap: 0 8px;
@@ -889,14 +925,14 @@
       border-block-end: 1px solid var(--slip-edge);
     }
 
-    .slip-offers th,
-    .slip-offers td {
+    .slip-offers:not(.slip-tally) th,
+    .slip-offers:not(.slip-tally) td {
       border: 0;
       padding: 0;
     }
 
-    .slip-offers td:nth-child(3),
-    .slip-offers td:nth-child(4) {
+    .slip-offers:not(.slip-tally) td:nth-child(3),
+    .slip-offers:not(.slip-tally) td:nth-child(4) {
       grid-column: 1 / -1;
       font-size: 13px;
       color: var(--slip-ink-faint);
@@ -1010,6 +1046,16 @@
   .slip-copied {
     font: inherit;
     margin-inline-start: 1ch;
+  }
+
+  /*
+   * An id that has to fit wherever it is shown. A receipt id breaks at its hyphens, but PayPal's
+   * are seventeen characters with nothing to break at, and the demo's stand-in issues short ones
+   * — so the real shape has never been on screen. It breaks anywhere rather than pushing the
+   * sheet wider than the phone holding it (D77).
+   */
+  .slip-id {
+    overflow-wrap: anywhere;
   }
 
   /* A key, or a command carrying one, shown once: wide enough to select in one go. */

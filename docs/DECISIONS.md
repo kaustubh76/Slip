@@ -1061,3 +1061,48 @@ permission slip says "recent records checked" and not that everything ever paid 
 A window wider than ten pages of PayPal's reporting answers `unknown` and stamps nothing, which is
 correct — Slip has not looked — but it is visible only as a `reconcile.unanswered` log line, so a
 deployment at that scale should alert on it.
+
+## D77 · 2026-10-21 · A safeguard nobody can see, and what rendering it for the first time found
+
+The daily reconcile (D75, D76) watches PayPal rather than the agent: it compares Slip's books with
+PayPal's own records and says what it cannot account for. It worked, it was tested, and **in the
+demo it was invisible.** Every record the stand-in reports comes from an order Slip asked for, so
+the comparison always agreed with itself and the count was always zero. The one safeguard aimed at
+the payment processor could not be shown to anyone, clicked, or filmed.
+
+**A stand-in that can only agree cannot demonstrate a disagreement.** `addSettlement` already
+existed, because the reconcile's tests needed PayPal to disagree; the demo console can now reach
+it. One button plants a settled charge against a purchase Slip refused, and within seconds the
+permission slip says a payment is unaccounted for. It is the demo's own stand-in doing it, which
+the disclosure band on every page already states.
+
+**Two timings had to shrink, for the reason three others already had.** `demoConfig` exists
+because "the stand-in answers instantly, so the states written before each PayPal call would never
+be seen". PayPal's reporting really does lag about three hours, and the reconcile really does wait
+a day between looks — so in a demo the first was invisible and the second meant a desk checked
+itself once on opening, found nothing because there was nothing yet, and never looked again inside
+a session. Both now shrink to seconds in the demo and keep their real values everywhere else. The
+stand-in's lag became a constructor option rather than a constant to make that possible.
+
+**What rendering it found, which is the other half of this.** The bench page had spent its whole
+life showing a NOT RUN YET stamp; SlipBench ran, and the results table reached a screen for the
+first time. Three defects, none of which any test could have caught, because tests do not have a
+width:
+
+- **A fold tuned to one table's shape silently mangles every other.** The narrow-screen rule turned
+  each row into a small slip by laying cells out in pairs and spanning the third and fourth across
+  both columns — true of the four-column offers table it was written for, meaningless for a
+  six-column one, which became six unlabelled numbers under a hidden header. A rule that counts
+  columns belongs to the table it counted. The tally scrolls instead, inside a named region a
+  keyboard can reach.
+- **An implicit grid track is `auto`, and `auto` is as wide as its widest content.** The cards grid
+  named its columns only at the two-column breakpoint, so below it the single track grew to fit the
+  table and pushed the page sideways — a 58 px overflow created by the previous fix and caught only
+  because the width is measured rather than looked at.
+- **An id that cannot break will not.** A receipt id is a UUID and breaks at its hyphens; a PayPal
+  id is seventeen characters with nothing to break at, and the stand-in issues short ones, so the
+  real shape had never been on a screen at all.
+
+**The measurement is the test.** Every layout defect found in three passes over this UI —
+including this one's — was invisible to the eye and obvious to `scrollWidth - clientWidth`. Axe
+does not evaluate layout and Playwright's viewport is 1280 px wide, so neither can find them.
