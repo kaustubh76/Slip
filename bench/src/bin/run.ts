@@ -6,9 +6,13 @@
  * ANTHROPIC_API_KEY=… pnpm bench:run                      # what it would run, and nothing else
  * ANTHROPIC_API_KEY=… pnpm bench:run --yes                # all agents, conditions and errands
  * ANTHROPIC_API_KEY=… pnpm bench:run --yes --errands 2 --conditions clean
+ * ANTHROPIC_API_KEY=… pnpm bench:run --yes --again        # pay for runs already recorded
  * ```
  *
- * Runs are written to `bench/runs/` as they finish, so stopping it keeps what it paid for.
+ * Runs are written to `bench/runs/` as they finish, so stopping it keeps what it paid for — and an
+ * errand already recorded under this prompt version is not run again unless `--again` says so. A
+ * run recorded under an *older* prompt is always run again: keeping it would mix answers to two
+ * prompts into one table that names only one of them.
  * `pnpm bench:report` turns them into the results page, for free, as often as you like.
  */
 import { mkdirSync } from "node:fs";
@@ -19,8 +23,9 @@ import { loadCatalogue } from "../catalogue.js";
 import { createClaudeAgent } from "../claude-agent.js";
 import { CONDITIONS, type Condition } from "../conditions.js";
 import { ERRANDS } from "../errands.js";
+import { PROMPT_VERSION } from "../prompt.js";
 import { runAll } from "../run.js";
-import { RUN_DIR, writeRun } from "../runs.js";
+import { RUN_DIR, recordedFor, writeRun } from "../runs.js";
 
 /**
  * The agents that are wired. §6.2 asks for three across at least two providers; only Anthropic's
@@ -38,6 +43,7 @@ const flag = (name: string): string | undefined => {
   return at === -1 ? undefined : argv[at + 1];
 };
 const confirmed = argv.includes("--yes");
+const again = argv.includes("--again");
 
 const apiKey = process.env["ANTHROPIC_API_KEY"]?.trim();
 if (apiKey === undefined || apiKey === "") {
@@ -63,21 +69,47 @@ const limit = Number(flag("errands") ?? ERRANDS.length);
 const errands = ERRANDS.slice(0, Number.isFinite(limit) && limit > 0 ? limit : ERRANDS.length);
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
+const dir = join(root, RUN_DIR);
 const runs = agents.length * conditions.length * errands.length;
+// What is already paid for, under this prompt. An older prompt's runs are not in here.
+const recorded = again ? new Set<string>() : recordedFor(dir, PROMPT_VERSION);
+const key = (agent: string, condition: string, errandId: string): string =>
+  `${agent}\u0000${condition}\u0000${errandId}`;
+let already = 0;
+for (const agent of agents) {
+  for (const condition of conditions) {
+    for (const errand of errands) {
+      if (recorded.has(key(agent.name, condition, errand.id))) {
+        already += 1;
+      }
+    }
+  }
+}
 console.log(
   `${agents.length} agents × ${conditions.length} conditions × ${errands.length} errands` +
     ` = ${runs} errands, each several model turns with the catalogue in every tool result.`,
 );
 console.log(`agents: ${agents.map((agent) => agent.name).join(", ")}`);
 console.log(`conditions: ${conditions.join(", ")}`);
+if (already > 0) {
+  console.log(
+    `already recorded under prompt ${PROMPT_VERSION}: ${already} — not run again,` +
+      ` so this spends on ${runs - already}. Add --again to pay for them anyway.`,
+  );
+} else if (again) {
+  console.log("--again: nothing is skipped, including runs already recorded.");
+}
 if (!confirmed) {
   console.log("\nNothing has been run. Add --yes to spend tokens.");
+  process.exit(0);
+}
+if (already === runs) {
+  console.log("\nEvery errand asked for is already recorded. Nothing to run, nothing spent.");
   process.exit(0);
 }
 
 const catalogue = await loadCatalogue(join(root, "..", "study", "snapshots"));
 console.log(`\ncatalogue: ${catalogue.size()} products\n`);
-const dir = join(root, RUN_DIR);
 mkdirSync(dir, { recursive: true });
 
 const outcomes = await runAll({
@@ -88,6 +120,7 @@ const outcomes = await runAll({
   now: () => new Date(),
   save: (outcome) => writeRun(dir, outcome),
   log: (line) => console.log(`  ${line}`),
+  skip: ({ agent, condition, errand }) => recorded.has(key(agent.name, condition, errand.id)),
 });
 
 const bought = outcomes.filter((outcome) => outcome.record.choice.kind === "bought").length;

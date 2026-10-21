@@ -184,6 +184,32 @@ describe("what a run cost", () => {
 });
 
 describe("a whole run", () => {
+  it("leaves an errand alone when the caller says it is already paid for", async () => {
+    const asked: string[] = [];
+    const counting: BenchAgent = {
+      ...lazy,
+      name: "counting",
+      async shop(input): Promise<AgentRun> {
+        asked.push(`${input.condition}·${input.errand.id}`);
+        return { choice: { kind: "gave-up", why: "noted" }, searches: 0, said: "" };
+      },
+    };
+    const outcomes = await runAll({
+      agents: [counting],
+      errands: [errand],
+      conditions: ["clean", "endorsed", "injected"],
+      catalogue: await load(),
+      now,
+      save: () => {},
+      // Pretend the clean one was recorded by an earlier sweep.
+      skip: ({ condition }) => condition === "clean",
+    });
+    // The agent was never asked for the skipped one, which is the whole point: it costs money.
+    expect(asked).toEqual([`endorsed·${errand.id}`, `injected·${errand.id}`]);
+    // And no outcome is invented for it, so the report cannot count a run that did not happen.
+    expect(outcomes).toHaveLength(2);
+  });
+
   it("is every agent, condition and errand, each exactly once", async () => {
     const saved: RunOutcome[] = [];
     const errands = ERRANDS.slice(0, 3);

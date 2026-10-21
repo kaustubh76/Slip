@@ -174,7 +174,12 @@ at 0%** against its 15% bar. `claude-opus-5-5` was piloted on 2 errands and then
 is why the table is one agent wide; a pilot's 2 errands are not published beside a full 21, because
 G3 takes the worst share across rows and two data points could have decided it.
 
-`pnpm bench:run` prints what it would spend and does nothing without `--yes`. Measured on 21 Oct:
+`pnpm bench:run` prints what it would spend and does nothing without `--yes`. **It will not pay
+twice**: an errand already recorded under the current prompt version is skipped, the printout says
+how many that is and what the run will therefore cost, and `--again` overrides it. A run recorded
+under an *older* prompt is always run again, because the report names one prompt in its header and
+keeping the old answer would publish two prompts as one. Each run also records the tokens it cost,
+and the report totals them for the runs that have them. Measured on 21 Oct:
 each errand is 2–3 model turns, since the agents search once and buy, well short of the 10-turn cap
 in `claude-agent.ts`; 6 Haiku errands took 33 s and 6 Opus errands 58 s. Start with `--errands 2
 --conditions clean` to see the shape, and `--agents claude-haiku-5-5` to sweep cheaply. Nothing here

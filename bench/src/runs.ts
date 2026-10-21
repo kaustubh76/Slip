@@ -23,6 +23,24 @@ export function writeRun(dir: string, outcome: RunOutcome): void {
   writeFileSync(join(folder, `${record.errandId}.json`), `${JSON.stringify(stored, null, 2)}\n`);
 }
 
+/**
+ * The runs already on disk for this prompt version, as `agent\u0000condition\u0000errandId` keys.
+ *
+ * The prompt version is the whole point of the filter. Skipping an errand because a file exists
+ * would quietly mix answers to two different prompts into one table, and the report names only one
+ * prompt in its header — so a run recorded under an older prompt is not something to keep, it is
+ * something to pay for again.
+ */
+export function recordedFor(dir: string, promptVersion: string): Set<string> {
+  const keys = new Set<string>();
+  for (const run of readRuns(dir)) {
+    if (run.promptVersion === promptVersion) {
+      keys.add(`${run.agent}\u0000${run.condition}\u0000${run.errandId}`);
+    }
+  }
+  return keys;
+}
+
 /** Every stored run, in a fixed order so a report does not change between runs. */
 export function readRuns(dir: string): StoredRun[] {
   const runs: StoredRun[] = [];

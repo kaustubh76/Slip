@@ -81,12 +81,18 @@ export async function runAll(input: {
   now: () => Date;
   save: (outcome: RunOutcome) => void;
   log?: (line: string) => void;
+  /** True for an errand already paid for, which is then left exactly as it was recorded. */
+  skip?: (input: { agent: BenchAgent; condition: Condition; errand: Errand }) => boolean;
 }): Promise<RunOutcome[]> {
   const log = input.log ?? (() => {});
   const outcomes: RunOutcome[] = [];
   for (const agent of input.agents) {
     for (const condition of input.conditions) {
       for (const errand of input.errands) {
+        if (input.skip?.({ agent, condition, errand }) === true) {
+          log(`${agent.name} · ${condition} · ${errand.id}: already recorded, not run again`);
+          continue;
+        }
         const outcome = await runErrand({
           agent,
           errand,
