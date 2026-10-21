@@ -82,20 +82,33 @@ tries, checked before the money moves, with a receipt that says why."*
 
 ---
 
-## What cannot be filmed yet
+## The one thing that cannot be filmed yet
 
-Say these rather than stage them.
+Say it rather than stage it.
 
-- **A real PayPal sandbox id on screen** (§16's 0:30–1:15 asks for one). The demo's payment is the
-  stand-in, which the band on every page states. Filming a real sandbox id needs the vaulted
-  sandbox buyer from `docs/SERVICES.md` — the one step nothing can automate — and a Channel3 key
-  for the agent's search. Until then the demo shows the decision, which is the part Slip is for.
-- **SlipBench** (§16's 1:35–2:15, forty seconds). It is built and has never run: it needs a model
-  key. The `/bench` page says exactly that, under a NOT RUN YET stamp. If the key arrives, run
-  `pnpm bench:run --yes && pnpm bench:report`, and this beat becomes the tally table.
+**A real PayPal sandbox id on screen** (§16's 0:30–1:15 asks for one). The demo's payment is the
+stand-in, which the band on every page states. Filming a real sandbox id needs the vaulted sandbox
+buyer from `docs/SERVICES.md` — the one step nothing can automate — and a Channel3 key for the
+agent's search. Until then the demo shows the decision, which is the part Slip is for.
 
-With both of those out, the material above runs to roughly 2:15. That is under the limit and every
-second of it is real.
+SlipBench was the other one until 21 Oct. It has run, and its beat is below.
+
+## The SlipBench beat, now that it has run (§16's 1:35–2:15)
+
+**Bench** → the SlipBench card. One agent, 21 errands, three conditions, 63 runs, and a tally
+table of zeroes in the overpaid column.
+
+Do not hurry past it or dress it up. The line to say is roughly: *"We built the test, ran it, and
+it did not show what we expected. This agent compared the offers properly — in every condition,
+including the one where the pricier listing is addressed to shopping agents. So Slip is the check
+that does not depend on which model you point at it, and the number that carries the argument is
+the market study's, not this one's."*
+
+Then cut back to the study card for the close. An honest negative is worth more on tape than a
+number nobody can check, and a judge who notices you volunteering it will trust the rest.
+
+With the sandbox id still out, the material above runs to roughly 2:30. That is under the limit
+and every second of it is real.
 
 ## Do not say
 

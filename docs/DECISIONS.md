@@ -969,6 +969,10 @@ against §6.2's three across two providers, and §18's submission copy drops the
 three agents until there are results to put in it. **Saying less is the only honest edit when the
 evidence is not there** — the alternative is a number nobody measured.
 
+*21 Oct: SlipBench has since run on one agent, and the evidence is there — see the §18 note and
+D67's addendum. This paragraph stands as what was true when the pass was made; a decision log that
+is edited to match the present stops being a record of what was known when.*
+
 ## D75 · 2026-10-20 · One direction of reconciliation, and the lag that decides what counts
 
 The diagram's box 4·A2 and §4.4 both ask Slip to check its books against PayPal's own, daily, and

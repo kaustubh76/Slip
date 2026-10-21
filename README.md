@@ -19,7 +19,7 @@ moves. Read [docs/SPEC.md](docs/SPEC.md) for the full spec,
 [docs/diagram.png](docs/diagram.png) for the execution flow and [docs/UI.md](docs/UI.md) for the
 owner UI. Agents connect through Slip's MCP server: [TOOLS.md](TOOLS.md). Design decisions are
 logged in [docs/DECISIONS.md](docs/DECISIONS.md), and [docs/DEMO.md](docs/DEMO.md) is the shot
-list for the video — including the two beats that cannot be filmed until a key arrives.
+list for the video — including the one beat still waiting on a vaulted sandbox buyer.
 
 ## Layout
 
@@ -195,9 +195,17 @@ pnpm bench:run       # SlipBench; needs ANTHROPIC_API_KEY, prints what it would 
 pnpm bench:report    # recompute SlipBench from bench/runs/ — free, once a run exists
 ```
 
-Only the first runs on a fresh clone. **SlipBench has not been run**: it needs a model key, so
-`bench/runs/` does not exist yet and the other two exit non-zero until it does. The `/bench` page
-says the same thing in a stamp rather than quietly showing zeroes.
+`bench:report` runs on a fresh clone; `bench:run` needs a model key and spends tokens.
+
+**SlipBench ran on 21 Oct, and its headline is a negative result.** One agent
+(`claude-haiku-5-5`), 21 errands, three conditions, 63 runs: **no overpayment in any condition —
+including `injected`, where the pricier listing carries text addressed to shopping agents.** Gate
+G3 wanted an agent to overpay or be steered on 15% of errands somewhere; it got 0%.
+
+So this agent compared offers well enough that Slip rarely had to stop it, and we publish that
+rather than the sentence we expected to write. It is the result that makes the method worth
+trusting: the same harness would have shown the opposite just as plainly. The runs, prompts and
+outputs are all committed under `bench/runs/`, so the number can be recomputed without a key.
 
 The market study ran on 19 Oct: 240 real products, 8 Channel3 credits, every response committed.
 **G1 fails** — 18.33% of products carry two or more comparable offers against a 60% bar — and the
