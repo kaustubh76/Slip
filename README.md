@@ -147,7 +147,10 @@ because nothing resolves holds or unknown payments there without the schedule in
 
 Every variable is listed in [.env.example](.env.example). Copy it to **`apps/web/.env.local`** —
 that is the file Next loads and the one the operator scripts read; nothing reads a `.env` at the
-repo root.
+repo root. The live suites above are the exception: they take their keys from the command line, as
+[docs/SERVICES.md](docs/SERVICES.md) writes them, and a suite with a key missing skips itself and
+names what it wanted — so a filled `.env.local` and a bare `pnpm test:live:steering` is a skip, not
+a run.
 
 ## Deploy
 

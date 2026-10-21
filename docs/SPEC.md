@@ -297,6 +297,13 @@ Payment status: `NONE, CAPTURED, AUTHORIZED, VOIDED, FAILED, UNKNOWN`. A timeout
 | Nov 11 | Submit by 6 PM | Done |
 | Nov 12 | Buffer | Critical fixes only |
 
+**The fresh-clone test ran on 22 Oct, sixteen days early**, and the exit holds: a clone installs
+from the lockfile, passes 1,793 tests and 308 more on real Postgres, builds, serves a desk, runs
+the agent script to a REJECTED and a PAID receipt, and recomputes both studies byte for byte. It
+also found the one defect none of that could — the demo crashing two seconds after it opens, in
+dev mode, which is the mode the README gives a visitor (D79). Running it on Nov 7 would have left
+one day to find that.
+
 ## 16. Video (target 2:45)
 - **0:00–0:12** An agent buys something. "Did it overpay? Nobody checks."
 - **0:12–0:30** The market study number, on screen with sample size.
