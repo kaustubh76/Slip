@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   issueScriptKey,
+  plantStrayPayPalCharge,
   raiseStandingDeskPrice,
   runConsoleErrand,
   settleConsolePending,
@@ -146,6 +147,14 @@ export function DemoConsole(props: {
               onClick={() => void run("Reprice", raiseStandingDeskPrice)}
             >
               Raise the standing desk's price by $8
+            </button>
+            <button
+              type="button"
+              className="slip-button"
+              disabled={busy}
+              onClick={() => void run("Stray charge", plantStrayPayPalCharge)}
+            >
+              Charge for a purchase Slip refused
             </button>
           </div>
           {log.length === 0 ? null : (

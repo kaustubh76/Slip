@@ -13,6 +13,19 @@ export const DEMO_TIMING = {
   paypalTimeoutMs: 4_000,
   resolverMinAgeMs: 5_000,
   resolverEveryMs: 5_000,
+  /**
+   * PayPal's transaction records really do lag about three hours behind, and the reconcile waits
+   * that long before trusting what they do not show. A demo cannot wait three hours, so here the
+   * stand-in's records catch up in seconds — the same bargain as the latency above, for the same
+   * reason: a wait nobody can sit through hides the thing it is there to make honest (D77).
+   */
+  reportingLagMs: 10_000,
+  /**
+   * And it looks again every few seconds rather than daily. Otherwise a desk checks itself once
+   * on opening, finds nothing — there is nothing to find yet — and never looks again inside a
+   * session, so anything the console plants afterwards is invisible for a day (D77).
+   */
+  reconcileEveryMs: 8_000,
 } as const;
 
 /** The latency asked for in `SLIP_DEMO_LATENCY_MS`, else the demo's default. */
@@ -29,6 +42,8 @@ export function demoConfig(): AppConfigInput {
   return {
     paypalTimeoutMs: DEMO_TIMING.paypalTimeoutMs,
     resolverMinAgeMs: DEMO_TIMING.resolverMinAgeMs,
+    reportingLagMs: DEMO_TIMING.reportingLagMs,
+    reconcileEveryMs: DEMO_TIMING.reconcileEveryMs,
   };
 }
 

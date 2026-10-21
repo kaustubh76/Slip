@@ -1,6 +1,6 @@
 import "server-only";
-import { type AppDeps, type CheckoutResult, issueAgentKey } from "@slip/app";
-import { formatUsd, type OwnerId } from "@slip/domain";
+import { type AppDeps, type CheckoutResult, issueAgentKey, listReceipts } from "@slip/app";
+import { type Cents, formatUsd, type OwnerId } from "@slip/domain";
 import { shortNo } from "@slip/receipt";
 import { ERRANDS, type ErrandName, productIdFor } from "./catalogue";
 import { type DemoFakes, runErrand } from "./desk";
@@ -106,6 +106,39 @@ export async function settlePending(desk: Desk): Promise<ConsoleAnswer> {
       settled === 0
         ? "Nothing was pending at PayPal."
         : `PayPal settled ${settled} pending ${settled === 1 ? "payment" : "payments"}; Slip reads ${settled === 1 ? "it" : "them"} within seconds.`,
+  };
+}
+
+/**
+ * PayPal records a charge Slip never decided, against a purchase Slip refused.
+ *
+ * Nothing a stand-in does on its own can produce this: every record it reports comes from an
+ * order Slip asked for, so the daily reconcile always agrees with itself and the one safeguard
+ * that watches PayPal rather than the agent is invisible (D77). This is the disagreement, planted
+ * — and it is the demo's own stand-in doing it, which the band on every page already says.
+ */
+export async function plantStrayCharge(desk: Desk): Promise<ConsoleAnswer> {
+  const page = await listReceipts(desk.deps, desk.ownerId, desk.mandateId, { limit: 50 });
+  const refused = page?.rows.find((row) => row.view.outcome === "REJECTED");
+  if (refused === undefined) {
+    return {
+      status: "refused",
+      message: "No refused purchase on this desk yet — run an errand Slip rejects first.",
+    };
+  }
+  const cents = refused.view.chosen?.priceCents ?? 5_999;
+  desk.fakes.gateway.addSettlement({
+    invoiceId: refused.view.receiptId,
+    amountCents: cents,
+    kind: "settled",
+  });
+  return {
+    status: "done",
+    receiptId: refused.view.receiptId,
+    message:
+      `The stand-in PayPal now has a ${formatUsd(cents as Cents)} charge against a purchase Slip` +
+      " refused. Slip compares its books with PayPal's every day; the permission slip says what" +
+      " it cannot account for within a few seconds.",
   };
 }
 

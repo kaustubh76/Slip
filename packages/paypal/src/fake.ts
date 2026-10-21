@@ -133,8 +133,13 @@ export class FakePaymentGateway implements PaymentGateway {
   readonly #tag = randomBytes(6).toString("hex").toUpperCase();
   #counter = 0;
 
-  constructor(options: { clock: Clock }) {
+  readonly #reportingLagMs: number;
+
+  constructor(options: { clock: Clock; reportingLagMs?: number }) {
     this.#clock = options.clock;
+    // PayPal's reporting lag, as a number rather than a constant, so a demo can shrink it the way
+    // it shrinks every other wait — three hours would hide the reconcile entirely (D77).
+    this.#reportingLagMs = options.reportingLagMs ?? REPORTING_LAG_MS;
   }
 
   // ---------- scripting and inspection (tests only) ----------
@@ -356,7 +361,7 @@ export class FakePaymentGateway implements PaymentGateway {
     if (this.#script.lookup.shift() === "unknown") {
       return { kind: "unknown", reason: "Transaction Search unavailable" };
     }
-    const visibleBefore = this.#clock.now().getTime() - REPORTING_LAG_MS;
+    const visibleBefore = this.#clock.now().getTime() - this.#reportingLagMs;
     const order = [...this.#orders.values()].find(
       (o) =>
         o.invoiceId === input.invoiceId &&
@@ -388,7 +393,7 @@ export class FakePaymentGateway implements PaymentGateway {
     if (this.#script.lookup.shift() === "unknown") {
       return { kind: "unknown", reason: "Transaction Search unavailable" };
     }
-    const visibleBefore = this.#clock.now().getTime() - REPORTING_LAG_MS;
+    const visibleBefore = this.#clock.now().getTime() - this.#reportingLagMs;
     const records: SettlementRecord[] = [];
     for (const order of this.#orders.values()) {
       const at = order.createdAt.getTime();

@@ -155,6 +155,11 @@ export class DemoPayPal implements PaymentGateway {
     return this.#inner.ordersFor(invoiceId);
   }
 
+  /** A transaction in PayPal's records that no order of Slip's explains; see the stand-in. */
+  addSettlement(record: { invoiceId: string; amountCents: number; kind: "settled" }): void {
+    this.#inner.addSettlement(record);
+  }
+
   orders(): FakeOrder[] {
     return this.#inner.orders();
   }

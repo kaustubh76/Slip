@@ -8,6 +8,7 @@ import {
   consoleErrand,
   type Desk,
   PAYPAL_SCRIPTS,
+  plantStrayCharge,
   repriceDesk,
   scriptKey,
   settlePending,
@@ -73,6 +74,10 @@ export async function settleConsolePending(): Promise<Answer> {
 
 export async function raiseStandingDeskPrice(): Promise<Answer> {
   return guarded((d) => repriceDesk(d, 800));
+}
+
+export async function plantStrayPayPalCharge(): Promise<Answer> {
+  return guarded(plantStrayCharge);
 }
 
 export async function issueScriptKey(): Promise<

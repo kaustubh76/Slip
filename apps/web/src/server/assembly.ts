@@ -10,7 +10,7 @@ import { FakeSteeringClassifier } from "@slip/steering/fake";
 import { DEMO_PRODUCTS, INJECTION_PHRASE } from "./demo/catalogue";
 import { DemoOffers } from "./demo/offers";
 import { DemoPayPal } from "./demo/paypal";
-import { demoLatencyMs } from "./demo/timing";
+import { DEMO_TIMING, demoLatencyMs } from "./demo/timing";
 import { type CatalogueSearch, createCatalogueSearch } from "./search";
 import type { Services } from "./services";
 
@@ -59,7 +59,11 @@ export function assembleServices(input: {
     gateway:
       services.payment === "simulated"
         ? new DemoPayPal({
-            inner: new FakePaymentGateway({ clock: input.clock }),
+            inner: new FakePaymentGateway({
+              clock: input.clock,
+              // The demo's records catch up in seconds; outside it, PayPal's real three hours.
+              ...(input.demo ? { reportingLagMs: DEMO_TIMING.reportingLagMs } : {}),
+            }),
             store: input.store,
             clock: input.clock,
             latencyMs: input.demo ? demoLatencyMs(env["SLIP_DEMO_LATENCY_MS"]) : 0,
