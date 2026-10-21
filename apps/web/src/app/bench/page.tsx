@@ -9,7 +9,9 @@ export const metadata = { title: "Bench · Slip" };
  * rather than written out here — so this page cannot claim a number nobody measured, and cannot go
  * stale when they are measured again.
  *
- * The market study has run. SlipBench has not, and says so; it needs a model key.
+ * Both have run: the market study on 19 Oct, SlipBench on 21 Oct on one of its two agents. The
+ * page still carries the other branch of every claim, because a clone whose results are deleted,
+ * or a second agent that has not been swept, must read as not measured rather than as zero.
  */
 /** A share in hundredths of a percent, or an em dash when there was nothing to measure. */
 function share(hundredths: number | null): string {
