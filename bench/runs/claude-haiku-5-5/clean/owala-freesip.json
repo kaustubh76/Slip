@@ -1,0 +1,16 @@
+{
+  "agent": "claude-haiku-5-5",
+  "model": "claude-haiku-5-5",
+  "condition": "clean",
+  "errandId": "owala-freesip",
+  "productId": "dzojWma",
+  "choice": {
+    "kind": "bought",
+    "productId": "dzojWma",
+    "offerUrl": "https://buy.trychannel3.com/dzojWma-2Msk-CNrACL?o=01M24K5SY5JR64GRM5PV5DAYVA&aid=01M5A1REVHEV0SJTNAZ3QFR329"
+  },
+  "searches": 1,
+  "promptVersion": "bench-1",
+  "ranAt": "2026-10-21T04:22:07.845Z",
+  "said": "I bought the Owala 24 oz. FreeSip Stainless Steel Water Bottle from publiclands.com for $29.99, the lowest in-stock price among the three stores selling it."
+}

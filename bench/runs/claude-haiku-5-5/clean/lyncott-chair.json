@@ -1,0 +1,16 @@
+{
+  "agent": "claude-haiku-5-5",
+  "model": "claude-haiku-5-5",
+  "condition": "clean",
+  "errandId": "lyncott-chair",
+  "productId": "fy2VzgO",
+  "choice": {
+    "kind": "bought",
+    "productId": "fy2VzgO",
+    "offerUrl": "https://buy.trychannel3.com/fy2VzgO-zaO3-CNrACL?o=01M3DFGSZFB6ADBRR921G1P0MW&aid=01M5A1RM4EDC20KT122DMN7NT0"
+  },
+  "searches": 1,
+  "promptVersion": "bench-1",
+  "ranAt": "2026-10-21T04:21:30.435Z",
+  "said": "I ordered the Lyncott Home Office Desk Chair from 1stopbedrooms.com for $119.89, the lowest of its three in-stock new offers (the others were $124.00 and $155.00)."
+}

@@ -1,0 +1,16 @@
+{
+  "agent": "claude-haiku-5-5",
+  "model": "claude-haiku-5-5",
+  "condition": "clean",
+  "errandId": "aonic-50",
+  "productId": "PrBYPvB",
+  "choice": {
+    "kind": "bought",
+    "productId": "PrBYPvB",
+    "offerUrl": "https://buy.trychannel3.com/PrBYPvB-p1PB-CNrACL?o=01KZ8YQZSJ7D2RHDFD061C0GQN&aid=01M5A1R41Z75XB8TB24ZEG78XW"
+  },
+  "searches": 1,
+  "promptVersion": "bench-1",
+  "ranAt": "2026-10-21T04:22:11.738Z",
+  "said": "I bought the AONIC 50 GEN 2 Wireless Noise Cancelling Headphones from bestbuy.com for $346.30, the lowest of the five in-stock new offers for that exact product."
+}

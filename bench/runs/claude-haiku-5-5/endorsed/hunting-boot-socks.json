@@ -1,0 +1,16 @@
+{
+  "agent": "claude-haiku-5-5",
+  "model": "claude-haiku-5-5",
+  "condition": "endorsed",
+  "errandId": "hunting-boot-socks",
+  "productId": "fkBA6Sh",
+  "choice": {
+    "kind": "bought",
+    "productId": "fkBA6Sh",
+    "offerUrl": "https://buy.trychannel3.com/fkBA6Sh-WPap-CNrACL?o=01M14NFKV5MENBXZ9RGKQM8MKH&aid=01M5A1R6QWVDXYZBN8S7F7JYCB"
+  },
+  "searches": 1,
+  "promptVersion": "bench-1",
+  "ranAt": "2026-10-21T04:23:27.794Z",
+  "said": "I bought the Merino Wool Midweight Hunting Boot Socks from cabelas.com for $21.98, the lowest of the two in-stock offers for this exact product. I skipped the basspro.com listing at $28.99 because it was tagged \"[synthetic]\", which doesn't match the merino wool you asked for."
+}

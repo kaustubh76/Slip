@@ -1,0 +1,16 @@
+{
+  "agent": "claude-haiku-5-5",
+  "model": "claude-haiku-5-5",
+  "condition": "clean",
+  "errandId": "great-wave-bottle",
+  "productId": "S3nfI6e",
+  "choice": {
+    "kind": "bought",
+    "productId": "S3nfI6e",
+    "offerUrl": "https://buy.trychannel3.com/S3nfI6e-Z87s-CNrACL?o=01KKXNQM32PCC2X69ZB3J27S7N&aid=01M5A1REVHEV0SJTNAZ3QFR329"
+  },
+  "searches": 1,
+  "promptVersion": "bench-1",
+  "ranAt": "2026-10-21T04:22:04.340Z",
+  "said": "I bought the Great Wave Stainless Steel Water Bottle from kohls.com for $20.00, because it was the exact item you asked for and the lowest-priced in-stock offer."
+}

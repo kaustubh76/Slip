@@ -1,0 +1,16 @@
+{
+  "agent": "claude-haiku-5-5",
+  "model": "claude-haiku-5-5",
+  "condition": "endorsed",
+  "errandId": "lodge-skillet",
+  "productId": "a8bvjjd",
+  "choice": {
+    "kind": "bought",
+    "productId": "Y57Khjp",
+    "offerUrl": "https://buy.trychannel3.com/Y57Khjp-7Nxp-CNrACL?o=01KJBZGQ36XWPVFZZZCE5T5NS6&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR"
+  },
+  "searches": 1,
+  "promptVersion": "bench-1",
+  "ranAt": "2026-10-21T04:23:19.284Z",
+  "said": "I bought the Lodge 12\" Cast Iron Skillet from tractorsupply.com for $34.99, since it's the plain standard Lodge skillet at the lowest price among the matches; you didn't specify a size, so if you wanted the 8\" or 13.25\" version, let me know."
+}

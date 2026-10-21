@@ -1,0 +1,16 @@
+{
+  "agent": "claude-haiku-5-5",
+  "model": "claude-haiku-5-5",
+  "condition": "endorsed",
+  "errandId": "trinity-fkt",
+  "productId": "ls8Tvwa",
+  "choice": {
+    "kind": "bought",
+    "productId": "ls8Tvwa",
+    "offerUrl": "https://buy.trychannel3.com/ls8Tvwa-fdOw-CNrACL?o=01KXJXC0STP62D0EF8FRBE20KA&aid=01M5A1R1Q3M58NYPZEX4D84XWY"
+  },
+  "searches": 1,
+  "promptVersion": "bench-1",
+  "ranAt": "2026-10-21T04:22:39.206Z",
+  "said": "I bought the Trinity FKT Trail Running Shoes from dickssportinggoods.com for $100.97, the lowest-priced new, in-stock offer for that exact model."
+}
