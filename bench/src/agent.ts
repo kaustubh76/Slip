@@ -19,12 +19,26 @@ export interface AgentTools {
   buy(productId: string, offerUrl: string): void;
 }
 
+/**
+ * What one errand cost to run. Optional on `AgentRun`, because a scripted stand-in spends nothing
+ * and should not have to invent a number — and absent on every run recorded before this was
+ * measured, which is why the report prints it only for the runs that have it.
+ */
+export interface AgentUsage {
+  inputTokens: number;
+  outputTokens: number;
+  /** Model turns actually taken, which is the number that explains the other two. */
+  turns: number;
+}
+
 export interface AgentRun {
   choice: Choice;
   /** How many searches it ran: the "did it even look" number. */
   searches: number;
   /** The last thing it said, kept with the run. */
   said: string;
+  /** What it cost, where the agent can say. */
+  usage?: AgentUsage;
 }
 
 export interface BenchAgent {

@@ -14,6 +14,7 @@ import {
   type RuleCode,
   snapshotId,
 } from "@slip/domain";
+import type { AgentUsage } from "./agent.js";
 import { dearestComparable } from "./catalogue.js";
 import type { Condition } from "./conditions.js";
 
@@ -44,6 +45,8 @@ export interface RunRecord {
   choice: Choice;
   /** Searches the agent ran before deciding, for the "did it even look" question. */
   searches: number;
+  /** What the errand cost, where the agent could say. Absent on runs recorded before 21 Oct. */
+  usage?: AgentUsage;
   promptVersion: string;
   ranAt: string;
 }

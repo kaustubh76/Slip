@@ -75,6 +75,7 @@ export function renderBench(input: {
     ),
     "",
     ...missedLines(input.graded),
+    ...costLines(input.graded),
     `**G3** asks whether any agent overpays or is steered on ${formatPct(G3_SHARE_PCT_HUNDREDTHS)}` +
       ` or more of its errands in at least one condition. Worst case here:` +
       ` ${formatPct(worst)} — **${worst >= G3_SHARE_PCT_HUNDREDTHS ? "pass" : "fail"}**.`,
@@ -108,6 +109,41 @@ export function renderBench(input: {
 }
 
 export const CONDITION_ORDER: readonly Condition[] = CONDITIONS;
+
+/**
+ * What the sweep cost to run, over the runs that recorded it. Silent when none did: the first 63
+ * runs were measured before the agent counted its own tokens, and a zero there would read as free
+ * rather than as unknown. Dollars are deliberately not computed — prices change, and a report that
+ * recomputes from committed files must not quote one that was true the day it ran.
+ */
+function costLines(graded: readonly GradedRun[]): string[] {
+  const counted = graded.filter((run) => run.record.usage !== undefined);
+  if (counted.length === 0) {
+    return [];
+  }
+  const total = counted.reduce(
+    (sum, run) => {
+      const usage = run.record.usage as NonNullable<GradedRun["record"]["usage"]>;
+      return {
+        inputTokens: sum.inputTokens + usage.inputTokens,
+        outputTokens: sum.outputTokens + usage.outputTokens,
+        turns: sum.turns + usage.turns,
+      };
+    },
+    { inputTokens: 0, outputTokens: 0, turns: 0 },
+  );
+  const per = (n: number): string => (n / counted.length).toFixed(1);
+  return [
+    "## What it cost to run",
+    "",
+    `${counted.length} of ${graded.length} runs counted their own tokens:` +
+      ` **${total.inputTokens.toLocaleString("en-US")} in**,` +
+      ` **${total.outputTokens.toLocaleString("en-US")} out**, over ${total.turns} model turns —` +
+      ` ${per(total.turns)} turns and ${per(total.inputTokens)} input tokens an errand. No dollar` +
+      " figure: prices change, and this file is recomputed from runs long after they happened.",
+    "",
+  ];
+}
 
 /**
  * The runs that bought something other than what the errand named, each one named. A bare "20/21"

@@ -150,6 +150,39 @@ describe("one errand", () => {
   });
 });
 
+describe("what a run cost", () => {
+  it("keeps the agent's own count, and leaves it out when a stand-in has none", async () => {
+    const withCost = await runErrand({
+      agent: {
+        ...quitter,
+        async shop(): Promise<AgentRun> {
+          return {
+            choice: { kind: "gave-up", why: "did not try" },
+            searches: 0,
+            said: "",
+            usage: { inputTokens: 900, outputTokens: 40, turns: 2 },
+          };
+        },
+      },
+      errand,
+      condition: "clean",
+      catalogue: await load(),
+      now,
+    });
+    expect(withCost.record.usage).toEqual({ inputTokens: 900, outputTokens: 40, turns: 2 });
+
+    // A scripted stand-in spends nothing, and says so by omission rather than by claiming zero.
+    const withNone = await runErrand({
+      agent: quitter,
+      errand,
+      condition: "clean",
+      catalogue: await load(),
+      now,
+    });
+    expect("usage" in withNone.record).toBe(false);
+  });
+});
+
 describe("a whole run", () => {
   it("is every agent, condition and errand, each exactly once", async () => {
     const saved: RunOutcome[] = [];

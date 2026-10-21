@@ -118,6 +118,66 @@ describe("the runs that missed", () => {
   });
 });
 
+describe("what it cost to run", () => {
+  const run = (usage?: { inputTokens: number; outputTokens: number; turns: number }): GradedRun =>
+    ({
+      record: {
+        agent: "claude-haiku-5-5",
+        model: "claude-haiku-5-5",
+        condition: "clean" as Condition,
+        errandId: "trail-shoe",
+        productId: "p1",
+        choice: { kind: "bought" as const, productId: "p1", offerUrl: "https://x.test/p" },
+        searches: 1,
+        ...(usage === undefined ? {} : { usage }),
+        promptVersion: "bench-1",
+        ranAt: "2026-10-21T09:00:00.000Z",
+      },
+      boughtWhatWasAsked: true,
+      paidCents: 3_499 as Cents,
+      cheapestCents: 3_499 as Cents,
+      overpaidCents: null,
+      overpaidPctHundredths: null,
+      tookThePlantedOffer: false,
+      slip: null,
+      paidWithSlipOn: true,
+    }) as GradedRun;
+
+  const report = (graded: readonly GradedRun[]): string =>
+    renderBench({ tallies: [row()], graded, ranAt: "2026-10-21T09:00:00.000Z" });
+
+  it("adds up the tokens and says how many runs counted them", () => {
+    const text = report([
+      run({ inputTokens: 1_000, outputTokens: 50, turns: 2 }),
+      run({ inputTokens: 2_000, outputTokens: 70, turns: 3 }),
+    ]);
+    expect(text).toContain("What it cost to run");
+    expect(text).toContain("2 of 2 runs counted their own tokens");
+    expect(text).toContain("3,000 in");
+    expect(text).toContain("120 out");
+    expect(text).toContain("5 model turns");
+  });
+
+  it("stays silent when no run counted anything, rather than printing zero", () => {
+    // The first 63 runs predate the measurement; "0 tokens" would read as free, not as unknown.
+    expect(report([run(), run()])).not.toContain("What it cost to run");
+  });
+
+  it("counts only the runs that have it, and says so", () => {
+    const text = report([run({ inputTokens: 1_000, outputTokens: 50, turns: 2 }), run()]);
+    expect(text).toContain("1 of 2 runs counted their own tokens");
+  });
+
+  it("quotes no dollar figure in that section, because this file outlives the prices", () => {
+    const text = report([run({ inputTokens: 1_000, outputTokens: 50, turns: 2 })]);
+    // Scoped to the section: the limits paragraph quotes the owner's own "$8", which is a policy
+    // the file records, not a price that will go stale.
+    const section = text.slice(text.indexOf("## What it cost to run")).split("## ")[1] ?? "";
+    expect(section).toContain("No dollar figure");
+    expect(section).not.toMatch(/\$[0-9]/);
+  });
+});
+
 describe("the money columns", () => {
   it("prints a typical overpayment as a percentage, not a bare number", () => {
     const report = renderBench({

@@ -65,6 +65,8 @@ export async function runErrand(input: {
       choice,
       // The agent's own count is trusted only as far as the tool log agrees.
       searches: Math.max(log.searches, run.searches),
+      // Only where the agent could say: a stand-in spends nothing, and the key says so by omission.
+      ...(run.usage === undefined ? {} : { usage: run.usage }),
       promptVersion: PROMPT_VERSION,
       ranAt: input.now().toISOString(),
     },

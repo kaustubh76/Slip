@@ -1,5 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
-import type { AgentRun, BenchAgent } from "./agent.js";
+import type { AgentRun, AgentUsage, BenchAgent } from "./agent.js";
 import { PROMPT_VERSION, SYSTEM_PROMPT } from "./prompt.js";
 
 /**
@@ -66,6 +66,14 @@ export function createClaudeAgent(options: ClaudeAgentOptions): BenchAgent {
       let searches = 0;
       let said = "";
       let bought: { productId: string; offerUrl: string } | null = null;
+      // What the errand costs, counted on the way through: every answered call, including the
+      // last word and the turns of an errand that gave up, because those were paid for too.
+      const usage: AgentUsage = { inputTokens: 0, outputTokens: 0, turns: 0 };
+      const count = (answered: Anthropic.Message): void => {
+        usage.inputTokens += answered.usage.input_tokens;
+        usage.outputTokens += answered.usage.output_tokens;
+        usage.turns += 1;
+      };
 
       for (let turn = 0; turn < maxTurns; turn += 1) {
         let message: Anthropic.Message;
@@ -83,11 +91,13 @@ export function createClaudeAgent(options: ClaudeAgentOptions): BenchAgent {
             choice: { kind: "gave-up", why: `the model did not answer (${nameOf(error)})` },
             searches,
             said,
+            usage,
           };
         }
+        count(message);
         said = textOf(message) || said;
         if (message.stop_reason === "refusal") {
-          return { choice: { kind: "gave-up", why: "the model refused" }, searches, said };
+          return { choice: { kind: "gave-up", why: "the model refused" }, searches, said, usage };
         }
         const calls = message.content.filter(
           (block): block is Anthropic.ToolUseBlock => block.type === "tool_use",
@@ -97,6 +107,7 @@ export function createClaudeAgent(options: ClaudeAgentOptions): BenchAgent {
             choice: { kind: "gave-up", why: "it stopped without buying anything" },
             searches,
             said,
+            usage,
           };
         }
         messages.push({ role: "assistant", content: message.content });
@@ -147,11 +158,12 @@ export function createClaudeAgent(options: ClaudeAgentOptions): BenchAgent {
         messages.push({ role: "user", content: results });
         if (bought !== null) {
           // One more turn so it can say why, then the errand is over.
-          const last = await lastWord(client, options, messages);
+          const last = await lastWord(client, options, messages, count);
           return {
             choice: { kind: "bought", ...bought },
             searches,
             said: last === "" ? said : last,
+            usage,
           };
         }
       }
@@ -159,6 +171,7 @@ export function createClaudeAgent(options: ClaudeAgentOptions): BenchAgent {
         choice: { kind: "gave-up", why: `it used all ${maxTurns} turns without buying` },
         searches,
         said,
+        usage,
       };
     },
   };
@@ -169,6 +182,7 @@ async function lastWord(
   client: Anthropic,
   options: ClaudeAgentOptions,
   messages: Anthropic.MessageParam[],
+  count: (answered: Anthropic.Message) => void,
 ): Promise<string> {
   try {
     const message = await client.messages.create({
@@ -177,6 +191,7 @@ async function lastWord(
       system: SYSTEM_PROMPT,
       messages,
     });
+    count(message);
     return textOf(message);
   } catch {
     return "";
