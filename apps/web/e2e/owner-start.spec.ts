@@ -31,8 +31,12 @@ test("an owner who sets a credential can sign out and come back", async ({ page 
   await page.locator("#start-password").fill(PASSWORD);
   await page.getByRole("button", { name: /Start with PayPal/ }).click();
 
-  // The stand-in approval page, then back into Slip with a permission in force.
-  await expect(page.getByRole("button", { name: /Approve/ })).toBeVisible();
+  // The stand-in approval page, then back into Slip with a permission in force. This is the first
+  // request in the file that touches the database, and the server starts by deleting its PGlite
+  // directory so each run begins clean — so this one step pays for the migrations, which takes
+  // longer than the 10 s the rest of the file inherits, and longer still while the demo server's
+  // tests are running beside it.
+  await expect(page.getByRole("button", { name: /Approve/ })).toBeVisible({ timeout: 30_000 });
   await page.getByRole("button", { name: /Approve/ }).click();
   // Approving finishes the setup and lands on the permission slip, in force.
   await expect(page).toHaveURL(/\/mandate/);

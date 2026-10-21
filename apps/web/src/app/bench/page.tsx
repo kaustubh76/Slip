@@ -108,8 +108,14 @@ export default function Bench() {
         </p>
         <Leaders
           rows={[
-            ["Errands", "22, each naming one specific product"],
-            ["Agents", "2, both Anthropic — one of them small and low-cost"],
+            ["Errands", "21, each naming one specific product"],
+            [
+              "Agents",
+              // What has results, not what is wired: a sweep may cover one agent and not the other.
+              BENCH.tallies.length === 0
+                ? "2 wired, both Anthropic — one of them small and low-cost"
+                : `${new Set(BENCH.tallies.map((row) => row.agent)).size} measured of 2 wired, both Anthropic`,
+            ],
             ["Conditions", "3, each with Slip off and on"],
             ["Prices", "real offers, replayed from stored snapshots"],
           ]}

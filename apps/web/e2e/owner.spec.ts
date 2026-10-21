@@ -117,9 +117,7 @@ test("nothing is readable without a session", async ({ request }) => {
   }
 });
 
-test("the bench prints the market study as measured, and says the benchmark has not run", async ({
-  page,
-}) => {
+test("the bench prints the market study and the benchmark as measured", async ({ page }) => {
   await openDesk(page);
   await page.getByRole("link", { name: "Bench" }).click();
   const main = page.getByRole("main");
@@ -131,9 +129,14 @@ test("the bench prints the market study as measured, and says the benchmark has 
   // Including the part that does not flatter us.
   await expect(main).toContainText("minority of products");
 
-  // The benchmark has not, and says so rather than showing an empty table.
-  await expect(page.getByRole("img", { name: "This benchmark has not run yet" })).toBeVisible();
-  await expect(main).toContainText("waiting on a model key");
+  // The benchmark has run too: the stamp carries its date and the table carries its rows, rather
+  // than the page promising numbers it does not have.
+  await expect(page.getByRole("img", { name: /^Run on \d{4}-\d{2}-\d{2}$/ })).toBeVisible();
+  await expect(main).toContainText("Per agent and condition");
+  await expect(main).toContainText("claude-haiku-5-5");
+  // What has results, never what is merely wired.
+  await expect(main).toContainText("measured of 2 wired");
+  await expect(main).not.toContainText("waiting on a model key");
 });
 
 test("another desk's receipt reads as not found, the same as no receipt at all", async ({
