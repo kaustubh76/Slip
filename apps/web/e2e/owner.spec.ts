@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { issueKey, openDesk, productId } from "./helpers";
 
-test("a new desk shows the four purchases its agent tried, and says the demo is simulated", async ({
+test("a new desk opens on the four purchases of its morning, and says the demo is simulated", async ({
   page,
 }) => {
   await openDesk(page);
@@ -11,15 +11,31 @@ test("a new desk shows the four purchases its agent tried, and says the demo is 
     ),
   ).toBeVisible();
   const roll = page.getByRole("region", { name: "Receipts" });
-  await expect(roll.getByRole("img", { name: "Outcome: paid" })).toHaveCount(1);
-  await expect(roll.getByRole("img", { name: "Outcome: rejected" })).toHaveCount(1);
-  await expect(roll.getByRole("img", { name: "Outcome: held" })).toHaveCount(2);
+  // The newest four, under today's date: one of each kind, whatever history is filed below them.
+  const top = await Promise.all(
+    [0, 1, 2, 3].map(async (i) =>
+      roll.getByRole("listitem").nth(i).getByRole("img").first().getAttribute("aria-label"),
+    ),
+  );
+  expect(top.sort()).toEqual([
+    "Outcome: held",
+    "Outcome: held",
+    "Outcome: paid",
+    "Outcome: rejected",
+  ]);
+  // And the history under them: more than one page of receipts, over more than one day.
+  await expect(roll.getByRole("listitem")).toHaveCount(25);
+  await expect(roll.getByRole("button", { name: /Older receipts/ })).toBeVisible();
+  await expect(roll.locator(".slip-day")).not.toHaveCount(1);
   await expect(page.getByRole("heading", { name: "Waiting for you" })).toBeVisible();
 });
 
 test("the rejected receipt reads in five seconds, with every offer behind it", async ({ page }) => {
   await openDesk(page);
-  await page.getByRole("link", { name: "Your agent tried to pay $58.99 at Store A." }).click();
+  await page
+    .getByRole("link", { name: "Your agent tried to pay $58.99 at Store A." })
+    .first()
+    .click();
   const slip = page.getByRole("article").first();
   await expect(slip).toContainText("The same item was listed at $47.99 at Store B.");
   await expect(slip).toContainText("Overpaid by $11.00 (23%).");
@@ -39,7 +55,10 @@ test("the ids behind a receipt are whole and can be taken, and the back of it fo
 }) => {
   await context.grantPermissions(["clipboard-write"]);
   await openDesk(page);
-  await page.getByRole("link", { name: "Your agent tried to pay $58.99 at Store A." }).click();
+  await page
+    .getByRole("link", { name: "Your agent tried to pay $58.99 at Store A." })
+    .first()
+    .click();
   const fold = page.locator("details.slip-fold");
   // It opens open: Slip's working is not something the reader has to ask for.
   await expect(fold).toHaveAttribute("open", "");
@@ -95,7 +114,8 @@ test("a purchase the agent makes prints on the roll without a reload", async ({ 
   const product = await productId(page, "trail-shoe");
   await page.goto("/receipts");
   const roll = page.getByRole("region", { name: "Receipts" });
-  await expect(roll.getByRole("listitem")).toHaveCount(4);
+  const top = roll.getByRole("listitem").first();
+  await expect(top).not.toContainText("$47.99");
   const answer = await page.request.post("/api/v1/agent/checkout", {
     headers: { authorization: `Bearer ${key}` },
     data: {
@@ -106,8 +126,10 @@ test("a purchase the agent makes prints on the roll without a reload", async ({ 
   });
   expect(answer.status()).toBe(200);
   expect(await answer.json()).toMatchObject({ status: "decided", outcome: "PAID" });
-  await expect(roll.getByRole("listitem")).toHaveCount(5, { timeout: 15_000 });
-  await expect(roll.getByRole("listitem").first()).toContainText("$47.99");
+  // Printed at the top of the roll by the live poll, with no reload. Counting rows would prove
+  // nothing now: a full page does not grow, the newest arrival pushes the oldest off the end.
+  await expect(top).toContainText("$47.99", { timeout: 15_000 });
+  await expect(top).toContainText("scout");
 });
 
 test("nothing is readable without a session", async ({ request }) => {

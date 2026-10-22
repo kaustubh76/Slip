@@ -49,7 +49,8 @@ test("the agent script, run from a terminal, is checked by Slip and prints on th
   const key = /SLIP_AGENT_KEY=(\S+)/.exec(command)?.[1] ?? "";
   await page.goto("/receipts");
   const roll = page.getByRole("region", { name: "Receipts" });
-  await expect(roll.getByRole("img", { name: "Outcome: rejected" })).toHaveCount(1);
+  const top = roll.getByRole("listitem").first();
+  await expect(top).not.toContainText("agent script");
 
   const transcript = await agentScript(["--errand", "top-pick", "--url", baseURL ?? ""], key);
   expect(transcript.code).toBe(0);
@@ -57,11 +58,9 @@ test("the agent script, run from a terminal, is checked by Slip and prints on th
   expect(transcript.stdout).toContain('listing text: "[synthetic] Top pick"');
   expect(transcript.stdout).toContain("REJECTED by R4_OVERPAID");
   expect(transcript.stdout).toContain("next    If you still want this item");
-  // Printed on the roll by the live poll, with no reload.
-  await expect(roll.getByRole("img", { name: "Outcome: rejected" })).toHaveCount(2, {
-    timeout: 10_000,
-  });
-  await expect(roll).toContainText("agent script");
+  // Printed at the top of the roll by the live poll, with no reload.
+  await expect(top).toContainText("agent script", { timeout: 10_000 });
+  await expect(top.getByRole("img")).toHaveAttribute("aria-label", "Outcome: rejected");
 });
 
 /** Runs `pnpm demo:agent` the way a presenter would, from the repository root. */

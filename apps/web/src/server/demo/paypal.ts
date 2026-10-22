@@ -76,6 +76,7 @@ export class DemoPayPal implements PaymentGateway {
   readonly #forced = new Map<string, ForcedOutcomes>();
   readonly #calls = new Map<string, DemoCall[]>();
   readonly #mandateOfInvoice = new Map<string, string | null>();
+  readonly #seeding = new Map<string, Clock>();
 
   constructor(options: {
     inner: FakePaymentGateway;
@@ -113,6 +114,23 @@ export class DemoPayPal implements PaymentGateway {
       return await work();
     } finally {
       this.#forced.delete(mandateId);
+    }
+  }
+
+  /**
+   * Runs `work` as part of building this desk rather than as something a visitor is watching: its
+   * PayPal calls answer at once instead of taking the demo's latency, and they are stamped with
+   * `clock` so a purchase seeded as "two days ago" says so in the call log too.
+   *
+   * Keyed by mandate, like everything else here, because one `DemoPayPal` serves every desk in the
+   * process: a shared flag would take the latency off another visitor's clicks mid-demo.
+   */
+  async seedingAs<T>(mandateId: string, clock: Clock, work: () => Promise<T>): Promise<T> {
+    this.#seeding.set(mandateId, clock);
+    try {
+      return await work();
+    } finally {
+      this.#seeding.delete(mandateId);
     }
   }
 
@@ -181,7 +199,7 @@ export class DemoPayPal implements PaymentGateway {
       attemptId: input.invoiceId,
       detail: `${input.intent} ${formatUsd(input.amountCents)}`,
     });
-    if (!(await this.#wait(signal))) {
+    if (!(await this.#wait(mandate, signal))) {
       return answered<OrderResult>(entry, { kind: "unknown", reason: TIMED_OUT });
     }
     const forced = this.#take(mandate, "order");
@@ -201,7 +219,7 @@ export class DemoPayPal implements PaymentGateway {
       attemptId: input.invoiceId,
       detail: `capture ${formatUsd(input.amountCents)}`,
     });
-    if (!(await this.#wait(signal))) {
+    if (!(await this.#wait(mandate, signal))) {
       return answered<CaptureResult>(entry, { kind: "unknown", reason: TIMED_OUT });
     }
     const forced = this.#take(mandate, "capture");
@@ -216,7 +234,7 @@ export class DemoPayPal implements PaymentGateway {
     const invoice = order?.invoiceId ?? null;
     const mandate = invoice === null ? null : await this.#mandateOf(invoice);
     const entry = this.#log(mandate, { call: "void", attemptId: invoice, detail: "void" });
-    if (!(await this.#wait(signal))) {
+    if (!(await this.#wait(mandate, signal))) {
       return answered<VoidResult>(entry, { kind: "unknown", reason: TIMED_OUT });
     }
     const forced = this.#take(mandate, "void");
@@ -309,14 +327,14 @@ export class DemoPayPal implements PaymentGateway {
     return outcome;
   }
 
-  #wait(signal: AbortSignal): Promise<boolean> {
-    return this.#latencyMs === 0
-      ? Promise.resolve(!signal.aborted)
-      : this.#clock.sleep(this.#latencyMs, signal);
+  #wait(mandate: string | null, signal: AbortSignal): Promise<boolean> {
+    const instant = this.#latencyMs === 0 || (mandate !== null && this.#seeding.has(mandate));
+    return instant ? Promise.resolve(!signal.aborted) : this.#clock.sleep(this.#latencyMs, signal);
   }
 
   #log(mandate: string | null, call: Omit<DemoCall, "at" | "answer">): DemoCall {
-    const entry: DemoCall = { at: this.#clock.now().toISOString(), answer: null, ...call };
+    const clock = (mandate === null ? undefined : this.#seeding.get(mandate)) ?? this.#clock;
+    const entry: DemoCall = { at: clock.now().toISOString(), answer: null, ...call };
     if (mandate !== null) {
       const calls = this.#calls.get(mandate) ?? [];
       calls.push(entry);

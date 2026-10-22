@@ -59,8 +59,8 @@ SLIP_AGENT_KEY=slip_live_… pnpm demo:agent --errand cheaper --url http://local
 Cut to the roll and watch the new receipt's status line walk INITIATED → CAPTURED. *"Same agent,
 cheaper offer. Slip pays that one."*
 
-**1:15–1:35 · A hold, and a human.** **Holds**. Two are waiting, each with the time left draining.
-Take the one above the order cap. Press **Approve…** and stop on the dialog: it names the exact
+**1:15–1:35 · A hold, and a human.** **Holds**. Two are waiting, each with the time left draining,
+and under them the ones this desk already decided. Take the one above the order cap. Press **Approve…** and stop on the dialog: it names the exact
 amount and the store. Cancel it. Press **Decline…** and confirm. The status line walks VOIDING →
 VOIDED. *"Above the limit the owner set, so it waits. Declining releases the money; nothing was
 charged."*
@@ -77,8 +77,9 @@ let Slip decide on the roll. *"Any MCP client. The agent never holds the payment
 does, and the agent can only pay through it."* Say the sandbox sentence here: in the demo PayPal
 is a stand-in in this process, Slip is the merchant of record, and no order reaches a retailer.
 
-**2:30–2:45 · Close.** The roll, full screen, four outcomes visible. *"Every purchase an agent
-tries, checked before the money moves, with a receipt that says why."*
+**2:30–2:45 · Close.** The roll, full screen. Scroll it once: three agents, two days, every
+outcome and every state PayPal leaves a payment in. *"Every purchase an agent tries, checked
+before the money moves, with a receipt that says why."*
 
 ---
 

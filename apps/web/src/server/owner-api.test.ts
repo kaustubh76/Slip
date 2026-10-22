@@ -1,3 +1,4 @@
+import { DEFAULT_PAGE_SIZE } from "@slip/app";
 import {
   AgentCardSchema,
   HoldsSchema,
@@ -35,7 +36,9 @@ describe("the owner's read API", () => {
     const roll = await receiptsAnswer(owner, new URLSearchParams());
     expect(roll.status).toBe(200);
     const page = ReceiptPageSchema.parse(roll.body);
-    expect(page.rows).toHaveLength(4);
+    // A page, not the desk: a seeded desk holds more receipts than one page shows.
+    expect(page.rows).toHaveLength(DEFAULT_PAGE_SIZE);
+    expect(page.next).not.toBeNull();
     const first = page.rows[0]?.view.receiptId ?? "";
     expect(ReceiptDetailSchema.parse((await receiptAnswer(owner, first)).body).view.receiptId).toBe(
       first,
@@ -52,9 +55,13 @@ describe("the owner's read API", () => {
     );
     expect(first.rows).toHaveLength(3);
     const rest = ReceiptPageSchema.parse(
-      (await receiptsAnswer(owner, new URLSearchParams({ before: first.next ?? "" }))).body,
+      (await receiptsAnswer(owner, new URLSearchParams({ limit: "3", before: first.next ?? "" })))
+        .body,
     );
-    expect(rest.rows).toHaveLength(1);
+    expect(rest.rows).toHaveLength(3);
+    // The cursor moves: the second page is three receipts nobody has seen yet.
+    const seen = new Set(first.rows.map((r) => r.view.receiptId));
+    expect(rest.rows.filter((r) => seen.has(r.view.receiptId))).toEqual([]);
   });
 
   it("another owner's receipt, or a made-up one, is a 404", async () => {

@@ -40,7 +40,7 @@ describe("DemoPayPal", () => {
       ),
     );
     const calls = fakes.gateway.callsFor(a.mandateId);
-    // The seed paid one purchase and reserved one: two orders on this desk.
+    // This morning's purchases, among everything the desk's history asked PayPal for.
     expect(calls.map((c) => [c.call, c.detail, c.answer])).toEqual(
       expect.arrayContaining([
         ["order", "CAPTURE $31.50", "captured"],
@@ -48,7 +48,8 @@ describe("DemoPayPal", () => {
       ]),
     );
     expect(calls.every((c) => c.attemptId !== null && mine.has(c.attemptId))).toBe(true);
-    expect(fakes.gateway.callsFor(b.mandateId)).toHaveLength(2);
+    // Both desks were built the same way, and neither one's calls are logged against the other.
+    expect(fakes.gateway.callsFor(b.mandateId)).toHaveLength(calls.length);
   });
 
   it("points approval links at Slip's own simulated approval page", async () => {

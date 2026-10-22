@@ -7,21 +7,29 @@ import {
   startMandate,
 } from "@slip/app";
 import { type DemoFakes, runErrand, stockDesk } from "./desk";
+import { seedHistory } from "./history";
 
 /**
  * A demo owner, set up the way a real one is: `registerOwner`, `startMandate`, the PayPal
  * approval (the stand-in's, since there are no sandbox keys), `completeMandateSetup`, then an
  * agent key. No shortcut past the use cases, so what the demo shows is what the application does.
  *
- * Then the agent runs four errands through `runCheckout`, so every page has something real on it:
- * a purchase paid, one rejected, one held above the owner's cap, and one held because Channel3 was
- * down (which has no PayPal order behind it, the case an owner approves by paying in one step).
+ * Then two days of history (`./history`) and, last, today's four errands through `runCheckout`, so
+ * every page has something real on it: a purchase paid, one rejected, one held above the owner's
+ * cap, and one held because Channel3 was down (which has no PayPal order behind it, the case an
+ * owner approves by paying in one step). Those four are seeded last and are the only holds left
+ * pending, so the tray and the shot list still read the way they always have.
+ *
  * Everything happens on this desk's own products, so two visitors signing in at once never see
- * each other's outage or prices.
+ * each other's outage or prices — and the whole seed runs through `seedingAs`, which takes the
+ * demo's two-second PayPal latency off the stand-in for this mandate alone while it is building.
  */
 
 /** How long a demo desk trusts a listing before asking the (stand-in) Channel3 again. */
 export const DEMO_PRICES_FRESH_MS = 60_000;
+
+/** What shopper-1 did this morning: the four the roll opens on, and the only pending holds. */
+export const TODAY = ["lamp", "top-pick", "above-cap", "offers-down"] as const;
 
 export interface DemoOwner {
   ownerId: string;
@@ -60,8 +68,15 @@ export async function seedDemoOwner(deps: AppDeps, fakes: DemoFakes): Promise<De
   }
   const desk = { mandateId, apiKey: issued.apiKey };
   stockDesk(fakes.offers, mandateId);
-  for (const errand of ["lamp", "top-pick", "above-cap", "offers-down"] as const) {
-    const result = await runErrand(deps, fakes, desk, errand);
+  await seedHistory(deps, fakes, {
+    ownerId,
+    mandateId,
+    keys: new Map([["shopper-1", issued.apiKey]]),
+  });
+  for (const errand of TODAY) {
+    const result = await fakes.gateway.seedingAs(mandateId, deps.clock, () =>
+      runErrand(deps, fakes, desk, errand),
+    );
     if (result.status === "refused") {
       deps.log.warn("demo.checkout_refused", { errand, reason: result.reason });
     }

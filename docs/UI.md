@@ -254,9 +254,13 @@ or 400, 401, 403, 409 or 429 with the reason. Agents that speak MCP use `/api/mc
 It refuses to start on Vercel, where in-memory state would split across instances. Every page
 says it is simulated.
 
-- **Sign-in** opens a fresh desk: an owner, a permission in force, an agent (shopper-1) and four
-  purchases (paid, rejected, held above the cap, held with no prices). Each visitor's products
-  have their own ids, so one desk's price change or outage never reaches another (D46).
+- **Sign-in** opens a fresh desk: an owner, a permission in force, three agents (shopper-1,
+  deal-hunter, restock-bot) and thirty receipts. The newest four are shopper-1's this morning
+  (paid, rejected, held above the cap, held with no prices) and are the only holds still waiting;
+  under them are two earlier days, with their holds decided, so the roll pages, prints a date
+  separator, fills the agent filter and shows the payment states a desk that only ever succeeds
+  never reaches (D80). Each visitor's products have their own ids, so one desk's price change or
+  outage never reaches another (D46).
 - **PayPal calls take time** (`SLIP_DEMO_LATENCY_MS`, default 2000), so INITIATED, CAPTURING and
   VOIDING can be seen, and a resolver loop finishes what is left pending (D47).
 - **`/demo`** sends the console's own agent (shopper-2) on six errands, with PayPal answering,
@@ -282,8 +286,8 @@ says it is simulated.
 - `pnpm test` covers the kit's components and hooks (Testing Library on jsdom), the tokens'
   contrast, the design lint (no colour literals, gradients, blur shadows or radius above 4px),
   the banned words, and the web app's server code.
-- `pnpm web:e2e` runs Playwright against the built app in demo mode. It covers the four seeded
-  outcomes, the five-second receipt, approve and decline, live arrival, the demo console and the
-  agent script, a price change, two tabs approving one hold, the kill switch during a checkout,
+- `pnpm web:e2e` runs Playwright against the built app in demo mode. It covers the four outcomes
+  the roll opens on, the five-second receipt, approve and decline, live arrival, the demo console
+  and the agent script, a price change, two tabs approving one hold, the kill switch during a checkout,
   another desk's receipt, the keyboard and contrast switches, and axe on every page in both
   themes (and on the shortcuts sheet in more contrast).

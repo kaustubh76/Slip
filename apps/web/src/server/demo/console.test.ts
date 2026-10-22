@@ -28,7 +28,10 @@ describe("the demo console", () => {
     const again = await consoleErrand(desk, "top-pick", "answers");
     expect(again.status === "done" && again.message).toContain("a repeat");
     const agents = await world.deps.store.agents.listByMandate(desk.mandateId as never);
-    expect(agents.map((a) => a.name).sort()).toEqual(["shopper-1", "shopper-2"]);
+    const names = agents.map((a) => a.name);
+    // Its own agent, beside the ones the desk was seeded with, and created once however many
+    // errands it runs.
+    expect(names.filter((n) => n === "shopper-2")).toEqual(["shopper-2"]);
   });
 
   it("runs an errand as the desk's own agent and says what Slip decided", async () => {
@@ -53,6 +56,9 @@ describe("the demo console", () => {
   it("a pending payment settles when PayPal is told to finish it", async () => {
     const world = demoWorld();
     const desk = await deskOf(world);
+    // A seeded desk already has one payment PayPal never finished; clear it, so this is about the
+    // one the console makes.
+    await settlePending(desk);
     const pending = await consoleErrand(desk, "cheaper", "stays-pending");
     expect(pending.status === "done" && pending.message).toContain("PayPal: PENDING");
     const settled = await settlePending(desk);

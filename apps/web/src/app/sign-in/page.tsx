@@ -47,7 +47,8 @@ export default async function SignIn(props: { searchParams: Promise<{ refused?: 
           <form action={signInToDemo}>
             <p className="slip-prose">
               This demo gives you your own owner, a PayPal mandate approved against a stand-in for
-              PayPal, one agent, and four purchases it has already tried.
+              PayPal, three agents, and a roll of what they have already tried — four purchases this
+              morning, two days of them before that.
             </p>
             <button type="submit" className="slip-button" data-variant="ink">
               Open a demo desk →

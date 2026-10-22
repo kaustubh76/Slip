@@ -88,7 +88,9 @@ SLIP_DEMO=1 SLIP_BASE_URL=http://localhost:3000 pnpm web:dev
 ```
 
 Open <http://localhost:3000>, choose **Open a demo desk**, and you get a fresh owner with a
-permission in force and four purchases already checked: one paid, one rejected, two held. Then:
+permission in force and a roll with a history on it: four purchases from this morning at the top —
+one paid, one rejected, two held for you — and two earlier days of them from three agents below,
+holds already decided, payments in every state PayPal leaves them in. Then:
 
 1. **Demo** tab → **Issue a key for the script**, and run the command it shows in a terminal:
 

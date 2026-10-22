@@ -1,6 +1,6 @@
 /**
- * Every demo sign-in seeds a desk — an owner, a mandate, an agent and four purchases — into a
- * process that never frees it. These limits keep one demo process healthy: a ceiling on desks in
+ * Every demo sign-in seeds a desk — an owner, a mandate, three agents and a roll of receipts —
+ * into a process that never frees it. These limits keep one demo process healthy: a ceiling on desks in
  * all, and a few per visitor's address in a sliding window.
  */
 export type Admission = "ok" | "full" | "slow";

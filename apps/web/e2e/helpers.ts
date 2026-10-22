@@ -1,6 +1,6 @@
 import { expect, type Page } from "@playwright/test";
 
-/** Opens a fresh demo desk: an owner, a permission in force, an agent and four purchases. */
+/** Opens a fresh demo desk: an owner, a permission in force, three agents and their receipts. */
 export async function openDesk(page: Page): Promise<void> {
   await page.goto("/sign-in");
   await page.getByRole("button", { name: "Open a demo desk →" }).click();

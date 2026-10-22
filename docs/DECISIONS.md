@@ -1179,3 +1179,46 @@ is not a lesser bug.
 
 Three of the four tests now in `clock.test.tsx` fail on the old hook, and the one that matters
 reads like the symptom: *a re-render between ticks must not move the clock*.
+
+## D80 · 2026-10-22 · A desk with a history, and what only a full one shows
+
+The demo seeded four purchases: one paid, one rejected, two held, all from one agent inside four
+seconds. It reads well and the video is cut to it. It is also the only desk anyone has ever
+designed this UI against, and a four-row desk renders less of the product than it looks.
+
+Measured rather than guessed, this is what never appeared on a screen: **a date separator** — the
+roll labels its first row always, and a second label needs two UTC days; **"Older receipts →"** —
+`next` is null under 26 rows, so the archive layout was unreachable except by typing a cursor;
+**an agent filter** whose two options select the same rows; **seven of the ten payment words**,
+which left `state.ts`'s whole `closed()` and `approved()` arms, the EXPIRED/DECLINED/RELEASED
+stamps and the in-tray's Decided section with nothing to draw; and `RollSummary`'s "Steered
+listings" row, because the one errand that trips `R3_STEERED` was never seeded.
+
+So the desk now opens on **thirty** receipts: the same four at the top, still the only holds left
+waiting, and two earlier days under them from three agents, holds already decided.
+
+**The checkout gate, not the page size, is what limits a seed.** Dedupe is per (agent, product):
+an open hold replays at any age, a decision replays within ten minutes, and a fifth attempt on one
+product in an hour is `RETRY_LIMIT`. One agent and five products is six receipts and no more. The
+two ways out were already in the codebase — hand the seed a shifted `Clock`, and issue more
+agents — and both are things the demo wanted anyway.
+
+**Seeding cannot be something a visitor waits for.** Every stand-in PayPal call takes
+`DEMO_TIMING.latencyMs`, two seconds, and sign-in blocks on the whole seed. `seedingAs` takes that
+off for one mandate — not a shared flag, because one `DemoPayPal` serves every desk in the process
+and a global one would strip the latency from another visitor's clicks mid-demo — and stamps the
+call log with the seed's own clock. A desk is **48 ms**.
+
+One of the console's four PayPal scripts is deliberately not seeded. A forced timeout is not a
+fast answer but no answer, and the purchase waits out `paypalTimeoutMs` before giving up: four
+seconds added to every sign-in, to show a state the resolver clears a moment later. On a manual
+clock it does not end at all, which is how it was found.
+
+**And the point of the exercise.** The first desk with a declined hold on it had the resolver
+logging `reconcile.disagreed, slipCents 0, paypalCents -23900` — Slip telling an owner that money
+had moved and it could not account for it, for every hold they had ever declined. A released
+authorization moved no money. The fake reported it as a reversal of the authorization amount, and
+PayPal's own `"V"` covers both that and a chargeback, so `settlement()` would have done the same
+against the real API. The sign already separates a refund from a reversal under `"S"` (D76); it
+separates these too, and `voided` is now its own kind that the netting ignores. **A branch nothing
+renders is a branch nothing checks, and that holds for the money paths behind it.**

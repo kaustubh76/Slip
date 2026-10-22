@@ -74,16 +74,25 @@ test("two tabs approving one hold capture once, and a third tab says it was alre
   await expect(idle.getByRole("button", confirm)).toBeDisabled();
 
   const holds = (await (await page.request.get("/api/v1/holds")).json()) as {
-    decided: { view: { receiptId: string; state: { word: string } } }[];
+    decided: {
+      view: { receiptId: string; state: { word: string }; chosen: { price: string } | null };
+    }[];
   };
-  const approved = holds.decided.find((r) => r.view.state.word === "CAPTURED");
-  const detail = (await (
-    await page.request.get(`/api/v1/receipts/${approved?.view.receiptId}`)
-  ).json()) as { timeline: { to: string }[] };
-  expect(detail.timeline.filter((t) => t.to === "CAPTURING")).toHaveLength(1);
-  expect((await paypalCalls(page)).filter((row) => row.includes("capture $239.00"))).toHaveLength(
-    1,
+  const approved = holds.decided.find(
+    (r) => r.view.state.word === "CAPTURED" && r.view.chosen?.price === "$239.00",
   );
+  const id = approved?.view.receiptId ?? "";
+  expect(id).not.toBe("");
+  const detail = (await (await page.request.get(`/api/v1/receipts/${id}`)).json()) as {
+    timeline: { to: string }[];
+  };
+  expect(detail.timeline.filter((t) => t.to === "CAPTURING")).toHaveLength(1);
+  // The desk's history holds captures of its own, so this counts the calls for *this* receipt:
+  // the stand-in's log names each one by the short number the receipt is filed under.
+  const hex = id.replaceAll("-", "");
+  const shortNo = `${hex.slice(0, 4)}…${hex.slice(-4)}`;
+  const mine = (await paypalCalls(page)).filter((row) => row.includes(shortNo));
+  expect(mine.filter((row) => row.includes("capture $239.00"))).toHaveLength(1);
 });
 
 test("the kill switch pulled during a checkout refuses the agent's next call and releases holds", async ({
