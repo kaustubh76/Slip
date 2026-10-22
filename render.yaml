@@ -35,3 +35,10 @@ services:
       # anyone could want; adding a quarter-second per call to a judged demo helps nobody.
       - key: SLIP_DEMO_LATENCY_MS
         value: "0"
+      # A desk holds thirty receipts in the process and is never freed, which measures at 789 KB
+      # of heap — so the 500 the code defaults to would be 385 MB on a box with 512 MB, before
+      # Node and Next have had any. Two hundred is 158 MB, and far more desks than a judged demo
+      # will open; `SLIP_DEMO_DESKS_PER_ADDRESS` (10 per 10 minutes) is what stops one visitor
+      # taking them all. Raise it with the plan, not on its own.
+      - key: SLIP_DEMO_MAX_DESKS
+        value: "200"

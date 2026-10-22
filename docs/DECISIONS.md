@@ -1197,6 +1197,14 @@ listings" row, because the one errand that trips `R3_STEERED` was never seeded.
 So the desk now opens on **thirty** receipts: the same four at the top, still the only holds left
 waiting, and two earlier days under them from three agents, holds already decided.
 
+*22 Oct 2026, later.* The "Older receipts →" line above is half wrong, and the correction matters
+because it is about what is still out of reach. Twenty-six receipts unlock the **button**, which
+loads the next page in place; the **archive layout** at `/receipts?before=` needs `olderCursor`,
+which `reads.ts` sets only once `LIVE_PAGES` (3) are loaded and a fourth page exists — **76
+receipts**. At thirty, one press shows the remaining five and the control then disappears, which
+is correct and is the whole of it. The archive page is still reachable only by typing a cursor,
+exactly as it was, and seeding 76 checkouts into a sign-in is not worth it to change that.
+
 **The checkout gate, not the page size, is what limits a seed.** Dedupe is per (agent, product):
 an open hold replays at any age, a decision replays within ten minutes, and a fifth attempt on one
 product in an hour is `RETRY_LIMIT`. One agent and five products is six receipts and no more. The
@@ -1222,3 +1230,38 @@ PayPal's own `"V"` covers both that and a chargeback, so `settlement()` would ha
 against the real API. The sign already separates a refund from a reversal under `"S"` (D76); it
 separates these too, and `voided` is now its own kind that the netting ignores. **A branch nothing
 renders is a branch nothing checks, and that holds for the money paths behind it.**
+
+## D81 · 2026-10-22 · Seven predictions, one defect, and a ceiling nobody had costed
+
+With thirty receipts on a desk, the parts of the UI that had never rendered were opened and
+watched. Three surveys were run over the archive flow, the roll at a full page, and the pages that
+render once per agent, and they produced a list of candidates. **Six of seven did not reproduce**,
+and that ratio is the point of measuring rather than reasoning:
+
+- Opening a receipt from twenty rows down was expected to leave the reader looking at nothing,
+  because the dock does not scroll with the roll. The router scrolls to the top on navigation, so
+  the receipt is on screen.
+- `.slip-button` on an anchor — the archive's only `<a>` wearing it — was expected to collapse to
+  an inline box well under the 44 px target. Measured: 151×46, the same as the button.
+- Three report cards beside the "New agent" sheet were expected to disagree about width above
+  1100 px. All four measure equal at 1100, 1280 and 1440.
+- The roll was expected to re-render every second behind the countdowns. **Zero DOM mutations in
+  six idle seconds**: React reconciles the tick to nothing.
+- An outcome filter with nothing in it prints first-run copy ("No receipts yet…"). Reachable in
+  theory; no agent on a seeded desk has a zero, so it is not reachable here.
+- Page weight went from about 25 KB to **103 KB** on `/receipts` and 111 KB on one receipt, because
+  the layout seeds a whole page into every route under it. Measured, considered, left alone.
+
+**The one that was real is a class, not an instance.** A desk now spans three days, and three
+places print a time with no date: the archive page, the in-tray's decided holds, and the stand-in
+PayPal's call log. The roll has day separators; `dayStarts` is pure, exported and was simply not
+passed to the other two `<Roll>`s. The call log was worse than ambiguous — it opens with today's
+rows above a day-old `20:00:00`, which reads as out of order. Today's calls keep the bare time,
+which is what someone pressing a button is watching for; older ones carry their date.
+
+**And a ceiling nobody had costed.** `render.yaml` never set `SLIP_DEMO_MAX_DESKS`, so the hosted
+demo took the default of 500, and a desk is never freed. A seeded desk measures **789 KB** of heap
+— so 500 desks is **385 MB on a box with 512 MB**, before Node and Next have had any. At four
+receipts it was perhaps 75 MB and nobody had to think about it. The blueprint now sets 200, which
+is 158 MB, and `docs/UI.md` carries the per-desk number so the arithmetic can be redone against a
+bigger plan. **Seeding more data is a change to the deployment, not only to the demo.**

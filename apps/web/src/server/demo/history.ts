@@ -12,12 +12,12 @@ import type { ForcedOutcomes } from "./paypal";
  *
  * Every step runs through `runCheckout` and the real hold use cases, exactly as the four purchases
  * of the present do — the only difference is the clock it is handed. That matters: the checkout
- * gate replays a repeat of the same (agent, product) within ten minutes and refuses a fifth
+ * gate replays a repeat of the same (agent, product) within ten minutes, and refuses a fifth
  * attempt on one product within an hour, so a history crammed into one instant would be mostly
  * replays. Spacing it over days is what makes it a history rather than a pile.
  *
  * One of the console's four PayPal scripts is deliberately absent. A forced timeout is not a fast
- * answer — it is no answer, and the purchase waits out `paypalTimeoutMs` before giving up — so a
+ * answer but no answer: the purchase waits out `paypalTimeoutMs` before giving up, so a
  * seeded one would add four seconds to every sign-in to show a payment state that the resolver
  * clears a moment later anyway. UNKNOWN belongs to the console, where someone asked for it.
  */

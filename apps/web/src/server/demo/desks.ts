@@ -1,7 +1,8 @@
 /**
  * Every demo sign-in seeds a desk — an owner, a mandate, three agents and a roll of receipts —
- * into a process that never frees it. These limits keep one demo process healthy: a ceiling on desks in
- * all, and a few per visitor's address in a sliding window.
+ * into a process that never frees it. These limits keep one demo process healthy: a ceiling on
+ * desks in all, and a few per visitor's address in a sliding window. A seeded desk measures about
+ * 789 KB of heap, so the ceiling is a memory budget; `render.yaml` sets it for the box it runs on.
  */
 export type Admission = "ok" | "full" | "slow";
 
