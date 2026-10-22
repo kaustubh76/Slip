@@ -19,6 +19,8 @@ export interface ConsoleErrand {
 
 export interface ConsoleCall {
   at: string;
+  /** The time, already printed: bare for today, with the day for anything older. */
+  when: string;
   call: string;
   receipt: string | null;
   detail: string;
@@ -189,7 +191,7 @@ export function DemoConsole(props: {
               <tbody>
                 {props.calls.map((call) => (
                   <tr key={`${call.at}-${call.call}-${call.receipt}-${call.detail}`}>
-                    <td className="slip-mono">{call.at.slice(11, 19)}</td>
+                    <td className="slip-mono">{call.when}</td>
                     <th scope="row">{call.detail}</th>
                     <td className="slip-mono">{call.receipt ?? "—"}</td>
                     <td>{call.answer ?? "waiting…"}</td>

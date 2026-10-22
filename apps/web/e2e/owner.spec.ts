@@ -30,6 +30,45 @@ test("a new desk opens on the four purchases of its morning, and says the demo i
   await expect(page.getByRole("heading", { name: "Waiting for you" })).toBeVisible();
 });
 
+/**
+ * A desk spans three days now, and two of the three places a roll is rendered were not given the
+ * day separators the live roll has — so a page of older receipts printed 13:00, 12:00, 11:00 with
+ * nothing on it saying which day (D81).
+ */
+test("every roll says which day its receipts are from, not just the time", async ({ page }) => {
+  await openDesk(page);
+  const page1 = await (await page.request.get("/api/v1/receipts")).json();
+  expect(page1.next, "a seeded desk is more than one page").not.toBeNull();
+
+  await page.goto(`/receipts?before=${encodeURIComponent(page1.next)}`);
+  const archive = page.locator("[data-archive]");
+  await expect(archive).toBeVisible();
+  await expect(archive.getByRole("listitem").first()).toBeVisible();
+  await expect(archive.locator(".slip-day").first()).toBeVisible();
+
+  // The in-tray's decided holds are the other one.
+  await page.goto("/holds");
+  const decided = page.getByRole("region", { name: "Decided" });
+  await expect(decided).toBeVisible();
+  await expect(decided.locator(".slip-day").first()).toBeVisible();
+});
+
+test("the stand-in PayPal's log dates the calls that are not from today", async ({ page }) => {
+  await openDesk(page);
+  await page.goto("/demo");
+  const times = page
+    .getByRole("table")
+    .getByRole("cell")
+    .filter({ hasText: /^\d\d:\d\d:\d\d$|^\d+ \w{3} \d\d:\d\d:\d\d$/ });
+  await expect(times.first()).toBeVisible();
+  const all = await times.allInnerTexts();
+  // The seed's own calls were made on earlier days and say so; a bare time means today.
+  expect(
+    all.some((t) => /^\d+ \w{3} /.test(t)),
+    `times were ${all.slice(0, 4).join(", ")}`,
+  ).toBe(true);
+});
+
 test("the rejected receipt reads in five seconds, with every offer behind it", async ({ page }) => {
   await openDesk(page);
   await page

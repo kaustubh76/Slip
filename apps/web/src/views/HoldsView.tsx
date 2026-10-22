@@ -1,6 +1,6 @@
 "use client";
 
-import { Countdown, LiveBadge, ReceiptSlip, Roll, useClock, useHolds } from "@slip/ui";
+import { Countdown, dayStarts, LiveBadge, ReceiptSlip, Roll, useClock, useHolds } from "@slip/ui";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import { HoldDecision } from "../components/HoldDecision";
@@ -75,7 +75,7 @@ export function HoldsView(props: { token: string; serverNow: number }) {
           <h2 id="decided-title" className="slip-meta">
             Decided
           </h2>
-          <Roll entries={past} hrefFor={receiptHref} Link={Link} />
+          <Roll entries={past} hrefFor={receiptHref} Link={Link} days={dayStarts(past)} />
         </section>
       )}
     </>

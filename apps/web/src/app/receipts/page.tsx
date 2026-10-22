@@ -1,5 +1,5 @@
 import { listReceipts } from "@slip/app";
-import { Roll } from "@slip/ui";
+import { dayStarts, Roll } from "@slip/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireOwner } from "../../server/owner";
@@ -41,6 +41,9 @@ export default async function Receipts({
         entries={page.rows}
         hrefFor={receiptHref}
         Link={Link}
+        // Without this a page of older receipts prints bare times — 13:00, 12:00, 11:00 — with
+        // nothing on it saying which day, which is the one thing a reader came here to know.
+        days={dayStarts(page.rows)}
         hasOlder={page.next !== null}
         {...(page.next === null
           ? {}
