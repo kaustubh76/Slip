@@ -405,6 +405,7 @@ export class FakePaymentGateway implements PaymentGateway {
         records.push({
           invoiceId: order.invoiceId,
           amountCents: kind === "reversed" ? -order.amountCents : order.amountCents,
+          // `voided` keeps its positive amount: it is what was never taken, not what came back.
           kind,
           transactionId: order.capture?.id ?? order.authorization?.id ?? null,
         });
@@ -703,7 +704,7 @@ function settledAs(order: FakeOrder): SettlementRecord["kind"] | null {
         : "denied";
   }
   if (order.authorization !== null) {
-    return order.authorization.status === "VOIDED" ? "reversed" : "pending";
+    return order.authorization.status === "VOIDED" ? "voided" : "pending";
   }
   return null;
 }

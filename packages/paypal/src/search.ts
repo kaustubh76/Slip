@@ -119,6 +119,11 @@ function allowed(window: { from: Date; to: Date }): { from: Date; to: Date } {
  * the sign decides, not the status — reading `kind === "reversed"` to find refunds would find
  * none of them (D76).
  *
+ * The sign decides inside `"V"` too. A chargeback takes money back and is negative; **a voided
+ * authorization is the positive amount of money that was never taken**, which is not a reversal
+ * of anything. Netting it would have a reconcile report every declined hold as money gone astray
+ * (D80).
+ *
  * A record in another currency is not skipped. Slip is USD-only by constraint, so a transaction
  * in anything else under a Slip invoice id is an anomaly, and dropping it silently would hide
  * exactly the kind of thing this exists to surface.
@@ -147,7 +152,9 @@ function settlement(info: TransactionInfo): SettlementRecord | null {
         : status === "P"
           ? "pending"
           : status === "V"
-            ? "reversed"
+            ? negative
+              ? "reversed"
+              : "voided"
             : status === "D"
               ? "denied"
               : "other";

@@ -73,7 +73,9 @@ export function describeGatewayContract(label: string, make: () => Promise<Gatew
         for (const record of listed.records) {
           expect(typeof record.invoiceId).toBe("string");
           expect(Number.isInteger(record.amountCents)).toBe(true);
-          expect(["settled", "pending", "reversed", "denied", "other"]).toContain(record.kind);
+          expect(["settled", "pending", "reversed", "voided", "denied", "other"]).toContain(
+            record.kind,
+          );
         }
       }
     });

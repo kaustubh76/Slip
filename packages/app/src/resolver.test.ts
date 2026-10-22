@@ -437,6 +437,20 @@ describe("checking Slip's books against PayPal's own", () => {
     expect((await mandateOf(h, seeded)).reconcileUnmatched).toBe(1);
   });
 
+  it("a hold the owner declined is not money gone astray", async () => {
+    // PayPal lists a released authorization under the same invoice, and the first version read
+    // that as a settlement of its own: every declined hold on a desk became an accusation that
+    // money had moved and Slip had lost it. Nothing moved — that is what declining a hold means.
+    // Found by seeding a demo desk with decided holds on it, which nothing had ever done (D80).
+    const { h, seeded } = await setup();
+    const id = await buy(h, seeded, "held");
+    await driveUntilSettled(h.clock, declineHold(h.deps, seeded.ownerId, id), { stepMs: 5_000 });
+    expect(await statusOf(h, id)).toBe("VOIDED");
+    h.clock.advance(25 * HOUR);
+    await resolve(h);
+    expect((await mandateOf(h, seeded)).reconcileUnmatched).toBe(0);
+  });
+
   it("a charge that lands after the kill switch is still reported", async () => {
     // The worst case this can find, and the one the first version silently dropped: the due list
     // took ACTIVE permissions only, so a settlement under a revoked one was counted into a bucket

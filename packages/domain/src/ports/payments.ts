@@ -65,7 +65,13 @@ export interface FindOrderInput {
 export interface SettlementRecord {
   invoiceId: string;
   amountCents: number;
-  kind: "settled" | "pending" | "reversed" | "denied" | "other";
+  /**
+   * `settled`: money moved (negative for a refund). `reversed`: money came back. **`voided`: an
+   * authorization released before any money moved** — not a reversal of anything, so a reconcile
+   * that counts it is accusing an owner of losing money that never left. `pending`: PayPal is
+   * still deciding. `denied`: it refused.
+   */
+  kind: "settled" | "pending" | "reversed" | "voided" | "denied" | "other";
   transactionId: string | null;
 }
 

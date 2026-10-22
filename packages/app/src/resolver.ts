@@ -163,7 +163,10 @@ async function reconcile(deps: AppDeps, run: Run, limit: number): Promise<void> 
  * could ever surface, since Slip's own payments table holds one row per attempt.
  *
  * Pending records are left out. They are PayPal still deciding, and disagreeing with that is the
- * resolver's other tasks' work, not this one's.
+ * resolver's other tasks' work, not this one's. So are voided ones: an authorization released
+ * without a capture moved no money, and counting it made every declined hold look like money gone
+ * astray — which is what a demo desk with decided holds on it showed the first time there was one
+ * (D80).
  */
 function netByInvoice(records: readonly SettlementRecord[]): Map<string, number> {
   const net = new Map<string, number>();
