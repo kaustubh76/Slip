@@ -126,3 +126,62 @@ test("the kill switch pulled during a checkout refuses the agent's next call and
   const holds = (await (await page.request.get("/api/v1/holds")).json()) as { pending: unknown[] };
   expect(holds.pending).toEqual([]);
 });
+
+/**
+ * The diagram's INTERFACES panel asks for the approval screen's two actions over REST, not only
+ * from the browser's own form (D82). Driven here the way a platform would: read the hold, price
+ * it, approve it, and watch the owner's roll say so.
+ */
+test("a hold can be decided over REST, and the roll shows it without a reload", async ({
+  page,
+}) => {
+  await openDesk(page);
+  const pending = (await (await page.request.get("/api/v1/holds")).json()) as {
+    pending: { view: { receiptId: string } }[];
+  };
+  expect(pending.pending.length).toBe(2);
+
+  // The amount the owner would be shown. Approving without it is refused, by design.
+  const id = pending.pending[0]?.view.receiptId ?? "";
+  const preview = await page.request.post(`/api/v1/holds/${id}/preview`);
+  expect(preview.status()).toBe(200);
+  const quoted = (await preview.json()) as { kind: string; amountCents: number; store: string };
+  expect(["capture", "pay"]).toContain(quoted.kind);
+
+  const stale = await page.request.post(`/api/v1/holds/${id}/approve`, {
+    data: { expectedAmountCents: quoted.amountCents - 1 },
+  });
+  expect(stale.status()).toBe(409);
+  expect(await stale.json()).toMatchObject({ reason: "PRICE_CHANGED" });
+
+  const done = await page.request.post(`/api/v1/holds/${id}/approve`, {
+    data: { expectedAmountCents: quoted.amountCents },
+  });
+  expect(done.status()).toBe(200);
+  expect(await done.json()).toMatchObject({ status: "done" });
+
+  // The owner's own page catches up on its own, because the change stamp moved.
+  await page.goto("/holds");
+  await expect(page.getByRole("region", { name: "Decided" })).toContainText("You approved at", {
+    timeout: 15_000,
+  });
+  const after = (await (await page.request.get("/api/v1/holds")).json()) as { pending: unknown[] };
+  expect(after.pending).toHaveLength(1);
+});
+
+test("nobody without a session can decide a hold", async ({ page, request }) => {
+  await openDesk(page);
+  const pending = (await (await page.request.get("/api/v1/holds")).json()) as {
+    pending: { view: { receiptId: string } }[];
+  };
+  const id = pending.pending[0]?.view.receiptId ?? "";
+  // A fresh request context carries no cookie: the same door the read API uses.
+  for (const path of ["preview", "approve", "decline"]) {
+    const answer = await request.post(`/api/v1/holds/${id}/${path}`, {
+      data: { expectedAmountCents: 1_000 },
+    });
+    expect(answer.status(), path).toBe(401);
+  }
+  const after = (await (await page.request.get("/api/v1/holds")).json()) as { pending: unknown[] };
+  expect(after.pending).toHaveLength(2);
+});
