@@ -263,7 +263,8 @@ export const MandateSummarySchema = z.object({
   agents: count,
   /** When Slip last checked this permission's payments against PayPal's own record (D75). */
   reconciledAt: isoTime.nullable(),
-  /** Transactions PayPal recorded under it that Slip could not account for, as of then. */
+  /** Purchases whose amount PayPal and Slip disagree about, as of then. A record Slip
+   * cannot tie to a purchase at all has no permission to be counted under, and is logged. */
   reconcileUnmatched: count,
 });
 export type MandateSummary = z.infer<typeof MandateSummarySchema>;

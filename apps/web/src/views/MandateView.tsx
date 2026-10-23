@@ -79,7 +79,7 @@ export function MandateView(props: { token: string; note: string | null }) {
               : ([["Recent records checked", printedAt(summary.reconciledAt)]] as const)),
             ...(summary.reconcileUnmatched === 0
               ? []
-              : ([["Unaccounted for", `${summary.reconcileUnmatched}`]] as const)),
+              : ([["Amounts that disagree", `${summary.reconcileUnmatched}`]] as const)),
             ...(summary.revokedAt === null
               ? []
               : ([["Cancelled", printedAt(summary.revokedAt)]] as const)),
@@ -93,14 +93,17 @@ export function MandateView(props: { token: string; note: string | null }) {
         {summary.reconciledAt === null ? null : (
           <p className="slip-caption">
             Each day Slip compares the last few days of PayPal&rsquo;s own records with what it
-            decided. It says what it checked, not that everything ever paid has been checked.
+            decided. It says what it checked, not that everything ever paid has been checked. A
+            record it cannot tie to a purchase it decided is reported in the server&rsquo;s log
+            rather than counted here: there is no permission to file it under.
           </p>
         )}
         {summary.reconcileUnmatched === 0 ? null : (
           <p className="slip-note slip-pen" role="status">
-            PayPal recorded {summary.reconcileUnmatched}{" "}
-            {summary.reconcileUnmatched === 1 ? "payment" : "payments"} under this permission that
-            Slip has no record of deciding. Check them at PayPal.
+            On {summary.reconcileUnmatched}{" "}
+            {summary.reconcileUnmatched === 1 ? "purchase" : "purchases"} under this permission,
+            PayPal&rsquo;s record and Slip&rsquo;s do not agree about how much money moved. Check
+            them at PayPal.
           </p>
         )}
         {props.note === null ? null : (

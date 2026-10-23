@@ -135,6 +135,10 @@ async function reconcile(deps: AppDeps, run: Run, limit: number): Promise<void> 
       paypalCents,
     });
   });
+  // A record Slip cannot tie to one of its own attempts has no mandate to be counted under — the
+  // mandate id lives on the attempt row, and there is no attempt row. So it is reported here and
+  // nowhere the owner reads, which is why the permission slip's number says "amounts that
+  // disagree" rather than claiming to cover this (D82).
   if (strangers + orphans > 0) {
     deps.log.warn("reconcile.unknown_transactions", { count: strangers + orphans });
   }
