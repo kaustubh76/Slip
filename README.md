@@ -16,8 +16,9 @@ which: real Channel3 prices with a stand-in PayPal is a state Slip will actually
 receipt must not call either one the other ([docs/SERVICES.md](docs/SERVICES.md)). With the PayPal
 keys it runs in the sandbox with Slip as the seller; no order reaches a retailer and no real money
 moves. Read [docs/SPEC.md](docs/SPEC.md) for the full spec,
-[docs/diagram.png](docs/diagram.png) for the execution flow and [docs/UI.md](docs/UI.md) for the
-owner UI. Agents connect through Slip's MCP server: [TOOLS.md](TOOLS.md). Design decisions are
+[docs/diagram.png](docs/diagram.png) for the execution flow — which wins over the spec where they
+disagree, and which [docs/DIAGRAM.md](docs/DIAGRAM.md) maps box by box onto the code and the tests
+— and [docs/UI.md](docs/UI.md) for the owner UI. Agents connect through Slip's MCP server: [TOOLS.md](TOOLS.md). Design decisions are
 logged in [docs/DECISIONS.md](docs/DECISIONS.md), and [docs/DEMO.md](docs/DEMO.md) is the shot
 list for the video — including the one beat still waiting on a vaulted sandbox buyer.
 

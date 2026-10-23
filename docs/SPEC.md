@@ -151,12 +151,12 @@ Agent ──MCP──► Slip server
 ### PayPal usage
 | Step | Capability | Status |
 |---|---|---|
-| Mandate | Orders v2, save PayPal payment method to vault during first purchase | **[VERIFIED in docs]** |
+| Mandate | Vault v3 setup token, approved by the owner, exchanged for a payment token — the diagram's no-purchase alternative, which is what shipped (D82) | **[BUILT]** |
 | Agent purchase | Orders v2 single-step order with vault token, CAPTURE | **[VERIFIED in docs; untested in sandbox]** |
 | Human-review hold | Orders v2 AUTHORIZE with vault token; Payments v2 capture or void | **[UNVERIFIED]** |
-| Status | Get order | Agent Toolkit `get_order` |
-| Daily reconcile | Transaction list (delayed up to 3 h) | Agent Toolkit `list_transactions` |
-| Refund (stretch) | Refund a capture | Agent Toolkit `create_refund` |
+| Status | Get order | REST `GET /v2/checkout/orders/{id}`, not the Agent Toolkit (D82) |
+| Daily reconcile | Transaction list (delayed up to 3 h) | REST `GET /v1/reporting/transactions` (D82) |
+| Refund (stretch) | Refund a capture | not built |
 
 **[VERIFIED]** The Agent Toolkit has no vault, authorise or void tools, so the vault and hold calls go to REST directly. State this in TOOLS.md. Every single-step order needs a `PayPal-Request-Id` header; use it as the idempotency key.
 

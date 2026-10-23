@@ -243,6 +243,21 @@ the same as one that does not exist.
 | `GET /api/v1/mandate` | the permission slip's summary |
 | `GET /api/v1/stamp` | `{ token }` |
 
+The owner also has three writes, the approval screen's own actions over REST so that something
+other than this browser can decide a hold (D82). Each answers one of the three shapes in
+`hold-results.ts` and reuses the same use cases the pages do.
+
+| Endpoint | Answer |
+|---|---|
+| `POST /api/v1/holds/{id}/preview` | `{ kind: "capture" \| "pay", amountCents, store }` — what approving would charge. A POST because a `pay` preview asks Channel3 for today's prices |
+| `POST /api/v1/holds/{id}/approve` | `{ expectedAmountCents }` in, the decided receipt out. A different amount is `409 PRICE_CHANGED` with the real one |
+| `POST /api/v1/holds/{id}/decline` | no body; the decided receipt out |
+
+`202` is the one to read carefully: Slip sent the decision and never heard back, so the money may
+have moved. Read the receipt rather than send it again. `409` means nothing was written — already
+decided, expired, the price moved, or a decision is in flight. `503` means Slip could not price
+the purchase; nothing was written and later may work.
+
 The agent side is one call, `POST /api/v1/agent/checkout`, with `Authorization: Bearer slip_live_…`
 and `{ productId, chosenOfferUrl, reason }`. It answers 200 with the outcome and the receipt view,
 or 400, 401, 403, 409 or 429 with the reason. Agents that speak MCP use `/api/mcp` instead (see

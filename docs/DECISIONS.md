@@ -1265,3 +1265,64 @@ demo took the default of 500, and a desk is never freed. A seeded desk measures 
 receipts it was perhaps 75 MB and nobody had to think about it. The blueprint now sets 200, which
 is 158 MB, and `docs/UI.md` carries the per-desk number so the arithmetic can be redone against a
 bigger plan. **Seeding more data is a change to the deployment, not only to the demo.**
+
+## D82 · 2026-10-23 · The diagram, read back against the code
+
+D1 made `docs/diagram.png` authoritative over `SPEC.md`, and D2–D4 booked the places the diagram
+departed from the written spec. Nothing had ever gone the other way: the diagram's own thirty-odd
+boxes had no map to the code, so "fully built" was an assertion. It was scanned at a resolution
+where its small text is legible and every box traced. `docs/DIAGRAM.md` is the map.
+
+Most of it is built exactly as drawn — box 2 in full, box 3A·P2 and 3C·H1/H4a/H4b down to the
+field names, box 4·A5's revoke including the `VAULT.PAYMENT-TOKEN.DELETED` webhook landing on the
+same shutdown, all thirteen items of the `CHANGED OR ADDED SINCE SPEC v5` panel, and the three
+timeouts. **One box was not built at all, one number was mislabelled, and four live departures had
+never been written down.**
+
+**The owner's decisions had no REST.** The INTERFACES panel asks for
+`POST /api/holds/{receipt_id}/approve and /decline`, and box 3C·H3 names them as the approval
+screen's two actions. Neither existed — all seven owner endpoints were GETs, and approve/decline
+lived only as Next server actions, so nothing but this browser could decide a hold. They exist now
+under `/api/v1/holds/{id}/`, with a third, `/preview`, that the diagram does not draw and the
+other two need: `approveHold` guards on `expectedAmountCents`, and for a hold with nothing
+reserved only the re-check can produce that figure. The path carries the `/api/v1` prefix every
+other owner endpoint has rather than the drawing's bare `/api/`; one unversioned prefix for two
+routes would be the odd thing. The ten `HoldRefusalReason`s map onto the status table the agent
+endpoint already established, with one worth naming: **202, not 500, when an answer is lost** —
+the money may have moved, and a 500 invites exactly the retry that could pay twice (D48).
+
+**A number whose label described something else.** The permission slip printed "PayPal recorded
+*n* payments under this permission that Slip has no record of deciding", and the schema and domain
+comments said the same. `reconcileUnmatched` counts nothing of the sort: it counts purchases Slip
+*does* have, where PayPal's amount and Slip's disagree. A transaction Slip cannot tie to an
+attempt has no mandate to be filed under — the mandate id lives on the attempt row — so it is
+logged and never reaches the owner. The count was right and the sentence over it was wrong, which
+is the failure this project has a rule about: **when evidence is missing, edit the claim, never
+invent the number.** The row now reads "Amounts that disagree", the sentence says what disagrees,
+and the caption says plainly what Slip cannot file.
+
+**Four departures, now booked rather than silent:**
+
+- **The mandate takes the parenthetical path.** The code implements the header note's no-purchase
+  alternative — `POST /v3/vault/setup-tokens`, the owner approves, `POST /v3/vault/payment-tokens`
+  — not M2/M3/M5's vault-during-a-first-purchase. There is no `store_in_vault` anywhere. It is the
+  better path for Slip: the owner consents without being charged for something they did not
+  choose, and the `usage_pattern` they approve is the one the later charge sends. `SPEC.md`'s
+  PayPal table still described the old path and now does not.
+- **PayPal's Agent Toolkit is not used**; `get_order` and `list_transactions` are direct REST. The
+  reasoning was already in `TOOLS.md` — the toolkit has no vault, authorize or void tools, and
+  Slip needs all three, so splitting across two clients would buy nothing — but the diagram's
+  panel outranks `SPEC.md` under D1, so it belongs here too.
+- **The UNKNOWN re-send window is 30 minutes, not the drawing's 6 hours.** D34's ladder is
+  deliberate and better reasoned: PayPal keeps a request id for six hours, but a charge must not
+  execute long after a decision made on a ten-minute snapshot. The quiet band between 30 minutes
+  and 3 hours is correct too — Transaction Search lags three hours, so a lookup before then would
+  report "not found" about something that exists.
+- **"The hold is valid for 29 days" is not tracked.** Expiry is read from PayPal's own signals
+  (`AUTHORIZATION_EXPIRED`) rather than from a clock Slip keeps; the 48-hour hold TTL sits well
+  inside the 3-day honor period, so nothing needs the 29.
+
+The diagram's own `NOT YET RUN — TEST FIRST` panel still has three items open — paying with a
+vault id in one step, AUTHORIZE then void, and whether `stored_credential` is needed. All three
+are the PayPal sandbox suite, which skips until a buyer's wallet has been vaulted. That is gate
+G2, and it is the last thing in the diagram that code cannot close on its own.
