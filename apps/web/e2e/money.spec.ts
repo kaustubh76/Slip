@@ -169,6 +169,48 @@ test("a hold can be decided over REST, and the roll shows it without a reload", 
   expect(after.pending).toHaveLength(1);
 });
 
+/**
+ * These three POSTs are the first cookie-authenticated writes Slip has ever had, so they are the
+ * first that a page on another site could try to forge. SameSite=Lax is what stops the browser
+ * attaching the cookie; this is the server saying no as well (D83).
+ */
+test("a write that says it came from another site is refused, origin-less ones are not", async ({
+  page,
+}) => {
+  await openDesk(page);
+  const before = (await (await page.request.get("/api/v1/holds")).json()) as {
+    pending: { view: { receiptId: string } }[];
+  };
+  const id = before.pending[0]?.view.receiptId ?? "";
+
+  const forged = await page.request.post(`/api/v1/holds/${id}/decline`, {
+    headers: { origin: "https://evil.example" },
+  });
+  expect(forged.status()).toBe(403);
+  expect(await forged.json()).toMatchObject({ reason: "FOREIGN_ORIGIN" });
+
+  // An opaque origin is a browser declining to say where it came from, not an absent header.
+  const opaque = await page.request.post(`/api/v1/holds/${id}/decline`, {
+    headers: { origin: "null" },
+  });
+  expect(opaque.status()).toBe(403);
+
+  // Nothing was decided by either.
+  const after = (await (await page.request.get("/api/v1/holds")).json()) as { pending: unknown[] };
+  expect(after.pending).toHaveLength(before.pending.length);
+
+  // And a caller that sends no origin — every platform calling Slip server to server — still works.
+  const allowed = await page.request.post(`/api/v1/holds/${id}/decline`);
+  expect(allowed.status()).toBe(200);
+
+  // Reads are never asked where they came from: they change nothing and a foreign page cannot
+  // read the answer anyway.
+  const read = await page.request.get("/api/v1/holds", {
+    headers: { origin: "https://evil.example" },
+  });
+  expect(read.status()).toBe(200);
+});
+
 test("nobody without a session can decide a hold", async ({ page, request }) => {
   await openDesk(page);
   const pending = (await (await page.request.get("/api/v1/holds")).json()) as {

@@ -17,6 +17,12 @@ export const UNAUTHENTICATED: JsonAnswer = answer(401, {
   message: "Sign in first.",
 });
 
+export const FOREIGN_ORIGIN: JsonAnswer = answer(403, {
+  status: "refused",
+  reason: "FOREIGN_ORIGIN",
+  message: "This request came from another site. Slip's own pages and server callers may write.",
+});
+
 export const NOT_FOUND: JsonAnswer = answer(404, {
   status: "refused",
   reason: "NOT_FOUND",
