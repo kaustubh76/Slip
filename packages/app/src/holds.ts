@@ -215,6 +215,13 @@ async function recheck(deps: AppDeps, held: Receipt): Promise<Recheck> {
 /**
  * What approving would charge, and how. Changes nothing except, for a hold with nothing reserved,
  * the price cache: that kind is checked again on current prices.
+ *
+ * **The re-check is behind the same lease a checkout takes**, because it is not free. It can ask
+ * Channel3 for today's prices and the classifier about the listing, both of them paid, on the
+ * operator's keys rather than this owner's. The snapshot's freshness window bounds a *series* of
+ * previews to one fetch and bounds nothing at all about previews that arrive together: without a
+ * lease, a hundred at once all read the same stale snapshot, all miss, and all pay (D83). Held
+ * only for the re-check and released before returning, so the owner's next click is not BUSY.
  */
 export async function previewApproval(
   deps: AppDeps,
@@ -238,11 +245,20 @@ export async function previewApproval(
       merchant: receipt.attempt.decision.checkResult.chosen?.domain ?? "",
     };
   }
-  const checked = await recheck(deps, receipt);
-  if (!checked.ok) {
-    return checked.refusal;
+  const holder = deps.ids.uuid();
+  const key = { agentId: receipt.attempt.agentId, productId: receipt.attempt.productId };
+  if (!(await deps.store.leases.acquire(key, holder, deps.config.leaseTtlMs, deps.clock.now()))) {
+    return refuse("BUSY", "Slip is already pricing this item. Try again shortly.");
   }
-  return { ...shown, kind: "pay", amountCents: checked.amountCents, merchant: checked.merchant };
+  try {
+    const checked = await recheck(deps, receipt);
+    if (!checked.ok) {
+      return checked.refusal;
+    }
+    return { ...shown, kind: "pay", amountCents: checked.amountCents, merchant: checked.merchant };
+  } finally {
+    await deps.store.leases.release(key, holder);
+  }
 }
 
 /**

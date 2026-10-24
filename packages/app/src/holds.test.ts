@@ -281,6 +281,39 @@ describe("a hold with nothing reserved", () => {
     expect((await h.store.holds.get(id as never))?.status).toBe("PENDING");
   });
 
+  it("previews that arrive together ask Channel3 once, not once each", async () => {
+    // A preview on this kind of hold asks Channel3 for today's prices and the classifier about
+    // the listing — both paid, both on the operator's keys. The snapshot's freshness window
+    // bounds a series of previews and bounds nothing about previews that arrive at the same
+    // instant: they all read the same stale snapshot, all miss, and all pay (D83).
+    const held = await heldPurchase({ channel3Down: true });
+    const { h, seeded, id } = held;
+    h.offers.comeBack();
+    relist(held, 250);
+    const asked = h.offers.calls.length;
+
+    const answers = await Promise.all(
+      Array.from({ length: 5 }, () => previewApproval(h.deps, seeded.ownerId, id)),
+    );
+    expect(h.offers.calls.length - asked).toBe(1);
+    // One of them priced it; the rest were told to come back rather than made to pay again.
+    expect(answers.filter((a) => a.status === "preview")).toHaveLength(1);
+    expect(answers.filter((a) => a.status === "refused" && a.reason === "BUSY")).toHaveLength(4);
+    // Nothing was decided by any of them.
+    expect((await h.store.holds.get(id as never))?.status).toBe("PENDING");
+  });
+
+  it("releases the lease it took, so the owner's next click is not refused", async () => {
+    const held = await heldPurchase({ channel3Down: true });
+    const { h, seeded, id } = held;
+    h.offers.comeBack();
+    relist(held, 250);
+    expect(await previewApproval(h.deps, seeded.ownerId, id)).toMatchObject({ kind: "pay" });
+    expect(
+      await approveHold(h.deps, seeded.ownerId, id, { expectedAmountCents: cents(25_000) }),
+    ).toMatchObject({ status: "done" });
+  });
+
   it("is BUSY while a checkout for the same product holds the lease", async () => {
     const held = await heldPurchase({ channel3Down: true });
     const { h, seeded, id } = held;
