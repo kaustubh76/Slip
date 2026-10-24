@@ -1326,3 +1326,64 @@ The diagram's own `NOT YET RUN — TEST FIRST` panel still has three items open 
 vault id in one step, AUTHORIZE then void, and whether `stored_credential` is needed. All three
 are the PayPal sandbox suite, which skips until a buyer's wallet has been vaulted. That is gate
 G2, and it is the last thing in the diagram that code cannot close on its own.
+
+## D83 · 2026-10-24 · A review of the day before's money endpoints
+
+D76 came out of an adversarial review of a day's unreviewed work and found four money-path bugs
+that green tests had not. Yesterday's three REST endpoints — which capture or release real money —
+were written, tested and pushed inside one session, so they got the same treatment. The review
+found one thing that was structurally new, two mistakes of mine, and one cost that nobody had
+bounded.
+
+**These were the first cookie-authenticated writes Slip has ever exposed over HTTP.** Every other
+mutation is either a Next server action, which the framework guards by comparing `Origin` against
+the host, or an endpoint behind a bearer credential, which a browser cannot be made to send. The
+whole mutating surface had been immune to cross-site forgery by accident of shape. These three
+were not: their only defence was `sameSite: "lax"` on the session cookie, chosen in D43 so an
+owner returns from PayPal still signed in — a redirect-usability reason that says nothing about
+forgery. `grep -ri csrf` over the repository returned nothing.
+
+Lax does hold. But `approve`'s JSON body is not the second lock it looks like: `request.json()`
+does not check a content type, and a cross-site form posting `text/plain` can be made to serialise
+as valid JSON. And `decline` parses no body at all. So all three stood on one cookie attribute,
+and **Slip already applies the better rule to a less exposed endpoint** — `/api/mcp` turns away a
+browser page from another site, and it demands a bearer key as well.
+
+`ownerRoute` now judges provenance on anything that is not a GET, so an owner write added later is
+covered by having been written at all. **It is depth, not a credential** — D74 took out
+`x-vercel-cron` precisely because anyone who can reach a deployment can type a header — so it sits
+behind the session and can only narrow what an already-signed-in browser may be made to do. The
+rule is the MCP endpoint's: *present must match, absent passes*, because a platform calling Slip
+server-to-server sends no `Origin` and these routes exist so that it can. `Origin: null` is
+refused rather than read as absent: it is a browser declining to name the source, not a client
+that has none.
+
+**It was reproduced before it was fixed**, which is the only reason it is worth writing down: a
+request carrying a desk's own session and `Origin: https://evil.example` released a hold, and now
+answers 403. What that proves is that *the server did not check* — in a real browser Lax would
+have stopped the cookie before it got there.
+
+**Two were mine, from the day before.** `preview` answered **202 "Slip sent the decision and did
+not hear back"** on any failure, because it shared the wrapper the two deciding routes use. A
+preview sends no decision and moves no money; telling an owner it might have is the same class of
+mistake as D82's mislabelled count, and it hid every real preview fault behind a status that reads
+like success. And `REFUSAL_STATUS` was typed `Record<string, number>`, so the next refusal reason
+anyone adds would have silently answered 400 — a money endpoint calling a request malformed when
+it was not. The table is exhaustive now and the compiler enforces it.
+
+**And one cost nobody had bounded.** A preview of a hold with nothing reserved asks Channel3 for
+today's prices and the classifier about the listing — both paid, both on the *operator's* keys,
+shared across every owner. The snapshot's freshness window looked like the bound and is not: it
+bounds a *series* of previews and says nothing about previews that arrive together, which all read
+the same stale snapshot, all miss, and all pay. Measured: five at once made five Channel3 calls.
+The re-check is behind the same lease a checkout takes now, and they make one.
+
+**Recorded and not changed.** `GET /mandates/[id]/return` is cookie-authenticated and mutates, and
+Lax *does* send a cookie on a top-level cross-site GET — but that is PayPal redirecting the owner
+back, which is why the cookie is Lax and not Strict, and an `Origin` check would not help because
+a top-level navigation sends none either way. `GET /api/cron/resolve` changes state on a GET;
+untidy, not unsafe, since it takes a bearer secret and no cookie. Two larger ones are pre-existing
+and worth naming rather than fixing in a review commit: **a session is not revocable server-side**
+— signing out only clears the client's copy, so a leaked cookie is a seven-day credential that
+only revoking the mandate stops — and `SameSite` is site-scoped, so if Slip is ever served from a
+domain shared with other hosts, a sibling is same-site and these endpoints are reachable from it.

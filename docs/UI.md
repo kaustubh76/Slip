@@ -253,10 +253,16 @@ other than this browser can decide a hold (D82). Each answers one of the three s
 | `POST /api/v1/holds/{id}/approve` | `{ expectedAmountCents }` in, the decided receipt out. A different amount is `409 PRICE_CHANGED` with the real one |
 | `POST /api/v1/holds/{id}/decline` | no body; the decided receipt out |
 
-`202` is the one to read carefully: Slip sent the decision and never heard back, so the money may
-have moved. Read the receipt rather than send it again. `409` means nothing was written — already
-decided, expired, the price moved, or a decision is in flight. `503` means Slip could not price
+`202` is the one to read carefully, and only `approve` and `decline` ever answer it: Slip sent the
+decision and never heard back, so the money may have moved. Read the receipt rather than send it
+again. `409` means nothing was written — already decided, expired, the price moved, or a decision
+is in flight. `403` means the request said it came from another site; Slip's own pages and callers
+that send no `Origin` at all are the ones that may write (D83). `503` means Slip could not price
 the purchase; nothing was written and later may work.
+
+A preview of a hold with nothing reserved asks Channel3 for current prices, so it takes the same
+lease a checkout does: previews that arrive together collapse into one, and the losers are `409
+BUSY` rather than each paying for the same answer.
 
 The agent side is one call, `POST /api/v1/agent/checkout`, with `Authorization: Bearer slip_live_…`
 and `{ productId, chosenOfferUrl, reason }`. It answers 200 with the outcome and the receipt view,

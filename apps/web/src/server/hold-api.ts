@@ -1,5 +1,5 @@
 import "server-only";
-import { approveHold, declineHold, previewApproval } from "@slip/app";
+import { approveHold, declineHold, type HoldRefusalReason, previewApproval } from "@slip/app";
 import { cents } from "@slip/domain";
 import { AmountCentsSchema, invalidRequest, ReceiptIdSchema } from "./action-input";
 import {
@@ -31,7 +31,11 @@ import type { OwnerContext } from "./owner";
 
 type Owner = Pick<OwnerContext, "deps" | "ownerId">;
 
-const REFUSAL_STATUS: Record<string, number> = {
+/**
+ * Exhaustive on purpose: typed loosely, the next reason added to `HoldRefusalReason` would quietly
+ * answer 400 — a money endpoint telling a caller its request was malformed when it was not.
+ */
+const REFUSAL_STATUS: Record<HoldRefusalReason | "INVALID_REQUEST", number> = {
   INVALID_REQUEST: 400,
   MANDATE_NOT_ACTIVE: 403,
   AGENT_REVOKED: 403,
@@ -79,14 +83,19 @@ async function guarded(
   }
 }
 
-/** What approving would charge, and which way it would be paid. */
+/**
+ * What approving would charge, and which way it would be paid.
+ *
+ * Not `guarded`: a preview sends no decision and moves no money, so a failure here is an ordinary
+ * 500 and the caller may simply ask again. Answering 202 "the money may have moved" — which this
+ * did until it was reviewed — would tell an owner not to retry a call that never charged them,
+ * and would hide every real preview fault behind a status that reads like success.
+ */
 export async function previewAnswer(owner: Owner, id: string): Promise<JsonAnswer> {
   if (!ReceiptIdSchema.safeParse(id).success) {
     return answer(400, invalidRequest("receipt"));
   }
-  return guarded(owner, id, "preview", async () =>
-    holdAnswer(previewResult(await previewApproval(owner.deps, owner.ownerId, id))),
-  );
+  return holdAnswer(previewResult(await previewApproval(owner.deps, owner.ownerId, id)));
 }
 
 /**

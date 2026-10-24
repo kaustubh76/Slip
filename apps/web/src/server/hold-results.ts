@@ -1,10 +1,12 @@
-import type { ApprovalPreview, HoldRefusal, HoldResult } from "@slip/app";
+import type { ApprovalPreview, HoldRefusal, HoldRefusalReason, HoldResult } from "@slip/app";
 import { type ReceiptView, storeName } from "@slip/receipt";
 
 /**
  * What a hold decision looks like by the time it reaches the browser. Three shapes only, and no
  * domain record among them: the client gets receipt views, never a `Receipt` with its PayPal
- * request ids and operations.
+ * request ids — the idempotency keys — or its operations. The order, authorization and capture
+ * ids *are* on a `ReceiptView` and do go out, to the owner the receipt belongs to; the receipt
+ * shows them because they are what an owner quotes to PayPal.
  *
  * `unknown` is the one that matters. A decision whose answer never arrived has not failed — the
  * money may well have moved — so the only honest thing to say is that Slip is checking, and the
@@ -13,7 +15,8 @@ import { type ReceiptView, storeName } from "@slip/receipt";
 
 export interface Refused {
   status: "refused";
-  reason: string;
+  /** Named rather than a bare string, so the status table that maps these stays exhaustive. */
+  reason: HoldRefusalReason | "INVALID_REQUEST";
   message: string;
   /** PRICE_CHANGED: what approving would charge now. */
   amountCents?: number;
