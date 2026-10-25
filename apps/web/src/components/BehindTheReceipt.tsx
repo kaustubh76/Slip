@@ -92,6 +92,16 @@ export function BehindTheReceipt({ detail }: { detail: ReceiptDetail }) {
         ))}
       </ol>
       <p className="slip-caption">Rules are code; no AI model decides an outcome.</p>
+      {view.listingText === null ? null : (
+        <>
+          <h4 className="slip-meta">What the listing said</h4>
+          <blockquote className="slip-prose slip-quote">“{view.listingText}”</blockquote>
+          <p className="slip-caption">
+            Written by the store, about the offer your agent chose. Slip&rsquo;s steering check read
+            this one — it is the text a rejection for steering is about.
+          </p>
+        </>
+      )}
       <h4 className="slip-meta">What the agent said</h4>
       <blockquote className="slip-prose slip-quote">
         {view.agentReason === "" ? "Nothing." : `“${view.agentReason}”`}

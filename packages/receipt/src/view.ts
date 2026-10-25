@@ -115,6 +115,12 @@ export function renderReceipt(receipt: Receipt, options: RenderOptions = {}): Re
     footer: foot,
     simulated: source === "simulated",
     agentReason: attempt.reason,
+    // Shown exactly when a rule read it: the classifier runs only above a 1 % gap, so `NOT_RUN`
+    // means nothing judged this listing and there is nothing to evidence.
+    listingText:
+      decision.checkResult.classifier === "NOT_RUN"
+        ? null
+        : (decision.checkResult.chosen?.listingText ?? null),
     chosen,
     best,
     gap,

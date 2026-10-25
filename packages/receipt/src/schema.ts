@@ -89,6 +89,14 @@ export const ReceiptViewSchema = z.object({
    * untrusted, because no rule reads it (D4).
    */
   agentReason: z.string(),
+  /**
+   * The chosen listing's own text, when Slip actually ran the steering check over it. The other
+   * untrusted text on a receipt, and the opposite case: a rule **did** read this one, so a
+   * rejection for steering is not evidenced unless the owner can see what was read (D84). Null
+   * when the classifier did not run — below a 1 % gap it is not asked — or when the listing
+   * carried no text.
+   */
+  listingText: z.string().nullable(),
   chosen: OfferSummarySchema.nullable(),
   best: OfferSummarySchema.nullable(),
   gap: z.object({ cents: z.number().int(), amount: z.string(), percent: z.string() }).nullable(),
