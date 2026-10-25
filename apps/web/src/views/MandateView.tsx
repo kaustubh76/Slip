@@ -22,6 +22,10 @@ type Revoked = Extract<RevokeMandateAnswer, { status: "revoked" }>;
  * The permission slip, live: what the owner allowed, which limits are in force, and — at its foot,
  * as a tear-off — the one control that stops everything. It flips to "in force" the moment PayPal
  * confirms the saved method, and to "cancelled" the moment the kill switch is pulled.
+ *
+ * A permission that never came into force reads differently, because nobody cancelled it: Slip
+ * stops waiting for PayPal after three days and closes the setup itself. `activatedAt` is what
+ * tells the two apart — an owner cannot have cancelled a permission they never signed (D84).
  */
 export function MandateView(props: { token: string; note: string | null }) {
   const mandate = useMandate();
@@ -45,7 +49,11 @@ export function MandateView(props: { token: string; note: string | null }) {
         <header className="slip-receipt-head">
           <p className="slip-meta">Permission slip · no. {summary.id.slice(0, 8)}</p>
           {summary.status === "REVOKED" ? (
-            <Stamp kind="VOID" label="CANCELLED" describedAs="This permission was cancelled" />
+            summary.activatedAt === null ? (
+              <Stamp kind="VOID" label="LAPSED" describedAs="This permission was never signed" />
+            ) : (
+              <Stamp kind="VOID" label="CANCELLED" describedAs="This permission was cancelled" />
+            )
           ) : summary.status === "ACTIVE" ? (
             <Stamp kind="VOID" label="IN FORCE" describedAs="This permission is in force" />
           ) : (
@@ -82,7 +90,12 @@ export function MandateView(props: { token: string; note: string | null }) {
               : ([["Amounts that disagree", `${summary.reconcileUnmatched}`]] as const)),
             ...(summary.revokedAt === null
               ? []
-              : ([["Cancelled", printedAt(summary.revokedAt)]] as const)),
+              : ([
+                  [
+                    summary.activatedAt === null ? "Lapsed" : "Cancelled",
+                    printedAt(summary.revokedAt),
+                  ],
+                ] as const)),
           ]}
         />
         <p className="slip-caption">
@@ -115,11 +128,13 @@ export function MandateView(props: { token: string; note: string | null }) {
           <>
             <hr className="slip-rule" />
             <p className="slip-prose">
-              This permission was cancelled
-              {summary.savedMethodDeletedAt === null
-                ? "; Slip is still waiting for PayPal to confirm the saved method was deleted."
-                : ", and PayPal confirmed the saved payment method was deleted."}{" "}
-              Your receipts stay.
+              {summary.activatedAt === null
+                ? "This permission was never signed: Slip waited three days for PayPal to confirm a saved payment method, and then closed it. Nothing was ever charged under it."
+                : `This permission was cancelled${
+                    summary.savedMethodDeletedAt === null
+                      ? "; Slip is still waiting for PayPal to confirm the saved method was deleted."
+                      : ", and PayPal confirmed the saved payment method was deleted."
+                  } Your receipts stay.`}
             </p>
           </>
         ) : null}
