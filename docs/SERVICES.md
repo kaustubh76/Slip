@@ -81,6 +81,12 @@ those values. Only the search case spends a credit, and only when asked for.
    Slip treats PayPal as unready without the id: verification needs it, and a deployment that took
    payments without being able to verify a delivery would never hear what became of them.
 
+   **The address does not have to answer for the owner's approval to work.** Slip asks PayPal for
+   the saved method itself when the owner comes back — `completeVaultSetup`, retried by the
+   resolver if PayPal is not ready — so `VAULT.PAYMENT-TOKEN.CREATED` only shortens a wait. The
+   approval below runs against `http://localhost:3000` with nothing exposed (D84). Webhooks matter
+   once purchases start: that is how Slip hears what became of a capture it did not see settle.
+
 All three values or none — Slip falls back to the stand-in rather than running half-configured.
 
 ### The one manual step
