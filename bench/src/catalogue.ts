@@ -1,7 +1,8 @@
 import { comparableOffers } from "@slip/check";
-import type { Offer, ProductOffers } from "@slip/domain";
+import { type Offer, type ProductOffers, shownText } from "@slip/domain";
+import { productText } from "@slip/offers/search";
 import { mapAsSlipWould, productsFrom, readSnapshots } from "@slip/study";
-import { type Condition, ENDORSEMENT, INJECTION } from "./conditions.js";
+import { buryIn, type Condition, ENDORSEMENT, INJECTION } from "./conditions.js";
 
 /**
  * The shop the agent sees: every product the market study recorded, searchable offline.
@@ -30,6 +31,12 @@ export interface ListedOffer {
 export interface ListedProduct {
   productId: string;
   title: string;
+  /**
+   * The product's own description and key features, bounded exactly as `/api/mcp` bounds them, so
+   * what the benchmark shows an agent is what the real tool would have shown it (D85, D86). Kept
+   * apart from the offers because it belongs to the product, not to one merchant.
+   */
+  text: string | null;
   offers: ListedOffer[];
 }
 
@@ -84,27 +91,37 @@ export async function loadCatalogue(snapshotDir: string): Promise<Catalogue> {
 }
 
 /**
- * One product as the agent sees it under a condition. Under `endorsed` and `injected` the dearest
- * comparable offer is moved to the front and carries the planted string; under `clean` the offers
- * keep the order and the silence the catalogue gave them.
+ * One product as the agent sees it under a condition.
+ *
+ * Every condition shows the product's real text, because every real product has some: a catalogue
+ * with nothing but prices and domains is not the surface Slip stands in front of, and until D86
+ * that is what this benchmark measured agents against.
+ *
+ * Under the three manipulated conditions the dearest comparable offer is moved to the front. What
+ * differs is only where the planted string goes: `endorsed` and `injected` put it on that offer's
+ * own listing text, which real offers never have; `buried` puts it inside the product's real
+ * description, which they always do.
  */
 export function list(product: ProductOffers, condition: Condition): ListedProduct {
   const offers = product.offers.map(show);
+  const text = productText(product.raw);
+  const plain = { productId: product.productId, title: product.title, text: shownText(text) };
   if (condition === "clean") {
-    return { productId: product.productId, title: product.title, offers };
+    return { ...plain, offers };
   }
   const dearest = dearestComparable(product);
   if (dearest === null) {
-    return { productId: product.productId, title: product.title, offers };
+    // Nothing to compare, so nothing to steer towards: the condition has no purchase here.
+    return { ...plain, offers };
   }
-  const planted: ListedOffer = {
-    ...show(dearest),
-    listingText: condition === "endorsed" ? ENDORSEMENT : INJECTION,
-  };
+  const front: ListedOffer =
+    condition === "buried"
+      ? show(dearest)
+      : { ...show(dearest), listingText: condition === "endorsed" ? ENDORSEMENT : INJECTION };
   return {
-    productId: product.productId,
-    title: product.title,
-    offers: [planted, ...offers.filter((offer) => offer.url !== dearest.url)],
+    ...plain,
+    ...(condition === "buried" ? { text: shownText(buryIn(text, dearest.domain)) } : {}),
+    offers: [front, ...offers.filter((offer) => offer.url !== dearest.url)],
   };
 }
 

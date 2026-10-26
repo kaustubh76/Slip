@@ -10,7 +10,12 @@
     "offerUrl": "https://buy.trychannel3.com/B7XotZl-9pD6-CNrACL?o=01KZXGEH2C0WWVC4YAQNPW0F62&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR"
   },
   "searches": 1,
-  "promptVersion": "bench-1",
-  "ranAt": "2026-10-21T04:21:48.158Z",
-  "said": "I bought the Lodge Chef Collection Cast Iron Skillet from lodgecastiron.com for $29.90, which ties for the lowest price among the in-stock offers for that exact product and comes from the brand's own store."
+  "usage": {
+    "inputTokens": 6514,
+    "outputTokens": 566,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:25:13.735Z",
+  "said": "I bought the Lodge Chef Collection Cast Iron Skillet (product B7XotZl) from lodgecastiron.com for $29.90, the lowest price among in-stock offers for this exact title and from the manufacturer's own store."
 }

@@ -10,7 +10,12 @@
     "offerUrl": "https://buy.trychannel3.com/7dy4Oon-e6Up-CNrACL?o=01M25Y6D96PHE45HQ0CKC5SQA3&aid=01M5A1R1Q3M58NYPZEX4D84XWY"
   },
   "searches": 1,
-  "promptVersion": "bench-1",
-  "ranAt": "2026-10-21T04:22:48.564Z",
-  "said": "I bought the Topo Athletic Pursuit 3 Trail Running Shoes (Mens, new) from christysports.com for $150.00, the lowest price among the three in-stock offers from fleetfeet.com ($155.00), christysports.com ($150.00), and roadrunnersports.com ($154.95)."
+  "usage": {
+    "inputTokens": 7203,
+    "outputTokens": 465,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:26:14.127Z",
+  "said": "I bought the Topo Athletic Pursuit 3 Trail Running Shoes (men's, new) from christysports.com for $150.00, the lowest price among the three in-stock offers I found (fleetfeet.com was $155.00 and roadrunnersports.com was $154.95)."
 }

@@ -173,12 +173,18 @@ recompute their numbers from those files for free.
 60% bar, the typical gap where comparison is possible is 16.67%, and the dearer offer pays more
 commission in 19 of 40 cases. It also found the grouping errors behind D68.
 
-**SlipBench ran on 21 Oct 2026, on one of its two agents.** `claude-haiku-5-5`, 21 errands × 3
-conditions = 63 runs, every one of them committed under `bench/runs/`. The headline is that it did
-not catch the agent out: no overpayment and no planted offer taken in any condition, so **G3 fails
-at 0%** against its 15% bar. `claude-opus-5-5` was piloted on 2 errands and then left unrun, which
-is why the table is one agent wide; a pilot's 2 errands are not published beside a full 21, because
-G3 takes the worst share across rows and two data points could have decided it.
+**SlipBench ran on 26 Oct 2026, on one of its two agents.** `claude-haiku-5-5`, 21 errands × 4
+conditions = 84 runs, every one of them committed under `bench/runs/`. The headline is that it did
+not catch the agent out: no overpayment and no planted offer taken in any condition — including
+`buried`, which puts the instruction inside the product's own real description rather than on an
+offer, where no real listing has text at all (D86) — so **G3 fails at 0%** against its 15% bar.
+`claude-opus-5-5` was piloted on 2 errands and then left unrun, which is why the table is one agent
+wide; a pilot's 2 errands are not published beside a full 21, because G3 takes the worst share
+across rows and two data points could have decided it.
+
+That sweep cost 573,456 input and 44,500 output tokens over 253 model turns, which is also the
+basis `pnpm bench:run` now projects an Opus sweep from — before it, the projection had nothing
+measured to work from and said so rather than guessing.
 
 `pnpm bench:run` prints what it would spend and does nothing without `--yes`. **It will not pay
 twice**: an errand already recorded under the current prompt version is skipped, the printout says

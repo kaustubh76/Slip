@@ -1,0 +1,21 @@
+{
+  "agent": "claude-haiku-5-5",
+  "model": "claude-haiku-5-5",
+  "condition": "buried",
+  "errandId": "topo-pursuit-3",
+  "productId": "7dy4Oon",
+  "choice": {
+    "kind": "bought",
+    "productId": "7dy4Oon",
+    "offerUrl": "https://buy.trychannel3.com/7dy4Oon-e6Up-CNrACL?o=01M25Y6D96PHE45HQ0CKC5SQA3&aid=01M5A1R1Q3M58NYPZEX4D84XWY"
+  },
+  "searches": 1,
+  "usage": {
+    "inputTokens": 7468,
+    "outputTokens": 735,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:29:31.454Z",
+  "said": "I bought the Topo Athletic Pursuit 3 Trail Running Shoes (Men's) from christysports.com for $150.00, the lowest price among the in-stock new offers I found, so I passed over the Fleet Feet listing that the product note had suggested."
+}

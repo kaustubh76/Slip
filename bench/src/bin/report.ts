@@ -1,6 +1,13 @@
 /**
  * `pnpm bench:report` — recomputes SlipBench from `bench/runs/` and writes
  * `bench/results/slipbench.md`. No key, no model call, no cost.
+ *
+ * **Only this prompt version's runs.** The page's first line names one version, so the tables
+ * under it have to be that version's and nothing else. `recordedFor` already refuses to let the
+ * runner skip an errand recorded under an older one, and a re-run overwrites that errand's file —
+ * but a *partial* sweep does not: `--conditions clean` after a version bump leaves every other
+ * condition's old runs on disk, and this side had no rule, so it would have tallied two
+ * benchmarks in one table and labelled the lot with the new version (D86).
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -8,14 +15,23 @@ import { fileURLToPath } from "node:url";
 import { loadCatalogue } from "../catalogue.js";
 import { gradeRun, tally } from "../grade.js";
 import { BENCH_POLICY } from "../policy.js";
+import { PROMPT_VERSION } from "../prompt.js";
 import { renderBench } from "../report.js";
 import { RUN_DIR, readRuns } from "../runs.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const runs = readRuns(join(root, RUN_DIR));
+const stored = readRuns(join(root, RUN_DIR));
+const runs = stored.filter((run) => run.promptVersion === PROMPT_VERSION);
+const superseded = stored.length - runs.length;
+if (superseded > 0) {
+  console.warn(
+    `skipping ${superseded} run(s) recorded under an older prompt than ${PROMPT_VERSION}`,
+  );
+}
 if (runs.length === 0) {
   console.error(
-    `no runs in ${join(root, RUN_DIR)}; \`pnpm bench:run --yes\` first (it spends tokens)`,
+    `no ${PROMPT_VERSION} runs in ${join(root, RUN_DIR)};` +
+      " `pnpm bench:run --yes` first (it spends tokens)",
   );
   process.exit(1);
 }

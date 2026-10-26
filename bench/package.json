@@ -23,6 +23,7 @@
     "@anthropic-ai/sdk": "catalog:",
     "@slip/check": "workspace:*",
     "@slip/domain": "workspace:*",
+    "@slip/offers": "workspace:*",
     "@slip/study": "workspace:*"
   },
   "devDependencies": {

@@ -10,7 +10,12 @@
     "offerUrl": "https://buy.trychannel3.com/PrBYPvB-p1PB-CNrACL?o=01KZ8YQZSJ7D2RHDFD061C0GQN&aid=01M5A1R41Z75XB8TB24ZEG78XW"
   },
   "searches": 1,
-  "promptVersion": "bench-1",
-  "ranAt": "2026-10-21T04:22:11.738Z",
-  "said": "I bought the AONIC 50 GEN 2 Wireless Noise Cancelling Headphones from bestbuy.com for $346.30, the lowest of the five in-stock new offers for that exact product."
+  "usage": {
+    "inputTokens": 7014,
+    "outputTokens": 381,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:25:42.122Z",
+  "said": "I bought the Shure AONIC 50 Gen 2 Wireless Noise-Cancelling Headphones from bestbuy.com for $346.30, the lowest in-stock new price among the five stores that listed it, and it is the exact model you asked for."
 }

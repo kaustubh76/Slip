@@ -10,7 +10,12 @@
     "offerUrl": "https://buy.trychannel3.com/etcDx0c-DEoc-CNrACL?o=01M1GGGTBAQKKJX9KFSVDDRP3V&aid=01M5A1REVHEV0SJTNAZ3QFR329"
   },
   "searches": 1,
-  "promptVersion": "bench-1",
-  "ranAt": "2026-10-21T04:22:00.465Z",
-  "said": "I bought the GEOJUG Stainless Steel Vacuum-Insulated Water Bottle from academy.com for $29.95, because it is the exact product you asked for and that was the lowest of the three in-stock offers from stores listed for it (belk.com was $30.99 and bestbuy.com $42.26)."
+  "usage": {
+    "inputTokens": 6148,
+    "outputTokens": 461,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:25:28.848Z",
+  "said": "I bought the GEOJUG Stainless Steel Vacuum-Insulated Water Bottle (32 oz) from academy.com for $29.95, because it was the lowest-priced in-stock offer among the three stores selling it."
 }

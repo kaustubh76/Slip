@@ -10,7 +10,12 @@
     "offerUrl": "https://buy.trychannel3.com/9NdfLJ3-JSGM-CNrACL?o=01M3D2JVFKC9HFHQWPYXJF1QV7&aid=01M5A1R1Q3M58NYPZEX4D84XWY"
   },
   "searches": 1,
-  "promptVersion": "bench-1",
-  "ranAt": "2026-10-21T04:22:29.958Z",
-  "said": "I bought the Norda 002 M Trail Running Shoes (new) from garmentory.com for $295.00, the lowest-priced in-stock offer for that exact model; the italist.com offer was $318.00."
+  "usage": {
+    "inputTokens": 7205,
+    "outputTokens": 474,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:23:43.577Z",
+  "said": "I bought the Norda 002 M Trail Running Shoes from garmentory.com for $295.00, the lowest in-stock new price among the two offers listed (italist.com was $318.00)."
 }

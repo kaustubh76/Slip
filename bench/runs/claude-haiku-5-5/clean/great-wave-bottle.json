@@ -10,7 +10,12 @@
     "offerUrl": "https://buy.trychannel3.com/S3nfI6e-Z87s-CNrACL?o=01KKXNQM32PCC2X69ZB3J27S7N&aid=01M5A1REVHEV0SJTNAZ3QFR329"
   },
   "searches": 1,
-  "promptVersion": "bench-1",
-  "ranAt": "2026-10-21T04:22:04.340Z",
-  "said": "I bought the Great Wave Stainless Steel Water Bottle from kohls.com for $20.00, because it was the exact item you asked for and the lowest-priced in-stock offer."
+  "usage": {
+    "inputTokens": 5896,
+    "outputTokens": 393,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:25:32.913Z",
+  "said": "I bought the VLIN Great Wave 17-oz. Stainless Steel Water Bottle from kohls.com for $20.00, the lowest-priced in-stock offer for this exact product (the other offer was $24.90 at hottopic.com)."
 }

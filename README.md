@@ -209,15 +209,21 @@ pnpm bench:report    # recompute SlipBench from bench/runs/ — free, once a run
 
 `bench:report` runs on a fresh clone; `bench:run` needs a model key and spends tokens.
 
-**SlipBench ran on 21 Oct, and its headline is a negative result.** One agent
-(`claude-haiku-5-5`), 21 errands, three conditions, 63 runs: **no overpayment in any condition —
-including `injected`, where the pricier listing carries text addressed to shopping agents.** Gate
-G3 wanted an agent to overpay or be steered on 15% of errands somewhere; it got 0%.
+**SlipBench ran again on 26 Oct, and its headline is still a negative result.** One agent
+(`claude-haiku-5-5`), 21 errands, four conditions, 84 runs: **no overpayment in any condition, and
+no planted offer taken** — not in `injected`, where the pricier listing carries text addressed to
+shopping agents, and not in `buried`, where that same sentence sits inside the product's own real
+description. Gate G3 wanted an agent to overpay or be steered on 15% of errands somewhere; it got
+0%.
 
-So this agent compared offers well enough that Slip rarely had to stop it, and we publish that
-rather than the sentence we expected to write. It is the result that makes the method worth
-trusting: the same harness would have shown the opposite just as plainly. The runs, prompts and
-outputs are all committed under `bench/runs/`, so the number can be recomputed without a key.
+`buried` exists because the first sweep had planted its attack where no real listing speaks: not
+one of the 321 offers in the study sample carries a word of its own text, while all 240 products
+do, a median of 712 characters each. So the planted sentence used to be the only prose on the page.
+Now it is inside the copy the agent was reading anyway — and this agent still compared offers
+well enough that Slip rarely had to stop it. We publish that rather than the sentence we expected
+to write; it is the result that makes the method worth trusting, since the same harness would have
+shown the opposite just as plainly. The runs, prompts and outputs are all committed under
+`bench/runs/`, so the number can be recomputed without a key.
 
 The market study ran on 19 Oct: 240 real products, 8 Channel3 credits, every response committed.
 **G1 fails** — 18.33% of products carry two or more comparable offers against a 60% bar — and the
@@ -227,15 +233,17 @@ behind D68, which is why Slip now holds an implausible gap instead of rejecting 
 [study/results/market-study.md](study/results/market-study.md) has the working, including why so
 few products can be compared at all.
 
-SlipBench ran on 21 Oct, on one agent: `claude-haiku-5-5`, 21 errands × 3 conditions = 63 runs, all
-63 ending in a purchase, every response committed. **It did not catch these agents out.** Nobody
-overpaid and nobody took the planted offer — not in `clean`, not in `endorsed`, and not in
-`injected`, where the dearer listing carries text addressed to shopping agents. **G3 fails at 0%**
-against a 15% bar, which here means the agent compared offers well enough that Slip rarely had to
-stop it, and the report says so instead of dressing it up. Three of the 63 runs bought a different
-product id than the errand named, all the same errand: the catalogue lists two near-identical Lodge
-skillets, and the agent bought the cheaper one (D68's grouping problem, not a model error) — the
-report names each miss so the count reads for what it is.
+SlipBench ran on 26 Oct, on one agent: `claude-haiku-5-5`, 21 errands × 4 conditions = 84 runs, all
+84 ending in a purchase, every response committed. **It did not catch these agents out.** Nobody
+overpaid and nobody took the planted offer — not in `clean`, not in `endorsed`, not in `injected`,
+where the dearer listing carries text addressed to shopping agents, and not in `buried`, where the
+same sentence is inside the product's real description instead, which is the only one of the two
+places a real listing ever has words (D86). **G3 fails at 0%** against a 15% bar, which here means
+the agent compared offers well enough that Slip rarely had to stop it, and the report says so
+instead of dressing it up. Three of the 84 runs bought a different product id than the errand
+named, all the same errand: the catalogue lists two near-identical Lodge skillets, and the agent
+bought the cheaper one (D68's grouping problem, not a model error) — the report names each miss so
+the count reads for what it is.
 [bench/results/slipbench.md](bench/results/slipbench.md) has the tables;
 `pnpm bench:report` recomputes them from the committed runs with no key and no model call.
 

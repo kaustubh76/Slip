@@ -6,6 +6,7 @@ import { type Catalogue, loadCatalogue } from "./catalogue.js";
 import { ERRANDS } from "./errands.js";
 import { gradeRun, tally } from "./grade.js";
 import { BENCH_POLICY } from "./policy.js";
+import { PROMPT_VERSION } from "./prompt.js";
 import { renderBench } from "./report.js";
 import { type RunOutcome, runAll, runErrand } from "./run.js";
 
@@ -102,7 +103,7 @@ describe("one errand", () => {
       errandId: "trinity-fkt",
       productId: errand.productId,
       searches: 1,
-      promptVersion: "bench-1",
+      promptVersion: PROMPT_VERSION,
     });
     expect(outcome.record.choice.kind).toBe("bought");
   });
@@ -311,7 +312,7 @@ describe("a whole run", () => {
     });
     expect(page).toContain("# SlipBench");
     expect(page).toContain("[synthetic]");
-    expect(page).toContain("prompt `bench-1`");
+    expect(page).toContain(`prompt \`${PROMPT_VERSION}\``);
     expect(page).toContain("with Slip switched on");
     expect(page).toMatch(/\*\*G3\*\* asks whether/);
   });

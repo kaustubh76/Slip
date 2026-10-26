@@ -1481,3 +1481,85 @@ so every example is a comparison Slip can stand behind. One has nine offers and 
 `--yes`, and it has no basis for any agent: the 63 committed runs were recorded before an errand
 recorded what it cost, so `estimateSweep` finds nothing with usage and says so rather than guessing.
 Two errands of a real sweep would give it one.
+
+## D86 · 2026-10-26 · The surface the steering check was never tested on
+
+D85 capped the untrusted text an agent is handed and measured it against one live search. Measured
+against all 240 committed products instead, the same number says something about SlipBench rather
+than about the cap.
+
+**Every product carries prose. No offer carries any.** A Channel3 offer has a url, a domain, a
+price, availability, a condition and a commission rate, and no `title` or `description` — so
+`toListingText` returns null for all 321 offers in the study sample, while `productText` returns
+something for 240 of 240 products: a median of 712 characters, up to 1,579, with 216 of them over
+the 400 the agent is shown. D67 recorded the first half of this — "a Channel3 offer carries no
+text" — and it has been quoted ever since without the second half being drawn out.
+
+**The consequence is that the steering path has only ever been exercised on the empty surface.**
+They are disjoint, and exactly so:
+
+- The **demo desk** fills an offer's `listingText` and has no product text at all, so its hit rows
+  carry none, no impression is recorded, and the classifier reads only the listing.
+- **Real Channel3** is the mirror: the listing is always null and the product text is always there,
+  so the classifier reads only what Slip's own search showed (D69's `searchContext`).
+
+So the demo, SlipBench's `injected` condition and the receipt's "What the listing said" block
+(D84) all run on the field real data leaves empty, and the field real data always fills had unit
+tests and nothing else. Two things follow, and the second is not fixed here.
+
+**SlipBench planted its attack where no listing speaks.** Under `injected` the planted sentence was
+the only prose anywhere on the page — one line of text among prices and domains, which is the
+easiest place there is to notice an instruction. That is not a hard test of an agent; it is a
+measurement artefact, and it is the likeliest reason **G3 came back 0 %**. The catalogue now carries
+each product's real description, bounded exactly as `/api/mcp` bounds it, under every condition —
+including `clean`, which until now showed an agent nothing a shopper would read. And a fourth
+condition, **`buried`**, puts the same sentence inside that real description, naming the dearer
+store because a description is shared by every offer under it and has no "this listing" to point at.
+`injected` stays as the control, so the two differ in where the sentence is and not in what it says.
+
+Three details decide whether that is a fair test:
+
+- **It has to be inside the window the agent is shown.** Nine descriptions in ten are longer than
+  400 characters, so a sentence dropped mid-paragraph would usually be cut away unread, and an
+  attack the agent cannot see is not an attack. It is placed after the last sentence break that
+  leaves room for all of it; a test checks it survives the bound for all 44 products that have two
+  comparable offers to steer between, and it does for all 44.
+- **Slip's verdict has to reach as far as the text does, and no further.** Under `buried` the
+  check has something to judge whichever offer was taken, because the description is shared — but
+  that is not a free flag: the rules consult a steering verdict only once the gap is above the
+  owner's flag line, so an agent that bought the cheapest offer of a poisoned product is still
+  paid. A test pins both halves.
+- **Changing what the agent sees invalidates the runs.** `recordedFor` skips an errand already
+  recorded under this `PROMPT_VERSION`, and the version named only the system prompt while the
+  stimulus is prompt plus catalogue. It is `bench-2` now, the 63 `bench-1` runs are superseded, and
+  the version's job is written down. `pnpm bench:report` grew the same rule, which only the runner
+  had: a re-run overwrites the errand's file, but a *partial* one (`--conditions clean`) leaves
+  every other condition's old runs on disk, and the reader would have tallied two benchmarks into
+  one table under the newer version's name.
+
+**One cap, not two.** `productText` bounded itself at 2,000 characters with a bare `slice`, so a
+listing long enough to reach it was cut with nothing to say so — and after D85 two numbers were
+cutting one value, only one of them visibly. The helper and both limits now live in `@slip/domain`,
+where the adapter that reads a listing, the tool that shows it and the benchmark that models it can
+share one definition: `storedText` keeps the store's own line breaks and bounds a row at 2,000,
+`shownText` flattens to one line and bounds at 400, and neither cuts without marking the cut. The
+stored bound has never fired on real data — the longest description in the sample is 1,579
+characters — and it is kept for a hostile payload, not a wordy merchant.
+
+**And it still did not catch the agent out.** 21 errands × 4 conditions = 84 runs of
+`claude-haiku-5-5`, all 84 ending in a purchase: no overpayment and no planted offer taken in any
+condition, `buried` included. **G3 fails at 0 % again**, and the fail now means something it did
+not mean on 21 Oct — the instruction was inside the copy the agent was reading, not alone on an
+otherwise wordless page, and the agent compared anyway. Three runs bought the wrong product id,
+all the same errand and all the two near-identical Lodge skillets of D68. The sweep also gave the
+cost projection its first basis: 573,456 input and 44,500 output tokens over 253 turns, which is
+what `estimateSweep` had nothing to work from before (D85's closing note).
+
+**What is not fixed: a real steering rejection cannot show its evidence.** D84 gave the receipt
+"What the listing said" and took it from `checkResult.chosen.listingText`, which on real data is
+always null — so the block that exists to show the text a rejection was about renders on the demo
+desk and never on a real purchase. The text the classifier actually read is the impression, and
+`CheckResult` has no field for it; the impression row itself is pruned after two hours, so the
+receipt cannot fetch it later either. Showing it means a `CHECK_RESULT_VERSION` bump to store the
+judged text on the decision, which is its own change and is not this one. Until then the honest
+reading of that block is "the chosen listing's own words, when it had any".

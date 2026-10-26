@@ -10,7 +10,12 @@
     "offerUrl": "https://buy.trychannel3.com/hIb2eu8-TgS4-CNrACL?o=01M4PRSP0Q0KQT4S32KBM1Z2DE&aid=01M5A1R41Z75XB8TB24ZEG78XW"
   },
   "searches": 1,
-  "promptVersion": "bench-1",
-  "ranAt": "2026-10-21T04:22:15.739Z",
-  "said": "I bought The Collexion Wireless Noise Cancelling Headphones from cdw.com for $581.99, the lowest price among the in-stock new offers for that exact product (the other stores listed it at $648.00)."
+  "usage": {
+    "inputTokens": 9094,
+    "outputTokens": 438,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:25:48.950Z",
+  "said": "I bought The Collexion Wireless Noise Cancelling Headphones (the Sony 1000X ColleXion) from cdw.com for $581.99, the lowest of the listed new, in-stock offers for that exact product."
 }

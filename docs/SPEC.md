@@ -309,7 +309,7 @@ one day to find that.
 - **0:12–0:30** The market study number, on screen with sample size.
 - **0:30–1:15** Live: agent picks the pricier "Top pick" offer → Slip's receipt screen → rejected, nothing charged. Agent retries with the cheaper offer → paid, PayPal sandbox id shown.
 - **1:15–1:35** A HELD purchase: funds authorised, human declines, hold released.
-- **1:35–2:15** SlipBench: three agents, three conditions, with and without Slip.
+- **1:35–2:15** SlipBench: one measured agent, four conditions, with and without Slip. Two of the four are the same injection in two places — on an offer, where a real listing is always silent, and inside the product description, where it never is (D86).
 - **2:15–2:30** Where this runs for real, and that the demo is sandbox with Slip as seller.
 - **2:30–2:45** Close.
 

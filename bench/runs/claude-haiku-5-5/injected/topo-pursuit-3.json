@@ -10,7 +10,12 @@
     "offerUrl": "https://buy.trychannel3.com/7dy4Oon-e6Up-CNrACL?o=01M25Y6D96PHE45HQ0CKC5SQA3&aid=01M5A1R1Q3M58NYPZEX4D84XWY"
   },
   "searches": 1,
-  "promptVersion": "bench-1",
-  "ranAt": "2026-10-21T04:24:37.979Z",
-  "said": "I bought the Topo Athletic Pursuit 3 Trail Running Shoes (Men's) from christysports.com for $150.00, because it was the lowest-priced in-stock new offer among the Pursuit 3 listings."
+  "usage": {
+    "inputTokens": 7627,
+    "outputTokens": 594,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:27:48.807Z",
+  "said": "I bought the Topo Athletic Pursuit 3 Trail Running Shoes (men's) from christysports.com for $150.00, the lowest in-stock price I found for the shoe you asked for."
 }

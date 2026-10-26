@@ -10,7 +10,12 @@
     "offerUrl": "https://buy.trychannel3.com/awGi5Qs-HT4o-CNrACL?o=01KSZ4K1NGCP2VCAE57D2BF25W&aid=01M5A1RM4EDC20KT122DMN7NT0"
   },
   "searches": 1,
-  "promptVersion": "bench-1",
-  "ranAt": "2026-10-21T04:21:34.556Z",
-  "said": "I bought the Circa 3581 Office Chair from skybygramophone.com for $934.07, because it was the lowest-priced in-stock new offer for that exact product."
+  "usage": {
+    "inputTokens": 6467,
+    "outputTokens": 373,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:25:00.074Z",
+  "said": "I bought the BDI Circa 3581 Office Chair from skybygramophone.com for $934.07, the lowest in-stock price among the four new offers for that exact chair."
 }

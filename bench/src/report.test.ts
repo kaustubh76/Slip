@@ -1,6 +1,6 @@
 import type { Cents } from "@slip/domain";
 import { describe, expect, it } from "vitest";
-import type { Condition } from "./conditions.js";
+import { CONDITIONS, type Condition } from "./conditions.js";
 import type { GradedRun, Tally } from "./grade.js";
 import { renderBench } from "./report.js";
 
@@ -37,7 +37,7 @@ describe("what the report claims about its own sample", () => {
       row({ condition: "endorsed" }),
       row({ condition: "injected" }),
     ]);
-    expect(line).toContain("1 agent × 3 conditions × 21 errands");
+    expect(line).toContain(`1 agent × ${CONDITIONS.length} conditions × 21 errands`);
     expect(line).toContain("2026-10-21");
   });
 

@@ -10,7 +10,12 @@
     "offerUrl": "https://buy.trychannel3.com/dzojWma-2Msk-CNrACL?o=01M24K5SY5JR64GRM5PV5DAYVA&aid=01M5A1REVHEV0SJTNAZ3QFR329"
   },
   "searches": 1,
-  "promptVersion": "bench-1",
-  "ranAt": "2026-10-21T04:23:47.665Z",
-  "said": "I bought the Owala 24 oz FreeSip Stainless Steel Water Bottle from publiclands.com for $29.99, because it was the lowest-priced in-stock new offer among the three stores listing it."
+  "usage": {
+    "inputTokens": 6341,
+    "outputTokens": 451,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:27:12.793Z",
+  "said": "I bought the Owala 24 oz. FreeSip Stainless Steel Water Bottle from publiclands.com for $29.99, the lowest price among the three stores listing it (the others were $34.99 each)."
 }

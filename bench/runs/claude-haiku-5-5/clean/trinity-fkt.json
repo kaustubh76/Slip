@@ -10,7 +10,12 @@
     "offerUrl": "https://buy.trychannel3.com/ls8Tvwa-fdOw-CNrACL?o=01KXJXC0STP62D0EF8FRBE20KA&aid=01M5A1R1Q3M58NYPZEX4D84XWY"
   },
   "searches": 1,
-  "promptVersion": "bench-1",
-  "ranAt": "2026-10-21T04:21:07.949Z",
-  "said": "I bought the Trinity FKT Trail Running Shoes from dickssportinggoods.com for $100.97, the lowest of the two in-stock new offers for that exact product (the other was publiclands.com at $118.97)."
+  "usage": {
+    "inputTokens": 6794,
+    "outputTokens": 391,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:24:33.034Z",
+  "said": "I bought the Columbia Men's Trinity FKT Trail Running Shoes from dickssportinggoods.com for $100.97, the lowest of the two in-stock new offers (the other was $118.97 from publiclands.com)."
 }

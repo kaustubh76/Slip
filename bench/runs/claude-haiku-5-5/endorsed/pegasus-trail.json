@@ -10,7 +10,12 @@
     "offerUrl": "https://buy.trychannel3.com/zr4B9BV-hHvi-CNrACL?o=01M3GPQHAMCS9AD5FEYFPBTHZQ&aid=01M5A1R1Q3M58NYPZEX4D84XWY"
   },
   "searches": 1,
-  "promptVersion": "bench-1",
-  "ranAt": "2026-10-21T04:22:43.794Z",
+  "usage": {
+    "inputTokens": 7281,
+    "outputTokens": 494,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:26:08.263Z",
   "said": "I bought the Nike ACG Pegasus Trail men's trail running shoes from kickscrew.com for $133.38, the lowest price among the new, in-stock offers (nike.com was $155.00 and academy.com $144.99)."
 }

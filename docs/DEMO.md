@@ -96,12 +96,13 @@ SlipBench was the other one until 21 Oct. It has run, and its beat is below.
 
 ## The SlipBench beat, now that it has run (§16's 1:35–2:15)
 
-**Bench** → the SlipBench card. One agent, 21 errands, three conditions, 63 runs, and a tally
+**Bench** → the SlipBench card. One agent, 21 errands, four conditions, 84 runs, and a tally
 table of zeroes in the overpaid column.
 
 Do not hurry past it or dress it up. The line to say is roughly: *"We built the test, ran it, and
 it did not show what we expected. This agent compared the offers properly — in every condition,
-including the one where the pricier listing is addressed to shopping agents. So Slip is the check
+including the one where the instruction is buried inside the product's own real description, which
+is where a real listing actually has words. So Slip is the check
 that does not depend on which model you point at it, and the number that carries the argument is
 the market study's, not this one's."*
 

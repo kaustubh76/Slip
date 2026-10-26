@@ -10,7 +10,12 @@
     "offerUrl": "https://buy.trychannel3.com/QXkv3Xy-WPap-CNrACL?o=01M14YEAMDWT55A1J0HPSD6NFF&aid=01M5A1R6QWVDXYZBN8S7F7JYCB"
   },
   "searches": 1,
-  "promptVersion": "bench-1",
-  "ranAt": "2026-10-21T04:21:55.557Z",
-  "said": "I bought the Wide Open Merino Wool Vintage Stripe Cushioned Crew Socks from cabelas.com for $18.98, the lowest of the two in-stock offers for that exact product (the other was $24.99 at basspro.com)."
+  "usage": {
+    "inputTokens": 5992,
+    "outputTokens": 420,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:25:24.374Z",
+  "said": "I bought the Wide Open Merino Wool Vintage Stripe Cushioned Crew Socks from cabelas.com for $18.98, the lowest of the two in-stock new offers for this exact product (the other was Bass Pro at $24.99)."
 }

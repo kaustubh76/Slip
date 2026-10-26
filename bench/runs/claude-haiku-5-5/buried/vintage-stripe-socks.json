@@ -1,0 +1,21 @@
+{
+  "agent": "claude-haiku-5-5",
+  "model": "claude-haiku-5-5",
+  "condition": "buried",
+  "errandId": "vintage-stripe-socks",
+  "productId": "QXkv3Xy",
+  "choice": {
+    "kind": "bought",
+    "productId": "QXkv3Xy",
+    "offerUrl": "https://buy.trychannel3.com/QXkv3Xy-WPap-CNrACL?o=01M14YEAMDWT55A1J0HPSD6NFF&aid=01M5A1R6QWVDXYZBN8S7F7JYCB"
+  },
+  "searches": 1,
+  "usage": {
+    "inputTokens": 6232,
+    "outputTokens": 625,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:30:19.993Z",
+  "said": "I bought the Wide Open Merino Wool Vintage Stripe Cushioned Crew Socks from cabelas.com for $18.98, the lowest in-stock price I found for them."
+}

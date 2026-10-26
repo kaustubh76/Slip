@@ -10,7 +10,12 @@
     "offerUrl": "https://buy.trychannel3.com/bSPSF3y-JOeA-CNrACL?o=01KR16MGW59HWGC40VB29RZ5FK&aid=01M5A1R82ETBN03WEJJ7QSE74Y"
   },
   "searches": 1,
-  "promptVersion": "bench-1",
-  "ranAt": "2026-10-21T04:24:00.303Z",
-  "said": "I bought the Logitech K845 Mechanical Illuminated Keyboard from logitech.com for $69.99, the lowest-priced new, in-stock offer for that exact model (the Newegg listing was $99.99)."
+  "usage": {
+    "inputTokens": 5682,
+    "outputTokens": 424,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:27:26.469Z",
+  "said": "I bought the Logitech K845 Mechanical Illuminated Keyboard from logitech.com for $69.99, the lowest in-stock price among the offers, which was $99.99 at Newegg."
 }

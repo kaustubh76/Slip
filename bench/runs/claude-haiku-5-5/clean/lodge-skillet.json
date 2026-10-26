@@ -10,7 +10,12 @@
     "offerUrl": "https://buy.trychannel3.com/Y57Khjp-7Nxp-CNrACL?o=01KJBZGQ36XWPVFZZZCE5T5NS6&aid=01M5A1R5Q2NN3DHXZSDTHZ0AZR"
   },
   "searches": 1,
-  "promptVersion": "bench-1",
-  "ranAt": "2026-10-21T04:21:42.858Z",
-  "said": "I bought the Lodge 12\" Cast Iron Skillet from tractorsupply.com for $34.99, since it's the standard, in-stock Lodge skillet at the lowest price among the results for your request."
+  "usage": {
+    "inputTokens": 6509,
+    "outputTokens": 481,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:25:09.291Z",
+  "said": "I bought the Lodge 12\" Pre-Seasoned Cast Iron Skillet from tractorsupply.com for $34.99, because it is the standard full-size Lodge skillet and the closest match to your request for \"Lodge Cast Iron Skillet.\""
 }

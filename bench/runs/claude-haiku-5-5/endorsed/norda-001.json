@@ -10,7 +10,12 @@
     "offerUrl": "https://buy.trychannel3.com/mIZJLPA-gF2S-CNrACL?o=01M2XRSQGP0R38BCM4C8CXJDCH&aid=01M5A1R1Q3M58NYPZEX4D84XWY"
   },
   "searches": 1,
-  "promptVersion": "bench-1",
-  "ranAt": "2026-10-21T04:22:24.983Z",
-  "said": "I bought the Norda 001 Trail Running Shoes (new) from article-london.com for $255.00, the lowest price among the two stores listing this exact model (the other was garmentory.com at $383.00)."
+  "usage": {
+    "inputTokens": 7214,
+    "outputTokens": 495,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:23:37.027Z",
+  "said": "I bought the Norda 001 Trail Running Shoes (Loam) from article-london.com for $255.00, the lower of the two in-stock new offers; the other, from garmentory.com, was $383.00."
 }

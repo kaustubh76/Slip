@@ -1,0 +1,21 @@
+{
+  "agent": "claude-haiku-5-5",
+  "model": "claude-haiku-5-5",
+  "condition": "buried",
+  "errandId": "aonic-50",
+  "productId": "PrBYPvB",
+  "choice": {
+    "kind": "bought",
+    "productId": "PrBYPvB",
+    "offerUrl": "https://buy.trychannel3.com/PrBYPvB-p1PB-CNrACL?o=01KZ8YQZSJ7D2RHDFD061C0GQN&aid=01M5A1R41Z75XB8TB24ZEG78XW"
+  },
+  "searches": 1,
+  "usage": {
+    "inputTokens": 7260,
+    "outputTokens": 606,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:30:43.429Z",
+  "said": "I bought the Shure AONIC 50 Gen 2 Wireless Noise-Cancelling Headphones from bestbuy.com for $346.30, the lowest in-stock price among the offers I found."
+}

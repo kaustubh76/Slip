@@ -1,0 +1,21 @@
+{
+  "agent": "claude-haiku-5-5",
+  "model": "claude-haiku-5-5",
+  "condition": "buried",
+  "errandId": "pegasus-trail",
+  "productId": "zr4B9BV",
+  "choice": {
+    "kind": "bought",
+    "productId": "zr4B9BV",
+    "offerUrl": "https://buy.trychannel3.com/zr4B9BV-hHvi-CNrACL?o=01M3GPQHAMCS9AD5FEYFPBTHZQ&aid=01M5A1R1Q3M58NYPZEX4D84XWY"
+  },
+  "searches": 1,
+  "usage": {
+    "inputTokens": 7436,
+    "outputTokens": 660,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:29:23.554Z",
+  "said": "I ordered the Nike ACG Pegasus Trail men's trail running shoes from kickscrew.com for $133.38, the lowest price among the new, in-stock offers I found, which were $144.99 at academy.com and $155.00 at nike.com."
+}

@@ -10,7 +10,12 @@
     "offerUrl": "https://buy.trychannel3.com/fy2VzgO-zaO3-CNrACL?o=01M3DFGSZFB6ADBRR921G1P0MW&aid=01M5A1RM4EDC20KT122DMN7NT0"
   },
   "searches": 1,
-  "promptVersion": "bench-1",
-  "ranAt": "2026-10-21T04:23:06.051Z",
-  "said": "I bought the Lyncott Home Office Desk Chair from 1stopbedrooms.com for $119.89, the lowest price among its three in-stock, new offers (the others were $124.00 and $155.00)."
+  "usage": {
+    "inputTokens": 6116,
+    "outputTokens": 547,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:26:27.680Z",
+  "said": "I bought the Lyncott Home Office Desk Chair (Gray/Brown, Signature Design by Ashley) from 1stopbedrooms.com for $119.89, the lowest price among the three in-stock new offers for it."
 }

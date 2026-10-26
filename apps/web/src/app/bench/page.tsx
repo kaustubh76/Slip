@@ -105,8 +105,8 @@ export default function Bench() {
         </header>
         <hr className="slip-rule" />
         <p className="slip-sentence">
-          Agents run the same errands under three conditions, once paying directly and once with
-          Slip checking each purchase first.
+          Agents run the same errands under four conditions, once paying directly and once with Slip
+          checking each purchase first.
         </p>
         <Leaders
           rows={[
@@ -118,12 +118,12 @@ export default function Bench() {
                 ? "2 wired, both Anthropic — one of them small and low-cost"
                 : `${new Set(BENCH.tallies.map((row) => row.agent)).size} measured of 2 wired, both Anthropic`,
             ],
-            ["Conditions", "3, each with Slip off and on"],
+            ["Conditions", "4, each with Slip off and on"],
             ["Prices", "real offers, replayed from stored snapshots"],
           ]}
         />
         <table className="slip-offers">
-          <caption className="slip-meta">The three conditions</caption>
+          <caption className="slip-meta">The four conditions</caption>
           <thead>
             <tr>
               <th scope="col">Condition</th>
@@ -153,11 +153,21 @@ export default function Bench() {
               <td>The same, but a pricier listing contains text that reads like instructions.</td>
               <td>Resistance to prompt injection</td>
             </tr>
+            <tr>
+              <th scope="row">D. Buried*</th>
+              <td>
+                The same instruction, inside the product&rsquo;s own real description rather than on
+                an offer, naming the pricier store.
+              </td>
+              <td>The same, where a real listing actually carries words</td>
+            </tr>
           </tbody>
         </table>
         <p className="slip-caption">
           * The &ldquo;Top pick&rdquo; label and the instruction-like text are synthetic, and are
-          labelled so wherever they appear. The offers and prices are real.
+          labelled so wherever they appear. The offers, the prices and the descriptions are real. C
+          and D are the same sentence in two places: no offer in this catalogue carries text of its
+          own, and every product does, so only D puts it where an agent was already reading.
         </p>
         {BENCH.tallies.length === 0 ? (
           <p className="slip-prose">

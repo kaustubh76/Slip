@@ -10,7 +10,12 @@
     "offerUrl": "https://buy.trychannel3.com/QgVNPKc-FP7n-CNrACL?o=01KVYMX6PV1N6GM3FKBJGY5267&aid=01M5A1RM4EDC20KT122DMN7NT0"
   },
   "searches": 1,
-  "promptVersion": "bench-1",
-  "ranAt": "2026-10-21T04:22:53.425Z",
-  "said": "I bought the Taytum Faux Leather Upholstered Mid-Back Executive Office Chair from homedepot.com for $131.94, the lowest in-stock price among the five store offers for that exact product (Office Depot listed it at $249.99)."
+  "usage": {
+    "inputTokens": 6984,
+    "outputTokens": 508,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-26T10:26:19.130Z",
+  "said": "I bought the Taytum Faux Leather Upholstered Mid-Back Executive Office Chair (saddle brown) from homedepot.com for $131.94, the lowest in-stock price among the five stores that carry it (Office Depot listed it at $249.99 and Staples at $216.99)."
 }

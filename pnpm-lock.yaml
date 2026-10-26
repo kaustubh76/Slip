@@ -195,6 +195,9 @@ importers:
       '@slip/domain':
         specifier: workspace:*
         version: link:../packages/domain
+      '@slip/offers':
+        specifier: workspace:*
+        version: link:../packages/offers
       '@slip/study':
         specifier: workspace:*
         version: link:../study
