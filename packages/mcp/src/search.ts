@@ -36,6 +36,36 @@ export interface ProductSearch {
 
 export const SEARCH_LIMIT = { default: 10, max: 30 } as const;
 
+/**
+ * How much of a store's own words an agent is handed for one product or one offer.
+ *
+ * Slip sits between an agent and listing text, so the size of what it passes on is Slip's problem,
+ * not the store's. A real Channel3 description runs to the better part of a thousand characters of
+ * marketing copy, and `SEARCH_LIMIT.max` is thirty products: uncapped, one call could spend tens
+ * of kilobytes of an agent's context on prose, every byte of it untrusted and sized by whoever
+ * wrote the listing (D85). Four hundred characters still says what a thing is.
+ */
+export const SHOWN_TEXT_LIMIT = 400;
+
+/**
+ * A store's words as an agent is shown them: whitespace collapsed to single spaces, cut to
+ * `SHOWN_TEXT_LIMIT`, and a cut marked so the agent can tell it is reading part of a listing.
+ *
+ * Collapsing matters as much as the cap. A description arrives with its own newlines, and the text
+ * form quotes it as `about: "…"` — so without this, a bullet list inside the quote is laid out
+ * exactly like the tool's own `- store: …` lines, and nothing tells them apart.
+ */
+export function shownText(text: string | null | undefined): string | null {
+  if (text === null || text === undefined) {
+    return null;
+  }
+  const flat = text.replace(/\s+/g, " ").trim();
+  if (flat === "") {
+    return null;
+  }
+  return flat.length <= SHOWN_TEXT_LIMIT ? flat : `${flat.slice(0, SHOWN_TEXT_LIMIT).trimEnd()}…`;
+}
+
 export const SearchArgs = z.object({
   query: z.string().trim().min(1).max(200).describe('What to look for, e.g. "trail shoe".'),
   limit: z
@@ -106,7 +136,7 @@ function listed(offer: Offer): ListedOffer {
       offer.commissionBps === null || offer.commissionBps === 0
         ? null
         : `up to ${percentFromHundredths(offer.commissionBps)}`,
-    listing_text: offer.listingText,
+    listing_text: shownText(offer.listingText),
   };
 }
 
@@ -172,15 +202,20 @@ export function recordingSearch(deps: AppDeps, agent: string, inner: ProductSear
     simulated: inner.simulated,
     async search(query, options, signal) {
       const answer = await inner.search(query, options, signal);
-      if (answer.ok) {
-        await recordShown(
-          deps,
-          agent,
-          answer.hits.map((hit) => ({ productId: hit.productId, text: hit.text ?? null })),
-          deps.clock.now(),
-        );
+      if (!answer.ok) {
+        return answer;
       }
-      return answer;
+      // Capped here rather than where the text is rendered, so one value reaches all three
+      // readers: the agent, the structured content, and the impression the steering check will
+      // be asked about. Capping downstream would have Slip judge text the agent never read (D69).
+      const hits = answer.hits.map((hit) => ({ ...hit, text: shownText(hit.text) }));
+      await recordShown(
+        deps,
+        agent,
+        hits.map((hit) => ({ productId: hit.productId, text: hit.text })),
+        deps.clock.now(),
+      );
+      return { ...answer, hits };
     },
   };
 }
