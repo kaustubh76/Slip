@@ -123,8 +123,15 @@ export function channel3SearchHits(body: unknown): SearchedProduct[] {
   return hits;
 }
 
+/**
+ * Both fields optional, and that is load-bearing: `z.unknown()` on its own still requires the key
+ * to be *present*, so a product carrying a description but no `key_features` parsed as a failure
+ * and its text was dropped altogether — reaching the agent with nothing to read and the steering
+ * check with nothing to judge. Every product in the study sample happens to send both, which is
+ * why nothing caught it until a test built one that did not.
+ */
 const TextSchema = z
-  .object({ description: z.unknown(), key_features: z.unknown() })
+  .object({ description: z.unknown().optional(), key_features: z.unknown().optional() })
   .loose()
   .optional();
 

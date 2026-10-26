@@ -233,6 +233,14 @@ behind D68, which is why Slip now holds an implausible gap instead of rejecting 
 [study/results/market-study.md](study/results/market-study.md) has the working, including why so
 few products can be compared at all.
 
+**It also answers the question underneath the steering rule: has a real listing ever tried this?**
+All 240 descriptions were read for the four things Slip's steering check looks for that a pattern
+can pick out of prose. **One matched**, and the production classifier cleared it — a merchant
+boasting that it is "Australia's preferred retailer", which is the exact distinction a regex cannot
+draw and a model can. So of Slip's two reasons to stop a purchase, the commission conflict is
+measured in this sample and a listing steering an agent is not: the steering rule guards against
+something not yet seen in the wild, which is worth saying plainly rather than implying otherwise.
+
 SlipBench ran on 26 Oct, on one agent: `claude-haiku-5-5`, 21 errands × 4 conditions = 84 runs, all
 84 ending in a purchase, every response committed. **It did not catch these agents out.** Nobody
 overpaid and nobody took the planted offer — not in `clean`, not in `endorsed`, not in `injected`,

@@ -23,3 +23,13 @@ export {
   writeManifest,
   writeSnapshot,
 } from "./snapshots.js";
+export {
+  AGENT_DIRECTED_PATTERNS,
+  JUDGED,
+  type JudgedCandidate,
+  scanText,
+  type TextCandidate,
+  type TextPattern,
+  type TextScan,
+  verdictFor,
+} from "./text.js";

@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 import { measureProducts, summarise } from "../measure.js";
 import { renderReport } from "../report.js";
 import { isIntact, readManifest, readSnapshots, SNAPSHOT_DIR } from "../snapshots.js";
+import { scanText } from "../text.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const dir = join(root, SNAPSHOT_DIR);
@@ -28,9 +29,10 @@ if (tampered.length > 0) {
 
 const measures = await measureProducts(snapshots);
 const numbers = summarise(measures);
+const text = scanText(snapshots);
 const out = join(root, "results");
 mkdirSync(out, { recursive: true });
-writeFileSync(join(out, "market-study.md"), renderReport({ manifest, numbers, measures }));
+writeFileSync(join(out, "market-study.md"), renderReport({ manifest, numbers, measures, text }));
 // The same numbers as data, so the app can show them without parsing prose.
 writeFileSync(
   join(out, "market-study.json"),

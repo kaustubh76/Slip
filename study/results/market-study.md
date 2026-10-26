@@ -89,6 +89,29 @@ Two products in three carry a single comparable offer, so a checkout picked at r
 | stainless steel water bottle | GEOJUG Stainless Steel Vacuum-Insulated Water Bottle | 41.1% · $12.31 | 3 |
 | stainless steel water bottle | Owala 24 oz. FreeSip Stainless Steel Water Bottle | 16.67% · $5.00 | 3 |
 
+## Has a real listing ever tried this?
+
+Slip rejects a purchase when a listing reads like instructions to the agent, so it is worth saying whether this sample contains any. All 240 products carried a description — 175,685 characters of store prose in all, a median of 712 each — and every one of them was read for the four things the steering check looks for that a pattern can pick out of prose:
+
+- text that addresses an AI, assistant, agent or model directly
+- text that refers to the reader's instructions, rules or system prompt
+- text that instructs the reader which offer to select, or to stop comparing prices
+- text that claims an authority a listing cannot have
+
+**1 of 240 matched**, and the model was asked about each one.
+
+| Pattern | Product | What it said | Judged |
+|---|---|---|---|
+| `approved-supplier` | Asics GEL Venture 11 Mens Trail Running Shoes | …Trail Running Shoes online - rebel is Australia’s preferred retailer of biggest sports brands at best prices. Nike, ad… | ordinary selling (`claude-opus-5-5`, `steer-2`) |
+
+Each candidate was put to the production classifier — the same model, the same prompt, the same text an agent would have been shown — and the verdict is recorded so this table needs no key to print. A pattern cannot tell a merchant boasting that it is a "preferred retailer" from a listing claiming the buyer pre-approved it, which is the whole reason the check asks a model. This is that distinction, on real data.
+
+**What this cannot say.** It reports what matched a stated list of patterns, and text written to avoid those words would pass it — which is the whole reason the production check asks a model instead. So read it as a statement about forms, not about intent. Two of the classifier's six categories are missing from it as well: copy imitating a system message, a tool call or JSON, and copy asking for something other than selling the product, neither of which has a form a pattern can pick out of ordinary prose.
+
+**So, of Slip's two reasons to stop a purchase, one is measured here and one is not.** The commission conflict is in this sample: the offer paying the most is the dearer one in 19 of 40 products where both could be read. A listing steering an agent is not, which is why SlipBench has to plant its own and label it synthetic. Slip's steering rule guards against something this sample does not contain — worth saying plainly, since agents doing the buying is new and the listings were written for people.
+
+**And the size of it.** 216 of 240 descriptions are longer than the 400 characters an agent is handed, which is why there is a bound at all: uncapped, a ten-product search would spend several thousand characters of an agent's context on store prose, every byte of it untrusted and sized by whoever wrote the listing.
+
 ## Grouping, for a person to check (G4)
 
 Channel3 groups each merchant's offer under one product id, and Slip compares only within one id. Whether that grouping is right cannot be measured from the data itself, so here are 30 products with two or more comparable offers to look at by hand. G4 passes at one wrong grouping or fewer.

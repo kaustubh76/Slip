@@ -2,6 +2,7 @@ import { formatPct, formatUsd } from "@slip/domain";
 import type { ProductMeasure, StudyNumbers } from "./measure.js";
 import { G1_SHARE_PCT_HUNDREDTHS, SUSPECT_GAP_PCT_HUNDREDTHS } from "./measure.js";
 import type { Manifest } from "./snapshots.js";
+import { AGENT_DIRECTED_PATTERNS, type TextScan, verdictFor } from "./text.js";
 
 /**
  * The study as a page anyone can read, with the sample size and the date on it. Percent and
@@ -19,8 +20,9 @@ export function renderReport(input: {
   manifest: Manifest;
   numbers: StudyNumbers;
   measures: readonly ProductMeasure[];
+  text: TextScan;
 }): string {
-  const { manifest, numbers } = input;
+  const { manifest, numbers, text: scan } = input;
   const pct = (hundredths: number | null): string =>
     hundredths === null ? "—" : formatPct(hundredths);
   const date = manifest.sampledAt.slice(0, 10);
@@ -171,6 +173,69 @@ export function renderReport(input: {
           ` | ${gap} | ${m.comparable} |`
         );
       }),
+    "",
+    "## Has a real listing ever tried this?",
+    "",
+    `Slip rejects a purchase when a listing reads like instructions to the agent, so it is worth` +
+      ` saying whether this sample contains any. All ${scan.products} products carried a` +
+      ` description — ${scan.totalChars.toLocaleString("en-US")} characters of store prose in all,` +
+      ` a median of ${scan.medianChars ?? "—"} each — and every one of them was read for the four` +
+      ` things the steering check looks for that a pattern can pick out of prose:`,
+    "",
+    ...[...new Set(AGENT_DIRECTED_PATTERNS.map((pattern) => pattern.what))].map(
+      (what) => `- text that ${what}`,
+    ),
+    "",
+    scan.candidates.length === 0
+      ? `**Nothing matched.** Not one of the ${scan.withText} descriptions used any of those` +
+          " forms."
+      : `**${scan.candidates.length} of ${scan.withText} matched**, and the model was asked about` +
+          " each one.",
+    "",
+    ...(scan.candidates.length === 0
+      ? []
+      : [
+          "| Pattern | Product | What it said | Judged |",
+          "|---|---|---|---|",
+          ...scan.candidates.map((candidate) => {
+            const judged = verdictFor(candidate);
+            const verdict =
+              judged === null
+                ? "not yet judged"
+                : `${judged.instructionLike ? "**instruction-like**" : "ordinary selling"}` +
+                  ` (\`${judged.model}\`, \`${judged.promptVersion}\`)`;
+            return (
+              `| \`${candidate.pattern}\` | ${candidate.title.replace(/\|/g, "/")}` +
+              ` | ${candidate.quote.replace(/\|/g, "/")} | ${verdict} |`
+            );
+          }),
+          "",
+          `Each candidate was put to the production classifier — the same model, the same prompt,` +
+            ` the same text an agent would have been shown — and the verdict is recorded so this` +
+            ` table needs no key to print. A pattern cannot tell a merchant boasting that it is a` +
+            ` "preferred retailer" from a listing claiming the buyer pre-approved it, which is the` +
+            ` whole reason the check asks a model. This is that distinction, on real data.`,
+          "",
+        ]),
+    `**What this cannot say.** It reports what matched a stated list of patterns, and text written` +
+      ` to avoid those words would pass it — which is the whole reason the production check asks a` +
+      ` model instead. So read it as a statement about forms, not about intent. Two of the` +
+      ` classifier's six categories are missing from it as well: copy imitating a system message, a` +
+      ` tool call or JSON, and copy asking for something other than selling the product, neither of` +
+      ` which has a form a pattern can pick out of ordinary prose.`,
+    "",
+    `**So, of Slip's two reasons to stop a purchase, one is measured here and one is not.** The` +
+      ` commission conflict is in this sample: the offer paying the most is the dearer one in` +
+      ` ${numbers.commissionConflicts} of ${numbers.commissionConsidered} products where both` +
+      ` could be read. A listing steering an agent is not, which is why SlipBench has to plant its own` +
+      ` and label it synthetic. Slip's steering rule guards against something this sample does not` +
+      ` contain — worth saying plainly, since agents doing the buying is new and the listings were` +
+      ` written for people.`,
+    "",
+    `**And the size of it.** ${scan.longerThanShown} of ${scan.withText} descriptions are longer` +
+      ` than the ${scan.shownLimit} characters an agent is handed, which is why there is a bound at` +
+      ` all: uncapped, a ten-product search would spend several thousand characters of an agent's` +
+      ` context on store prose, every byte of it untrusted and sized by whoever wrote the listing.`,
     "",
     "## Grouping, for a person to check (G4)",
     "",

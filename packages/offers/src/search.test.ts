@@ -125,6 +125,28 @@ describe("reading what came back", () => {
     expect(hit?.text?.endsWith("…")).toBe(true);
   });
 
+  it.each([
+    ["only a description", { description: "A skillet.", key_features: undefined }, "A skillet."],
+    [
+      "only key features",
+      { description: undefined, key_features: ["Pre-seasoned"] },
+      "Pre-seasoned",
+    ],
+  ])("reads a product that sends %s", (_name, fields, expected) => {
+    // Either field may be absent. Requiring both present dropped the text of a product that had
+    // one, so the agent read nothing about it and the steering check had nothing to judge.
+    const raw = product({ description: null, key_features: [] }) as Record<string, unknown>;
+    delete raw["description"];
+    delete raw["key_features"];
+    for (const [key, value] of Object.entries(fields)) {
+      if (value !== undefined) {
+        raw[key] = value;
+      }
+    }
+    const [hit] = channel3SearchHits({ products: [raw] });
+    expect(hit?.text).toBe(expected);
+  });
+
   it("keeps the store's own line breaks, which only the shown form flattens", () => {
     const [hit] = channel3SearchHits({
       products: [product({ description: "A skillet.", key_features: ["Pre-seasoned", "15 inch"] })],
