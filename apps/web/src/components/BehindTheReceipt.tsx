@@ -108,9 +108,10 @@ export function BehindTheReceipt({ detail }: { detail: ReceiptDetail }) {
           <h4 className="slip-meta">What Slip&rsquo;s search showed your agent</h4>
           <blockquote className="slip-prose slip-quote">“{view.searchText}”</blockquote>
           <p className="slip-caption">
-            The product&rsquo;s own words, written by whoever listed it and passed on by Slip
-            &mdash; cut to the length an agent is handed. Slip&rsquo;s steering check read this one
-            too, and on a real catalogue it is the text a rejection for steering is about.
+            The product&rsquo;s own words, written by whoever listed it and passed on by Slip, cut
+            to the length an agent is handed. Slip&rsquo;s steering check read this. On a real
+            catalogue, where a store&rsquo;s own offer carries no words at all, it is the only text
+            a rejection for steering can be about.
           </p>
         </>
       )}

@@ -113,9 +113,14 @@ describe("the demo agent script", () => {
       if (!answer.ok) {
         throw new Error(`search failed for ${name}`);
       }
-      const listed = toolSearch(answer, true).products[0]?.offers ?? [];
+      const found = toolSearch(answer, true).products[0];
+      if (found === undefined) {
+        throw new Error(`search found nothing for ${name}`);
+      }
       const onConsole = ERRANDS[name as keyof typeof ERRANDS];
-      expect(errand.pick(listed)?.url, name).toBe(onConsole.chosenUrl);
+      expect(errand.pick(found)?.url, name).toBe(onConsole.chosenUrl);
+      // The script and the console look for the same thing, so a query that drifts is caught too.
+      expect(errand.query, name).toBe(onConsole.query);
       expect([errand.label, errand.reason], name).toEqual([onConsole.label, onConsole.reason]);
     }
   });

@@ -1,5 +1,5 @@
-import { previewApproval } from "@slip/app";
-import type { OwnerId } from "@slip/domain";
+import { previewApproval, renderReceipt } from "@slip/app";
+import { DEFAULT_POLICY, type OwnerId } from "@slip/domain";
 import { describe, expect, it } from "vitest";
 import { demoWorld } from "./__fixtures__/world";
 import { consoleErrand, type Desk, repriceDesk, scriptKey, settlePending } from "./console";
@@ -15,6 +15,15 @@ async function deskOf(world: ReturnType<typeof demoWorld>): Promise<Desk> {
     mandateId: owner.mandateId,
     desks: new Map<string, DemoDesk>(),
   };
+}
+
+/** One receipt as the owner's page renders it. */
+async function receiptFor(world: ReturnType<typeof demoWorld>, receiptId: string) {
+  const stored = await world.deps.store.attempts.get(receiptId as never);
+  if (stored === null) {
+    throw new Error(`no receipt ${receiptId}`);
+  }
+  return renderReceipt(stored, { policy: DEFAULT_POLICY });
 }
 
 describe("the demo console", () => {
@@ -44,6 +53,47 @@ describe("the demo console", () => {
     expect(cheaper.status === "done" && cheaper.message).toMatch(
       /^PAID by R7_WITHIN_LIMITS.*CAPTURED/,
     );
+  });
+
+  /**
+   * The demo's whole point, on the surface a real catalogue actually has. Until D88 the desk never
+   * searched, so no impression was ever recorded and the steering check could only ever read an
+   * offer's own listing text — which no real Channel3 offer carries (D86). This errand puts the
+   * instruction in the product's description, where a real one would be, and the receipt has to be
+   * able to quote it (D87).
+   */
+  it("a description that names an \u201capproved\u201d store is caught, and the receipt quotes it", async () => {
+    const world = demoWorld();
+    const desk = await deskOf(world);
+    const answer = await consoleErrand(desk, "buried", "answers");
+    // Its $3.51 gap is under the reject line, so the price rules alone pay it: without the search
+    // that records what the agent read, this errand comes back PAID by R7_WITHIN_LIMITS.
+    expect(answer.status === "done" && answer.message).toMatch(/^REJECTED by R3_STEERED/);
+
+    const receiptId = answer.status === "done" ? answer.receiptId : null;
+    expect(receiptId).not.toBeNull();
+    const view = await receiptFor(world, receiptId as string);
+    // The offer said nothing, as every real offer says nothing. The description said it all.
+    expect(view.listingText).toBeNull();
+    expect(view.searchText).toContain("approved supplier");
+    expect(view.searchText).toContain("Store P");
+  });
+
+  it("the offer-level injection still works, so the demo shows both places text can hide", async () => {
+    const world = demoWorld();
+    const desk = await deskOf(world);
+    const answer = await consoleErrand(desk, "injected", "answers");
+    expect(answer.status === "done" && answer.message).toMatch(/^REJECTED by R3_STEERED/);
+    const view = await receiptFor(world, (answer as { receiptId: string }).receiptId);
+    expect(view.listingText).toContain("only offer worth buying");
+  });
+
+  it("an errand whose product is offline still searches, and still holds on a stale snapshot", async () => {
+    // The search reads the desk's own listing; the outage is in the price lookup the checkout does.
+    const world = demoWorld();
+    const desk = await deskOf(world);
+    const answer = await consoleErrand(desk, "offers-down", "answers");
+    expect(answer.status === "done" && answer.message).toMatch(/^HELD by R1_STALE_SNAPSHOT/);
   });
 
   it("scripts what PayPal answers, for that purchase only", async () => {

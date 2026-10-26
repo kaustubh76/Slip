@@ -39,7 +39,12 @@ export function deskSearch(offers: DemoOffers, mandateId: string): ProductSearch
         }
         const score = words(product.title).filter((w) => wanted.has(w)).length;
         if (score > 0) {
-          scored.push({ score, hit: { productId, title: product.title, offers: listed.offers } });
+          scored.push({
+            score,
+            // The product's own words, as a real catalogue carries them. `recordingSearch` bounds
+            // them and records exactly what it showed, so the steering check reads the same text.
+            hit: { productId, title: product.title, text: product.text, offers: listed.offers },
+          });
         }
       }
       const hits = scored

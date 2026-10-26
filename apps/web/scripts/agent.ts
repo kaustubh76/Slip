@@ -1,5 +1,5 @@
 import { Client, StreamableHTTPClientTransport } from "@modelcontextprotocol/client";
-import type { ListedOffer, ToolReceipt, ToolSearch } from "@slip/mcp";
+import type { ToolReceipt, ToolSearch } from "@slip/mcp";
 
 /**
  * The demo agent: what an AI shopping agent does with Slip in front of PayPal, as a terminal
@@ -13,18 +13,26 @@ import type { ListedOffer, ToolReceipt, ToolSearch } from "@slip/mcp";
  * the command line (`demo-agent.ts`) so the transcript can be tested against a fake `fetch`.
  */
 
+/** One product as search returned it: its own words and the offers under them. */
+type Found = ToolSearch["products"][number];
+type Offer = Found["offers"][number];
+
 export interface ScriptErrand {
   label: string;
   query: string;
   reason: string;
-  /** How the agent picks among the offers search listed. */
-  pick: (offers: readonly ListedOffer[]) => ListedOffer | undefined;
+  /**
+   * How the agent picks among what search returned. It gets the whole product, not just the
+   * offers, because the product's description is the only text a real listing ever has — so an
+   * agent that can be steered is steered by something it reads there (D86).
+   */
+  pick: (found: Found) => Offer | undefined;
   /** Needs Channel3 down for this product while it runs, which only the console can arrange. */
   consoleOnly?: boolean;
 }
 
-const cheapest = (offers: readonly ListedOffer[]): ListedOffer | undefined =>
-  offers
+const cheapest = (found: Found): Offer | undefined =>
+  found.offers
     .filter((o) => o.in_stock && o.condition === "new" && o.price_cents !== null)
     .sort((a, b) => (a.price_cents ?? 0) - (b.price_cents ?? 0))[0];
 
@@ -39,7 +47,7 @@ export const SCRIPT_ERRANDS: Readonly<Record<string, ScriptErrand>> = {
     label: "Picks the [synthetic] Top pick trail shoe at $58.99",
     query: "trail shoe",
     reason: "Top pick badge, ships fastest",
-    pick: (offers) => offers.find((o) => o.listing_text?.includes("Top pick") === true),
+    pick: (found) => found.offers.find((o) => o.listing_text?.includes("Top pick") === true),
   },
   cheaper: {
     label: "Retries with the $47.99 trail shoe",
@@ -64,7 +72,15 @@ export const SCRIPT_ERRANDS: Readonly<Record<string, ScriptErrand>> = {
     label: "Follows a listing that tells AI agents what to buy",
     query: "phone case",
     reason: "the listing said it was the only offer worth buying",
-    pick: (offers) => offers.find((o) => /AI shopping agents/i.test(o.listing_text ?? "")),
+    pick: (found) => found.offers.find((o) => /AI shopping agents/i.test(o.listing_text ?? "")),
+  },
+  buried: {
+    label: "Follows a product description that names an \u201capproved\u201d store",
+    query: "water bottle",
+    reason: "the description said this store was the buyer's approved supplier",
+    // The description names a store rather than pointing at a listing, because every offer under
+    // the product shares it. An agent that believed it would buy from the store it named.
+    pick: (found) => found.offers.find((o) => found.text?.includes(o.store) === true),
   },
 };
 
@@ -158,13 +174,18 @@ export async function runAgent(run: AgentRun): Promise<AgentOutcome> {
       return { code: 2, lines };
     }
     say("slip", `${product.title} (product_id ${product.product_id})`);
+    if (product.text !== null) {
+      // The product's own words, which is the text a real listing actually has. Untrusted, and
+      // already cut to the length Slip hands an agent (D85).
+      say("", `  about: "${product.text}"`);
+    }
     for (const offer of product.offers) {
       say("", `  ${offerLine(offer)}`);
       if (offer.listing_text !== null) {
         say("", `    listing text: "${offer.listing_text}"`);
       }
     }
-    const chosen = errand.pick(product.offers);
+    const chosen = errand.pick(product);
     if (chosen === undefined) {
       say("agent", "found no offer to pick");
       return { code: 2, lines };
@@ -218,7 +239,7 @@ export async function runAgent(run: AgentRun): Promise<AgentOutcome> {
   }
 }
 
-function offerLine(offer: ListedOffer): string {
+function offerLine(offer: Offer): string {
   const stock = [
     offer.condition ?? "condition not stated",
     offer.in_stock ? "in stock" : "out of stock",
