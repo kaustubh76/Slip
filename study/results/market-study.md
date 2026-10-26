@@ -70,6 +70,25 @@ Channel3 listed 321 offers across the 240 products. The adapter read 321 of them
 | wireless noise cancelling headphones | 30 | 5 (16.67%) |
 | yoga mat | 30 | 6 (20%) |
 
+## If you are about to use Slip on real prices
+
+Two products in three carry a single comparable offer, so a checkout picked at random is held for too few offers rather than paid or rejected — correct, and a poor way to see what Slip does. Density is uneven and the table above is the map: search where the comparisons are. These are products from the 2026-10-19 sample that had two or more comparable offers and a real spread between them, with the suspected grouping errors below left out, so each one is a comparison Slip can stand behind. A catalogue moves — the queries are the durable part, the ids are not.
+
+| Search for | Product | Gap | Offers |
+|---|---|---|---|
+| wireless noise cancelling headphones | The Collexion Wireless Noise Cancelling Headphones | 11.34% · $66.01 | 9 |
+| wireless noise cancelling headphones | AONIC 50 GEN 2 Wireless Noise Cancelling Headphones | 12.33% · $42.70 | 6 |
+| office desk chair | Taytum Faux Leather Upholstered Mid-Back Executive Office Chair | 89.47% · $118.05 | 5 |
+| office desk chair | Circa 3581 Office Chair | 17.65% · $164.93 | 4 |
+| office desk chair | Ergonomic Leather Office Chair with Rocking Function | 53.1% · $45.13 | 4 |
+| cast iron skillet | Cast Iron Skillet | 62.78% · $25.05 | 4 |
+| yoga mat | Yoga Mat | 76.51% · $13.00 | 4 |
+| cast iron skillet | Lodge Chef Collection Cast Iron Skillet | 17.02% · $5.09 | 4 |
+| office desk chair | Lyncott Home Office Desk Chair | 29.28% · $35.11 | 3 |
+| trail running shoes | Nike Acg Pegasus Trail Men's Trail Running Shoes | 16.2% · $21.62 | 3 |
+| stainless steel water bottle | GEOJUG Stainless Steel Vacuum-Insulated Water Bottle | 41.1% · $12.31 | 3 |
+| stainless steel water bottle | Owala 24 oz. FreeSip Stainless Steel Water Bottle | 16.67% · $5.00 | 3 |
+
 ## Grouping, for a person to check (G4)
 
 Channel3 groups each merchant's offer under one product id, and Slip compares only within one id. Whether that grouping is right cannot be measured from the data itself, so here are 30 products with two or more comparable offers to look at by hand. G4 passes at one wrong grouping or fewer.

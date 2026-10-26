@@ -135,6 +135,12 @@ SLIP_ENCRYPTION_KEY=$(openssl rand -base64 32) \
 SLIP_BASE_URL=http://localhost:3000 DATABASE_URL=pglite://.data/slip pnpm web:dev
 ```
 
+**What to search for.** On real prices two products in three carry a single comparable offer, so a
+purchase picked at random is held for too few offers rather than paid or rejected — correct, and a
+poor way to see what Slip does. The density is uneven and measured:
+[the market study](study/results/market-study.md#if-you-are-about-to-use-slip-on-real-prices) names
+the searches worth making and a dozen real products that have something to compare.
+
 Each adapter also has a live suite that skips itself until its keys exist:
 
 ```sh

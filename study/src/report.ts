@@ -12,6 +12,9 @@ import type { Manifest } from "./snapshots.js";
 /** How many products the grouping check (G4) lists for a person to look at by hand. */
 const HAND_CHECK = 30;
 
+/** How many products to name for someone about to drive Slip on real prices. */
+const WORTH_TRYING = 12;
+
 export function renderReport(input: {
   manifest: Manifest;
   numbers: StudyNumbers;
@@ -137,6 +140,37 @@ export function renderReport(input: {
         `| ${queryText.get(row.slug) ?? row.slug} | ${row.products} |` +
         ` ${row.withTwoOrMore} (${formatPct(row.sharePctHundredths)}) |`,
     ),
+    "",
+    "## If you are about to use Slip on real prices",
+    "",
+    `Two products in three carry a single comparable offer, so a checkout picked at random is` +
+      ` held for too few offers rather than paid or rejected — correct, and a poor way to see what` +
+      ` Slip does. Density is uneven and the table above is the map: search where the comparisons` +
+      ` are. These are products from the ${date} sample that had two or more comparable offers and` +
+      ` a real spread between them, with the suspected grouping errors below left out, so each one` +
+      ` is a comparison Slip can stand behind. A catalogue moves — the queries are the durable` +
+      ` part, the ids are not.`,
+    "",
+    "| Search for | Product | Gap | Offers |",
+    "|---|---|---|---|",
+    ...input.measures
+      .filter((m) => m.spread !== null && !m.suspectGrouping && m.comparable >= 2)
+      .sort(
+        (a, b) =>
+          b.comparable - a.comparable || (b.spread?.gapCents ?? 0) - (a.spread?.gapCents ?? 0),
+      )
+      .slice(0, WORTH_TRYING)
+      .map((m) => {
+        const spread = m.spread;
+        const gap =
+          spread === null
+            ? "—"
+            : `${formatPct(spread.gapPctHundredths)} · ${formatUsd(spread.gapCents)}`;
+        return (
+          `| ${queryText.get(m.foundBy) ?? m.foundBy} | ${m.title.replace(/\|/g, "/")}` +
+          ` | ${gap} | ${m.comparable} |`
+        );
+      }),
     "",
     "## Grouping, for a person to check (G4)",
     "",
