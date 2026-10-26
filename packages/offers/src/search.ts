@@ -1,4 +1,4 @@
-import type { Offer } from "@slip/domain";
+import { type Offer, storedText } from "@slip/domain";
 import { createJsonClient, type Fetch, type JsonClient } from "@slip/http";
 import { z } from "zod";
 import { CHANNEL3_BASE_URL, channel3Offer, ProductSchema } from "./channel3.js";
@@ -71,9 +71,6 @@ export function createChannel3Search(options: {
   };
 }
 
-/** The product's own words, which is where any text an agent reads actually lives (D67). */
-const PRODUCT_TEXT_LIMIT = 2_000;
-
 /**
  * One product from a search, as a caller needs it: the ids and prices a checkout will use, plus
  * the text the agent will be shown.
@@ -131,8 +128,16 @@ const TextSchema = z
   .loose()
   .optional();
 
-/** The description and the key features, joined, trimmed and capped. Null when there is none. */
-function productText(raw: unknown): string | null {
+/**
+ * The product's own words — its description and key features, joined — which is where any text an
+ * agent reads actually lives: a Channel3 *offer* carries none (D67), and in the study sample not
+ * one of 321 offers did, while all 240 products had prose.
+ *
+ * Bounded by `storedText`, which marks what it cut. The old bound here was a bare `slice`, so a
+ * listing long enough to reach it was cut with nothing to say so — and once the shown bound
+ * arrived (D85) there were two numbers cutting one value, only one of them visible.
+ */
+export function productText(raw: unknown): string | null {
   const parsed = TextSchema.safeParse(raw);
   if (!parsed.success || parsed.data === undefined) {
     return null;
@@ -142,9 +147,5 @@ function productText(raw: unknown): string | null {
     ? parsed.data.key_features.filter((line): line is string => typeof line === "string")
     : [];
   const parts = [description, ...features].map((part) => part.trim()).filter((part) => part !== "");
-  if (parts.length === 0) {
-    return null;
-  }
-  // Capped rather than dropped: a very long description is still the text the agent was shown.
-  return parts.join("\n").slice(0, PRODUCT_TEXT_LIMIT);
+  return storedText(parts.join("\n"));
 }

@@ -233,3 +233,9 @@ export {
   type Transitions,
   terminalStatuses,
 } from "./state-machine.js";
+export {
+  SHOWN_TEXT_LIMIT,
+  STORED_TEXT_LIMIT,
+  shownText,
+  storedText,
+} from "./text.js";

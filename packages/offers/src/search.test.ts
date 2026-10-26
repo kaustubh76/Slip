@@ -1,4 +1,4 @@
-import { OfferSchema } from "@slip/domain";
+import { OfferSchema, STORED_TEXT_LIMIT } from "@slip/domain";
 import type { Fetch } from "@slip/http";
 import { describe, expect, it } from "vitest";
 import { channel3SearchHits, createChannel3Search } from "./search.js";
@@ -116,11 +116,21 @@ describe("reading what came back", () => {
     expect(hit?.text).toBeNull();
   });
 
-  it("caps a very long description rather than dropping it", () => {
+  it("caps a very long description rather than dropping it, and says that it cut", () => {
     const [hit] = channel3SearchHits({
       products: [product({ description: "x".repeat(5_000), key_features: [] })],
     });
-    expect(hit?.text).toHaveLength(2_000);
+    // A silent cut leaves a row that reads as the whole listing and is not; the mark is the point.
+    expect(hit?.text).toHaveLength(STORED_TEXT_LIMIT + 1);
+    expect(hit?.text?.endsWith("…")).toBe(true);
+  });
+
+  it("keeps the store's own line breaks, which only the shown form flattens", () => {
+    const [hit] = channel3SearchHits({
+      products: [product({ description: "A skillet.", key_features: ["Pre-seasoned", "15 inch"] })],
+    });
+    // The row is a record of what the store wrote. `shownText` is where it becomes one line (D85).
+    expect(hit?.text).toBe("A skillet.\nPre-seasoned\n15 inch");
   });
 
   it("drops a product it cannot read instead of guessing", () => {

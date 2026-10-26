@@ -5,45 +5,16 @@ import {
   type SearchAnswer,
   SHOWN_TEXT_LIMIT,
   searchText,
-  shownText,
   toolSearch,
 } from "./search.js";
 
 /**
- * What an agent is handed when it searches. Slip stands between an agent and listing text, so how
- * much of it reaches the agent — and whether the steering check is asked about the same words —
- * is Slip's to answer, not the store's (D85).
+ * What an agent is handed when it searches, and whether the steering check is asked about the same
+ * words (D85). The bound itself is `@slip/domain`'s and tested there; this is about the one place
+ * it has to be applied for the two to agree.
  */
 
 const long = (n: number) => "word ".repeat(Math.ceil(n / 5)).slice(0, n);
-
-describe("shownText", () => {
-  it("leaves a short line alone", () => {
-    expect(shownText("A 15-inch cast iron skillet.")).toBe("A 15-inch cast iron skillet.");
-  });
-
-  it("puts a description on one line, however the store laid it out", () => {
-    // A real Channel3 description arrives with its own newlines and bullet list. The text form
-    // quotes it as `about: "…"`, so left alone those bullets look exactly like the tool's own
-    // `- store: …` lines and nothing tells them apart.
-    expect(shownText("These shoes are great.\n\nVibram outsole\nToe bumper\t\tLow 4mm drop")).toBe(
-      "These shoes are great. Vibram outsole Toe bumper Low 4mm drop",
-    );
-  });
-
-  it("cuts at the limit and says it cut", () => {
-    const cut = shownText(long(2_000));
-    expect(cut).not.toBeNull();
-    expect((cut ?? "").length).toBeLessThanOrEqual(SHOWN_TEXT_LIMIT + 1);
-    expect(cut?.endsWith("…")).toBe(true);
-  });
-
-  it("is nothing at all for nothing at all", () => {
-    expect(shownText(null)).toBeNull();
-    expect(shownText(undefined)).toBeNull();
-    expect(shownText("   \n\t ")).toBeNull();
-  });
-});
 
 describe("what reaches the agent", () => {
   const hits = [
