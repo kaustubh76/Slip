@@ -1,7 +1,6 @@
 import {
   type AgentAuth,
   type CheckoutRequest,
-  type ClassifierAnswer,
   ConflictError,
   LeaseLostError,
   MandateNotActiveError,
@@ -14,7 +13,7 @@ import type { ReceiptView } from "@slip/receipt";
 import type { AppDeps } from "../deps.js";
 import { orderDescription, sendOrder } from "../payments.js";
 import { viewOf } from "../views.js";
-import { checkOffers, currentSnapshot, recordInputFor } from "./decision.js";
+import { checkOffers, currentSnapshot, type Judged, recordInputFor } from "./decision.js";
 import {
   authenticate,
   dedupe,
@@ -114,7 +113,7 @@ async function checkoutUnderLease(
 
   let policy = auth.policy;
   const { snapshot } = await currentSnapshot(deps, request, policy, started);
-  let reuse: ClassifierAnswer | undefined;
+  let reuse: Judged | undefined;
   for (let round = 1; round <= 2; round += 1) {
     const now = deps.clock.now();
     const checked = await checkOffers(deps, {
@@ -124,7 +123,7 @@ async function checkoutUnderLease(
       now,
       ...(reuse === undefined ? {} : { reuse }),
     });
-    reuse = checked.classifier === "NOT_RUN" ? undefined : checked.classifier;
+    reuse = checked.judged.answer === "NOT_RUN" ? undefined : checked.judged;
     const input = recordInputFor(deps, {
       auth,
       request,

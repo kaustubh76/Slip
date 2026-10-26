@@ -4,6 +4,7 @@ export { type CheckoutResult, runCheckout } from "./checkout/checkout.js";
 export {
   checkOffers,
   currentSnapshot,
+  type Judged,
   recordInputFor,
   type SnapshotOutcome,
   type SnapshotSource,

@@ -243,7 +243,7 @@ describe("checkOffers", () => {
         now: NOW,
       });
       expect(h.classifier.calls).toHaveLength(0);
-      expect(result.classifier).toEqual({ instruction_like: false });
+      expect(result.judged.answer).toEqual({ instruction_like: false });
     });
 
     it("goes to the classifier beside the listing when the merchant has text too", async () => {
@@ -275,10 +275,10 @@ describe("checkOffers", () => {
         policy: DEFAULT_POLICY,
         snapshot,
         now: NOW,
-        reuse: { instruction_like: false },
+        reuse: { answer: { instruction_like: false }, searchContext: null },
       });
       expect(h.classifier.calls).toHaveLength(0);
-      expect(result.classifier).toEqual({ instruction_like: false });
+      expect(result.judged.answer).toEqual({ instruction_like: false });
     });
 
     it("is one agent's own: another agent's search is not evidence about this one", async () => {
@@ -299,7 +299,7 @@ describe("checkOffers", () => {
         now: NOW,
       });
       expect(h.classifier.calls).toHaveLength(0);
-      expect(result.classifier).toEqual({ instruction_like: false });
+      expect(result.judged.answer).toEqual({ instruction_like: false });
     });
   });
 
@@ -314,7 +314,7 @@ describe("checkOffers", () => {
       now: NOW,
     });
     expect(h.classifier.calls).toHaveLength(0);
-    expect(result.classifier).toEqual({ instruction_like: false });
+    expect(result.judged.answer).toEqual({ instruction_like: false });
   });
 
   it("a classifier that hangs past its deadline is NO_ANSWER, which holds", async () => {
@@ -331,7 +331,7 @@ describe("checkOffers", () => {
         now: NOW,
       }),
     );
-    expect(result.classifier).toBe("NO_ANSWER");
+    expect(result.judged.answer).toBe("NO_ANSWER");
     expect(result.decision.ruleCode).toBe("R4A_NO_CLASSIFIER_ANSWER");
     expect(h.logs.some((l) => l.event === "classifier.timeout")).toBe(true);
   });
@@ -345,7 +345,7 @@ describe("checkOffers", () => {
       policy: DEFAULT_POLICY,
       snapshot,
       now: NOW,
-      reuse: { instruction_like: true },
+      reuse: { answer: { instruction_like: true }, searchContext: "what it had been shown" },
     });
     expect(h.classifier.calls).toHaveLength(0);
     expect(result.decision.ruleCode).toBe("R3_STEERED");

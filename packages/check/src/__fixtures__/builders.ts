@@ -29,6 +29,8 @@ export interface RunSpec {
   now?: Date;
   /** Defaults to a clean listing, which is what the classifier says on the normal path. */
   classifier?: ClassifierAnswer;
+  /** What the orchestrator showed the classifier beside the listing, kept on the result (D87). */
+  searchContext?: string | null;
 }
 
 /** `prepareCheck` then `decide`, the way the orchestrator will call them. */
@@ -46,5 +48,10 @@ export function runCheck(spec: RunSpec): Decision {
   if (prepared.kind !== "ready") {
     return prepared.decision;
   }
-  return decide(prepared, policy, spec.classifier ?? { instruction_like: false });
+  return decide(
+    prepared,
+    policy,
+    spec.classifier ?? { instruction_like: false },
+    spec.searchContext ?? null,
+  );
 }

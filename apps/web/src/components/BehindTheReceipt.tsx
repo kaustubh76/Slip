@@ -98,7 +98,19 @@ export function BehindTheReceipt({ detail }: { detail: ReceiptDetail }) {
           <blockquote className="slip-prose slip-quote">“{view.listingText}”</blockquote>
           <p className="slip-caption">
             Written by the store, about the offer your agent chose. Slip&rsquo;s steering check read
-            this one — it is the text a rejection for steering is about.
+            this one. Most catalogues give a merchant no words of its own, so a real purchase is
+            usually judged on the search text below instead.
+          </p>
+        </>
+      )}
+      {view.searchText === null ? null : (
+        <>
+          <h4 className="slip-meta">What Slip&rsquo;s search showed your agent</h4>
+          <blockquote className="slip-prose slip-quote">“{view.searchText}”</blockquote>
+          <p className="slip-caption">
+            The product&rsquo;s own words, written by whoever listed it and passed on by Slip
+            &mdash; cut to the length an agent is handed. Slip&rsquo;s steering check read this one
+            too, and on a real catalogue it is the text a rejection for steering is about.
           </p>
         </>
       )}

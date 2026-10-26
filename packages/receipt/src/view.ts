@@ -115,12 +115,16 @@ export function renderReceipt(receipt: Receipt, options: RenderOptions = {}): Re
     footer: foot,
     simulated: source === "simulated",
     agentReason: attempt.reason,
-    // Shown exactly when a rule read it: the classifier runs only above a 1 % gap, so `NOT_RUN`
-    // means nothing judged this listing and there is nothing to evidence.
+    // Both shown exactly when a rule read them: the classifier runs only above a 1 % gap, so
+    // `NOT_RUN` means nothing judged this purchase and there is nothing to evidence. The two
+    // halves of what it was shown — the merchant's own listing, and what Slip's search showed the
+    // agent — and on real data only the second is ever there (D86, D87).
     listingText:
       decision.checkResult.classifier === "NOT_RUN"
         ? null
         : (decision.checkResult.chosen?.listingText ?? null),
+    searchText:
+      decision.checkResult.classifier === "NOT_RUN" ? null : decision.checkResult.searchContext,
     chosen,
     best,
     gap,

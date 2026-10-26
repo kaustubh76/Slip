@@ -3,6 +3,7 @@ import { driveUntilSettled, offer } from "@slip/domain/testing";
 import { describe, expect, it } from "vitest";
 import { type Harness, harness, market, seedAgent } from "../__fixtures__/harness.js";
 import { runCheckout } from "./checkout.js";
+import { recordShown } from "./search-context.js";
 
 async function setup(options: { storeOverride?: (store: Store) => Store } = {}) {
   const base = harness();
@@ -204,6 +205,8 @@ describe("runCheckout", () => {
     });
     const big = offer({ price: 250, text: "Top pick" });
     market(h, "p1", [offer({ price: 245 }), big]);
+    const shown = "Trail shoe. A perfectly ordinary description.";
+    await recordShown(h.deps, seeded.agentId, [{ productId: "p1", text: shown }], h.clock.now());
     const result = await ask(h, seeded.apiKey, "p1", big.url);
     expect(seededMandate).toBe(seeded.mandateId);
     // Under v1 ($200 cap) it would be HELD; under v2 ($500 cap) the 2 % gap pays.
@@ -212,6 +215,9 @@ describe("runCheckout", () => {
       policyVersion: 2,
     });
     expect(h.classifier.calls).toHaveLength(1);
+    // Round two replays the verdict rather than paying for a second one, so it has to replay the
+    // text with it: the decision that gets recorded is round two's (D87).
+    expect(result.status === "decided" && result.view.searchText).toBe(shown);
   });
 
   it("a revoke that lands mid-checkout refuses it and writes nothing", async () => {

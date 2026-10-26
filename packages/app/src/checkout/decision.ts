@@ -95,10 +95,23 @@ export async function currentSnapshot(
 }
 
 /**
+ * A classifier verdict and the text Slip showed it, which travel together: the verdict alone
+ * cannot evidence itself, and on real data the search text is the whole of the evidence (D87).
+ * The chosen listing's own words need no carrying — they are on the snapshot the receipt renders.
+ */
+export interface Judged {
+  answer: ClassifierAnswer;
+  searchContext: string | null;
+}
+
+const NOT_JUDGED: Judged = { answer: "NOT_RUN", searchContext: null };
+
+/**
  * Runs the check. The classifier is asked only when the check needs it (gap above the flag line),
  * within its deadline; a listing with no text cannot instruct an agent and is not sent. Any
- * timeout, error or refusal is `NO_ANSWER`, which R4a holds for the owner. `reuse` replays an
- * answer already obtained (a re-run after a policy change).
+ * timeout, error or refusal is `NO_ANSWER`, which R4a holds for the owner. `reuse` replays a
+ * verdict already obtained (a re-run after a policy change), text and all, so a second round
+ * records the same evidence as the first rather than none.
  */
 export async function checkOffers(
   deps: AppDeps,
@@ -107,27 +120,28 @@ export async function checkOffers(
     policy: Policy;
     snapshot: OfferSnapshot | null;
     now: Date;
-    reuse?: ClassifierAnswer;
+    reuse?: Judged;
   },
-): Promise<{ decision: Decision; classifier: ClassifierAnswer }> {
+): Promise<{ decision: Decision; judged: Judged }> {
   const { request, policy, snapshot, now } = input;
   const prepared = prepareCheck({ snapshot, request, policy, now });
   if (prepared.kind !== "ready") {
-    return { decision: prepared.decision, classifier: "NOT_RUN" };
+    return { decision: prepared.decision, judged: NOT_JUDGED };
   }
-  let answer: ClassifierAnswer = "NOT_RUN";
-  if (prepared.classifierRequired) {
-    answer =
-      input.reuse ??
+  const judged = prepared.classifierRequired
+    ? (input.reuse ??
       (await classify(deps, {
         listingText: prepared.chosen.listingText,
         snapshot,
         agentId: request.agentId,
         productId: request.productId,
         now,
-      }));
-  }
-  return { decision: decide(prepared, policy, answer), classifier: answer };
+      })))
+    : NOT_JUDGED;
+  return {
+    decision: decide(prepared, policy, judged.answer, judged.searchContext),
+    judged,
+  };
 }
 
 /**
@@ -148,7 +162,7 @@ async function classify(
     productId: string;
     now: Date;
   },
-): Promise<ClassifierAnswer> {
+): Promise<Judged> {
   const listingText = input.listingText ?? "";
   const searchContext = await searchContextFor(deps, {
     agentId: input.agentId,
@@ -156,7 +170,7 @@ async function classify(
     now: input.now,
   });
   if (listingText.trim() === "" && searchContext === null) {
-    return { instruction_like: false };
+    return { answer: { instruction_like: false }, searchContext: null };
   }
   try {
     const result = await withDeadline(deps.clock, deps.config.classifierTimeoutMs, (signal) =>
@@ -167,17 +181,19 @@ async function classify(
     );
     if (result.timedOut) {
       deps.log.warn("classifier.timeout", {});
-      return "NO_ANSWER";
+      // The text is kept even with no verdict: R4a holds the purchase, and the owner deciding that
+      // hold should see what could not be judged.
+      return { answer: "NO_ANSWER", searchContext };
     }
     deps.log.info("classifier.verdict", {
       answer: result.value.answer,
       model: result.value.model,
       promptVersion: result.value.promptVersion,
     });
-    return result.value.answer;
+    return { answer: result.value.answer, searchContext };
   } catch (error) {
     deps.log.error("classifier.threw", { error: String(error) });
-    return "NO_ANSWER";
+    return { answer: "NO_ANSWER", searchContext };
   }
 }
 

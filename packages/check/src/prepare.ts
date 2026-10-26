@@ -81,6 +81,8 @@ function stop(code: RuleCode, policy: Policy, detail: StopDetail): Stopped {
         gapPctHundredths: null,
         conflict: false,
         classifier: "NOT_RUN",
+        // The check stopped before it compared prices, so nothing was ever shown to a classifier.
+        searchContext: null,
         ruleCodes: [code],
         ruleCode: code,
       },

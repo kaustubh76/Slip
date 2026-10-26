@@ -91,12 +91,21 @@ export const ReceiptViewSchema = z.object({
   agentReason: z.string(),
   /**
    * The chosen listing's own text, when Slip actually ran the steering check over it. The other
-   * untrusted text on a receipt, and the opposite case: a rule **did** read this one, so a
-   * rejection for steering is not evidenced unless the owner can see what was read (D84). Null
-   * when the classifier did not run — below a 1 % gap it is not asked — or when the listing
-   * carried no text.
+   * untrusted text on a receipt, and the opposite case to the agent's words: a rule **did** read
+   * this one, so a rejection for steering is not evidenced unless the owner can see what was read
+   * (D84). Null when the classifier did not run — below a 1 % gap it is not asked — or when the
+   * listing carried no text, **which on a real catalogue is always** (D86).
    */
   listingText: z.string().nullable(),
+  /**
+   * What Slip's own search showed this agent about the product, when the steering check read it.
+   *
+   * The same evidence from the other side, and the half that exists on real data: a Channel3 offer
+   * carries no words of its own, so this is usually all a steering rejection can be about (D87).
+   * Null under the same rule as `listingText` — and when Slip had shown this agent nothing, which
+   * is every demo desk, whose catalogue gives a product no text.
+   */
+  searchText: z.string().nullable(),
   chosen: OfferSummarySchema.nullable(),
   best: OfferSummarySchema.nullable(),
   gap: z.object({ cents: z.number().int(), amount: z.string(), percent: z.string() }).nullable(),

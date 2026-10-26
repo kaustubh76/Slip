@@ -1563,3 +1563,50 @@ desk and never on a real purchase. The text the classifier actually read is the 
 receipt cannot fetch it later either. Showing it means a `CHECK_RESULT_VERSION` bump to store the
 judged text on the decision, which is its own change and is not this one. Until then the honest
 reading of that block is "the chosen listing's own words, when it had any".
+
+## D87 · 2026-10-26 · A steering rejection that can show its evidence
+
+D84 gave the receipt a **"What the listing said"** block, because the owner was being told the
+listing read like instructions and never shown the listing. D86 then measured where that text lives,
+and the block turned out to be reading the half that real data never has: it comes from
+`checkResult.chosen.listingText`, and a Channel3 offer carries no `title` and no `description`, so
+it is null for all 321 offers in the study sample.
+
+What the classifier actually reads on a real purchase is the other element of its prompt —
+`search-<nonce>`, what Slip's own search showed this agent (D69). Nothing stored it. `CheckResult`
+had no field for it and the impression row is pruned after two hours, so the receipt could not fetch
+it later either: **a real `R3_STEERED` arrived saying the listing read like instructions, with
+nothing underneath.** The fix D84 made went to the surface the demo uses, which is the same mistake
+D86 found in SlipBench, in a second place.
+
+`CheckResult` now carries `searchContext`, `decide` records it, and the receipt shows it under
+**"What Slip's search showed your agent"**. Four things decided the shape:
+
+- **It follows the answer exactly.** `decide` already discards a verdict nobody asked for — below
+  the 1 % flag line the classifier is not consulted and the answer is recorded as `NOT_RUN`. The
+  text is dropped on the same condition, because keeping it would put evidence on a receipt for a
+  judgement that was never made, and quote words no rule had read. `NO_ANSWER` is *not* that case:
+  a timeout holds the purchase under R4a, and the owner deciding that hold is shown the text that
+  could not be judged rather than nothing.
+- **It had to survive the retry.** `runCheckout` runs the check twice when the owner's limits change
+  mid-checkout, and replays the first verdict rather than paying for a second one; the decision
+  recorded is round two's. So the verdict and the text now travel together as one value, and a test
+  fails if round two keeps only the answer.
+- **No migration.** `check_result_version` has been a per-row column since the first migration, so
+  bumping it to **2** cost nothing: `parseStoredCheckResult` gained a `case 2`, and `case 1` reads
+  the old shape and fills the field with null. 0008 is still free. The in-memory store had
+  `parseStoredCheckResult(1, …)` hardcoded at two sites, which would have nulled the field on every
+  read it served.
+- **The demo desk is deliberately unchanged.** Its errands check out without searching, so no
+  impression exists and a demo product's description would never reach the classifier; reshaping the
+  errands would be a larger change for no correctness gain, and the demo already evidences itself
+  through the offer-level path. So the new block shows on real purchases and the old one on demo
+  ones, which is exactly where each kind of text exists.
+
+**Checked against live Channel3.** One real search, the dearest of six comparable offers on a Shure
+AONIC 50: the agent was shown **401 characters on one line**, the offer's own listing text was null,
+and the receipt came back carrying that same 401 characters — `same value the agent read: true`. The
+decision was HELD on the order cap rather than rejected for steering, which is the right reason:
+whether the text is shown turns on whether a rule read it, not on what it decided, and a 2.9 % gap
+is above the flag line. Before the change the same run printed "the receipt cannot show what was
+judged".

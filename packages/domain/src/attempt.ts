@@ -106,6 +106,17 @@ export const CheckResultSchema = z.object({
   gapPctHundredths: z.number().int().min(0).nullable(),
   conflict: z.boolean(),
   classifier: ClassifierAnswerSchema,
+  /**
+   * What Slip's own search showed this agent about the product, when the steering check was asked
+   * about it — the other half of what the classifier reads, beside `chosen.listingText` (D69).
+   *
+   * Stored because it is the only half that exists on real data: a Channel3 offer carries no text
+   * of its own, so on a real purchase this is the whole of the evidence for a steering rejection
+   * (D86). It cannot be fetched back later — the impression it came from is pruned after two hours
+   * — so a receipt that could not show it could never show it. Null when the classifier was not
+   * consulted, and when Slip had shown this agent nothing.
+   */
+  searchContext: z.string().nullable(),
   ruleCodes: z.array(RuleCodeSchema).min(1),
   ruleCode: RuleCodeSchema,
 });
@@ -122,11 +133,16 @@ export type Decision = z.infer<typeof DecisionSchema>;
  * Version of the stored `CheckResult` shape. Bump it when the shape changes and add a branch to
  * `parseStoredCheckResult`, so receipts written by older code still read back exactly.
  */
-export const CHECK_RESULT_VERSION = 1;
+export const CHECK_RESULT_VERSION = 2;
+
+/** Version 1 knew nothing of `searchContext`; a row written then has none to read. */
+const CheckResultV1Schema = CheckResultSchema.omit({ searchContext: true });
 
 export function parseStoredCheckResult(version: number, json: unknown): CheckResult {
   switch (version) {
     case 1:
+      return { ...CheckResultV1Schema.parse(json), searchContext: null };
+    case 2:
       return CheckResultSchema.parse(json);
     default:
       throw new InvariantError(`unknown check_result version ${version}`);

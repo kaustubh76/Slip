@@ -139,6 +139,8 @@ export interface DecisionSpec {
   policyVersion?: number;
   snapshotId?: SnapshotId | null;
   classifier?: ClassifierAnswer;
+  /** What Slip's search had shown the agent, when the classifier was asked about it. */
+  searchContext?: string | null;
   conflict?: boolean;
 }
 
@@ -170,6 +172,7 @@ export function testDecision(spec: DecisionSpec): Decision {
           : null,
       conflict: spec.conflict ?? false,
       classifier: spec.classifier ?? "NOT_RUN",
+      searchContext: spec.searchContext ?? null,
       ruleCodes: [spec.ruleCode, ...(spec.alsoTripped ?? [])],
       ruleCode: spec.ruleCode,
     },

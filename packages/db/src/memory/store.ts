@@ -4,6 +4,7 @@ import {
   type Attempt,
   assertDirectRecord,
   assertRecordInvariants,
+  CHECK_RESULT_VERSION,
   ConflictError,
   classifyMove,
   type Hold,
@@ -135,7 +136,7 @@ export function createMemoryStore(): Store {
     decision: {
       outcome: record.outcome,
       ruleCode: record.ruleCode,
-      checkResult: parseStoredCheckResult(1, copy(record.checkResultJson)),
+      checkResult: parseStoredCheckResult(CHECK_RESULT_VERSION, copy(record.checkResultJson)),
     },
   });
 
@@ -1135,7 +1136,7 @@ export function createMemoryStore(): Store {
         );
         const results = mine.map((r) => ({
           outcome: r.outcome,
-          result: parseStoredCheckResult(1, r.checkResultJson),
+          result: parseStoredCheckResult(CHECK_RESULT_VERSION, r.checkResultJson),
         }));
         const overpaid = results.filter((r) => (r.result.gapAbsCents ?? 0) > 0);
         const pcts = overpaid.map((r) => r.result.gapPctHundredths ?? 0);
