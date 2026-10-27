@@ -1725,3 +1725,45 @@ one. It is in `TODAY` now — fourth of five, so the pending hold stays the newe
 approval beat still opens the roll — and twice in the backdated history. `docs/DEMO.md` gained the
 steering beat the shot list never had, as an optional last fifteen seconds rather than a re-timing
 of a video that is the entrant's to cut.
+
+## D90 · 2026-10-27 · Building the container nobody had ever built
+
+`render.yaml` points Render at `./Dockerfile` and says "connect this repo, then New → Blueprint.
+Nothing else is needed." The image it builds *is* the hosted demo — what a judge loads, in the shape
+they meet it. It had never been built: one commit, no decision here, no record of `docker build`
+anywhere. The same shape as D79's fresh-clone test, which found the one defect nothing else could.
+
+**The prediction that justified doing it now was wrong, and that is the first finding.** I expected
+`RUN … pnpm web:build` to abort the image build, because Next's security nudge had made the first
+`pnpm web:build` of every session in this repo exit non-zero, and a `RUN` layer has no second
+attempt. It does not abort. The build ran end to end with **zero** occurrences of
+`SecurityFatalError` — `next build` printed its whole route table — and Next's own code says why:
+`nudgeUpgrade` returns early unless `getAgentName()` detects a coding agent or
+`canPromptForUpgrade()` finds a TTY, and a `docker build` has neither. **The nudge is a property of a
+coding agent's session, not of this repo**, so Render's build would never see it and no workaround is
+needed. Three reports in that session described it as something the repo does; they were wrong, and
+the claim never reached the docs.
+
+**What the build measures.** 7.4 MB of context (`.dockerignore` earning its place — no
+`node_modules`, no `.next`, no `dist`), `pnpm install --frozen-lockfile && pnpm web:build` in 50.1 s
+with the app compiling in 4.4 s, the run stage's `COPY --from=build` in 39.9 s, layers exported in
+30.9 s, 156 s wall in total.
+
+**And what it costs, which is the new deployment constraint.** It then failed at the final layer
+commit: `commit failed: input/output error`. Not the Dockerfile — the host disk. The machine had
+**17 GB free when the build started and 205 MB when it stopped**, because the base image, the
+installed workspace, the exported layers and their extraction all land in Docker's storage. The
+fill also damaged BuildKit's metadata store, so `docker system df` and `docker builder prune` now
+fail with the same error on this machine. The Dockerfile and the README say to check free space
+first; "well over ten gigabytes" is the honest form of a number measured once.
+
+**So the image has still never been run.** Repairing the store needs either a daemon restart, which
+would stop containers belonging to other work on this machine, or Docker Desktop's purge, which
+destroys its images — both the owner's to decide, so the plan stopped there rather than improvising.
+
+**The one risk the container was going to settle, settled another way.** Everything here is
+developed on Node 26 while the image runs `node:22-slim`, and `engines` only declares `>=22.12`, so
+that difference had never been exercised. It has now, on the host: under **Node 22.16.0**, `tsc -b`,
+**1,869 unit tests**, `pnpm web:build` and **36 browser tests** against a production `next start` all
+pass. That is the production server path the container runs, on the Node major the container runs, so
+what remains unverified is narrower than it was: the image's own layers, and Render's blueprint.

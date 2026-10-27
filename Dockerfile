@@ -9,6 +9,18 @@
 #   docker build -t slip .
 #   docker run -p 3000:3000 -e SLIP_BASE_URL=https://your.host slip
 #
+# **Give it room.** The build runs end to end — 7.4 MB of context in, `pnpm install` and
+# `pnpm web:build` in 50 s, the run stage's copy in 40 s — but between the base image, an installed
+# workspace, the exported layers and their extraction it wants well over ten gigabytes of Docker
+# storage. The first attempt on a developer machine exhausted 17 GB of free disk and failed at the
+# final layer commit with an I/O error, which also damaged BuildKit's own metadata store. Check free
+# space before building, not after (D90).
+#
+# `next build` is clean in here: Next's agent-upgrade nudge needs either a TTY or a detected coding
+# agent, and a `docker build` has neither, so the build is never interrupted by it. It interrupts a
+# coding agent's own `pnpm web:build` on the host, which is a property of that session and not of
+# this image or of a host that builds it.
+#
 # To run the real thing instead, leave `SLIP_DEMO` unset and pass the keys from `.env.example`.
 # A real deployment also needs its schema: `pnpm db:migrate` against `DATABASE_URL` before the
 # first boot, because the server does not migrate Postgres itself — it would race its replicas.

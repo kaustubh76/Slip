@@ -182,6 +182,11 @@ That is the whole of it: demo mode needs no database and no keys. Point any host
 container at the [Dockerfile](Dockerfile) — the image serves `/sign-in` and answers its own
 healthcheck once it is listening.
 
+**Building it yourself needs disk.** The build is quick — about 50 seconds to install the workspace
+and compile the app — but it wants well over ten gigabytes of Docker storage for the base image, the
+installed workspace and the exported layers. The first local attempt had 17 GB free and ran out at
+the final layer commit (D90).
+
 **On Render**, [render.yaml](render.yaml) declares the service: connect this repo, then **New →
 Blueprint**. Slip works out its own address from `RENDER_EXTERNAL_URL`, so there is nothing to
 set.
