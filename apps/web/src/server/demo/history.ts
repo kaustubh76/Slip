@@ -55,7 +55,9 @@ const HISTORY: readonly Step[] = [
   { agent: "shopper-1", errand: "injected", daysAgo: 2, hourUtc: 16 },
   { agent: "shopper-1", errand: "offers-down", daysAgo: 2, hourUtc: 17, decide: "decline" },
   { agent: "deal-hunter", errand: "injected", daysAgo: 2, hourUtc: 18 },
-  { agent: "restock-bot", errand: "top-pick", daysAgo: 2, hourUtc: 19 },
+  // The same attack from the other place it can hide: the product's own description (D88).
+  { agent: "deal-hunter", errand: "buried", daysAgo: 2, hourUtc: 19 },
+  { agent: "restock-bot", errand: "top-pick", daysAgo: 2, hourUtc: 20 },
 
   { agent: "deal-hunter", errand: "cheaper", daysAgo: 1, hourUtc: 8 },
   { agent: "deal-hunter", errand: "offers-down", daysAgo: 1, hourUtc: 9, decide: "approve" },
@@ -71,6 +73,7 @@ const HISTORY: readonly Step[] = [
     forced: { order: "pending" },
   },
   { agent: "restock-bot", errand: "injected", daysAgo: 1, hourUtc: 14 },
+  { agent: "restock-bot", errand: "buried", daysAgo: 1, hourUtc: 21 },
   { agent: "shopper-1", errand: "lamp", daysAgo: 1, hourUtc: 15 },
   { agent: "shopper-1", errand: "above-cap", daysAgo: 1, hourUtc: 16, decide: "decline" },
   { agent: "shopper-1", errand: "top-pick", daysAgo: 1, hourUtc: 17 },

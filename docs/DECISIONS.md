@@ -1661,3 +1661,67 @@ Its prices are chosen, not incidental: **$21.50 against $17.99 is above the 1 % 
 the $8 reject line**, so the price rules alone would pay it and the steering check is the only thing
 that stops it. Taking the search back out makes the errand come back **PAID by R7_WITHIN_LIMITS** —
 the attack landing in full — which is what the demo could never have shown before.
+
+## D89 · 2026-10-27 · Reading PayPal's own docs before claiming a gap in them
+
+`SPEC.md` §2 carried the sentence the submission leads with — *"PayPal's public agentic-commerce
+docs describe the merchant side… We found no buyer-side price check there. Slip is that missing
+piece"* — tagged **[UNVERIFIED: based on overview pages only; read the Agent Ready docs fully before
+saying this.]** It had been tagged that way since 11 Oct, it was item 3 on §19's list of things still
+to verify, and it is the most consequential claim in the entry. It has now been read.
+
+**The claim holds, and the evidence is sharper than the claim was.** Four pages in full: the
+agentic-commerce services overview, the `docsai` agentic-commerce overview, the AI-tools
+getting-started page and the Agent Toolkit quickstart. Everything described is merchant-side —
+product discovery, cart and checkout, payment acceptance, order routing, brand control, catalog
+setup. Nothing compares a price, applies a spending limit, or requires the buyer's approval before
+an agent pays.
+
+The sharper part is in PayPal's own Agent Toolkit. Its OpenAI Agents SDK example instructs the
+model: *"To create orders, invoke create_order. **After approval by user**, invoke capture_order."*
+— under the guidance to *"use well-defined system prompts to control the behavior of the agent"*.
+Its CrewAI, LangChain and Vercel examples have no approval step at all. So **the only buyer-side
+control anywhere in PayPal's published agent material is a sentence in a system prompt, and nothing
+enforces it.** That is D4 — rules are code, no model decides an outcome — arriving from the outside,
+in the other party's documentation, which is a better argument than asserting it ourselves.
+
+**What the claim must not become.** It is about what the public documentation describes, on a stated
+date. Two limits travel with it in §2: the agentic-commerce services are gated behind a merchant
+request form, so what access reveals is unknown; and *"supervised and automatic shopping
+scenarios"* appears on two PayPal pages and is defined on neither, so a buyer-side step inside
+"supervised" cannot be ruled out. Saying PayPal *lacks* or *forgot* a price check is now
+**[PROHIBITED]** in §2 — the Agent Toolkit is a payments toolkit and was never meant to be a
+buyer-protection product. The finding is about where the gap is, not about anyone's omission.
+
+**§19.4, answered: no.** `github.com/paypal/agent-toolkit` is the official repository, wiring agent
+frameworks to Orders, Invoices, Products, Subscription plans, Shipment and Disputes. Its examples
+are seller-side — a fictional coffee store doing support, recommendations and payments — and none
+browses or compares offers. There is nothing published to run through SlipBench, which is part of
+why §6.2's second provider never materialised: not skipped, not available.
+
+**The landscape, since the search surfaced it.** Looking for buyer-side controls in PayPal's docs
+turned up several other entries in this hackathon building the same thing — spending mandates and
+guardrails between a shopping agent and PayPal — one of them with a policy engine returning
+*Cleared / Hold (needs the owner's OK) / Refused* and listing every rule that fired, which is
+Slip's own outcome set almost exactly:
+
+- https://github.com/SAMMETAMEGHASHYAM/mandateguard
+- https://github.com/rochak779/the-payer
+- https://github.com/FredBourouliou/mandat
+- https://github.com/MuhammadNabiyev/mandate
+
+Read the right way round, that supports the pitch: a problem four strangers reach for
+independently is a real one, and PayPal's docs not addressing it is the gap. It also says plainly
+what does **not** distinguish this entry — the architecture. A policy engine over PayPal Orders is
+the obvious answer. §10 now says what to lead with instead: the market study anyone can recompute
+from committed snapshots, the benchmark whose every run is committed, a receipt that quotes the
+text its own decision was about, and a steering check with a field measurement behind the question
+of whether it is needed. Those are snapshots of other people's work in progress, so they are
+recorded here as evidence and named nowhere in the spec or the pitch.
+
+**And `buried` moved to the front door.** D88 added the errand but left it where only the console
+could reach it, so a visitor landing on a seeded desk never met the one attack shaped like a real
+one. It is in `TODAY` now — fourth of five, so the pending hold stays the newest receipt and the
+approval beat still opens the roll — and twice in the backdated history. `docs/DEMO.md` gained the
+steering beat the shot list never had, as an optional last fifteen seconds rather than a re-timing
+of a video that is the entrant's to cut.

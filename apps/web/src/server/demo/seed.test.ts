@@ -23,13 +23,16 @@ const shapeOf = (r: Awaited<ReturnType<typeof rowsOf>>[number]) => ({
 });
 
 /** What shopper-1 did this morning. The roll opens on these, and the shot list is written to them. */
-const TODAYS_FOUR = [
+const TODAYS_OPENING = [
   // Cheapest: paid in one step.
   { outcome: "PAID", rule: "R7_WITHIN_LIMITS", payment: "CAPTURED", hold: null },
   // $11 over, and the pricier store pays more commission: refused, no PayPal order.
   { outcome: "REJECTED", rule: "R4_OVERPAID", payment: "NONE", hold: null },
   // Above the owner's cap: money reserved, waiting for them.
   { outcome: "HELD", rule: "R6_ABOVE_ORDER_CAP", payment: "AUTHORIZED", hold: "PENDING" },
+  // An instruction in the product's own description, which is where a real listing keeps one:
+  // refused for steering, no PayPal order. Its price gap alone would have paid it (D88).
+  { outcome: "REJECTED", rule: "R3_STEERED", payment: "NONE", hold: null },
   // Channel3 down: held with nothing reserved, the case approval pays in one step.
   { outcome: "HELD", rule: "R1_STALE_SNAPSHOT", payment: "NONE", hold: "PENDING" },
 ];
@@ -68,10 +71,10 @@ describe("seedDemoOwner", () => {
     expect(JSON.stringify(agents)).not.toContain(owner.apiKey);
   });
 
-  it("opens on this morning's four, one of each kind, on its own products", async () => {
+  it("opens on this morning's five, one of each kind, on its own products", async () => {
     const rows = await rowsOf(deps, owner.mandateId);
-    expect(newest(rows).map(shapeOf)).toEqual(expect.arrayContaining(TODAYS_FOUR));
-    expect(newest(rows)).toHaveLength(4);
+    expect(newest(rows).map(shapeOf)).toEqual(expect.arrayContaining(TODAYS_OPENING));
+    expect(newest(rows)).toHaveLength(TODAYS_OPENING.length);
     for (const r of rows) {
       expect(r.attempt.productId.endsWith(`--${deskSuffix(owner.mandateId)}`)).toBe(true);
     }
@@ -157,7 +160,7 @@ describe("seedDemoOwner", () => {
 });
 
 describe("two visitors signing in at once", () => {
-  it("each desk gets its own four and its own history: no outage or outcome leaks across", async () => {
+  it("each desk gets its own opening and its own history: no outage or outcome leaks across", async () => {
     const { deps, fakes } = demoWorld();
     const desks = await Promise.all([
       seedDemoOwner(deps, fakes),
@@ -167,8 +170,8 @@ describe("two visitors signing in at once", () => {
     const counts = new Set<number>();
     for (const desk of desks) {
       const rows = await rowsOf(deps, desk.mandateId);
-      expect(newest(rows).map(shapeOf)).toEqual(expect.arrayContaining(TODAYS_FOUR));
-      expect(newest(rows)).toHaveLength(4);
+      expect(newest(rows).map(shapeOf)).toEqual(expect.arrayContaining(TODAYS_OPENING));
+      expect(newest(rows)).toHaveLength(TODAYS_OPENING.length);
       counts.add(rows.length);
     }
     // Every desk is the same desk: a visitor's receipts do not depend on who else signed in.

@@ -2,11 +2,16 @@
 
 **The second opinion on every agent purchase.**
 
-AI agents are starting to spend people's money, and nothing checks whether they are overpaying
-or being steered. Slip checks every purchase an agent attempts before PayPal moves the money. It
-compares the chosen offer with the other listed offers for the same item (from Channel3), flags
-steering and cases where the pricier store pays more commission, and applies the owner's limits:
-pay, reject, or hold for a human.
+AI agents are starting to spend people's money, and nothing checks whether they are overpaying or
+being steered. That is not a guess. PayPal's public agentic-commerce docs describe the merchant
+side, and the only buyer-side control in its own agent material is a line in an example system
+prompt — *"After approval by user, invoke capture_order"* — which nothing enforces.
+[docs/SPEC.md](docs/SPEC.md) §2 has the sources and the bound on that claim.
+
+Slip checks every purchase an agent attempts before PayPal moves the money. It compares the chosen
+offer with the other listed offers for the same item (from Channel3), flags steering and cases
+where the pricier store pays more commission, and applies the owner's limits: pay, reject, or hold
+for a human.
 
 > Agents shop. Slip checks. Policy decides. PayPal pays.
 

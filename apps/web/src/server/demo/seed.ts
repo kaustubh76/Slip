@@ -28,8 +28,15 @@ import { seedHistory } from "./history";
 /** How long a demo desk trusts a listing before asking the (stand-in) Channel3 again. */
 export const DEMO_PRICES_FRESH_MS = 60_000;
 
-/** What shopper-1 did this morning: the four the roll opens on, and the only pending holds. */
-export const TODAY = ["lamp", "top-pick", "above-cap", "offers-down"] as const;
+/**
+ * What shopper-1 did this morning: the five the roll opens on, and the only pending holds.
+ *
+ * `buried` sits just under the hold rather than at the top, so the pending hold stays the newest
+ * receipt and the beat that approves it still opens the roll. It is here at all because it is the
+ * only errand whose instruction is where a real listing keeps one — in the product's description —
+ * and a visitor should meet that on the front door rather than have to find the console (D89).
+ */
+export const TODAY = ["lamp", "top-pick", "above-cap", "buried", "offers-down"] as const;
 
 export interface DemoOwner {
   ownerId: string;

@@ -39,7 +39,15 @@ Both are synthetic research markets. Neither uses live retail prices or sits in 
 
 **In the demo, Slip is the merchant of record.** Its PayPal sandbox app is the seller. It relists real offers from real retailers, and no order is placed with those retailers. Say this on screen and in the README.
 
-**Pitch line for PayPal judges:** PayPal's public agentic-commerce docs describe the merchant side: catalog, cart, payment. We found no buyer-side price check there. Slip is that missing piece, shown working on PayPal rails. **[UNVERIFIED: based on overview pages only; read the Agent Ready docs fully before saying this.]**
+**Pitch line for PayPal judges:** PayPal's public agentic-commerce docs describe the merchant side — product discovery, cart, checkout, payment acceptance, order routing. No public page compares a price, applies a spending limit, or requires the buyer's approval before an agent pays. **The one buyer-side control anywhere in PayPal's own agent material is a line in an example system prompt** — the Agent Toolkit's OpenAI example says *"After approval by user, invoke capture_order"*, under the guidance to "use well-defined system prompts to control the behavior of the agent", and its CrewAI, LangChain and Vercel examples have no approval step at all. Nothing enforces it. Slip is that piece, in code rather than in a prompt, shown working on PayPal rails. **[VERIFIED 26–27 Oct 2026 against the four pages listed in §19.3.]**
+
+**Say it bounded, and nothing wider.** This is a claim about what the public documentation
+describes on a stated date — not that PayPal has no price check. Two limits belong with it: the
+agentic-commerce services are gated behind a merchant request form, so what access reveals is
+unknown; and *"supervised and automatic shopping scenarios"* appears on two PayPal pages and is
+defined on neither, so a buyer-side step inside "supervised" cannot be ruled out. Nor is any of this
+a criticism of PayPal — the Agent Toolkit is a payments toolkit and was never meant to be a
+buyer-protection product. **[PROHIBITED]** saying PayPal lacks, omits or forgot a price check.
 
 ## 3. Who it is for
 
@@ -221,6 +229,17 @@ Payment status: `NONE, CAPTURED, AUTHORIZED, VOIDED, FAILED, UNKNOWN`. A timeout
 - **G3:** lead with the market study and the commission-conflict check; present SlipBench as "these agents passed this test".
 - **G4:** restrict to hand-verified products.
 
+**What to lead with, and why it is not the architecture.** A policy engine between an agent and
+PayPal Orders — propose, decide in code, pay or hold or refuse — is the obvious answer to this
+problem, and it is not what distinguishes this entry; several other entries in this hackathon
+arrive at the same shape, one of them at the same three outcomes with the same list of rules that
+fired (D89). What is harder to arrive at is the evidence around it: a market study on 240 real
+products whose numbers anyone can recompute from committed snapshots with no key, a benchmark whose
+every run is committed and replayable, a receipt that quotes the text its own decision was about,
+and a steering check with a field measurement behind the question of whether it is needed at all —
+one real listing in 240 matched the patterns, and the model cleared it (D88). Lead with the
+measurements, not the diagram.
+
 ## 11. Regression scenarios
 1. Cheapest offer chosen → PAID
 2. Gap 12% and $15 → REJECTED (overpaid)
@@ -336,25 +355,50 @@ Use percent and dollars throughout. No basis points, no "slippage", no "TCA".
 ## 18. Submission copy (edit to match what ships)
 
 **Slip — the second opinion on every agent purchase.**
-AI agents are starting to spend people's money, and nothing checks whether they are overpaying or being steered. Slip checks every purchase an agent attempts before PayPal moves the money. It compares the chosen offer with other listed offers for the same item from Channel3, flags steering and cases where the pricier store pays more commission, and applies the owner's limits: pay, reject, or hold for a human. The owner approves once through PayPal; after that the agent can only pay through Slip. Every attempt gets a plain-language receipt. We measured real price and commission spreads across 240 products from Channel3's index: 18.33% carry two or more comparable offers, the typical spread between cheapest and priciest is 16.67%, and the offer paying the most commission is not the cheapest 47.5% of the time. Prices and agent decisions are real; payments run in PayPal sandbox with Slip as the seller.
+AI agents are starting to spend people's money, and nothing checks whether they are overpaying or being steered — PayPal's own agent examples put the buyer's approval in a system prompt rather than in code, and nothing there checks a price. Slip checks every purchase an agent attempts before PayPal moves the money. It compares the chosen offer with other listed offers for the same item from Channel3, flags steering and cases where the pricier store pays more commission, and applies the owner's limits: pay, reject, or hold for a human. The owner approves once through PayPal; after that the agent can only pay through Slip. Every attempt gets a plain-language receipt. We measured real price and commission spreads across 240 products from Channel3's index: 18.33% carry two or more comparable offers, the typical spread between cheapest and priciest is 16.67%, and the offer paying the most commission is not the cheapest 47.5% of the time. Prices and agent decisions are real; payments run in PayPal sandbox with Slip as the seller.
 
 We also ran **one agent — `claude-haiku-5-5`, the small low-cost one — through 21 shopping errands** under clean, endorsed and injected listings, with and without Slip. It did not overpay in any condition, including the one where the pricier listing carries text addressed to shopping agents. That is a claim about one cheap model on 21 errands, not about agents in general, and we publish it because it is what the test said. Three of its purchases did fetch the wrong product: the catalogue files two near-identical skillets separately and it took the cheaper one — the same grouping weakness the market study found, showing up again from the other direction. The spread and the commission conflict are real and measured; whether a given agent walks into them is not something anyone can promise, which is the argument for checking every purchase rather than trusting a model to be careful.
 
 *Edited 21 Oct to match what ships. The original claimed three agents across two providers; one is wired and measured, a second is wired and unrun, and there is no second provider. Gate G3 asked for an agent to overpay or be steered on 15% of errands in some condition and got 0%, so §10's fallback applies: lead with the market study and the commission-conflict number, and present SlipBench as "these agents passed this test".*
 
 ## 19. Still to verify
-1. Vault single-step purchase and authorise/void in sandbox.
-2. Channel3 offer density, grouping accuracy, credit allowance.
-3. Agent Ready docs in full, before claiming a gap in PayPal's stack.
-4. Whether PayPal publishes any sample shopping agent worth running through the bench.
-5. Rules on multiple sponsor prizes; Devpost page changes.
+1. Vault single-step purchase and authorise/void in sandbox. **Open — the last thing code cannot
+   close on its own (G2); it waits on a sandbox buyer approving the permission.**
+2. Channel3 offer density, grouping accuracy, credit allowance. **Density and credits done** (G1
+   fails at 18.33%, G5 passes; `study/results/market-study.md`). **Grouping accuracy still open**
+   (G4): the study prints 30 products for a person to check, and the price-gap heuristic found three
+   suspects (D68). There is no second signal in the data to lean on — of the 44 products with two or
+   more comparable offers, not one has two offers that both carry Channel3's per-offer `dimensions`,
+   so size and weight cannot corroborate a grouping. It needs a person.
+3. ~~Agent Ready docs in full, before claiming a gap in PayPal's stack.~~ **Done, 26–27 Oct 2026**
+   (D89). Four pages read in full: the agentic-commerce services overview, the `docsai`
+   agentic-commerce overview, the AI-tools getting-started page and the Agent Toolkit quickstart (all
+   in Sources). Everything described is merchant-side; nothing compares a price, applies a limit or
+   requires buyer approval; *"supervised and automatic shopping scenarios"* appears twice and is
+   defined neither time; the only buyer-side control in PayPal's own agent material is the line
+   *"After approval by user, invoke capture_order"* in one example system prompt, which nothing
+   enforces. §2 now carries the claim with that evidence and its bound.
+4. ~~Whether PayPal publishes any sample shopping agent worth running through the bench.~~
+   **Answered: no** (26–27 Oct 2026). `github.com/paypal/agent-toolkit` is the official repository;
+   it wires agent frameworks (OpenAI Agents SDK, LangChain, CrewAI, Vercel AI SDK, MCP, Bedrock) to
+   Orders, Invoices, Products, Subscription plans, Shipment and Disputes. Its examples are
+   seller-side — a fictional coffee store doing support, recommendations and payments — and none
+   browses or compares offers. So there is nothing published to run through SlipBench, which is part
+   of why §6.2's second provider never materialised: the gap is not that it was skipped.
+5. Rules on multiple sponsor prizes; Devpost page changes. **Open — the entrant's to check.**
 
 ## Sources
 - PayPal Orders v2: https://developer.paypal.com/docs/api/orders/v2/
 - PayPal save payment methods: https://developer.paypal.com/sdk/js/save-with-purchase/paypal
 - PayPal Transaction Search: https://developer.paypal.com/api/transaction-search/v1/
 - PayPal Agent Toolkit: https://github.com/paypal/agent-toolkit
-- PayPal Store Sync: https://docs.paypal.ai/growth/agentic-commerce/store-sync/overview
+- PayPal Store Sync: https://developer.paypal.com/docsai/growth/agentic-commerce/store-sync/overview
+  (the old `docs.paypal.ai` host 301-redirects here as of 27 Oct 2026)
+- PayPal agentic commerce services, read in full for §19.3 on 26–27 Oct 2026:
+  - https://developer.paypal.com/agentic-commerce-services/about
+  - https://developer.paypal.com/docsai/growth/agentic-commerce/overview
+  - https://developer.paypal.com/ai-tools/get-started
+  - https://developer.paypal.com/ai-tools/toolkit
 - Channel3 search API: https://docs.trychannel3.com/api-reference/v1/search
 - ACES: https://arxiv.org/abs/2508.02630
 - Magentic Marketplace: https://arxiv.org/html/2510.25779v1

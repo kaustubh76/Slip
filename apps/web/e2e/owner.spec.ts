@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { issueKey, openDesk, productId } from "./helpers";
 
-test("a new desk opens on the four purchases of its morning, and says the demo is simulated", async ({
+test("a new desk opens on the five purchases of its morning, and says the demo is simulated", async ({
   page,
 }) => {
   await openDesk(page);
@@ -11,9 +11,10 @@ test("a new desk opens on the four purchases of its morning, and says the demo i
     ),
   ).toBeVisible();
   const roll = page.getByRole("region", { name: "Receipts" });
-  // The newest four, under today's date: one of each kind, whatever history is filed below them.
+  // The newest five, under today's date: one of each kind, whatever history is filed below them.
+  // Two rejections since D89 — one on price, one on an instruction in the product's description.
   const top = await Promise.all(
-    [0, 1, 2, 3].map(async (i) =>
+    [0, 1, 2, 3, 4].map(async (i) =>
       roll.getByRole("listitem").nth(i).getByRole("img").first().getAttribute("aria-label"),
     ),
   );
@@ -21,6 +22,7 @@ test("a new desk opens on the four purchases of its morning, and says the demo i
     "Outcome: held",
     "Outcome: held",
     "Outcome: paid",
+    "Outcome: rejected",
     "Outcome: rejected",
   ]);
   // And the history under them: more than one page of receipts, over more than one day.

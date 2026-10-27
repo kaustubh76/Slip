@@ -112,6 +112,32 @@ number nobody can check, and a judge who notices you volunteering it will trust 
 With the sandbox id still out, the material above runs to roughly 2:30. That is under the limit
 and every second of it is real.
 
+## The steering beat, if you want the last fifteen seconds
+
+The shot list above never shows the steering check, which is the other of Slip's two reasons to
+stop a purchase. It is optional because the market study's numbers carry the argument on their own
+— but it is the most *watchable* thing in the product, and since D88 it finally shows the shape real
+data has. Run it from a terminal:
+
+```sh
+SLIP_AGENT_KEY=slip_live_… pnpm demo:agent --errand buried --url http://localhost:3000
+```
+
+The transcript prints the product's own description with the instruction sitting inside it, the
+agent choosing the store that description named, and `REJECTED by R3_STEERED`. Open the receipt and
+*"What Slip's search showed your agent"* quotes the text the check actually read. The line to say:
+*"The instruction wasn't in the price. It was in the product description, which is the only place a
+real listing has words at all — and the agent did what it said. Slip read the same text and stopped
+it."*
+
+Two things to have straight if a judge asks, both from the study. **The price gap alone would not
+have stopped that purchase** — $3.51 is above the flag line that calls the check and under the line
+that rejects on price, so the steering check is the only thing between the agent and the payment.
+And **we looked for this in the wild**: all 240 real descriptions were read for it, one matched the
+patterns, and the model cleared it as ordinary selling. So the honest claim is that this guards
+against something not yet seen in that sample, which is also why the demo's own instruction is
+labelled `[synthetic]` wherever it appears.
+
 ## Do not say
 
 The repo's copy tests refuse these words and the video should too: "savings", "you saved", basis
