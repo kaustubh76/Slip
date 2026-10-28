@@ -20,7 +20,7 @@ import { fileURLToPath } from "node:url";
 import Anthropic from "@anthropic-ai/sdk";
 import { buildPrompt, createClaudeSteeringClassifier, STEERING_MODEL } from "@slip/steering";
 import { loadCatalogue } from "../catalogue.js";
-import { asksFor, type JudgeResult, judge, renderJudge, tallyJudged } from "../judge.js";
+import { asksFor, type JudgeResult, judge, renderJudge, suspect, tallyJudged } from "../judge.js";
 
 /** What the application allows the check (`classifierTimeoutMs`, `packages/app/src/config.ts`). */
 const DEADLINE_MS = 5_000;
@@ -34,6 +34,8 @@ const flag = (name: string): string | undefined => {
 };
 const confirmed = argv.includes("--yes");
 const limit = Number(flag("limit") ?? Number.NaN);
+const parallel = Number(flag("concurrency") ?? Number.NaN);
+const concurrency = Number.isFinite(parallel) && parallel > 0 ? parallel : CONCURRENCY;
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const catalogue = await loadCatalogue(join(root, "..", "study", "snapshots"));
@@ -102,7 +104,7 @@ const judged = await judge({
   asks,
   classifier,
   deadlineMs: DEADLINE_MS,
-  concurrency: CONCURRENCY,
+  concurrency,
   onDone: (done, total) => {
     if (done % 20 === 0 || done === total) {
       console.log(`  ${done}/${total}`);
@@ -117,7 +119,7 @@ const result: JudgeResult = {
   promptVersion: first?.promptVersion ?? "unknown",
   deadlineMs: DEADLINE_MS,
   inputTokens,
-  tally: tallyJudged(judged),
+  tally: tallyJudged(judged, DEADLINE_MS),
   judged,
 };
 
@@ -133,3 +135,10 @@ for (const arm of [result.tally.honest, result.tally.buried]) {
   );
 }
 console.log(`report: ${join(out, "steering-judge.md")}`);
+if (suspect(result.tally)) {
+  console.warn(
+    "Some calls came back with no answer far inside the deadline, which a slow model cannot do." +
+      " The adapter does not keep the reason, so re-run with `--concurrency 1` before concluding" +
+      " anything from these figures. The page says the same thing.",
+  );
+}

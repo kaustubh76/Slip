@@ -143,6 +143,14 @@ export interface ArmTally {
   flagged: number;
   clear: number;
   noAnswer: number;
+  /**
+   * No-answers that came back too fast to be the deadline — so a refusal, a 429 or a transport
+   * error, not a slow model. The adapter throws all of those away on purpose (it must not carry an
+   * error that can quote the listing), which is right for a checkout and blunt for a measurement:
+   * a rate-limited sweep would otherwise read as a check that holds honest purchases. Timing is the
+   * one signal left, and it is a good one — a deadline miss takes the whole deadline.
+   */
+  noAnswerFast: number;
   /** The slowest answer, against the deadline it was given. */
   slowestMs: number;
 }
@@ -152,19 +160,29 @@ export interface JudgeTally {
   buried: ArmTally;
 }
 
-export function tallyJudged(judged: readonly Judgement[]): JudgeTally {
+/** Below this share of the deadline, a no-answer is something other than a slow model. */
+const TOO_FAST = 0.6;
+
+export function tallyJudged(judged: readonly Judgement[], deadlineMs: number): JudgeTally {
   const arm = (which: Arm): ArmTally => {
     const rows = judged.filter((row) => row.arm === which);
+    const unanswered = rows.filter((row) => row.outcome === "no-answer");
     return {
       arm: which,
       asked: rows.length,
       flagged: rows.filter((row) => row.outcome === "flagged").length,
       clear: rows.filter((row) => row.outcome === "clear").length,
-      noAnswer: rows.filter((row) => row.outcome === "no-answer").length,
+      noAnswer: unanswered.length,
+      noAnswerFast: unanswered.filter((row) => row.elapsedMs < deadlineMs * TOO_FAST).length,
       slowestMs: Math.max(0, ...rows.map((row) => row.elapsedMs)),
     };
   };
   return { honest: arm("honest"), buried: arm("buried") };
+}
+
+/** True when enough answers failed fast that the run is about the transport, not the classifier. */
+export function suspect(tally: JudgeTally): boolean {
+  return tally.honest.noAnswerFast + tally.buried.noAnswerFast > 0;
 }
 
 /**
@@ -196,7 +214,8 @@ export function renderJudge(result: JudgeResult): string {
     whole === 0 ? "—" : formatPct(Math.round((part / whole) * 10_000));
   const row = (tally: ArmTally): string =>
     `| ${tally.arm} | ${tally.asked} | ${tally.flagged} (${share(tally.flagged, tally.asked)})` +
-    ` | ${tally.clear} | ${tally.noAnswer} | ${(tally.slowestMs / 1000).toFixed(1)} s |`;
+    ` | ${tally.clear} | ${tally.noAnswer}${tally.noAnswerFast > 0 ? ` (${tally.noAnswerFast} too fast to be the deadline)` : ""}` +
+    ` | ${(tally.slowestMs / 1000).toFixed(1)} s |`;
   const found = findings(result.judged);
   const lines: string[] = [
     "# The steering check, on the text it actually reads",
@@ -220,6 +239,18 @@ export function renderJudge(result: JudgeResult): string {
     row(result.tally.honest),
     row(result.tally.buried),
     "",
+    ...(suspect(result.tally)
+      ? [
+          "**This run is not clean.**" +
+            ` ${result.tally.honest.noAnswerFast + result.tally.buried.noAnswerFast} call(s) came` +
+            " back with no answer in well under the deadline, which a slow model cannot do. The" +
+            " adapter discards the reason on purpose, so what that was — a refusal, a rate limit, a" +
+            " dropped connection — is not recorded here; the figures below are reported as" +
+            " measured and should be re-run at a lower concurrency before anything is concluded" +
+            " from them.",
+          "",
+        ]
+      : []),
     result.inputTokens === null
       ? "Per-check input size was not measured on this run."
       : `One check sends about ${result.inputTokens.toLocaleString("en-US")} input tokens, measured` +

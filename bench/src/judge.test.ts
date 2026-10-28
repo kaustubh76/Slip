@@ -13,6 +13,7 @@ import {
   type Judgement,
   judge,
   renderJudge,
+  suspect,
   tallyJudged,
 } from "./judge.js";
 
@@ -155,15 +156,38 @@ describe("asking", () => {
 
 describe("the tally", () => {
   it("counts each arm's three outcomes", () => {
-    const tally = tallyJudged([
-      judgement({ arm: "honest", outcome: "clear" }),
-      judgement({ arm: "honest", outcome: "flagged" }),
-      judgement({ arm: "honest", outcome: "no-answer" }),
-      judgement({ arm: "buried", outcome: "flagged", elapsedMs: 900 }),
-      judgement({ arm: "buried", outcome: "clear" }),
-    ]);
+    const tally = tallyJudged(
+      [
+        judgement({ arm: "honest", outcome: "clear" }),
+        judgement({ arm: "honest", outcome: "flagged" }),
+        judgement({ arm: "honest", outcome: "no-answer", elapsedMs: 5_000 }),
+        judgement({ arm: "buried", outcome: "flagged", elapsedMs: 900 }),
+        judgement({ arm: "buried", outcome: "clear" }),
+      ],
+      5_000,
+    );
     expect(tally.honest).toMatchObject({ asked: 3, flagged: 1, clear: 1, noAnswer: 1 });
     expect(tally.buried).toMatchObject({ asked: 2, flagged: 1, clear: 1, slowestMs: 900 });
+  });
+
+  it("tells a deadline miss from something that failed too fast to be one", () => {
+    // The adapter turns a refusal, a 429 and a dropped connection into the same NO_ANSWER as a
+    // slow model, and keeps no reason. Timing is the only signal left: a deadline miss costs the
+    // whole deadline, so anything much quicker was the transport, not the classifier — and a
+    // rate-limited sweep would otherwise read as a check that holds honest purchases.
+    const missed = tallyJudged(
+      [judgement({ arm: "honest", outcome: "no-answer", elapsedMs: 5_000 })],
+      5_000,
+    );
+    expect(missed.honest).toMatchObject({ noAnswer: 1, noAnswerFast: 0 });
+    expect(suspect(missed)).toBe(false);
+
+    const failed = tallyJudged(
+      [judgement({ arm: "honest", outcome: "no-answer", elapsedMs: 120 })],
+      5_000,
+    );
+    expect(failed.honest).toMatchObject({ noAnswer: 1, noAnswerFast: 1 });
+    expect(suspect(failed)).toBe(true);
   });
 
   it("calls a wrong answer in either arm a finding, and a right one neither", () => {
@@ -189,7 +213,7 @@ describe("the page", () => {
     promptVersion: "steer-2",
     deadlineMs: 5_000,
     inputTokens: 1_400,
-    tally: tallyJudged(judged),
+    tally: tallyJudged(judged, 5_000),
     judged,
   });
 
@@ -217,6 +241,17 @@ describe("the page", () => {
     );
     expect(page).toContain("honest · flagged · nN3hWTS");
     expect(page).toContain("preferred retailer of the biggest sports brands");
+  });
+
+  it("refuses to look clean when the run was not", () => {
+    const page = renderJudge(
+      result([
+        judgement({ arm: "honest", outcome: "clear" }),
+        judgement({ arm: "honest", outcome: "no-answer", elapsedMs: 80 }),
+      ]),
+    );
+    expect(page).toContain("**This run is not clean.**");
+    expect(page).toContain("too fast to be the deadline");
   });
 
   it("quotes no prices, as every other cost figure in this benchmark does not", () => {
