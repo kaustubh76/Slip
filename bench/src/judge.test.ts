@@ -12,6 +12,7 @@ import {
   findings,
   type Judgement,
   judge,
+  pilot,
   renderJudge,
   suspect,
   tallyJudged,
@@ -93,6 +94,15 @@ describe("the questions", () => {
       const without = bare(candidate.text.replace(buriedInjection(dearest?.domain ?? "—"), ""));
       expect(bare(honest?.text ?? "").startsWith(without)).toBe(true);
     }
+  });
+
+  it("gives a pilot both arms, whatever the first products happen to carry", () => {
+    const three = pilot(asks, 3);
+    expect(new Set(three.map((ask) => ask.arm))).toEqual(new Set(["honest", "buried"]));
+    // The first products in catalogue order have one comparable offer, so a plain slice would be
+    // all honest and the attacked half of the instrument would go unexercised.
+    expect(asks.slice(0, 3).some((ask) => ask.arm === "buried")).toBe(false);
+    expect(three.filter((ask) => ask.arm === "honest")).toHaveLength(3);
   });
 
   it("keeps both questions inside the bound an agent is shown", () => {

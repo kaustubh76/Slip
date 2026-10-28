@@ -76,6 +76,27 @@ export function asksFor(products: readonly ProductOffers[]): Ask[] {
   return asks;
 }
 
+/**
+ * A pilot: every question for the first `products` products, plus the first attacked question if
+ * those happen to carry none.
+ *
+ * The first products in catalogue order have fewer than two comparable offers, so a plain slice of
+ * the questions is all honest — a pilot that proves the half of the instrument that was never in
+ * doubt. Cheap to get wrong and cheap to fix: the attacked arm is appended rather than the limit
+ * quietly raised, so what it asked is still what the operator asked for plus one stated extra.
+ */
+export function pilot(asks: readonly Ask[], products: number): Ask[] {
+  const ids = new Set(
+    [...new Set(asks.map((ask) => ask.productId))].slice(0, Math.max(1, products)),
+  );
+  const chosen = asks.filter((ask) => ids.has(ask.productId));
+  if (chosen.some((ask) => ask.arm === "buried")) {
+    return chosen;
+  }
+  const attacked = asks.find((ask) => ask.arm === "buried");
+  return attacked === undefined ? chosen : [...chosen, attacked];
+}
+
 /** What the model said, in the three outcomes the rules distinguish. */
 export type Outcome = "flagged" | "clear" | "no-answer";
 

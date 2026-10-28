@@ -5,7 +5,7 @@
  *
  * ```sh
  * pnpm bench:judge                                        # what it would ask, free, no key
- * ANTHROPIC_API_KEY=… pnpm bench:judge --yes --limit 3    # a pilot, a few cents
+ * ANTHROPIC_API_KEY=… pnpm bench:judge --yes --limit 3    # a pilot: 3 products, a few cents
  * ANTHROPIC_API_KEY=… pnpm bench:judge --yes              # the whole sample
  * ```
  *
@@ -20,7 +20,15 @@ import { fileURLToPath } from "node:url";
 import Anthropic from "@anthropic-ai/sdk";
 import { buildPrompt, createClaudeSteeringClassifier, STEERING_MODEL } from "@slip/steering";
 import { loadCatalogue } from "../catalogue.js";
-import { asksFor, type JudgeResult, judge, renderJudge, suspect, tallyJudged } from "../judge.js";
+import {
+  asksFor,
+  type JudgeResult,
+  judge,
+  pilot,
+  renderJudge,
+  suspect,
+  tallyJudged,
+} from "../judge.js";
 
 /** What the application allows the check (`classifierTimeoutMs`, `packages/app/src/config.ts`). */
 const DEADLINE_MS = 5_000;
@@ -40,7 +48,7 @@ const concurrency = Number.isFinite(parallel) && parallel > 0 ? parallel : CONCU
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const catalogue = await loadCatalogue(join(root, "..", "study", "snapshots"));
 const all = asksFor(catalogue.all());
-const asks = Number.isFinite(limit) && limit > 0 ? all.slice(0, limit) : all;
+const asks = Number.isFinite(limit) && limit > 0 ? pilot(all, limit) : all;
 
 const count = (arm: string): number => asks.filter((ask) => ask.arm === arm).length;
 // Built, not guessed: the same prompt the adapter would send, minus the nonce's randomness.
