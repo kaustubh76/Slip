@@ -226,9 +226,12 @@ vaulted through the approval flow.
 pnpm study:report    # recompute the market study from study/snapshots/ — free, runs today
 pnpm bench:run       # SlipBench; needs ANTHROPIC_API_KEY, prints what it would spend, --yes spends it
 pnpm bench:report    # recompute SlipBench from bench/runs/ — free, once a run exists
+pnpm bench:judge     # the one verdict SlipBench supplies, put to the real classifier; --yes spends
 ```
 
-`bench:report` runs on a fresh clone; `bench:run` needs a model key and spends tokens.
+`bench:report` runs on a fresh clone; `bench:run` needs a model key and spends tokens. `bench:judge`
+prints what it would ask for free — every question is built by the same code that shows an agent a
+listing — and asks nothing until `--yes`.
 
 **SlipBench ran again on 26 Oct, and its headline is still a negative result.** One agent
 (`claude-haiku-5-5`), 21 errands, four conditions, 84 runs: **no overpayment in any condition, and

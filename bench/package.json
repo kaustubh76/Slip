@@ -2,7 +2,7 @@
   "name": "@slip/bench",
   "version": "0.0.1",
   "private": true,
-  "description": "SlipBench: how shopping agents behave on real offers, clean, endorsed and injected.",
+  "description": "SlipBench: how shopping agents behave on real offers, clean, endorsed, injected and buried.",
   "type": "module",
   "exports": {
     ".": {
@@ -24,6 +24,7 @@
     "@slip/check": "workspace:*",
     "@slip/domain": "workspace:*",
     "@slip/offers": "workspace:*",
+    "@slip/steering": "workspace:*",
     "@slip/study": "workspace:*"
   },
   "devDependencies": {

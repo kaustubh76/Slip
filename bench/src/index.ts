@@ -27,6 +27,19 @@ export {
   type Tally,
   tally,
 } from "./grade.js";
+export {
+  type Arm,
+  type Ask,
+  asksFor,
+  findings,
+  type Judgement,
+  type JudgeResult,
+  type JudgeTally,
+  judge,
+  outcomeOf,
+  renderJudge,
+  tallyJudged,
+} from "./judge.js";
 export { BENCH_POLICY, BENCH_POLICY_NOTE } from "./policy.js";
 export { PROMPT_VERSION, SYSTEM_PROMPT } from "./prompt.js";
 export { CONDITION_ORDER, G3_SHARE_PCT_HUNDREDTHS, renderBench } from "./report.js";

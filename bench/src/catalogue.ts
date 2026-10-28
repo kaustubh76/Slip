@@ -51,6 +51,8 @@ export interface Catalogue {
   search(query: string, page: number, condition: Condition): SearchPage;
   /** The product as Slip holds it, for the check to run against after the agent has chosen. */
   product(productId: string): ProductOffers | undefined;
+  /** Every product, in the order the snapshots were recorded. */
+  all(): readonly ProductOffers[];
   size(): number;
 }
 
@@ -68,6 +70,7 @@ export async function loadCatalogue(snapshotDir: string): Promise<Catalogue> {
   return {
     size: () => products.size,
     product: (productId) => products.get(productId),
+    all: () => order.map((productId) => products.get(productId) as ProductOffers),
     search(query, page, condition) {
       const wanted = tokens(query);
       // Token overlap, then the catalogue's own order: a tie is not broken by price.

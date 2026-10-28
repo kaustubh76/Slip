@@ -198,6 +198,9 @@ importers:
       '@slip/offers':
         specifier: workspace:*
         version: link:../packages/offers
+      '@slip/steering':
+        specifier: workspace:*
+        version: link:../packages/steering
       '@slip/study':
         specifier: workspace:*
         version: link:../study

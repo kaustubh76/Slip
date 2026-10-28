@@ -37,7 +37,8 @@
     "study:sample": "tsx --conditions=@slip/source study/src/bin/sample.ts",
     "study:report": "tsx --conditions=@slip/source study/src/bin/report.ts",
     "bench:run": "tsx --conditions=@slip/source bench/src/bin/run.ts",
-    "bench:report": "tsx --conditions=@slip/source bench/src/bin/report.ts"
+    "bench:report": "tsx --conditions=@slip/source bench/src/bin/report.ts",
+    "bench:judge": "tsx --conditions=@slip/source bench/src/bin/judge.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",

@@ -186,6 +186,14 @@ That sweep cost 573,456 input and 44,500 output tokens over 253 model turns, whi
 basis `pnpm bench:run` now projects an Opus sweep from — before it, the projection had nothing
 measured to work from and said so rather than guessing.
 
+**The one input that table supplies rather than measures** is the steering verdict: under `injected`
+and `buried` the planted text is instruction-like by construction, so the answer is handed to the
+rules instead of a model being asked and billed twice. `pnpm bench:judge` is the other half — it
+puts the same question to the production classifier, on the same text the benchmark showed its
+agents, and writes `bench/results/steering-judge.md`. Without `--yes` it asks nothing and needs no
+key: it prints the number of calls and the exact character size of the prompts, both measured by
+building every one of them.
+
 `pnpm bench:run` prints what it would spend and does nothing without `--yes`. **It will not pay
 twice**: an errand already recorded under the current prompt version is skipped, the printout says
 how many that is and what the run will therefore cost, and `--again` overrides it. A run recorded

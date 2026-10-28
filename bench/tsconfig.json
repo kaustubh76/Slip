@@ -16,6 +16,9 @@
       "path": "../packages/check"
     },
     {
+      "path": "../packages/steering"
+    },
+    {
       "path": "../study"
     }
   ]
