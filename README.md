@@ -66,13 +66,24 @@ pnpm lint          # biome
 `pnpm test` needs nothing else: the database and end-to-end tests run on PGlite, an in-process
 Postgres, against fake Channel3, PayPal and classifier, on a manual clock.
 
-Real Postgres (Docker):
+Real Postgres:
 
 ```sh
 pnpm db:up         # Postgres 18 on localhost:54329 (docker compose)
 pnpm test:pg       # same store contract + database guards + concurrency races on real Postgres
 DATABASE_URL=postgres://slip:slip@localhost:54329/slip pnpm db:migrate
 ```
+
+**Already have a Postgres?** Point `test:pg` at it and it will not start a container:
+
+```sh
+SLIP_TEST_DATABASE_URL=postgres://you@localhost:5432/postgres pnpm test:pg
+```
+
+It creates a throwaway `slip_test_<random>` per test file, migrates it, and drops it afterwards, so
+it never touches anything else on that server. This matters more than it looks: these are the only
+tests `pnpm test` skips, and when they could only be run through Docker, a broken Docker meant they
+went five days without running (D91).
 
 No Docker: `DATABASE_URL=pglite://.data/slip pnpm db:migrate` gives a Postgres on disk — but
 that path is relative to wherever the command runs, and `db:migrate` runs in `packages/db` while

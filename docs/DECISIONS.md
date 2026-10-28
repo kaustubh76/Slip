@@ -1767,3 +1767,44 @@ that difference had never been exercised. It has now, on the host: under **Node 
 **1,869 unit tests**, `pnpm web:build` and **36 browser tests** against a production `next start` all
 pass. That is the production server path the container runs, on the Node major the container runs, so
 what remains unverified is narrower than it was: the image's own layers, and Render's blueprint.
+
+## D91 · 2026-10-28 · The suite that had not run since the stored shape changed
+
+D87 changed how every receipt is stored — `CHECK_RESULT_VERSION` 1 → 2, `CheckResult` gained
+`searchContext`, and `parseStoredCheckResult` grew a `case 1` whose whole job is that "receipts
+written by older code still read back exactly". **That change had never run against a real
+Postgres.**
+
+**The gate I reported all week excluded it, and that is worth saying plainly.** "Lint, 1,869 unit
+tests, build, 36 browser tests" was true every time, and every time it carried "5 skipped" that I
+reported as a number without reading what it was. Those five files are the store contract, the
+database guards and the concurrency races — the part that exercises the version column, the jsonb
+payload and the triggers underneath the store. They skip unless `SLIP_TEST_DATABASE_URL` is set,
+`test:pg` set it by starting a container, and Docker broke on 27 Oct (D90). So the stored-shape
+change was verified against the in-memory store and PGlite only, from 26 to 28 October.
+
+**It passes.** 310 tests on **PostgreSQL 14.17** (brew services, already running on this machine;
+`docker-compose.yml` pins 18-alpine, so this is evidence from a four-major-older server rather than
+a claim about the pinned one — but a defect in a zod branch, a jsonb column and an int column would
+have shown on either). 308 of those are what the fresh-clone test saw on 22 Oct (D79); the two new
+ones are below. No `slip_test_*` databases left behind.
+
+**The promise now has a test behind it.** `parseStoredCheckResult(1, …)` was covered on the schema
+function and nowhere else: nothing wrote a row the way the previous code wrote one and read it back
+through the store. A new guard in `sql-guards.ts` — the right home, because its stated purpose is
+writing SQL "the way a buggy future change or a manual edit would" — inserts one attempt as pre-D87
+code would have (`checkResultVersion: 1`, no `searchContext` key in the jsonb) and one as current
+code does (version 2, the key carrying text), then reads both back through the store. The old row
+comes back with `searchContext: null` and otherwise field-for-field identical to what the current
+code would have written; the new one comes back with its text.
+
+Both directions, deliberately: a v1 row reading back null proves nothing on its own if a v2 row does
+the same, so the test only means something if the version column is what selects the branch.
+Checked rather than assumed — with `case 1` replaced by the v2 parse, it fails with `invalid_type`
+on `searchContext` under both the Postgres and the PGlite harness.
+
+**And the reason the gap lasted is fixed.** `test:pg` hardcoded `pnpm db:up`, so the only documented
+way to run the one suite `pnpm test` skips was through Docker — which is what made it unrunnable
+when Docker broke. It now honours `SLIP_TEST_DATABASE_URL` when one is already set and starts no
+container, and the README says so. Anyone with a Postgres can run these tests; nobody needs to be
+blocked on a container daemon again.
