@@ -15,6 +15,24 @@ const PASSWORD = "a reasonable passphrase";
 
 test.describe.configure({ mode: "serial" });
 
+/**
+ * Whichever test signs up first builds the database, and that is the slowest thing this file does.
+ * The server deletes its PGlite directory at startup so each run begins clean, and the first
+ * request to touch it pays for creating and migrating it. Measured on 30 Oct 2026: **82.1 s** for
+ * that first sign-up on a busy machine, of which `pnpm --filter @slip/db migrate` alone was
+ * **50.8 s**; about 8 s when the machine is quiet.
+ *
+ * So the budget below is a measurement, not a hope. It is deliberately far above the 82 s, because
+ * the number scales with whatever else is running, and because this file is `serial`: when the
+ * first test exceeds its budget every test behind it is **skipped rather than run**, which is how
+ * two tests here went a full day without once being executed. A long first test is a far smaller
+ * problem than a file that silently stops testing.
+ *
+ * Both tests that can be the one to pay take it, since either may run alone under `--grep`.
+ */
+const COLD_DATABASE = 240_000;
+const COLD_DATABASE_TEST = 300_000;
+
 test("starting needs no credential, but offers one", async ({ page }) => {
   await page.goto("/sign-in");
   await expect(page.getByRole("button", { name: /Start with PayPal/ })).toBeVisible();
@@ -25,18 +43,18 @@ test("starting needs no credential, but offers one", async ({ page }) => {
 });
 
 test("an owner who sets a credential can sign out and come back", async ({ page }) => {
+  test.setTimeout(COLD_DATABASE_TEST);
   const email = someone();
   await page.goto("/sign-in");
   await page.locator("#start-email").fill(email);
   await page.locator("#start-password").fill(PASSWORD);
   await page.getByRole("button", { name: /Start with PayPal/ }).click();
 
-  // The stand-in approval page, then back into Slip with a permission in force. This is the first
-  // request in the file that touches the database, and the server starts by deleting its PGlite
-  // directory so each run begins clean — so this one step pays for the migrations, which takes
-  // longer than the 10 s the rest of the file inherits, and longer still while the demo server's
-  // tests are running beside it.
-  await expect(page.getByRole("button", { name: /Approve/ })).toBeVisible({ timeout: 30_000 });
+  // The stand-in approval page, then back into Slip with a permission in force. See COLD_DATABASE:
+  // this step may be the one that builds the database.
+  await expect(page.getByRole("button", { name: /Approve/ })).toBeVisible({
+    timeout: COLD_DATABASE,
+  });
   await page.getByRole("button", { name: /Approve/ }).click();
   // Approving finishes the setup and lands on the permission slip, in force.
   await expect(page).toHaveURL(/\/mandate/);
@@ -104,12 +122,15 @@ test("a wrong password says the same thing as an unknown owner", async ({ page }
 });
 
 test("issuing a key also says where to point the agent", async ({ page }) => {
+  test.setTimeout(COLD_DATABASE_TEST);
   const email = someone();
   await page.goto("/sign-in");
   await page.locator("#start-email").fill(email);
   await page.locator("#start-password").fill(PASSWORD);
   await page.getByRole("button", { name: /Start with PayPal/ }).click();
-  await expect(page.getByRole("button", { name: /Approve/ })).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByRole("button", { name: /Approve/ })).toBeVisible({
+    timeout: COLD_DATABASE,
+  });
   await page.getByRole("button", { name: /Approve/ }).click();
 
   await page.goto("/agents");

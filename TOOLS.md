@@ -32,7 +32,12 @@ A cancelled permission can still read its receipts and report; `checkout` is ref
 
 ## Connecting
 
-**Claude Code**, with a key from the console:
+Slip's own **Agents** page prints all of this for the deployment you are on — the endpoint, this
+command and the JSON below — with the key in place at the moment it is issued, and the name of an
+environment variable afterwards, since Slip keeps only the key's hash. A demo desk shows the same
+thing in its console.
+
+**Claude Code**, with a key from either:
 
 ```sh
 claude mcp add --transport http slip http://localhost:3000/api/mcp \
