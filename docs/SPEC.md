@@ -386,6 +386,16 @@ We also ran **one agent — `claude-haiku-5-5`, the small low-cost one — throu
    browses or compares offers. So there is nothing published to run through SlipBench, which is part
    of why §6.2's second provider never materialised: the gap is not that it was skipped.
 5. Rules on multiple sponsor prizes; Devpost page changes. **Open — the entrant's to check.**
+6. An operator signal when a model credential is rejected. **Open, and newly known (D92).** The
+   steering adapter turns a 401 into the same `NO_ANSWER` as a slow model and keeps no reason —
+   correct for a checkout, because R4a holds the purchase either way and an error can quote the
+   listing. The consequence in production is that a revoked or mistyped `ANTHROPIC_API_KEY` holds
+   every purchase whose price gap needed the check, silently:
+   `apps/web/src/server/assembly.ts` requires the variable to be present, nothing asks whether it
+   works, and there is no health route. The live suites and `pnpm bench:judge` now probe it with an
+   unbilled `count_tokens` call (`checkSteeringCredential`); the deployed app does not. A doctor
+   command across all three services is the fix and is deliberately not half-built: PayPal needs a
+   token call and Channel3 would spend a credit.
 
 ## Sources
 - PayPal Orders v2: https://developer.paypal.com/docs/api/orders/v2/

@@ -1,6 +1,7 @@
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { describe, expect, it } from "vitest";
+import { checkSteeringCredential } from "@slip/steering";
+import { beforeAll, describe, expect, it } from "vitest";
 import { loadCatalogue } from "./catalogue.js";
 import { createClaudeAgent } from "./claude-agent.js";
 import { ERRANDS } from "./errands.js";
@@ -18,6 +19,8 @@ import { runErrand } from "./run.js";
  */
 
 const apiKey = process.env["ANTHROPIC_API_KEY"] ?? "";
+/** The cheapest model that can hold a tool loop; the benchmark's own default for a smoke run. */
+const MODEL = "claude-haiku-5-5";
 const SNAPSHOTS = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "study", "snapshots");
 
 if (apiKey === "") {
@@ -26,6 +29,20 @@ if (apiKey === "") {
   });
 } else {
   describe("SlipBench, live", () => {
+    beforeAll(async () => {
+      // A rejected key would arrive here as an agent that searched nothing, or as a raw SDK error
+      // out of the tool loop — both of which read as the loop being broken. One unbilled token
+      // count says which it is before any assertion below gets the blame (D92).
+      const check = await checkSteeringCredential({ apiKey, model: MODEL });
+      if (!check.ok) {
+        throw new Error(
+          `ANTHROPIC_API_KEY ${check.reason === "rejected" ? "was rejected by the API" : "could not be checked"}` +
+            ` (status ${check.status ?? "none"}). No model was asked, so nothing below is a` +
+            " measurement. See docs/SERVICES.md for where the key comes from.",
+        );
+      }
+    }, 30_000);
+
     it("shops one errand end to end: searches, buys, and is graded", async () => {
       const catalogue = await loadCatalogue(SNAPSHOTS);
       const errand = ERRANDS.find((candidate) => candidate.id === "trinity-fkt");
@@ -34,8 +51,8 @@ if (apiKey === "") {
       }
       const agent = createClaudeAgent({
         apiKey,
-        model: "claude-haiku-5-5",
-        name: "claude-haiku-5-5",
+        model: MODEL,
+        name: MODEL,
         maxTurns: 6,
       });
       const outcome = await runErrand({

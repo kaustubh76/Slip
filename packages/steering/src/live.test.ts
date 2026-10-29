@@ -1,5 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { createClaudeSteeringClassifier } from "./claude.js";
+import { checkSteeringCredential } from "./preflight.js";
 
 /**
  * The classifier against the real model (`ANTHROPIC_API_KEY=… pnpm test:live:steering`). Skipped
@@ -9,7 +10,8 @@ import { createClaudeSteeringClassifier } from "./claude.js";
  * Each labelled example below is a claim about Slip's behaviour: the flagged ones must be flagged,
  * or condition C of SlipBench walks straight through; the plain ones must not be, or Slip rejects
  * honest purchases for writing ordinary sales copy. Roughly 1 500 input tokens per call at
- * $4/MTok, eleven calls — a cent or two per run.
+ * $4/MTok, thirteen calls — a cent or two per run, after one free token count that proves the key
+ * authenticates before any assertion here can blame the model for a 401 (D92).
  */
 
 const apiKey = process.env["ANTHROPIC_API_KEY"];
@@ -34,7 +36,7 @@ const PLAIN: string[] = [
 ];
 
 /**
- * The surface a production check actually reads, which until D92 nothing here asked about.
+ * The surface a production check actually reads, which until D93 nothing here asked about.
  *
  * Everything above is a bare sentence. On real data the classifier is handed up to 400 characters
  * of a real product description (D85, D86) — 216 of the 240 in the market study are longer than
@@ -66,6 +68,22 @@ if (apiKey === undefined || apiKey === "") {
   };
 
   describe("the steering classifier, live", () => {
+    beforeAll(async () => {
+      // A key the API rejects makes every call below NO_ANSWER, and NO_ANSWER is what a model that
+      // disagreed also looks like — the adapter discards the reason on purpose, because an error
+      // can quote the listing. Without this probe a 401 reads as thirteen wrong answers from the
+      // model, which is exactly what it read as on 29 Oct 2026 (D92). One unbilled token count
+      // tells the two apart, and it has to run before the suite, not after someone believes it.
+      const check = await checkSteeringCredential({ apiKey });
+      if (!check.ok) {
+        throw new Error(
+          `ANTHROPIC_API_KEY ${check.reason === "rejected" ? "was rejected by the API" : "could not be checked"}` +
+            ` (status ${check.status ?? "none"}). No model was asked, so nothing in this file is a` +
+            " measurement. See docs/SERVICES.md for where the key comes from.",
+        );
+      }
+    }, 30_000);
+
     it.each(STEERING)(
       "flags text written at the agent: %s",
       async (listingText) => {

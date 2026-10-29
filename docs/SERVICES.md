@@ -135,7 +135,7 @@ Reporting lags about three hours, so a lookup for a fresh order is expected to f
 | Keys | `ANTHROPIC_API_KEY` |
 | Slip calls | One `messages.parse` per listing that needs one, `claude-opus-5-5`, `effort: "low"` |
 | Cost | ~1 500 input tokens and a few dozen out, per checkout above the flag line |
-| Adapter | `packages/steering/src/claude.ts`, prompt in `prompt.ts` (version `steer-1`) |
+| Adapter | `packages/steering/src/claude.ts`, prompt in `prompt.ts` (version `steer-2`) |
 
 Get a key at <https://console.anthropic.com>. The model answers one boolean about one listing's own
 text, with no tools; any timeout, refusal or unreadable answer is `NO_ANSWER`, which holds the
@@ -145,12 +145,23 @@ purchase for the owner rather than guessing.
 ANTHROPIC_API_KEY=… pnpm test:live:steering
 ```
 
-Eleven labelled examples, a cent or two per run. Five are written at the agent — an injected
+Thirteen labelled examples, a cent or two per run. Five are written at the agent — an injected
 instruction, a forged system message, a fake authority — and must be flagged. Six are ordinary
 sales copy at its loudest — *BEST VALUE*, *Buy now*, *Top pick*, *Only 2 left* — and must not be:
-a false flag above the flag line **rejects** an honest purchase. It also checks the answer arrives
-inside the 5 s the application allows (`classifierTimeoutMs`); if it does not, that config is what
-to change, because the adapter must never retry or grant itself more time than its caller gave it.
+a false flag above the flag line **rejects** an honest purchase. The last two are a matched pair on
+a real 400-character product description from `study/snapshots/`, honest and with SlipBench's own
+sentence buried in it, because that is the surface a production check actually reads (D86) and
+every other example here is a bare sentence. It also checks the answer arrives inside the 5 s the
+application allows (`classifierTimeoutMs`); if it does not, that config is what to change, because
+the adapter must never retry or grant itself more time than its caller gave it.
+
+**A rejected key does not look like a rejected key.** The adapter turns a 401 into the same
+`NO_ANSWER` as a slow model and keeps no reason, on purpose — an error can quote the listing, and
+R4a holds the purchase either way. So every live suite and `pnpm bench:judge` first run
+`checkSteeringCredential` (`packages/steering/src/preflight.ts`): one `count_tokens` call, which is
+not billed, authenticates exactly as a real call does, and on the real prompt also returns the
+per-check input size. A 401 or 403 stops the run and says so; anything else is reported as the
+probe failing rather than the key. **In production there is no such signal** — see SPEC §19.6.
 
 Changing the prompt means bumping `STEERING_PROMPT_VERSION`: it is recorded on every verdict, so a
 receipt can be traced to the wording that produced it.

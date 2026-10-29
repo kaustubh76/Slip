@@ -161,7 +161,7 @@ Each adapter also has a live suite that skips itself until its keys exist:
 
 ```sh
 pnpm test:live:channel3   # the key, the path, and offers the domain accepts
-pnpm test:live:steering   # the prompt's boundary: injected text flagged, loud sales copy not
+pnpm test:live:steering   # the prompt's boundary, and one real listing with the sentence buried
 pnpm test:live:paypal     # the gateway contract the fake passes, against the sandbox
 pnpm test:live:bench      # SlipBench's grader against a real model answer
 ```

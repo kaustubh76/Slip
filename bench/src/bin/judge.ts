@@ -17,8 +17,12 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import Anthropic from "@anthropic-ai/sdk";
-import { buildPrompt, createClaudeSteeringClassifier, STEERING_MODEL } from "@slip/steering";
+import {
+  buildPrompt,
+  checkSteeringCredential,
+  createClaudeSteeringClassifier,
+  STEERING_MODEL,
+} from "@slip/steering";
 import { loadCatalogue } from "../catalogue.js";
 import {
   asksFor,
@@ -81,31 +85,44 @@ if (apiKey === undefined || apiKey === "") {
 }
 
 /**
- * One `count_tokens` call, so the per-check input size in the report is a measurement. It is the
- * real prompt for the first ask, on the model the check uses.
+ * One `count_tokens` call, before anything is spent. It is not billed, it authenticates exactly as
+ * a real call does, and given the real prompt it returns the per-check input size — so the gate and
+ * the measurement cost one free request between them.
+ *
+ * The gate is the part that was missing. The adapter cannot tell a rejected key from a slow model:
+ * it turns both into `NO_ANSWER` and keeps no reason, which is right for a checkout and useless
+ * here. Without this, a revoked key sweeps the whole sample and writes a page whose only honest
+ * line is "This run is not clean" — which is what happened to the live suite on 29 Oct 2026 (D92).
  */
-const inputTokens = await (async (): Promise<number | null> => {
-  const first = asks[0];
-  if (first === undefined) {
-    return null;
-  }
-  const prompt = buildPrompt(
-    { listingText: "", productTitle: first.title, searchContext: first.text },
-    "0".repeat(32),
+const probeAsk = asks[0];
+const check = await checkSteeringCredential({
+  apiKey,
+  ...(probeAsk === undefined
+    ? {}
+    : {
+        prompt: buildPrompt(
+          { listingText: "", productTitle: probeAsk.title, searchContext: probeAsk.text },
+          "0".repeat(32),
+        ),
+      }),
+});
+if (!check.ok && check.reason === "rejected") {
+  console.error(
+    `ANTHROPIC_API_KEY was rejected by the API (status ${check.status ?? "none"}). Nothing was` +
+      " asked and nothing was written; see docs/SERVICES.md for where the key comes from.",
   );
-  try {
-    const counted = await new Anthropic({ apiKey, maxRetries: 0 }).messages.countTokens({
-      model: STEERING_MODEL,
-      system: prompt.system,
-      messages: [{ role: "user", content: prompt.user }],
-    });
-    return counted.input_tokens;
-  } catch (error) {
-    // A missing figure is better than an invented one; the sweep is what was paid for.
-    console.warn(`count_tokens failed, so the report will say so: ${String(error)}`);
-    return null;
-  }
-})();
+  process.exit(1);
+}
+if (!check.ok) {
+  // The probe failing is not the key failing. Saying otherwise would let the probe decide that a
+  // measurement cannot happen, which is a different claim and a worse one.
+  console.warn(
+    `The credential could not be checked (status ${check.status ?? "none"}); continuing without a` +
+      " measured per-check size. If the page comes back not clean, this is the first thing to look" +
+      " at.",
+  );
+}
+const inputTokens = check.ok ? check.inputTokens : null;
 
 const classifier = createClaudeSteeringClassifier({ apiKey });
 const judged = await judge({

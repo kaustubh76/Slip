@@ -1808,3 +1808,67 @@ way to run the one suite `pnpm test` skips was through Docker — which is what 
 when Docker broke. It now honours `SLIP_TEST_DATABASE_URL` when one is already set and starts no
 container, and the README says so. Anyone with a Postgres can run these tests; nobody needs to be
 blocked on a container daemon again.
+
+## D92 · 2026-10-29 · A credential the API rejects, read as a model that disagreed
+
+D86–D88 built SlipBench's `buried` condition on an assumption `bench/src/grade.ts` states and does
+not test: the planted sentence is "instruction-like by construction", and the real claim "lives" in
+`pnpm test:live:steering`. It does not live there — every example in that suite was a bare
+one-liner, while a production check reads up to 400 characters of real retail prose. So the
+instrument to settle it was built (`pnpm bench:judge`, 284 questions over both arms) and left
+unrun, waiting on a key.
+
+**The key was there, and the API rejects it.** `ANTHROPIC_API_KEY` in `apps/web/.env.local` is
+well-formed — 106 characters, the right prefix — and `count_tokens` answers `401
+authentication_error: invalid x-api-key`. It has been revoked or mistyped.
+
+**That is not what the failure said.** `pnpm test:live:steering` reported fourteen failures, each
+one an assertion that the model had given the wrong answer:
+
+```
+AssertionError: expected 'NO_ANSWER' to deeply equal { instruction_like: true }
+```
+
+Fourteen calls in 6.4 seconds, and a reader of that output would conclude the classifier had
+collapsed. No model was asked at all.
+
+**The adapter is right and the conclusion was wrong.** `createClaudeSteeringClassifier` catches
+everything and returns `NO_ANSWER` carrying no reason, deliberately: "an abort, a 401, a 529, an
+unparsable body: all the same to the rules, and the error is… deliberately not carried out of here
+— it can quote the listing". For a checkout that is correct twice over — R4a holds the purchase for
+the owner whichever it was, and an error that quotes the listing is an error that can be steered.
+For a *measurement* it is useless, and nothing between the adapter and the assertion was closing
+that gap. Part one had already met this and guarded the bench's tally by timing (`noAnswerFast`,
+`suspect()`, the "This run is not clean" banner), on the reasoning that a deadline miss costs the
+whole deadline so anything quicker was the transport. That proxy works, and it is still the right
+guard for a sweep already in flight — but it reports a symptom after the money is spent, when the
+direct question can be asked for nothing beforehand.
+
+**`count_tokens` is that question.** It authenticates exactly as a real call does, it is not
+billed, and given the real prompt it returns the per-check input size — so one free request both
+gates a sweep and measures it. `checkSteeringCredential` (`packages/steering/src/preflight.ts`)
+makes that call and answers in three states, carrying out a reason and a numeric status and never
+the SDK's message, because the prompt it was handed is a listing and the adapter's rule holds here
+too:
+
+- **ok** — with the model it authenticated against and the tokens it counted.
+- **rejected** — 401 or 403. The key. Every answer in the run would be `NO_ANSWER`, so the run
+  stops: `pnpm bench:judge --yes` now exits 1 before asking anything and writes no file, and the
+  live suites fail once, in `beforeAll`, with *"No model was asked, so nothing in this file is a
+  measurement"* while their cases report as skipped rather than wrong.
+- **unreachable** — anything else, including a model name the probe got wrong. This warns and
+  continues. Stopping here would let the probe decide that a measurement cannot happen, which is a
+  different claim from the key being bad, and a worse one to get wrong.
+
+**What this does not settle.** No sweep has run. Nothing in the repository claims a rate for either
+arm, `grade.ts` still supplies its verdict, and the report still says the claim lives in the live
+suite. **D93 is reserved for the measurement**, and it needs a key the API accepts.
+
+**And it leaves a hole in production, recorded as §19.6 rather than patched.** `assembly.ts`
+requires `ANTHROPIC_API_KEY` to be *present*; nothing asks whether it works, and there is no health
+route. A revoked key on deploy day means every purchase whose price gap needed the check is HELD,
+silently, with a receipt that says the check had no answer — which is exactly what the owner should
+see for a slow model and exactly the wrong thing to see for a dead credential. The fix is an
+operator doctor across all three services, and it is deliberately not half-built here: PayPal needs
+a token call and Channel3 would spend a credit, so it is its own piece of work with its own
+decision.
