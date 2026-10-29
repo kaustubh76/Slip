@@ -3,10 +3,10 @@ import { defineConfig, devices } from "@playwright/test";
 /**
  * Browser flows against the built app (`pnpm web:build` first), on two servers.
  *
- * **Demo** (:3100) is most of the suite: the in-memory store and the stand-ins for Channel3 and
+ * **Demo** (:3100 by default) is most of the suite: the in-memory store and the stand-ins for Channel3 and
  * PayPal, so nothing needs a key, and every test opens its own desk so tests never share data.
  *
- * **Owner** (:3101) is the same build without `SLIP_DEMO`, which is the deployment shape a real
+ * **Owner** (:3101 by default) is the same build without `SLIP_DEMO`, which is the deployment shape a real
  * owner meets: no desks, no stand-in catalogue, and the only way in is the credential they set
  * (D71). It had no browser coverage at all until that existed, so `owner-start.spec.ts` runs there
  * and nowhere else.
@@ -14,9 +14,14 @@ import { defineConfig, devices } from "@playwright/test";
  * The base URLs are plain http so the session cookie is not `__Host-`/Secure-only, which a
  * production build would otherwise insist on.
  */
-const PORT = 3100;
+/**
+ * Overridable, because a hardcoded port makes the whole suite unrunnable when anything else on the
+ * machine happens to hold it — which is not a hypothetical: an unrelated server sat on 3101 on
+ * 29 Oct 2026 and the owner project could not start at all. The defaults are unchanged.
+ */
+const PORT = Number(process.env["SLIP_E2E_PORT"] ?? 3100);
 const BASE = `http://localhost:${PORT}`;
-const OWNER_PORT = 3101;
+const OWNER_PORT = Number(process.env["SLIP_E2E_OWNER_PORT"] ?? 3101);
 const OWNER_BASE = `http://localhost:${OWNER_PORT}`;
 
 export default defineConfig({
