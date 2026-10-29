@@ -19,6 +19,7 @@ export { ReceiptSlip, stampOf } from "./components/ReceiptSlip.js";
 export { ReportCard, type ReportCardData } from "./components/ReportCard.js";
 export { Roll, type RollEntry, RollRow } from "./components/Roll.js";
 export { RollSummary } from "./components/RollSummary.js";
+export { ErrorSlip, FeedingPaper } from "./components/Slips.js";
 export { Stamp, type StampKind } from "./components/Stamp.js";
 export { StatusLine } from "./components/StatusLine.js";
 export { clockTime, printedAt, withAmounts } from "./components/text.js";

@@ -40,6 +40,8 @@ export interface ReceiptsState {
   olderCursor: string | null;
   status: "loading" | "ready" | "error";
   error: Error | null;
+  /** Reads the roll again. The one failure the query client gives up on is still worth offering. */
+  retry(): void;
 }
 
 const byDefaultAtTop = () => typeof window === "undefined" || window.scrollY < 80;
@@ -168,6 +170,9 @@ export function useReceipts(
     olderCursor: atLimit ? lastNext : null,
     status: query.status === "pending" ? "loading" : query.status === "error" ? "error" : "ready",
     error: query.error,
+    retry: () => {
+      void query.refetch();
+    },
   };
 }
 

@@ -2,6 +2,7 @@
 
 import type { Outcome } from "@slip/domain";
 import { type ReactNode, useState } from "react";
+import { SlipClientError, type SlipClientErrorKind } from "../data/client.js";
 import { SlipProvider } from "../data/provider.js";
 import { FakeSlipClient } from "../fake.js";
 import { countByOutcome, summariseAgents } from "../rollView.js";
@@ -26,6 +27,7 @@ import { ReceiptSlip } from "./ReceiptSlip.js";
 import { ReportCard } from "./ReportCard.js";
 import { Roll, type RollEntry } from "./Roll.js";
 import { RollSummary } from "./RollSummary.js";
+import { ErrorSlip, FeedingPaper } from "./Slips.js";
 import { Stamp, type StampKind } from "./Stamp.js";
 import { StatusLine } from "./StatusLine.js";
 
@@ -44,6 +46,8 @@ import { StatusLine } from "./StatusLine.js";
 
 const STAMPS: StampKind[] = ["PAID", "REJECTED", "HELD", "VOID"];
 const HOUR_MS = 3_600_000;
+/** Every way a read can fail, in the order a reader is most likely to meet them. */
+const FAILURES: SlipClientErrorKind[] = ["server", "signed-out", "not-found", "invalid"];
 
 function Case(props: { of: string; children: ReactNode }) {
   return (
@@ -72,6 +76,22 @@ export function KitGallery(props: { slip?: FakeSlipClient; now?: number } = {}) 
   return (
     <SlipProvider client={slip}>
       <h1 className="slip-meta">The kit, every state</h1>
+
+      <Case of="FeedingPaper">
+        <FeedingPaper label="Receipt" />
+      </Case>
+
+      <Case of="ErrorSlip">
+        {/* The states a reader would otherwise have to break a server to see. */}
+        {FAILURES.map((kind) => (
+          <ErrorSlip
+            key={kind}
+            what="the receipts"
+            error={new SlipClientError(kind, 500, "not shown to anyone")}
+            onRetry={() => {}}
+          />
+        ))}
+      </Case>
 
       <Case of="Stamp">
         {STAMPS.map((kind) => (

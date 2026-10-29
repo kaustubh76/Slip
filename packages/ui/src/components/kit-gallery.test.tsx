@@ -24,6 +24,8 @@ describe("the kit gallery", () => {
     () => {
       render(<KitGallery slip={new FakeSlipClient()} now={NOW} />);
       for (const of of [
+        "FeedingPaper",
+        "ErrorSlip",
         "Stamp",
         "OutcomeBar",
         "OutcomeFilter",
@@ -41,6 +43,20 @@ describe("the kit gallery", () => {
       ]) {
         expect(screen.getByRole("region", { name: of })).toBeTruthy();
       }
+    },
+    MOUNTS_EVERYTHING,
+  );
+
+  it(
+    "shows every way a read can fail, which no running app shows all at once",
+    () => {
+      render(<KitGallery slip={new FakeSlipClient()} now={NOW} />);
+      const failures = screen.getByRole("region", { name: "ErrorSlip" });
+      expect(failures.textContent).toContain("session has ended");
+      expect(failures.textContent).toContain("not there, or it is not yours");
+      expect(failures.textContent).toContain("could not answer just now");
+      // Still never the error's own words, even here.
+      expect(failures.textContent).not.toContain("not shown to anyone");
     },
     MOUNTS_EVERYTHING,
   );
