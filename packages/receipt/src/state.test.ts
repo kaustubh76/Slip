@@ -8,9 +8,9 @@ import {
 } from "@slip/domain";
 import { offer, testAttempt, testDecision } from "@slip/domain/testing";
 import { describe, expect, it } from "vitest";
-import { followUp, hold, payment } from "./__fixtures__/receipts.js";
 import { shortNo, utcDayTime } from "./format.js";
 import { stateLine } from "./state.js";
+import { followUp, hold, payment } from "./testing.js";
 
 const held = (): Attempt =>
   testAttempt({

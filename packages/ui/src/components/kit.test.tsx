@@ -3,7 +3,7 @@ import { testUuid } from "@slip/domain/testing";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { heldView, paidView, rejectedView } from "../__fixtures__/views.js";
+import { heldView, paidView, rejectedView } from "../seed/views.js";
 import { ConfirmDialog } from "./ConfirmDialog.js";
 import { CopyButton } from "./CopyButton.js";
 import { ApproveDialog, DeclineDialog } from "./HoldDialogs.js";

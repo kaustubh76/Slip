@@ -107,3 +107,11 @@ test("there are no demo desks here", async ({ page }) => {
   await page.goto("/sign-in");
   await expect(page.getByRole("button", { name: /Open a demo desk/ })).toHaveCount(0);
 });
+
+test("the kit gallery is not served here", async ({ page }) => {
+  // `/kit` renders canned fixtures, so on a real owner's deployment it would be a page of invented
+  // receipts beside their real ones. The gate is `isDemo`, and this is what proves it is not
+  // decoration: this server runs without SLIP_DEMO.
+  const answer = await page.goto("/kit");
+  expect(answer?.status()).toBe(404);
+});

@@ -18,7 +18,10 @@
       "default": "./dist/schema.js"
     },
     "./testing": {
-      "@slip/source": "./src/__fixtures__/receipts.ts"
+      "types": "./dist/testing.d.ts",
+      "@slip/source": "./src/testing.ts",
+      "import": "./dist/testing.js",
+      "default": "./dist/testing.js"
     }
   },
   "files": [

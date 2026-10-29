@@ -6,7 +6,7 @@ import {
   paidView,
   rejectedView,
   releasedView,
-} from "../__fixtures__/views.js";
+} from "../seed/views.js";
 import { placeLabels } from "./GapScale.js";
 import { Leaders } from "./Leaders.js";
 import { ReceiptSlip } from "./ReceiptSlip.js";

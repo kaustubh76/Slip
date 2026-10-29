@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { heldView, rejectedView } from "../__fixtures__/views.js";
+import { heldView, rejectedView } from "../seed/views.js";
 import { seedSlipQueries } from "../server.js";
 import { createSlipClient, SlipClientError } from "./client.js";
 import type { SlipCommands } from "./commands.js";

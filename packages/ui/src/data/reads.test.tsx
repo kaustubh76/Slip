@@ -1,11 +1,10 @@
-import type { ReceiptPage, ReceiptRow } from "@slip/receipt";
+import type { ReceiptRow } from "@slip/receipt";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { paidView } from "../__fixtures__/views.js";
-import type { SlipClient } from "./client.js";
+import { FakeSlipClient } from "../fake.js";
+import { paidView } from "../seed/views.js";
 import { useClock } from "./clock.js";
-import type { SlipCommands } from "./commands.js";
 import { slipKeys } from "./keys.js";
 import { SlipProvider } from "./provider.js";
 import { createSlipQueryClient } from "./query-client.js";
@@ -16,38 +15,11 @@ const row = (n: number, agent = "agent-1"): ReceiptRow => ({
   agent: { id: agent, name: agent },
 });
 
-/** A client over a list of receipts, newest first, `size` to a page. */
-function listClient(rows: ReceiptRow[], size: number): SlipClient {
-  const page = (
-    before: string | null | undefined,
-    agent: string | null | undefined,
-  ): ReceiptPage => {
-    const mine = rows.filter((r) => !agent || r.agent.id === agent);
-    const start = before ? mine.findIndex((r) => r.view.receiptId === before) + 1 : 0;
-    const slice = mine.slice(start, start + size);
-    return {
-      rows: slice,
-      next: start + size < mine.length ? (slice.at(-1)?.view.receiptId ?? null) : null,
-    };
-  };
-  const unused = async () => {
-    throw new Error("not in this test");
-  };
-  return {
-    receipts: async (query = {}) => page(query.before, query.agent),
-    receipt: unused,
-    holds: unused,
-    agents: unused,
-    policies: unused,
-    mandate: unused,
-    stamp: unused,
-    commands: {} as SlipCommands,
-  };
-}
-
 function setup(rows: ReceiptRow[], size = 25) {
   const queryClient = createSlipQueryClient();
-  const client = listClient(rows, size);
+  // A whole Slip over these rows: the server's page size is the server's to choose, so it is
+  // scripted here rather than asked for by the hook.
+  const client = new FakeSlipClient({ rows }).pageSize(size);
   const wrapper = ({ children }: { children: ReactNode }) => (
     <SlipProvider client={client} queryClient={queryClient}>
       {children}

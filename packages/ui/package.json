@@ -17,6 +17,12 @@
       "import": "./dist/server.js",
       "default": "./dist/server.js"
     },
+    "./fake": {
+      "types": "./dist/fake.d.ts",
+      "@slip/source": "./src/fake.ts",
+      "import": "./dist/fake.js",
+      "default": "./dist/fake.js"
+    },
     "./tokens.css": "./src/tokens.css",
     "./components.css": "./src/components.css"
   },

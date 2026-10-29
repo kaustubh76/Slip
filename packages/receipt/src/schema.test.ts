@@ -1,8 +1,8 @@
 import { DEFAULT_POLICY, type Hold, RULE_CODES, SYSTEM_DECIDER } from "@slip/domain";
 import { offer, testAttempt, testDecision } from "@slip/domain/testing";
 import { describe, expect, it } from "vitest";
-import { followUp, hold, payment } from "./__fixtures__/receipts.js";
 import { ReceiptViewSchema } from "./schema.js";
+import { followUp, hold, payment } from "./testing.js";
 import { renderReceipt } from "./view.js";
 
 const held = () =>

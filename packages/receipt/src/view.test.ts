@@ -1,7 +1,7 @@
 import { DEFAULT_POLICY, type PaymentStatus, RULE_CODES } from "@slip/domain";
 import { offer, testAttempt, testDecision } from "@slip/domain/testing";
 import { describe, expect, it } from "vitest";
-import { hold, payment } from "./__fixtures__/receipts.js";
+import { hold, payment } from "./testing.js";
 import { renderReceipt } from "./view.js";
 
 const storeA = (price: number, rate = 0) => offer({ price, domain: "store-a.example", rate });
