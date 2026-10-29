@@ -31,6 +31,8 @@ export interface SteeringCredentialOptions {
   /** Counted instead of the probe's own word, so one free call also sizes a real check. */
   prompt?: { system: string; user: string };
   baseUrl?: string;
+  /** The caller's deadline, since a probe that cannot be given up on is not a check. */
+  signal?: AbortSignal;
   /** Injected in tests, which answer with recorded `count_tokens` responses. */
   fetch?: ClientOptions["fetch"];
   client?: Anthropic;
@@ -60,7 +62,7 @@ export async function checkSteeringCredential(
         ...(prompt.system === "" ? {} : { system: prompt.system }),
         messages: [{ role: "user", content: prompt.user }],
       },
-      { maxRetries: 0 },
+      { maxRetries: 0, ...(options.signal === undefined ? {} : { signal: options.signal }) },
     );
     return { ok: true, model, inputTokens: counted.input_tokens };
   } catch (error) {

@@ -386,16 +386,21 @@ We also ran **one agent — `claude-haiku-5-5`, the small low-cost one — throu
    browses or compares offers. So there is nothing published to run through SlipBench, which is part
    of why §6.2's second provider never materialised: the gap is not that it was skipped.
 5. Rules on multiple sponsor prizes; Devpost page changes. **Open — the entrant's to check.**
-6. An operator signal when a model credential is rejected. **Open, and newly known (D92).** The
-   steering adapter turns a 401 into the same `NO_ANSWER` as a slow model and keeps no reason —
-   correct for a checkout, because R4a holds the purchase either way and an error can quote the
-   listing. The consequence in production is that a revoked or mistyped `ANTHROPIC_API_KEY` holds
-   every purchase whose price gap needed the check, silently:
-   `apps/web/src/server/assembly.ts` requires the variable to be present, nothing asks whether it
-   works, and there is no health route. The live suites and `pnpm bench:judge` now probe it with an
-   unbilled `count_tokens` call (`checkSteeringCredential`); the deployed app does not. A doctor
-   command across all three services is the fix and is deliberately not half-built: PayPal needs a
-   token call and Channel3 would spend a credit.
+6. A signal when a credential is rejected. **The operator half is done, 29 Oct 2026** (D92); a
+   signal from a *running* deployment is still open and deliberately unbuilt. Every adapter folds a
+   refusal into the answer a slow service gives — `NO_ANSWER` from the steering check, `UNAVAILABLE`
+   from Channel3, a failure at the token from PayPal — which is correct at a checkout, because R4a
+   holds the purchase either way and an error must not quote a listing back. It leaves an operator
+   with nothing: a revoked key holds every purchase that needed the check, and
+   `apps/web/src/server/assembly.ts` only requires the variable to be *present*.
+   **`pnpm doctor:keys`** now asks each service something only a working credential can answer — an
+   unbilled `count_tokens`, a product id Channel3 cannot have, an order id the PayPal sandbox cannot
+   have — printing no part of any credential and never touching live. Run against this repository's
+   own `.env.local` it found `ANTHROPIC_API_KEY` dead while Channel3 and the PayPal sandbox were
+   healthy. *Correcting what this item said before: Channel3 was not a reason to defer it. Product
+   detail is free; search is the call that costs a credit, and it is never made.* What remains is a
+   key revoked **while a deployment runs**, which needs a health route or monitoring and is out of
+   scope for the hackathon.
 
 ## Sources
 - PayPal Orders v2: https://developer.paypal.com/docs/api/orders/v2/

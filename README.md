@@ -157,6 +157,14 @@ poor way to see what Slip does. The density is uneven and measured:
 [the market study](study/results/market-study.md#if-you-are-about-to-use-slip-on-real-prices) names
 the searches worth making and a dozen real products that have something to compare.
 
+Before a demo, one free command asks all three services whether the keys actually work — a
+refused credential is otherwise invisible, because every adapter folds one into the same answer a
+slow service gives:
+
+```sh
+pnpm doctor:keys   # free, prints no part of any credential, never touches live
+```
+
 Each adapter also has a live suite that skips itself until its keys exist:
 
 ```sh

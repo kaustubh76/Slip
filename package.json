@@ -32,6 +32,7 @@
     "test:live:bench": "vitest run --project bench src/live.test.ts",
     "web:e2e": "pnpm --filter @slip/web e2e",
     "demo:agent": "tsx apps/web/scripts/demo-agent.ts",
+    "doctor:keys": "tsx --conditions=@slip/source apps/web/scripts/doctor.ts",
     "paypal:webhook": "tsx --conditions=@slip/source apps/web/scripts/paypal-webhook.ts",
     "paypal:vault-id": "tsx --conditions=@slip/source apps/web/scripts/paypal-vault-id.ts",
     "study:sample": "tsx --conditions=@slip/source study/src/bin/sample.ts",

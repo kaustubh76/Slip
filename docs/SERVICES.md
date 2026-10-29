@@ -13,6 +13,40 @@ and each ships a live suite that skips itself until its keys exist.
 documented payloads, read from their schemas — not traffic from a live account. The live suites are
 what closes that gap, and they are the gate before any demo that claims to be real.
 
+## Are the keys any good? `pnpm doctor:keys`
+
+```sh
+pnpm doctor:keys   # free, prints no part of any credential, never touches live
+```
+
+**A credential that a service refuses is invisible from inside Slip, by design.** Each adapter folds
+a refusal into the same answer a slow service gives — the steering check returns `NO_ANSWER`,
+Channel3 returns `UNAVAILABLE` ("no prices right now"), PayPal fails at the token inside a call that
+reports only that the payment did not happen. That is right at a checkout, where rule R4a holds the
+purchase for the owner either way and an error must not quote a listing back. It is useless to an
+operator: a revoked key means every purchase that needed the check is held, indefinitely, and
+nothing anywhere says why (D92, SPEC §19.6).
+
+So each service is asked something only a working credential can answer, and each question is free:
+
+| Service | Asked | Works | Refused |
+|---|---|---|---|
+| Anthropic | `count_tokens`, which is not billed | counted | 401 or 403 |
+| Channel3 | a product id it cannot have | `404 NOT_FOUND` | `401`, surfaced out of `UNAVAILABLE` |
+| PayPal | an order id it cannot have, in the sandbox | `404` after the token | `401` on the token |
+
+A deliberate miss is the cheapest proof there is that authentication succeeded: Channel3's 404
+settles the base url, the path, the `x-api-key` header and the key at once, and PayPal's settles the
+client id and secret, because the token has to be minted before the order can be missing.
+
+Exit **0** when everything configured was accepted, **1** when any of it was refused, **2** when
+there is no `apps/web/.env.local`. A variable that is not set is reported and is **not** a failure —
+"real prices, simulated payment" is a state Slip is meant to be in. `PAYPAL_ENV=live` is never
+probed; the command says so and asks nothing.
+
+It is named `doctor:keys` rather than `doctor` because pnpm has a built-in `doctor` that shadows a
+script of that name silently — it never runs, and the exit code is pnpm's.
+
 ---
 
 ## Channel3 — the offers
