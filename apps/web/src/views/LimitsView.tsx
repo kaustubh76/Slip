@@ -1,10 +1,10 @@
 "use client";
 
 import { formatPct, formatUsd, type Policy } from "@slip/domain";
-import { Leaders, LimitsPicture, LiveBadge, usePolicies } from "@slip/ui";
+import { ErrorSlip, FeedingPaper, Leaders, LimitsPicture, LiveBadge, usePolicies } from "@slip/ui";
+import Link from "next/link";
 import { useState } from "react";
 import { LimitsForm } from "../components/LimitsForm";
-import { ErrorSlip, FeedingPaper } from "../components/Slips";
 import {
   capSentence,
   EXAMPLE_BEST,
@@ -35,6 +35,7 @@ export function LimitsView(props: { token: string }) {
         what="your limits"
         error={policies.error}
         onRetry={() => void policies.refetch()}
+        Link={Link}
       />
     ) : (
       <FeedingPaper label="Policy" />

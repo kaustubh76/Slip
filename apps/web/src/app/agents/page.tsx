@@ -18,7 +18,7 @@ export default async function Agents() {
   }
   return (
     <SlipHydrate state={seedSlipQueries({ agents })}>
-      <AgentsView token={token} />
+      <AgentsView token={token} base={deps.config.publicBaseUrl} />
     </SlipHydrate>
   );
 }

@@ -2,12 +2,24 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { openDesk } from "./helpers";
 
+/**
+ * The origin the suite is actually running against. A cookie set for a hardcoded port is simply
+ * ignored when the ports are overridden, and the override exists because an unrelated server can
+ * hold 3100 — as one did on 30 Oct 2026, when this and `demo.spec.ts` were the only two specs that
+ * could not follow it.
+ */
+const origin = (baseURL: string | undefined): string => baseURL ?? "http://localhost:3100";
+
 // The way in is the one page a visitor meets before anything else, and the only one with no
 // session, so it is audited on its own rather than after a desk is opened.
 for (const theme of ["original", "carbon"] as const) {
-  test(`the way in has no serious accessibility problem (${theme})`, async ({ page, context }) => {
+  test(`the way in has no serious accessibility problem (${theme})`, async ({
+    page,
+    context,
+    baseURL,
+  }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await context.addCookies([{ name: "slip-theme", value: theme, url: "http://localhost:3100" }]);
+    await context.addCookies([{ name: "slip-theme", value: theme, url: origin(baseURL) }]);
     await page.goto("/sign-in");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     const results = await new AxeBuilder({ page }).analyze();
@@ -21,10 +33,14 @@ for (const theme of ["original", "carbon"] as const) {
 }
 
 for (const theme of ["original", "carbon"] as const) {
-  test(`every page has no serious accessibility problem (${theme})`, async ({ page, context }) => {
+  test(`every page has no serious accessibility problem (${theme})`, async ({
+    page,
+    context,
+    baseURL,
+  }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await openDesk(page);
-    await context.addCookies([{ name: "slip-theme", value: theme, url: "http://localhost:3100" }]);
+    await context.addCookies([{ name: "slip-theme", value: theme, url: origin(baseURL) }]);
     const first = await page
       .getByRole("region", { name: "Receipts" })
       .getByRole("link")
@@ -74,10 +90,11 @@ for (const theme of ["original", "carbon"] as const) {
   test(`the states a path list never reaches are clean too (${theme})`, async ({
     page,
     context,
+    baseURL,
   }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await openDesk(page);
-    await context.addCookies([{ name: "slip-theme", value: theme, url: "http://localhost:3100" }]);
+    await context.addCookies([{ name: "slip-theme", value: theme, url: origin(baseURL) }]);
     const serious = async (where: string) => {
       const results = await new AxeBuilder({ page }).analyze();
       expect(

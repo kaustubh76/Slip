@@ -2,6 +2,8 @@
 
 import { formatPct, formatUsd, type Policy } from "@slip/domain";
 import {
+  ErrorSlip,
+  FeedingPaper,
   Leaders,
   LiveBadge,
   printedAt,
@@ -14,7 +16,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { BeginSetup } from "../components/BeginSetup";
 import { KillSwitch, RevokeSummary } from "../components/KillSwitch";
-import { ErrorSlip, FeedingPaper } from "../components/Slips";
 
 type Revoked = Extract<RevokeMandateAnswer, { status: "revoked" }>;
 
@@ -35,7 +36,16 @@ export function MandateView(props: { token: string; note: string | null }) {
   const current = policies.data?.[0];
   if (summary === undefined || current === undefined) {
     return mandate.isError || policies.isError ? (
-      <ErrorSlip what="the permission slip" error={mandate.error ?? policies.error} />
+      <ErrorSlip
+        what="the permission slip"
+        error={mandate.error ?? policies.error}
+        onRetry={() => {
+          // Either read may be the one that failed, and the page needs both.
+          void mandate.refetch();
+          void policies.refetch();
+        }}
+        Link={Link}
+      />
     ) : (
       <FeedingPaper label="Permission slip" />
     );

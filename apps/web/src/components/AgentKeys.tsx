@@ -2,13 +2,14 @@
 
 import { useAgentKeys } from "@slip/ui";
 import { useState } from "react";
+import { ConnectAgent } from "./ConnectAgent";
 
 /**
  * Issuing and revoking agent keys. A new key is shown once, here, and held only in this
  * component's state: Slip keeps the hash, so no page can ever show it again, and it never goes
  * into a URL, a log or the query cache.
  */
-export function IssueAgentKey() {
+export function IssueAgentKey(props: { base: string }) {
   const keys = useAgentKeys();
   const [name, setName] = useState("");
   const busy = keys.issueStatus === "busy";
@@ -22,6 +23,7 @@ export function IssueAgentKey() {
         <p className="slip-caption">
           Copy it now. Slip keeps only its hash, so this is the only time it can be shown.
         </p>
+        <ConnectAgent base={props.base} apiKey={result.apiKey} />
         <button
           type="button"
           className="slip-button"

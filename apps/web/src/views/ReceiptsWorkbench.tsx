@@ -4,6 +4,7 @@ import type { Outcome } from "@slip/domain";
 import {
   countByOutcome,
   dayStarts,
+  ErrorSlip,
   filterRows,
   HoldsTray,
   LiveBadge,
@@ -21,7 +22,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
-import { ErrorSlip } from "../components/Slips";
 import { receiptHref, rollHref } from "./links";
 
 /**
@@ -89,7 +89,12 @@ export function ReceiptsWorkbench(props: {
             <LiveBadge initialToken={props.token} />
           </header>
           {receipts.status === "error" ? (
-            <ErrorSlip what="the receipts" error={receipts.error} />
+            <ErrorSlip
+              what="the receipts"
+              error={receipts.error}
+              onRetry={receipts.retry}
+              Link={Link}
+            />
           ) : null}
           <Roll
             entries={rows}

@@ -23,15 +23,23 @@ test("the console sends the agent shopping with PayPal declining, and logs what 
 
 test("the console issues a key for the agent script, shown once with the command", async ({
   page,
+  baseURL,
 }) => {
+  // Built from the base the suite was given: these two assertions used to name port 3100, so they
+  // failed whenever the ports were overridden to get around something else holding it.
+  const base = (baseURL ?? "http://localhost:3100").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   await openDesk(page);
   await page.goto("/demo");
   await page.getByRole("button", { name: "Issue a key for the script" }).click();
   await expect(page.locator(".slip-key")).toContainText(
-    /^SLIP_AGENT_KEY=slip_live_\S+ pnpm demo:agent --errand top-pick --url http:\/\/localhost:3100$/,
+    new RegExp(`^SLIP_AGENT_KEY=slip_live_\\S+ pnpm demo:agent --errand top-pick --url ${base}$`),
   );
-  await expect(page.locator(".slip-command")).toContainText(
-    /^claude mcp add --transport http slip http:\/\/localhost:3100\/api\/mcp --header "Authorization:\s+Bearer slip_live_\S+"$/,
+  // By content, not by position: the connect panel lists the endpoint and a configuration block in
+  // the same class, and each line ends with its copy button's own label.
+  await expect(page.locator(".slip-command").filter({ hasText: "claude mcp add" })).toContainText(
+    new RegExp(
+      `^claude mcp add --transport http slip ${base}/api/mcp --header "Authorization:\\s+Bearer slip_live_\\S+"`,
+    ),
   );
   await expect(page.getByRole("button", { name: "Issue a key for the script" })).toHaveCount(0);
   // The MCP server answers to an agent key, never to the owner's cookie.

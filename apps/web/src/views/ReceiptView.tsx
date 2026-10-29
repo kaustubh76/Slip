@@ -1,10 +1,9 @@
 "use client";
 
-import { ReceiptSlip, useReceipt } from "@slip/ui";
+import { ErrorSlip, FeedingPaper, ReceiptSlip, useReceipt } from "@slip/ui";
 import Link from "next/link";
 import { BehindTheReceipt } from "../components/BehindTheReceipt";
 import { HoldDecision } from "../components/HoldDecision";
-import { ErrorSlip, FeedingPaper } from "../components/Slips";
 
 /**
  * One receipt in full, live: the five-second part, the decision if it waits, everything behind.
@@ -27,6 +26,7 @@ export function ReceiptView(props: { id: string }) {
             what="this receipt"
             error={receipt.error}
             onRetry={() => void receipt.refetch()}
+            Link={Link}
           />
         ) : (
           <FeedingPaper label="Receipt" />

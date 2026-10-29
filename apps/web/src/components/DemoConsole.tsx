@@ -11,6 +11,7 @@ import {
   settleConsolePending,
 } from "../app/actions/demo";
 import { answerOf } from "./answer";
+import { ConnectAgent } from "./ConnectAgent";
 
 export interface ConsoleErrand {
   name: string;
@@ -228,13 +229,7 @@ export function DemoConsole(props: {
             <p className="slip-mono slip-key">
               SLIP_AGENT_KEY={key} pnpm demo:agent --errand top-pick --url {props.base}
             </p>
-            <p className="slip-mono slip-command">
-              claude mcp add --transport http slip {props.base}/api/mcp --header "Authorization:
-              Bearer {key}"
-            </p>
-            <p className="slip-caption">
-              Copy them now. Slip keeps only the key's hash, so it is shown this once.
-            </p>
+            <ConnectAgent base={props.base} apiKey={key} />
           </>
         )}
       </article>

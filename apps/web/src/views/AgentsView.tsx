@@ -1,11 +1,12 @@
 "use client";
 
-import { LiveBadge, ReportCard, useAgents } from "@slip/ui";
+import { ErrorSlip, LiveBadge, ReportCard, useAgents } from "@slip/ui";
+import Link from "next/link";
 import { IssueAgentKey, RevokeAgentKey } from "../components/AgentKeys";
-import { ErrorSlip } from "../components/Slips";
+import { ConnectAgent } from "../components/ConnectAgent";
 
 /** Each agent's report card, live, and the keys that let them spend. */
-export function AgentsView(props: { token: string }) {
+export function AgentsView(props: { token: string; base: string }) {
   const agents = useAgents();
   return (
     <>
@@ -13,7 +14,14 @@ export function AgentsView(props: { token: string }) {
         <h1 className="slip-meta">Agents</h1>
         <LiveBadge initialToken={props.token} />
       </header>
-      {agents.isError ? <ErrorSlip what="your agents" error={agents.error} /> : null}
+      {agents.isError ? (
+        <ErrorSlip
+          what="your agents"
+          error={agents.error}
+          onRetry={() => void agents.refetch()}
+          Link={Link}
+        />
+      ) : null}
       <div className="slip-cards">
         {(agents.data ?? []).map((card) => (
           <div key={card.agent.id} className="slip-stack">
@@ -35,7 +43,16 @@ export function AgentsView(props: { token: string }) {
           <p className="slip-prose">
             An agent spends under this mandate, within your limits, using a key of its own.
           </p>
-          <IssueAgentKey />
+          <IssueAgentKey base={props.base} />
+        </article>
+        {/* Where to point it, for an owner whose key was issued on some earlier day. */}
+        <article className="slip-sheet" data-perforated="">
+          <p className="slip-meta">Connect an agent</p>
+          <p className="slip-prose">
+            Any MCP client can reach this Slip, with an agent's key as its bearer token. The agent
+            searches, chooses, and pays through Slip — which checks each purchase first.
+          </p>
+          <ConnectAgent base={props.base} />
         </article>
       </div>
     </>

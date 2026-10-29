@@ -1,10 +1,18 @@
 "use client";
 
-import { Countdown, dayStarts, LiveBadge, ReceiptSlip, Roll, useClock, useHolds } from "@slip/ui";
+import {
+  Countdown,
+  dayStarts,
+  ErrorSlip,
+  LiveBadge,
+  ReceiptSlip,
+  Roll,
+  useClock,
+  useHolds,
+} from "@slip/ui";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import { HoldDecision } from "../components/HoldDecision";
-import { ErrorSlip } from "../components/Slips";
 import { receiptHref } from "./links";
 
 /**
@@ -46,7 +54,14 @@ export function HoldsView(props: { token: string; serverNow: number }) {
         <h1 className="slip-meta">In tray</h1>
         <LiveBadge initialToken={props.token} />
       </header>
-      {holds.isError ? <ErrorSlip what="the in-tray" error={holds.error} /> : null}
+      {holds.isError ? (
+        <ErrorSlip
+          what="the in-tray"
+          error={holds.error}
+          onRetry={() => void holds.refetch()}
+          Link={Link}
+        />
+      ) : null}
       {shown.length === 0 ? (
         <article className="slip-sheet" data-perforated="">
           <p className="slip-sentence">

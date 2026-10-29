@@ -103,6 +103,34 @@ test("a wrong password says the same thing as an unknown owner", async ({ page }
   expect(await page.getByRole("status").textContent()).toBe(unknown);
 });
 
+test("issuing a key also says where to point the agent", async ({ page }) => {
+  const email = someone();
+  await page.goto("/sign-in");
+  await page.locator("#start-email").fill(email);
+  await page.locator("#start-password").fill(PASSWORD);
+  await page.getByRole("button", { name: /Start with PayPal/ }).click();
+  await expect(page.getByRole("button", { name: /Approve/ })).toBeVisible({ timeout: 30_000 });
+  await page.getByRole("button", { name: /Approve/ }).click();
+
+  await page.goto("/agents");
+  const main = page.getByRole("main");
+  // Before any key exists, the endpoint is still here: an owner whose key was issued on an earlier
+  // day has nowhere else to find it.
+  await expect(main).toContainText("/api/mcp");
+  await expect(main).toContainText("$SLIP_AGENT_KEY");
+
+  await page.locator("#agent-name").fill("shopper-2");
+  await page.getByRole("button", { name: /Issue a key/ }).click();
+
+  // The key is shown once, and the command that uses it is shown with it — which is the whole
+  // point: a key with no endpoint beside it cannot be connected to anything.
+  const key = await main.locator(".slip-key").first().textContent();
+  expect(key).toMatch(/^slip_live_/);
+  await expect(main).toContainText(`claude mcp add --transport http slip`);
+  await expect(main).toContainText(`Bearer ${key}`);
+  await expect(main).toContainText("/api/v1/agent/checkout");
+});
+
 test("there are no demo desks here", async ({ page }) => {
   await page.goto("/sign-in");
   await expect(page.getByRole("button", { name: /Open a demo desk/ })).toHaveCount(0);
