@@ -105,18 +105,37 @@ running. That is the designed local workflow rather than a misconfiguration: a q
 address changes on every run, which is why the script re-points the same id. But while no tunnel is
 up, **every delivery PayPal attempts fails.**
 
-So three mechanisms, and only two of them are working right now:
+So three mechanisms, and **only one of them works right now**:
 
 | mechanism | what it does | state |
 |---|---|---|
 | Webhook → `POST /api/webhooks/paypal` | PayPal reports what became of orders, captures, authorizations and vault tokens; every delivery verified against the webhook id | **not arriving** — the registered address is a dead tunnel |
-| Resolver polling | finishes unknown payments by asking PayPal directly; every 30 s in a long-lived process, every 5 min on the schedule | working |
-| `reconcile` | nets settlements by invoice against Slip's own records; stamps `reconciledAt` and `reconcileUnmatched` on the permission page | working, but **every 24 h**, over a 3-day window, with a 3-hour reporting lag |
+| Resolver polling | finishes an unknown payment by asking PayPal about *that order*; every 30 s in a long-lived process, every 5 min on the schedule | **working** |
+| `reconcile` | nets settlements by invoice against Slip's own records; stamps `reconciledAt` and `reconcileUnmatched` on the permission page | **cannot run** — see below |
 
-**So a purchase is not lost, but it is slow and partly invisible.** The resolver learns a payment's
-fate without the webhook. What the webhook adds is promptness and the events polling cannot
-reconstruct — `PAYMENT.CAPTURE.REFUNDED` in particular, which without it reaches Slip only through
-the daily reconcile, where it reads as an amount that disagrees rather than as a refund.
+**Reconcile is not slow, it is off.** It reads PayPal's Transaction Search, and that feature is not
+enabled on this sandbox app. Measured 30 Oct 2026, directly against the endpoint the code calls:
+
+```
+GET /v1/reporting/transactions → 403 NOT_AUTHORIZED
+```
+
+`search.ts` maps any non-`ok` answer to **`unknown`, never "not found"** — *"Slip has not looked, so
+it may not conclude anything"* — so this **fails safe and says nothing**. Which is the right
+behaviour and the reason it went unnoticed: a reconcile that cannot look is indistinguishable, from
+the outside, from a reconcile that looked and found nothing wrong. `createOrderLookup`, the
+double-charge check, reads the same endpoint and is equally off. `docs/SERVICES.md` carries this
+with PayPal's exact error names, alongside the three closed vaulting doors.
+
+**So a purchase is not lost, and the gap is narrower than it sounds.** The resolver still learns a
+payment's fate, because it asks about a specific order through `/v2/checkout/orders` — a different
+endpoint, and one this app *is* authorized for. What is missing is everything that needs a *sweep*
+rather than a lookup: the webhook's promptness, and the events polling cannot reconstruct at all —
+`PAYMENT.CAPTURE.REFUNDED` above all, which was supposed to reach Slip through the daily reconcile
+and currently reaches it nowhere.
+
+**To fix reconcile:** enable **Transaction Search** on the sandbox REST app (PayPal dashboard →
+the app → Features). It is a tick-box, and nothing in Slip changes.
 
 **To restore it locally:** start a tunnel, then re-run the command in §2.3 with its address.
 **To stop needing a tunnel:** finish §2, and point it at the deployment once.
@@ -167,3 +186,47 @@ Each probe asks a question only a working credential can answer and costs nothin
 for Anthropic, a product id Channel3 cannot have, an order id the sandbox cannot have. A 401 or 403
 is a refusal; anything else is reported as unreachable, because a failing probe is not a failing
 key.
+
+---
+
+## 6 · The live contract suites, run 30 Oct 2026
+
+The offline tests check each adapter against recorded responses written from the service's own
+documentation. These are the only tests that can prove the documentation, which is why SERVICES.md
+calls them the gate before any demo that claims to be real. **Three of the four had never run.**
+
+| suite | result | what it settles |
+|---|---|---|
+| `pnpm test:live:channel3` | **2 passed, 1 skipped** | the base url, the path, the `x-api-key` header and the key, via a product id Channel3 cannot have. The skip is the search case, which costs a credit and is opt-in twice so a keyed run never spends one by accident |
+| `pnpm test:live:steering` | **14 passed** | the prompt draws the line in the right place: five examples written for SlipBench's condition C all flagged, and eight ordinary listings — *"including the loudest kind"* — none flagged. A false flag here would be Slip rejecting an honest purchase for writing sales copy |
+| `pnpm test:live:bench` | **1 passed** | the agent tool loop works against the real API, asserting the mechanism and never the model's choice, before `pnpm bench:run` spends tokens on 126 errands |
+| `pnpm test:live:paypal` | **skipped** — `skipped: set PAYPAL_TEST_VAULT_ID (pnpm test:live:paypal)` | nothing yet. This is **gate G2** |
+
+**The steering suite and D93 are different claims and neither substitutes for the other.** D93 swept
+284 real catalogue descriptions and measured breadth: 44 of 44 planted instructions flagged, 0 of 240
+honest ones. This suite takes thirteen examples chosen to probe the boundary — including text shaped
+like a tool result and a closing tag — and checks the line falls between them. Breadth and boundary.
+
+### Why `test:live:paypal` cannot run, measured
+
+It needs a sandbox buyer whose PayPal wallet has been vaulted through the approval flow. Slip's half
+of that works — two owners, two mandates, two genuine PayPal setup tokens — but the consent click
+never happens, and all three ways round it are shut on this app (`docs/SERVICES.md`, with PayPal's
+exact error names):
+
+| attempt | PayPal |
+|---|---|
+| vault a PayPal wallet | `PAYER_ACTION_REQUIRED` — the tokens Slip created are still waiting |
+| vault a card instead | `NOT_ENABLED_TO_VAULT_PAYMENT_SOURCE` |
+| pay by card without vaulting | `PAYEE_NOT_ENABLED_FOR_CARD_PROCESSING` |
+
+So G2 needs a **sandbox buyer account login**, which is a human step at PayPal's approval page.
+Once it exists:
+
+```sh
+PAYPAL_TEST_VAULT_ID=$(pnpm -s paypal:vault-id <mandate id>) pnpm test:live:paypal
+```
+
+`paypal:vault-id` prints only the token, so it can be captured without being shown — and it
+**refuses to run while the web app is answering**, because PGlite takes no lock and two processes on
+one database corrupt it. Stop the dev server first.
