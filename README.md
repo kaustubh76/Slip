@@ -101,12 +101,12 @@ Requires Node ≥ 22.12 and pnpm 10 (`corepack enable` picks the pinned version)
 ### More than one of you in this checkout
 
 Several people — or several agent sessions — working in one clone is normal here, and it produces
-failures that look exactly like defects and are not. On 30 Oct 2026 four sessions between them lost
-most of a day to this, each discovering it by accident. What it looks like:
+failures that look exactly like defects and are not. On 30 Oct 2026 several sessions between them
+lost most of a day to this, each discovering it by accident. What it looks like:
 
 - **A red suite whose failing set moves between runs.** That is a timeout, not a defect. The load
-  average on that machine ran between 61 and 659; at 659 even a server's 120 s startup budget
-  failed. **Re-run the file alone before believing it** — every one of those failures passed
+  average on that machine ran between 61 and 695; at that peak `git commit` itself took over two
+  minutes, and even a server's 120 s startup budget failed. **Re-run the file alone before believing it** — every one of those failures passed
   in isolation.
 - **`ENOENT` on a Playwright trace, or "Could not find a production build".** Another run cleared
   `apps/web/test-results/` or `.next` underneath yours. They are shared; only one run owns them.

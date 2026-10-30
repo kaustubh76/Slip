@@ -68,7 +68,9 @@ export default function Bench() {
             ["Typical gap, cheapest to priciest", gap()],
             [
               "Dearer offer pays more commission",
-              `${share(STUDY.numbers.commissionConflictPctHundredths)} (${STUDY.numbers.commissionConflicts} of ${STUDY.numbers.commissionConsidered})`,
+              // Of the products whose offers stated two different rates — not of all 240, and not
+              // of the comparable set, both of which are larger. The study report has the working.
+              `${share(STUDY.numbers.commissionConflictPctHundredths)} (${STUDY.numbers.commissionConflicts} of ${STUDY.numbers.commissionConsidered} where rates differ)`,
             ],
           ]}
         />
