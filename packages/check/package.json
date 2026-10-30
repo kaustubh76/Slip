@@ -2,7 +2,7 @@
   "name": "@slip/check",
   "version": "0.0.1",
   "private": true,
-  "description": "The pure Slip check: freshness → variant → locate → comparable → gap → rules. No I/O.",
+  "description": "The pure Slip check: freshness \u2192 variant \u2192 locate \u2192 comparable \u2192 gap \u2192 rules. No I/O.",
   "type": "module",
   "exports": {
     ".": {
@@ -20,7 +20,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@slip/domain": "workspace:*"
+    "@slip/domain": "workspace:*",
+    "@slip/graph": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "catalog:",

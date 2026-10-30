@@ -263,6 +263,9 @@ importers:
       '@slip/domain':
         specifier: workspace:*
         version: link:../domain
+      '@slip/graph':
+        specifier: workspace:*
+        version: link:../graph
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -319,6 +322,25 @@ importers:
       zod:
         specifier: 'catalog:'
         version: 4.6.5
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 26.6.5
+      fast-check:
+        specifier: 'catalog:'
+        version: 4.10.2
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vitest:
+        specifier: 'catalog:'
+        version: 5.0.3(@opentelemetry/api@1.9.1)(@types/node@26.6.5)(jsdom@30.1.2)(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(tsx@4.23.15))
+
+  packages/graph:
+    dependencies:
+      '@slip/domain':
+        specifier: workspace:*
+        version: link:../domain
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -512,6 +534,9 @@ importers:
       '@slip/domain':
         specifier: workspace:*
         version: link:../packages/domain
+      '@slip/graph':
+        specifier: workspace:*
+        version: link:../packages/graph
       '@slip/http':
         specifier: workspace:*
         version: link:../packages/http

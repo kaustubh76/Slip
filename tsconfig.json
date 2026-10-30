@@ -8,6 +8,9 @@
       "path": "packages/http"
     },
     {
+      "path": "packages/graph"
+    },
+    {
       "path": "packages/check"
     },
     {

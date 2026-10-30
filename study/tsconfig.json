@@ -12,6 +12,7 @@
     { "path": "../packages/domain" },
     { "path": "../packages/http" },
     { "path": "../packages/check" },
+    { "path": "../packages/graph" },
     { "path": "../packages/offers" }
   ]
 }

@@ -22,6 +22,7 @@
   "dependencies": {
     "@slip/check": "workspace:*",
     "@slip/domain": "workspace:*",
+    "@slip/graph": "workspace:*",
     "@slip/http": "workspace:*",
     "@slip/offers": "workspace:*"
   },
