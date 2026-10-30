@@ -299,7 +299,7 @@ mail service involved). It is required where `PAYPAL_ENV=live`, because losing t
 otherwise lose the kill switch over real money. There is no reset — Slip cannot send email.
 
 **Housekeeping runs.** A long-lived process resolves on a timer; a serverless one needs
-`SLIP_CRON_SECRET` and the `/api/cron/resolve` schedule in `vercel.json`. Without one of those,
+`SLIP_CRON_SECRET` and the `/api/cron/resolve` schedule in `apps/web/vercel.json`. Without one of those,
 nothing expires a hold or finishes an unknown payment.
 
 **Two combinations are refused outright.** `PAYPAL_ENV=live` with simulated prices, or with a

@@ -221,7 +221,7 @@ pnpm test:live:bench      # SlipBench's grader against a real model answer
 
 Only one case anywhere spends a Channel3 credit, and it is opt-in twice: a key, then
 `CHANNEL3_LIVE_SEARCH=1`. A deployment that will run on serverless also needs `SLIP_CRON_SECRET`,
-because nothing resolves holds or unknown payments there without the schedule in `vercel.json`.
+because nothing resolves holds or unknown payments there without the schedule in `apps/web/vercel.json`.
 
 Every variable is listed in [.env.example](.env.example). Copy it to **`apps/web/.env.local`** —
 that is the file Next loads and the one the operator scripts read; nothing reads a `.env` at the

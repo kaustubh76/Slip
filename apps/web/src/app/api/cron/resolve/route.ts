@@ -15,7 +15,9 @@ export const maxDuration = 60;
  *
  * A serverless deployment has no long-lived process to do this on a timer, and without it a hold
  * would never expire and an authorization could sit on someone's card until PayPal dropped it. See
- * `apps/web/src/server/cron.ts` for who is allowed to call it, and `vercel.json` for the schedule.
+ * `apps/web/src/server/cron.ts` for who is allowed to call it, and `apps/web/vercel.json` for the
+ * schedule — it lives beside the app because Vercel reads its configuration from the project's
+ * root directory, which for this workspace is `apps/web`.
  *
  * It answers with the resolver's own report, so a scheduler's logs show what moved.
  */
