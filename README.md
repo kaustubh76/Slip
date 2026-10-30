@@ -242,6 +242,10 @@ docker build -t slip .
 docker run -p 3000:3000 -e SLIP_BASE_URL=https://your.host slip
 ```
 
+**[docs/DEPLOY.md](docs/DEPLOY.md)** is the runbook: the demo Blueprint, a serverless deployment's
+settings and the two-step `SLIP_BASE_URL`, whether a sandbox purchase is currently being tracked,
+and the five gates that stand between here and live money.
+
 That is the whole of it: demo mode needs no database and no keys. Point any host that runs a
 container at the [Dockerfile](Dockerfile) — the image serves `/sign-in` and answers its own
 healthcheck once it is listening.
