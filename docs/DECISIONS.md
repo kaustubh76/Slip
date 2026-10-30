@@ -1872,3 +1872,269 @@ see for a slow model and exactly the wrong thing to see for a dead credential. T
 operator doctor across all three services, and it is deliberately not half-built here: PayPal needs
 a token call and Channel3 would spend a credit, so it is its own piece of work with its own
 decision.
+
+## D94 · 2026-10-30 · The merchant side, and the rule that was not written
+
+Slip is buyer-side only, and everything merchant-side is one string on an offer inside a jsonb
+blob: `Offer.domain`. No seller table, no canonical id, no foreign key. Designing the merchant side
+([docs/MERCHANTS.md](MERCHANTS.md)) turned up two defects in shipping code before it turned up any
+incentive question, and they are the reason the design exists in this order.
+
+**A seller can manufacture its own market.** `prepareCheck` dedupes offers by normalised URL only
+and counts `comparable.length` as the market. One seller on three storefront domains clears
+`R2_TOO_FEW_OFFERS`; `pickBest` then picks that seller's own cheapest listing, so the gap is
+whatever the seller chose, and the rules fall through to `R7_WITHIN_LIMITS` — PAID, unattended, on
+a receipt that reads as a comparison against a market. The study sample already carries the shapes
+this needs: `jcpenney.com` beside `slt-sfcc-react-production.mobify-storefront.com`, `walmart.com`
+beside `garvee.ca`, `cos.com` twice under one product id. Reachable today; whether it has happened
+is G6.
+
+**And silence beats disclosure.** `hasConflict` needs both commission rates known and above zero,
+and Channel3 reports 0 when it has no data (D3). A merchant that discloses a high rate can trip
+R5; one that discloses nothing cannot. The rule rewards the merchants it was written to catch, and
+the study's 19-of-40 is therefore a floor, not a measurement.
+
+**So the mechanism is disclosure, not money.** Merchants attest — a price binding, a commission
+rate, a domain identity, a GTIN — and what they get back is certainty: a hold becoming a decided
+purchase. [SPEC.md](SPEC.md) §17's *"Stores never pay for ranking"* stays true verbatim on two
+counts, both testable: no money enters, and `compareOffers`/`pickBest` are untouched, so `best`
+stays the cheapest comparable offer and standing never reorders anything. The owner's demand for
+standing lives in `Policy`, versioned by `policyWith`, so whenever standing holds a purchase it is
+because that owner asked.
+
+**The rule that was not written.** An earlier draft paid a single-seller purchase when the lone
+seller was fully attested — the obvious way to convert the 196-of-240 products that carry one
+comparable offer. It is wrong, and the reason is worth keeping: **an attestation establishes that a
+price is known, never that it is fair**, and a sole seller with perfect attestations is precisely
+the party best placed to overcharge. A single comparable offer stays a hold. The repair for a thin
+market is more comparisons — attested product identity widening across Channel3's product ids —
+not more trust.
+
+That cuts the whole relaxation side down to removing holds that existed only because something was
+*unknown*: a price binding satisfies R1's freshness test where a refetch failed and holds the price
+through hold approval, and a disclosed rate means the new `R5A` does not fire. **Nothing an
+attestation can reach maps to PAID**, which is the invariant expressed in the type system rather
+than in a comment.
+
+**Three new rule codes, all HELD, rather than overrides.** `attempts_outcome_matches_rule` is
+generated from `RULE_OUTCOME`, so one code means one outcome; writing PAID while keeping
+`ruleCode: R2_TOO_FEW_OFFERS` would violate the database. So `R2B_SINGLE_SELLER_MARKET`,
+`R5A_COMMISSION_UNDISCLOSED` and `R8_SELLER_BELOW_FLOOR` each get their own code, `ruleCodes[]`
+carries both the rule that would have fired and the one that decided, and the migration drops and
+re-adds `attempts_rule_codes_valid` and `attempts_outcome_matches_rule` the way 0004 and 0006 did
+for `R2A_GAP_IMPLAUSIBLE`.
+
+**And inferred evidence is fenced.** Edges carry tiers: a payout-rooted attestation (A) may merge
+sellers and widen comparisons, a signed domain-control proof (B) may do so damped, and a guess from
+a shared platform host or an identical price-and-rate pair (C) may only lower the seller count.
+**Tier C may move a decision toward HOLD and in no other direction** — not toward PAID, and not
+toward REJECTED, because a guess must not reject an honest purchase either. That matches what the
+code already decided for itself in D68: uncertainty's destination is a human.
+
+One subtlety is load-bearing and is a property test rather than a comment: a seller collapse must
+never feed `best`. Removing a ring's cheapest listing would make `best` dearer, the gap *smaller*,
+and could flip an `R4_OVERPAID` rejection to PAID — cheap evidence relaxing an outcome inside the
+step whose purpose is caution. `best` and the gap stay computed over every comparable offer; the
+collapse yields one new number, `comparableSellerCount`, and touches nothing else.
+
+**Nothing here is built.** The document is the design, §2's two defects are its only verified
+claims, and G6–G9 own every number in it.
+
+## D95 · 2026-10-30 · Two of the three merchant rules, and the narrow half of R5a
+
+D94 designed the merchant side. `R2B_SINGLE_SELLER_MARKET` and `R5A_COMMISSION_UNDISCLOSED` are
+now in `packages/check`, with migration `0008` dropping and re-adding `attempts_rule_codes_valid`
+and `attempts_outcome_matches_rule` from the domain's own map the way 0004 and 0006 did.
+`R8_SELLER_BELOW_FLOOR` is not: it needs the owner's floor in `Policy`, which needs a column on an
+append-only table, and it is its own piece of work.
+
+**R2b runs on inference nothing can get wrong.** `inferSellerEdges` joins two domains only when one
+is a subdomain of the other, and stops there. "Same price and same rate" was considered and left
+out: the study sample has Sur La Table and Williams Sonoma listing one skillet at the same price, 0%
+apart, and collapsing them would hold an honest purchase for want of a market that is really
+there. A bare brand label across country TLDs is a guess about ownership. And sibling subdomains
+are two tenants of a platform, not one seller, so they stay apart — which is the case the
+`mobify-storefront` host in the sample would have fallen into. Tier C can only hold, but holding an
+honest purchase is still a cost someone pays, so the inference stops where certainty does. Anything
+wider needs an attestation or a public-suffix list, and the repository has neither.
+
+**R2b holds what the gap rules would have rejected.** One seller listing $100 and $200, agent picks
+$200: before, `R4_OVERPAID` rejected it. `R4_OVERPAID` says the item was listed cheaper
+*elsewhere*; inside a single-seller market it was listed cheaper by the same seller, so the claim
+the rejection rests on is untrue. Held. That is D68 moved from the gap to the seller — uncertainty's
+destination is a human in both directions — and it is why the tier invariant is written "only
+toward HOLD" and not "only away from PAID". The attack's payoff drops from PAID to HELD in the
+zero-gap case, which is the case that mattered.
+
+**R5a ships as the asymmetric half only.** It fires above the flag line when the cheaper offer's
+rate is known and the chosen offer's is not — `null`, or the 0 Channel3 sends for no data (D3).
+That is exactly the shape `hasConflict` cannot judge, since it needs both rates above zero, and it
+asks only the store the money goes to to speak, which is where the conflict of interest sits. A
+silent *cheaper* store leaves nothing to compare against and no transaction at stake, so it holds
+nothing up.
+
+The broad form — every chosen offer must disclose or be held — is deliberately not here. It would
+turn every unreported rate above the flag line into a hold, and on a catalogue where most offers
+report nothing that is a change to the default behaviour of the product, not a rule. It belongs to
+the owner, through `Policy`, with D94's grace window beside it.
+
+**The type system asked for the copy.** Adding two rule codes broke `packages/receipt`'s two
+exhaustive switches with `TS2366`, which is the whole point of writing them as switches: a held
+receipt that could not say why would have shipped silently from a `Partial<Record>`. Both now have
+a sentence and a line for the holds tray. `HoldsTray`'s `WHY` map is a `Partial<Record>` and still
+has no entry for `R2A_GAP_IMPLAUSIBLE`, which predates this and is left alone.
+
+**What is not claimed.** Nothing here says a single-seller market or a withheld rate has ever
+occurred in a real catalogue. Both rules close holes that are reachable in the code as written;
+G6 is the question of whether anyone has walked through them, and it has not been run.
+
+## D96 · 2026-10-30 · The page moved, and the interface written in a session's shape
+
+D89 read PayPal's agentic-commerce material in full on 26–27 Oct and settled §2's claim against
+four pages. **One page was not among them, and it carries its own date.** The Agent Ready overview
+is stamped *last updated 13 Oct 2026* — before D89's pass, not after — so the omission was a gap in
+the reading, not drift in the source. Read on 30 Oct 2026.
+
+**What it says.** Three integration paths: ACP, with delegated payment tokens through Braintree
+(ChatGPT, OpenAI); UCP with Braintree, via the Google Pay payment handler (Google AI Mode, Gemini);
+and UCP with PayPal, where an encrypted Google Pay credential arrives in the checkout session and
+the merchant forwards it to Orders v2 for decryption. It names `/api/orders/v2` and no other
+endpoint, no headers and no request fields. All three paths describe how a credential reaches
+PayPal. No spending limit, no mandate, no agent identity; customer authorisation appears in the ACP
+path only. **D89's finding is unchanged and its bound is unchanged.** Recording the re-check matters
+more than its result: the most consequential claim in the repository is now dated against the newest
+page rather than against the pages that happened to exist when it was written. §19.3 says the
+earlier pass was incomplete rather than quietly widening what it covered.
+
+**The claim is better anchored on a bound than on an example.** §2 turned on a line in an example
+system prompt. The mechanism is stronger: a delegated payment request's documented constraints are a
+maximum chargeable amount and an expiry, both set from what the shopper selected in the agent's own
+interface. A bound whose value is taken from the thing it bounds cannot discriminate between that
+thing and its alternatives — $400 that is the lowest listed price and $400 that is listed at $260
+elsewhere are the same number, and a maximum of $400 admits both.
+
+**Three narrowings, and the third is the one that keeps this inside D89.**
+
+- **Merchant scope is not documented and the first draft of this said it was.** The ACP page states
+  that restrictions exist on how the credential may be used and does not enumerate them; the first
+  compatible implementation is a third party's, whose scoping is not restated there. So the claim is
+  about a maximum and an expiry **[VERIFIED]**, and merchant binding is **[UNVERIFIED]**. The
+  argument needs only the maximum, so it costs nothing to be accurate. Corrected before it reached a
+  document.
+- **"Automatic" is undefined, so nothing is inferred from it.** *"Supervised and automatic shopping
+  scenarios"* appears on PayPal pages and is defined on neither, which §2 already carried as a
+  bound. What sets a bound in an automatic scenario is therefore **not described** publicly, which
+  is not the same as *absent*, and the docs say the former.
+- **Slip's own `R6_ABOVE_ORDER_CAP` is a bound and cannot do this either.** It would pass a $400
+  overpayment as readily as a $400 best price. Writing that sentence into both §2 and
+  [RAILS.md](RAILS.md) §3 is what makes the argument about an instrument rather than about anyone's
+  product. A document that indicted someone else's bound while shipping its own, silently, would be
+  arguing in bad faith.
+
+**It is not a new claim.** §12 has carried *"Spend limits · Cap amount. Slip compares price with
+the market and spots conflicts"* since v4, written before these pages existed in their current form.
+What is new is a current, specific, dated artefact for the general claim to be about. Said the other
+way round, in case the order flatters: the thesis was not reverse-engineered from the rails.
+
+**Agent Ready stays out, and the interface is written anyway.** UCP-with-PayPal credential
+forwarding is the one genuinely new capability the 13 Oct page names concretely, and it sits behind
+the same merchant access form as the rest — so designing the inside of a gate nobody can see would
+be unfalsifiable, and §12 forbids claiming Agent Ready use in any case. Instead
+[RAILS.md](RAILS.md) §5 specifies Slip in the shape of a checkout session: create, update, complete,
+cancel, retrieve. §12's **[PROHIBITED]** list gains protocol conformance — ACP, UCP, AP2 or another
+— so the distinction between *shaped like* and *running on* cannot erode under deadline pressure.
+
+**What writing the interface found.** Slip is **complete-only**: `POST /api/v1/agent/checkout` and
+the MCP `checkout` tool check and pay in one call, and there is no session object anywhere. Splitting
+them puts the check at create and the money at complete, which opens a time-of-check/time-of-use gap
+one call cannot have. The repository already holds the discipline for it — a decision is valid only
+while its snapshot is fresh, which `R1` enforces, and hold approval already previews an amount and
+approves against it. Both are reused rather than invented.
+
+**What is not claimed.** That any of §5 is built, that the endpoint and field names in it are right
+— they are tagged third-party and G14 retires each tag — or that Slip has run on any platform's
+rails. Nothing from §5 appears in the README, the submission copy or the video.
+
+## D97 · 2026-10-30 · The reversal Slip owes, and why it is a refund and not a dispute
+
+Designing the rails side asked what happens *after* a session completes, and the answer is that
+nothing does. **Slip can stop a payment and cannot undo one.** Four readings of the current code, on
+30 Oct 2026.
+
+- **No refund call exists.** `voidAuthorization` is the only money-reversal call in the port
+  (`packages/domain/src/ports/payments.ts:201`) and it releases an authorisation that never moved
+  money. A one-step capture — what the PAID path creates — has no reversal at all.
+- **A refunded capture reads as captured, and correctly.** `CAPTURE_HELD` includes `REFUNDED` and
+  `PARTIALLY_REFUNDED` (`packages/paypal/src/map.ts:64`): *"the money moved, and a refund is outside
+  what Slip models — calling it anything else would say the charge never happened."* That line is
+  right and the design does not touch it. A naive implementation would "fix" it and break
+  `orderResult`.
+- **A refund is never delivered, not merely unhandled.** `pnpm paypal:webhook` subscribes to exactly
+  `SLIP_WEBHOOK_EVENTS` intersected with what the app is offered
+  (`apps/web/scripts/paypal-webhook.ts:47`), and `PAYMENT.CAPTURE.REFUNDED` is not in that list —
+  whose own comment says *"a subscription narrower than this loses money events silently."* The
+  `default` arm that names a refund as a real event with no rule never has to run.
+- **So an out-of-band refund reads as the owner's own account disagreeing with Slip.** A refund
+  arrives as `kind: "settled"` with a **negative** amount — PayPal reports it with
+  `transaction_status: "S"`, so *"the sign decides, not the status"* (`packages/paypal/src/search.ts:117`,
+  D76). Netted against the capture it gives zero, while `slipBelieves` returns the full amount for
+  any `CAPTURED` payment and has no reversal case (`packages/app/src/resolver.ts:192`). The attempt
+  is counted under `reconcile.disagreed` and raises the mandate's unmatched count — the figure the
+  permission slip shows the owner — on every pass for as long as the window reaches back, **three
+  days** by default (`reconcileWindowMs`, `packages/app/src/config.ts:42`). Then it stops, without
+  having been resolved, which is worse than persisting.
+
+**The plumbing to see a refund was built; the destination was not.** The port comment says `kind`
+keeps settlements and reversals apart *"because a reconcile that collapsed the two … could not see a
+refund at all"*, and D76 worked out that the sign decides. Slip can already observe a refund in full
+detail and has nowhere to put it.
+
+**And the kill switch is prospective.** `revokeMandate` (`packages/app/src/mandates.ts:316`) revokes,
+declines open holds, releases their reservations and deletes the saved method at PayPal. Nothing
+already charged is touched. An owner who finds a bad purchase can only prevent the next one.
+
+**Why this is an obligation and not a feature.** A gate that can only ever say no is a filter, not a
+policy engine. Slip claims the authority to decide a payment, and it has a *measured* way of
+deciding wrongly: Channel3's grouping accuracy is **[UNVERIFIED]**, G4 is open, and the study's
+price-gap heuristic found three suspect groupings in the committed sample with no second signal in
+the data to settle them (§19.2, D68). A purchase decided on a wrong grouping is a PAID decision
+resting on a comparison this project has itself published as unreliable, and today nothing can be
+done about one.
+
+**The rule that was not written: a `REFUNDED` payment status.** `CAPTURED` is terminal — its
+transition list is empty — and the payment graph is deliberately acyclic. A refund that can be
+declined would have to return a payment from `REFUNDED` to `CAPTURED`, the first cycle in the
+machine, weakening every exhaustive proof over it. So a reversal is **its own record with its own
+small machine** (`NONE → REFUNDING → REFUNDED | REFUND_DECLINED`), which leaves `Payment`,
+`TERMINAL_PAYMENT_STATUSES`, `IN_FLIGHT_PAYMENT_STATUSES`, the partial unique index and
+`missingPaymentFields` untouched. It also matches how PayPal models it: a refund is its own resource
+under a capture, not a new state of one. `PAYMENT_OPERATION_KINDS` gains `REFUND`, so the request-id
+audit stays in one place and a refund is idempotent by the same mechanism as a capture and a void.
+
+**A refund, and not a dispute, for a reason about roles as much as the deadline.** Purchase
+Protection covers an item that *"doesn't arrive or match the seller's description"* (PayPal,
+*Is AI checkout safe?*, 22 Apr 2026). On an overpayment the seller performed: the item arrives, it
+matches, and the price was one the buyer's own agent agreed to. A dispute process adjudicates the
+seller's performance, and there was nothing wrong with it — the thing that went wrong happened on the
+buyer's side, before the money moved. **That is not a gap in anyone's product**; an overpayment was
+never evidenceable until something kept the comparison. Beyond that: Slip as merchant of record is a
+dispute's respondent rather than its raiser, §14 cuts disputes, the evidence payload is multipart
+upload, and the sandbox flow cannot be driven before 12 Nov. G13 names the single fact that would
+reopen it — whether a dispute resource carries anything tying it to a Slip attempt. D87's
+`searchContext` is a narrow bridge, named and not built.
+
+**What §14's stretch item becomes.** The price-protection refund is **replaced, not renamed**.
+Refunding a difference whenever a cheaper listing appears within 24 h is a promise about future
+prices, which Slip never measured, never decided, and cannot bound — a listing can appear at any
+price at any time. The correction refund fires on a closed, enumerated list of cases where Slip's own
+record shows the decision was wrong, which is the only thing it can defend.
+
+**The agent may never ask.** An agent that can both spend and un-spend can probe the owner's limits
+for free: buy, read the verdict, undo. The agent is the party under check. Written into
+[TOOLS.md](../TOOLS.md) as a documented absence rather than left to look like an unimplemented
+feature. Who bears the cost in a real deployment is the platform's commercial question and is not
+decided here.
+
+**What is not claimed.** That any of it is built — no code changed. G10–G14 own every number.
+**G11 and G12 need no key, no model call and no live traffic**, which makes them the cheapest
+untaken gates in the repository; taking either is a code change, and this was not one.

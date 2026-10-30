@@ -99,7 +99,7 @@ those values. Only the search case spends a credit, and only when asked for.
 | | |
 |---|---|
 | Keys | `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `PAYPAL_WEBHOOK_ID`, `PAYPAL_ENV` |
-| Slip calls | Orders v2, Payments v2 (capture/void/read), Vault v3, webhook verification, Transaction Search |
+| Slip calls | Orders v2, Payments v2 (capture/void/read — **no refund**, [RAILS.md](RAILS.md) §8), Vault v3, webhook verification, Transaction Search |
 | Adapter | `packages/paypal/src/` — `orders.ts`, `vault.ts`, `webhooks.ts`, `search.ts` |
 
 1. At <https://developer.paypal.com/dashboard/applications/sandbox>, create a REST app and tick
@@ -122,6 +122,13 @@ those values. Only the search case spends a credit, and only when asked for.
    once purchases start: that is how Slip hears what became of a capture it did not see settle.
 
 All three values or none — Slip falls back to the stand-in rather than running half-configured.
+
+**The subscription is generated from the code's own list.** `pnpm paypal:webhook` subscribes to
+exactly `SLIP_WEBHOOK_EVENTS` intersected with what the app is offered
+(`apps/web/scripts/paypal-webhook.ts:47`), so an event Slip has no rule for is also an event Slip
+never receives. `PAYMENT.CAPTURE.REFUNDED` is one of them: a refund issued in the dashboard reaches
+Slip only through the daily reconcile, where today it reads as an amount that disagrees rather than
+as a refund ([RAILS.md](RAILS.md) §8). **[VERIFIED 30 Oct 2026, by reading.]**
 
 ### The one manual step
 

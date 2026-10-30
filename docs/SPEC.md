@@ -49,6 +49,26 @@ defined on neither, so a buyer-side step inside "supervised" cannot be ruled out
 a criticism of PayPal — the Agent Toolkit is a payments toolkit and was never meant to be a
 buyer-protection product. **[PROHIBITED]** saying PayPal lacks, omits or forgot a price check.
 
+**Re-checked on 30 October 2026, against a page that had moved.** PayPal's Agent Ready overview
+carries its own date — *last updated 13 Oct 2026* — and was not one of the four pages read for
+§19.3. It describes three integration paths: ACP, with delegated payment tokens through Braintree;
+UCP with Braintree, using a Google Pay payment handler; and UCP with PayPal, where an encrypted
+Google Pay credential arrives in the checkout session and the merchant forwards it to Orders v2 for
+decryption. All three describe how a credential reaches PayPal. The page names no spending limit, no
+mandate and no agent identity, and customer authorisation appears only in the ACP path. **The claim
+above is unchanged and its bound is unchanged**; what is new is that it has been checked against the
+newest page rather than only the four that existed when it was written.
+**[VERIFIED 30 Oct 2026.]** [RAILS.md](RAILS.md) §2 has the table and the sources.
+
+**The stronger form of the claim is about a bound, not an example.** A delegated payment request's
+documented constraints are a maximum chargeable amount and an expiry, both set from what the shopper
+selected in the agent's own interface. A bound whose value is taken from the thing it bounds cannot
+discriminate between that thing and its alternatives: $400 that is the lowest listed price and $400
+that is listed at $260 elsewhere are the same number, and a maximum of $400 admits both. That is a
+statement about bounds as a category, and **Slip's own `R6_ABOVE_ORDER_CAP` is a bound and cannot do
+it either** — which is why the cap is not the check in Slip, and why saying this about anyone else's
+bound would otherwise be arguing in bad faith. [RAILS.md](RAILS.md) §3.
+
 ## 3. Who it is for
 
 **Primary:** teams building agentic shopping platforms. They need to know whether their agent buys well, prove it, and stop bad purchases.
@@ -164,11 +184,15 @@ Agent ──MCP──► Slip server
 | Human-review hold | Orders v2 AUTHORIZE with vault token; Payments v2 capture or void | **[UNVERIFIED]** |
 | Status | Get order | REST `GET /v2/checkout/orders/{id}`, not the Agent Toolkit (D82) |
 | Daily reconcile | Transaction list (delayed up to 3 h) | REST `GET /v1/reporting/transactions` (D82) |
-| Refund (stretch) | Refund a capture | not built |
+| Refund | Payments v2 `POST /v2/payments/captures/{id}/refund` — the only reversal of a one-step capture; `voidAuthorization` reverses nothing that moved | **not built; designed in [RAILS.md](RAILS.md) §9–§11** |
+| Dispute evidence | Disputes v1, provide-evidence | not built, and deliberately not designed ([RAILS.md](RAILS.md) §12) |
 
 **[VERIFIED]** The Agent Toolkit has no vault, authorise or void tools, so the vault and hold calls go to REST directly. State this in TOOLS.md. Every single-step order needs a `PayPal-Request-Id` header; use it as the idempotency key.
 
-**[VERIFIED]** Store Sync is limited-access and US-physical-goods only. Slip does not use Store Sync or Agent Ready.
+**[VERIFIED]** Store Sync is limited-access and US-physical-goods only. Slip does not use Store Sync
+or Agent Ready — Agent Ready is behind a merchant access form, and §12 forbids claiming its use.
+[RAILS.md](RAILS.md) §5 writes Slip's interface in the shape of a checkout session so it could sit
+on those rails later: designed, never claimed as used. **[VERIFIED 30 Oct 2026.]**
 
 ### Channel3 usage [VERIFIED]
 `POST /v1/search`, max 30 results per call, free credits that run out (HTTP 402). Each product has an `offers` list with `domain`, `url`, `price`, `availability`, `condition`, `max_commission_rate`. Cache every response.
@@ -265,20 +289,20 @@ measurements, not the diagram.
 |---|---|
 | Shopping agents | Slip checks them; it does not shop |
 | Honey and price trackers | Help a human choose. Slip stops an agent's payment and keeps a record |
-| Spend limits | Cap amount. Slip compares price with the market and spots conflicts |
+| Spend limits, and delegated payment tokens | Both bound an amount. A bound whose value is the price of the offer under review cannot say whether that offer was the cheapest listed; Slip compares it with the others and spots conflicts. Slip's own `R6_ABOVE_ORDER_CAP` is a bound too, and cannot do this either ([RAILS.md](RAILS.md) §3) |
 | ACES, Magentic Marketplace | Measure bias in synthetic markets. Slip uses real offers and acts at the payment step |
 
 **Claim to defend:** "On a platform that controls both the agent's payment and the checkout, Slip compares the agent's chosen offer with other listed offers for the same item, flags steering and commission conflicts, and prevents the PayPal payment when the owner's limits are breached."
 
-**[PROHIBITED]** Gating third-party retailers' checkouts; "best execution" or landed-cost claims; savings figures not from the study or bench; presenting synthetic labels or injections as found in the wild; real purchases; use of Agent Ready or Store Sync; "first benchmark of agent bias"; adoption claims without named, consenting users.
+**[PROHIBITED]** Gating third-party retailers' checkouts; "best execution" or landed-cost claims; savings figures not from the study or bench; presenting synthetic labels or injections as found in the wild; real purchases; use of Agent Ready or Store Sync; claiming conformance with, certification by, or use of any agent-commerce protocol — ACP, UCP, AP2 or another — or that Slip has run against any agent platform's live rails; "first benchmark of agent bias"; adoption claims without named, consenting users.
 
 ## 13. Prizes
 
 | Prize | Fit | Why |
 |---|---|---|
 | **Best Use of Channel3 — chosen side track** | Strong | Offers as the comparison base; `max_commission_rate` as a conflict signal. Frame it as Channel3's transparency making the check possible |
-| Best Use of Agentic Commerce | Plausible | Buyer-side check for agent purchases, with the merchant model stated plainly |
-| Best Use of PayPal + AI | Plausible | Vault mandate, single-step pay, hold and void, reconcile |
+| Best Use of Agentic Commerce | Plausible | Buyer-side check for agent purchases, with the merchant model stated plainly, and the interface written in a checkout session's shape ([RAILS.md](RAILS.md) §5) |
+| Best Use of PayPal + AI | Plausible | Vault mandate, single-step pay, hold and void, reconcile; the reversal is designed and not built ([RAILS.md](RAILS.md) §9–§11) |
 | Best Demo Delivery | Plausible | A payment visibly refused, with a one-screen reason |
 | Top 3 overall | Long shot | Needs the product to feel complete, not like a test harness |
 
@@ -295,9 +319,9 @@ measurements, not the diagram.
 8. Market study and SlipBench results, reproducible
 9. Hosted demo, public repo with licence, README, TOOLS.md, video under 3:00
 
-**Stretch, in order:** price-protection refund (the platform refunds the difference if a cheaper listing appears within 24 h; funded by the platform, not the retailer); one or two outside builders from your own developer community running their agent through Slip; AG Grid report card if multiple sponsor entries are allowed **[UNVERIFIED]**.
+**Stretch, in order:** the correction refund of [RAILS.md](RAILS.md) §9–§11 — Slip reverses a capture its own attempt record shows was decided on evidence that was wrong. *This replaces the price-protection refund this list carried until 30 Oct 2026: refunding the difference when a cheaper listing appears within 24 h is a promise about future prices, which Slip never measured and never decided, and it has no bound. The correction refund is bounded by what Slip's own record already holds (D97).* Then one or two outside builders from your own developer community running their agent through Slip; AG Grid report card if multiple sponsor entries are allowed **[UNVERIFIED]**.
 
-**Cut:** npm wrapper; adoption target among competing teams; 40-errand bench; live reconciliation; PYUSD or anything on-chain; shipping and tax; multi-currency; disputes.
+**Cut:** npm wrapper; adoption target among competing teams; 40-errand bench; live reconciliation; PYUSD or anything on-chain; shipping and tax; multi-currency; disputes — and the reasoning is now written down rather than assumed ([RAILS.md](RAILS.md) §12).
 
 ## 15. Build plan (IST, solo)
 
@@ -377,7 +401,10 @@ We also ran **one agent — `claude-haiku-5-5`, the small low-cost one — throu
    requires buyer approval; *"supervised and automatic shopping scenarios"* appears twice and is
    defined neither time; the only buyer-side control in PayPal's own agent material is the line
    *"After approval by user, invoke capture_order"* in one example system prompt, which nothing
-   enforces. §2 now carries the claim with that evidence and its bound.
+   enforces. §2 now carries the claim with that evidence and its bound. *Re-checked 30 Oct 2026
+   against the Agent Ready overview, which carries a **last updated 13 Oct 2026** stamp and was not
+   one of the four — so the original pass was incomplete, not wrong. The finding is unchanged; the
+   newer page is in Sources, and [RAILS.md](RAILS.md) §2 tabulates it (D96).*
 4. ~~Whether PayPal publishes any sample shopping agent worth running through the bench.~~
    **Answered: no** (26–27 Oct 2026). `github.com/paypal/agent-toolkit` is the official repository;
    it wires agent frameworks (OpenAI Agents SDK, LangChain, CrewAI, Vercel AI SDK, MCP, Bedrock) to
@@ -401,6 +428,13 @@ We also ran **one agent — `claude-haiku-5-5`, the small low-cost one — throu
    detail is free; search is the call that costs a credit, and it is never made.* What remains is a
    key revoked **while a deployment runs**, which needs a health route or monitoring and is out of
    scope for the hackathon.
+7. The refund path, and whether a refunded capture already makes the reconcile disagree. **Open
+   (G10, G11, [RAILS.md](RAILS.md) §14).** The second needs no key, no model call and no live
+   traffic — a refund arrives as a negative `settled` record and `slipBelieves` has no reversal case
+   (`packages/app/src/resolver.ts:192`) — which makes it the cheapest untaken gate here.
+8. The endpoint, field and status names in [RAILS.md](RAILS.md) §5 that came from third-party
+   write-ups rather than a primary specification. **Open (G14).** Each is tagged in place, and none
+   of them appears in this spec's submission copy, the README or the video.
 
 ## Sources
 - PayPal Orders v2: https://developer.paypal.com/docs/api/orders/v2/
@@ -414,6 +448,18 @@ We also ran **one agent — `claude-haiku-5-5`, the small low-cost one — throu
   - https://developer.paypal.com/docsai/growth/agentic-commerce/overview
   - https://developer.paypal.com/ai-tools/get-started
   - https://developer.paypal.com/ai-tools/toolkit
+- PayPal Agent Ready overview (PayPal's own date: last updated 13 Oct 2026; read 30 Oct 2026):
+  https://developer.paypal.com/agent-ready/overview
+- PayPal Payments v2, refund a captured payment: https://developer.paypal.com/docs/api/payments/v2/
+- PayPal Disputes v1: https://developer.paypal.com/docs/api/customer-disputes/v1/
+- PayPal, "Agentic commerce explained", 5 Mar 2026, shopper-facing (read 30 Oct 2026):
+  https://www.paypal.com/us/money-hub/article/agentic-commerce-explained
+- PayPal, "Is AI checkout safe?", 22 Apr 2026, shopper-facing — Purchase Protection's documented
+  grounds (read 30 Oct 2026): https://www.paypal.com/us/money-hub/article/ai-checkout-security-guide
+- PayPal newsroom, "Making Sense of the AI Shopping Protocol Moment", 22 Jan 2026:
+  https://newsroom.paypal-corp.com/2026-01-22-Making-Sense-of-the-AI-Shopping-Protocol-Moment
+- OpenAI, Agentic Commerce Protocol — key concepts (read 30 Oct 2026):
+  https://developers.openai.com/commerce/guides/key-concepts
 - Channel3 search API: https://docs.trychannel3.com/api-reference/v1/search
 - ACES: https://arxiv.org/abs/2508.02630
 - Magentic Marketplace: https://arxiv.org/html/2510.25779v1

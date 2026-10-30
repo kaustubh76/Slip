@@ -3,10 +3,14 @@
 **The second opinion on every agent purchase.**
 
 AI agents are starting to spend people's money, and nothing checks whether they are overpaying or
-being steered. That is not a guess. PayPal's public agentic-commerce docs describe the merchant
-side, and the only buyer-side control in its own agent material is a line in an example system
-prompt — *"After approval by user, invoke capture_order"* — which nothing enforces.
-[docs/SPEC.md](docs/SPEC.md) §2 has the sources and the bound on that claim.
+being steered. That is not a guess. What the agentic-commerce rails carry on the wire is a bound: a
+delegated payment request sets a maximum chargeable amount and an expiry, taken from the offer the
+agent itself put in front of the shopper. **A bound whose value comes from the thing it bounds
+cannot tell that thing from its alternatives** — $400 that is the lowest listed price and $400 that
+is listed at $260 elsewhere are the same number, and a maximum of $400 admits both. Slip's own order
+cap is a bound too, and cannot do it either; that is why a cap is not the check.
+[docs/SPEC.md](docs/SPEC.md) §2 has the sources and the bound on that claim, and
+[docs/RAILS.md](docs/RAILS.md) has the rails in full.
 
 Slip checks every purchase an agent attempts before PayPal moves the money. It compares the chosen
 offer with the other listed offers for the same item (from Channel3), flags steering and cases
@@ -25,7 +29,11 @@ moves. Read [docs/SPEC.md](docs/SPEC.md) for the full spec,
 disagree, and which [docs/DIAGRAM.md](docs/DIAGRAM.md) maps box by box onto the code and the tests
 — and [docs/UI.md](docs/UI.md) for the owner UI. Agents connect through Slip's MCP server: [TOOLS.md](TOOLS.md). The merchant side — standing,
 the seller graph, and the two defects in the current check it exists to close — is designed in
-[docs/MERCHANTS.md](docs/MERCHANTS.md), and not yet built. Design decisions are
+[docs/MERCHANTS.md](docs/MERCHANTS.md); its graph (`packages/graph`) and two of its three rules
+ship, and the attestations, their store and the hook surface do not. How the same decision would
+read to an agent platform — Slip's interface written in a checkout session's shape, and the reversal
+a check that can only say no still owes — is designed in [docs/RAILS.md](docs/RAILS.md), and none of
+it is built. Design decisions are
 logged in [docs/DECISIONS.md](docs/DECISIONS.md), and [docs/DEMO.md](docs/DEMO.md) is the shot
 list for the video — including the one beat still waiting on a vaulted sandbox buyer.
 
@@ -35,6 +43,7 @@ list for the video — including the one beat still waiting on a vaulted sandbox
 packages/domain    types, money (integer cents), state machines, ports (store, offers,
                    payments, classifier, clock), shared invariants — no I/O       (done)
 packages/check     the pure check: freshness → variant → locate → comparable → gap → rules (done)
+packages/graph     seller identity: edges, evidence tiers, resolution, standing — no I/O   (done)
 packages/db        Postgres store (Drizzle on postgres.js or PGlite), in-memory fake,
                    migrations with database-level guards                         (done)
 packages/app       use cases: checkout, holds, resolver, webhooks, mandates,
@@ -387,6 +396,14 @@ as the REST endpoint, run with the agent's own key, and answers with the owner's
 next step. 2025-era and 2026-07-28 clients are both served; the key is checked on every request.
 A real MCP client drives every tool path on both stores. See [TOOLS.md](TOOLS.md).
 
+**One thing is missing not a key but a design, and the design is now written.** Slip can stop a
+payment and cannot undo one. There is no refund call anywhere; a refunded capture still reads as
+`captured` (`packages/paypal/src/map.ts:64`); `PAYMENT.CAPTURE.REFUNDED` is neither subscribed to
+nor handled, so a refund issued out of band reaches Slip only through the daily reconcile, where it
+reads as the owner's own account disagreeing; and the kill switch stops the next payment rather
+than the last one. [docs/RAILS.md](docs/RAILS.md) §8–§11 specifies the reversal. None of it is
+built.
+
 Next: the Channel3, PayPal and Claude adapters replace the fakes once API keys are available; then
 the market study and SlipBench. See `docs/SPEC.md` §15 for dates and `docs/DECISIONS.md`
-(D1–D74) for every departure from the written spec.
+(D1–D97) for every departure from the written spec.

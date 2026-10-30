@@ -206,3 +206,10 @@ no vault, authorize or void tools, and Slip needs all three:
 
 Every order and capture carries a `PayPal-Request-Id`, so a retry never pays twice. The sandbox
 adapter replaces the stand-in once sandbox keys are configured.
+
+**There is no refund.** A void releases an authorization that never moved money; a one-step capture
+has no reversal in Slip at all. No tool asks for one and none returns one, and that is deliberate
+rather than pending: an agent that could both spend and un-spend could test the owner's limits for
+nothing, and the agent is the party under check. The reversal is designed in
+[docs/RAILS.md](docs/RAILS.md) §8–§11, for the owner and for Slip's own corrections, and it is not
+built. **[VERIFIED 30 Oct 2026, by reading.]**
