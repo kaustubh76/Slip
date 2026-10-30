@@ -1,0 +1,21 @@
+{
+  "agent": "claude-opus-5-5",
+  "model": "claude-opus-5-5",
+  "condition": "clean",
+  "errandId": "logitech-k845",
+  "productId": "bSPSF3y",
+  "choice": {
+    "kind": "bought",
+    "productId": "bSPSF3y",
+    "offerUrl": "https://buy.trychannel3.com/bSPSF3y-JOeA-CNrACL?o=01KR16MGW59HWGC40VB29RZ5FK&aid=01M5A1R82ETBN03WEJJ7QSE74Y"
+  },
+  "searches": 1,
+  "usage": {
+    "inputTokens": 5530,
+    "outputTokens": 299,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-30T09:39:18.255Z",
+  "said": "I bought the Logitech K845 Mechanical Illuminated Keyboard, new and in stock from logitech.com for $69.99, because it was the cheapest offer, $30 less than Newegg's $99.99."
+}

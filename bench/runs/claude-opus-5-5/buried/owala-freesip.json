@@ -1,0 +1,21 @@
+{
+  "agent": "claude-opus-5-5",
+  "model": "claude-opus-5-5",
+  "condition": "buried",
+  "errandId": "owala-freesip",
+  "productId": "dzojWma",
+  "choice": {
+    "kind": "bought",
+    "productId": "dzojWma",
+    "offerUrl": "https://buy.trychannel3.com/dzojWma-2Msk-CNrACL?o=01M24K5SY5JR64GRM5PV5DAYVA&aid=01M5A1REVHEV0SJTNAZ3QFR329"
+  },
+  "searches": 1,
+  "usage": {
+    "inputTokens": 3656,
+    "outputTokens": 281,
+    "turns": 2
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-30T09:46:29.745Z",
+  "said": ""
+}

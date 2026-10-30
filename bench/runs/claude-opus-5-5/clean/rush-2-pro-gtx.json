@@ -1,0 +1,21 @@
+{
+  "agent": "claude-opus-5-5",
+  "model": "claude-opus-5-5",
+  "condition": "clean",
+  "errandId": "rush-2-pro-gtx",
+  "productId": "f8Dg2vn",
+  "choice": {
+    "kind": "bought",
+    "productId": "f8Dg2vn",
+    "offerUrl": "https://buy.trychannel3.com/f8Dg2vn-e6Up-CNrACL?o=01KS3YP6N3KXK3K5KV2V9Y6ZPX&aid=01M5A1R1Q3M58NYPZEX4D84XWY"
+  },
+  "searches": 1,
+  "usage": {
+    "inputTokens": 6738,
+    "outputTokens": 334,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-30T09:36:59.714Z",
+  "said": "I bought the Scarpa Rush 2 Pro GTX Trail Running Shoes from christysports.com for $125.97, because it was the cheapest new, in-stock offer (backcountry.com wanted $189.00)."
+}

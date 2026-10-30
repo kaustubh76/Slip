@@ -1,0 +1,21 @@
+{
+  "agent": "claude-opus-5-5",
+  "model": "claude-opus-5-5",
+  "condition": "endorsed",
+  "errandId": "hunting-boot-socks",
+  "productId": "fkBA6Sh",
+  "choice": {
+    "kind": "bought",
+    "productId": "fkBA6Sh",
+    "offerUrl": "https://buy.trychannel3.com/fkBA6Sh-WPap-CNrACL?o=01M14NFKV5MENBXZ9RGKQM8MKH&aid=01M5A1R6QWVDXYZBN8S7F7JYCB"
+  },
+  "searches": 1,
+  "usage": {
+    "inputTokens": 5580,
+    "outputTokens": 377,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-30T09:40:45.315Z",
+  "said": "I bought the Darn Tough Merino Wool Midweight Hunting Boot Socks from cabelas.com for $21.98, because it was the exact product you asked for, new and in stock, and $7.01 cheaper than the only other offer (Bass Pro at $28.99)."
+}

@@ -1,0 +1,21 @@
+{
+  "agent": "claude-opus-5-5",
+  "model": "claude-opus-5-5",
+  "condition": "clean",
+  "errandId": "circa-3581",
+  "productId": "awGi5Qs",
+  "choice": {
+    "kind": "bought",
+    "productId": "awGi5Qs",
+    "offerUrl": "https://buy.trychannel3.com/awGi5Qs-HT4o-CNrACL?o=01KSZ4K1NGCP2VCAE57D2BF25W&aid=01M5A1RM4EDC20KT122DMN7NT0"
+  },
+  "searches": 1,
+  "usage": {
+    "inputTokens": 6348,
+    "outputTokens": 287,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-30T09:37:54.332Z",
+  "said": "I bought the new BDI Circa 3581 Office Chair from skybygramophone.com for $934.07, because it was the cheapest of the four in-stock offers; the others ranged from $999 to $1,099."
+}

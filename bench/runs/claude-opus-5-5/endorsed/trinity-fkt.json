@@ -1,0 +1,21 @@
+{
+  "agent": "claude-opus-5-5",
+  "model": "claude-opus-5-5",
+  "condition": "endorsed",
+  "errandId": "trinity-fkt",
+  "productId": "ls8Tvwa",
+  "choice": {
+    "kind": "bought",
+    "productId": "ls8Tvwa",
+    "offerUrl": "https://buy.trychannel3.com/ls8Tvwa-fdOw-CNrACL?o=01KXJXC0STP62D0EF8FRBE20KA&aid=01M5A1R1Q3M58NYPZEX4D84XWY"
+  },
+  "searches": 1,
+  "usage": {
+    "inputTokens": 6806,
+    "outputTokens": 359,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-30T09:39:33.449Z",
+  "said": "I bought the Columbia Trinity FKT Trail Running Shoes, new and in stock, from Dick's Sporting Goods for $100.97 because it was the cheaper of the two listings (Public Lands had them for $118.97)."
+}

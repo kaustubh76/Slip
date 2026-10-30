@@ -199,8 +199,10 @@ test("the bench prints the market study and the benchmark as measured", async ({
   await expect(page.getByRole("img", { name: /^Run on \d{4}-\d{2}-\d{2}$/ })).toHaveCount(2);
   await expect(main).toContainText("Per agent and condition");
   await expect(main).toContainText("claude-haiku-5-5");
+  // Both agents now, so the second one is pinned rather than implied by the count.
+  await expect(main).toContainText("claude-opus-5-5");
   // What has results, never what is merely wired.
-  await expect(main).toContainText("measured of 2 wired");
+  await expect(main).toContainText("2 measured of 2 wired");
   await expect(main).not.toContainText("waiting on a model key");
 
   // The steering sweep: the one input SlipBench supplies rather than measures, now measured. Both

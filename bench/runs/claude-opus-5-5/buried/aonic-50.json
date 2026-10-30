@@ -1,0 +1,20 @@
+{
+  "agent": "claude-opus-5-5",
+  "model": "claude-opus-5-5",
+  "condition": "buried",
+  "errandId": "aonic-50",
+  "productId": "PrBYPvB",
+  "choice": {
+    "kind": "gave-up",
+    "why": "the model did not answer (Error: 400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"You have reached your specified API usage )"
+  },
+  "searches": 0,
+  "usage": {
+    "inputTokens": 0,
+    "outputTokens": 0,
+    "turns": 0
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-30T09:46:30.049Z",
+  "said": ""
+}

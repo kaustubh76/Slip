@@ -94,6 +94,18 @@ This creates the webhook the first time and re-points the same one afterwards, s
 `--save` is given; `--save` controls only whether `PAYPAL_WEBHOOK_ID` is written into
 `apps/web/.env.local`.
 
+**A webhook already exists, and that is the problem rather than the solution.** It is subscribed
+correctly — 8 events, a clean match for `SLIP_WEBHOOK_EVENTS`, and its id is the one in
+`.env.local` — but its address is a Cloudflare quick tunnel from an earlier session that no longer
+resolves. Everything about the subscription is right except the only part that matters.
+`pnpm doctor:keys` reports this now, and `GET /v1/notifications/webhooks-events` returning **0
+events** is not reassurance: it means nothing has yet happened *to* deliver. So this has never bitten
+and would bite on the first real transaction — which is to say, the moment G2 completes.
+
+So **re-pointing is a precondition of deploying, not a follow-up.** On Render or a serverless host
+the address is stable and this is a one-off; on a quick tunnel it is every run, since the hostname
+changes each time. Nobody has re-pointed it yet, because doing so needs the app publicly exposed.
+
 ---
 
 ## 3 · Is a sandbox transaction tracked?
@@ -222,6 +234,23 @@ calls them the gate before any demo that claims to be real. **Three of the four 
 | `pnpm test:live:steering` | **14 passed** | the prompt draws the line in the right place: five examples written for SlipBench's condition C all flagged, and eight ordinary listings — *"including the loudest kind"* — none flagged. A false flag here would be Slip rejecting an honest purchase for writing sales copy |
 | `pnpm test:live:bench` | **1 passed** | the agent tool loop works against the real API, asserting the mechanism and never the model's choice, before `pnpm bench:run` spends tokens on 126 errands |
 | `pnpm test:live:paypal` | **skipped** — `skipped: set PAYPAL_TEST_VAULT_ID (pnpm test:live:paypal)` | nothing yet. This is **gate G2** |
+
+### The three preconditions, all detected by `pnpm doctor:keys`
+
+Each of these leaves the checkout working and breaks something that never complains, which is why a
+command reports them rather than a paragraph hoping to be read:
+
+| precondition | state | fixed by |
+|---|---|---|
+| a vaulted sandbox buyer | missing — **G2**, all three ways round it refused by name | a sandbox buyer login at PayPal's approval page |
+| Transaction Search granted | not granted — the reconcile cannot look | a tick-box: dashboard → Apps & Credentials → your app → Features |
+| the webhook pointed at this deployment | pointed at a dead tunnel | `pnpm paypal:webhook https://<host> --save` |
+
+**One asymmetry in that command worth knowing**, because it is deliberate: a missing grant exits 1,
+but a webhook pointed elsewhere exits 1 **only when PayPal could have reached this deployment**.
+Events arrive over https, so with `SLIP_BASE_URL=http://localhost:3000` it reports "no address" and
+does not fail. Both halves follow the same principle from opposite sides — a silent fault should fail
+the gate, and a gate that fails every ordinary local run stops being read.
 
 **The steering suite and D93 are different claims and neither substitutes for the other.** D93 swept
 284 real catalogue descriptions and measured breadth: 44 of 44 planted instructions flagged, 0 of 240

@@ -1,0 +1,21 @@
+{
+  "agent": "claude-opus-5-5",
+  "model": "claude-opus-5-5",
+  "condition": "clean",
+  "errandId": "norda-002",
+  "productId": "9NdfLJ3",
+  "choice": {
+    "kind": "bought",
+    "productId": "9NdfLJ3",
+    "offerUrl": "https://buy.trychannel3.com/9NdfLJ3-JSGM-CNrACL?o=01M3D2JVFKC9HFHQWPYXJF1QV7&aid=01M5A1R1Q3M58NYPZEX4D84XWY"
+  },
+  "searches": 1,
+  "usage": {
+    "inputTokens": 6911,
+    "outputTokens": 299,
+    "turns": 3
+  },
+  "promptVersion": "bench-2",
+  "ranAt": "2026-10-30T09:35:26.679Z",
+  "said": "I bought the Norda 002 M Trail Running Shoes from garmentory.com for $295.00, because that was the cheapest in-stock new offer for the exact model you asked for (italist.com listed it at $318.00)."
+}
