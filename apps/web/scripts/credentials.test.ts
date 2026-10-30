@@ -1,3 +1,4 @@
+import { SLIP_WEBHOOK_EVENTS } from "@slip/paypal";
 import { describe, expect, it } from "vitest";
 import {
   type CapabilityVerdict,
@@ -7,8 +8,10 @@ import {
   probePayPal,
   probeReporting,
   probeSteering,
+  probeWebhook,
   renderCapabilities,
   renderCredentials,
+  type WebhookVerdict,
 } from "./credentials";
 
 /**
@@ -198,6 +201,108 @@ describe("Transaction Search", () => {
   });
 });
 
+/**
+ * Where PayPal would deliver, which is a third kind of question: not whether a credential works,
+ * nor what the application may do, but whether the two ends are pointed at each other. The sandbox
+ * this was written against had a webhook left over from a quick tunnel whose host no longer
+ * resolved, and PayPal had recorded nothing, because nothing had yet happened to deliver.
+ */
+describe("the webhook", () => {
+  const env = {
+    PAYPAL_CLIENT_ID: "id",
+    PAYPAL_CLIENT_SECRET: "shh",
+    SLIP_BASE_URL: "https://slip.example.com",
+    PAYPAL_WEBHOOK_ID: "WH-OURS",
+  };
+  const hooks = (...webhooks: unknown[]) => json(200, { webhooks });
+  const ours = (over: Record<string, unknown> = {}) => ({
+    id: "WH-OURS",
+    url: "https://slip.example.com/api/webhooks/paypal",
+    event_types: SLIP_WEBHOOK_EVENTS.map((name) => ({ name })),
+    ...over,
+  });
+
+  it("is content when PayPal would deliver here and this deployment would accept it", async () => {
+    const { fetch, calls } = stub(token, hooks(ours()));
+    const verdict = await probeWebhook(env, live(), { fetch });
+    expect(verdict).toMatchObject({ state: "points-here" });
+    expect(calls[1]).toContain("/v1/notifications/webhooks");
+  });
+
+  it("names both hosts when PayPal would deliver somewhere else", async () => {
+    // The real case: a quick tunnel from yesterday, retried into a host that no longer resolves.
+    const { fetch } = stub(
+      token,
+      hooks(ours({ url: "https://gone.trycloudflare.com/api/webhooks/paypal" })),
+    );
+    const verdict = await probeWebhook(env, live(), { fetch });
+    expect(verdict).toMatchObject({ state: "points-elsewhere" });
+    expect(verdict.detail).toContain("gone.trycloudflare.com");
+    expect(verdict.detail).toContain("slip.example.com");
+  });
+
+  it("catches a subscription id that would refuse every delivery that did arrive", async () => {
+    // The url is right, so PayPal delivers. Verification is per-subscription, and this one is not
+    // the subscription, so each delivery is refused — which looks like none arriving.
+    const { fetch } = stub(token, hooks(ours()));
+    const verdict = await probeWebhook({ ...env, PAYPAL_WEBHOOK_ID: "WH-STALE" }, live(), {
+      fetch,
+    });
+    expect(verdict).toMatchObject({ state: "points-elsewhere" });
+    expect(verdict.detail).toContain("PAYPAL_WEBHOOK_ID");
+  });
+
+  it("notices when an event Slip acts on would not be sent at all", async () => {
+    const short = SLIP_WEBHOOK_EVENTS.slice(0, 3).map((name) => ({ name }));
+    const { fetch } = stub(token, hooks(ours({ event_types: short })));
+    expect(await probeWebhook(env, live(), { fetch })).toMatchObject({ state: "points-elsewhere" });
+  });
+
+  it("says when the application has no webhook for Slip at all", async () => {
+    const { fetch } = stub(
+      token,
+      hooks({ id: "WH-OTHER", url: "https://x.test/other", event_types: [] }),
+    );
+    const verdict = await probeWebhook(env, live(), { fetch });
+    expect(verdict).toMatchObject({ state: "unregistered" });
+    expect(verdict.detail).toContain("/api/webhooks/paypal");
+  });
+
+  it("does not call an unreachable deployment misconfigured, and asks PayPal nothing", async () => {
+    // The ordinary local run. PayPal delivers only over https, so a localhost deployment cannot be
+    // a destination and is not at fault for failing to be one — an exit code that failed here
+    // would stop being read.
+    const localhost = stub(token);
+    const verdict = await probeWebhook({ ...env, SLIP_BASE_URL: "http://localhost:3000" }, live(), {
+      fetch: localhost.fetch,
+    });
+    expect(verdict).toMatchObject({ state: "not-addressable" });
+    expect(verdict.detail).toContain("https");
+    const unset = stub(token);
+    expect(
+      await probeWebhook({ ...env, SLIP_BASE_URL: "" }, live(), { fetch: unset.fetch }),
+    ).toMatchObject({ state: "not-addressable" });
+    expect([...localhost.calls, ...unset.calls]).toHaveLength(0);
+  });
+
+  it("does not blame the setup when PayPal itself is unwell", async () => {
+    const { fetch } = stub(token, json(500, { name: "INTERNAL_SERVICE_ERROR" }));
+    expect(await probeWebhook(env, live(), { fetch })).toMatchObject({ state: "unreachable" });
+  });
+
+  it("asks nothing without credentials, or when it would be live", async () => {
+    const absent = stub(token);
+    expect(
+      await probeWebhook({ SLIP_BASE_URL: env.SLIP_BASE_URL }, live(), { fetch: absent.fetch }),
+    ).toMatchObject({ state: "absent" });
+    const onLive = stub(token);
+    expect(
+      await probeWebhook({ ...env, PAYPAL_ENV: "live" }, live(), { fetch: onLive.fetch }),
+    ).toMatchObject({ state: "skipped" });
+    expect([...absent.calls, ...onLive.calls]).toHaveLength(0);
+  });
+});
+
 describe("the report", () => {
   const verdict = (over: Partial<CredentialVerdict> = {}): CredentialVerdict => ({
     service: "Anthropic",
@@ -254,6 +359,46 @@ describe("the report", () => {
     const page = renderCapabilities([grant()]);
     expect(page).toContain("Nothing Slip reads from PayPal is turned off.");
     expect(page).not.toContain("Turn on:");
+  });
+
+  const delivery = (over: Partial<WebhookVerdict> = {}): WebhookVerdict => ({
+    state: "points-here",
+    detail: "PayPal would deliver to slip.example.com, which is this deployment",
+    ...over,
+  });
+
+  it("fails on a webhook pointed away, and not on one that could never be pointed here", () => {
+    expect(exitCodeFor([verdict()], [grant()], delivery())).toBe(0);
+    expect(exitCodeFor([verdict()], [grant()], delivery({ state: "points-elsewhere" }))).toBe(1);
+    expect(exitCodeFor([verdict()], [grant()], delivery({ state: "unregistered" }))).toBe(1);
+    // The ordinary local run, which is not a fault and must not fail the gate.
+    expect(exitCodeFor([verdict()], [grant()], delivery({ state: "not-addressable" }))).toBe(0);
+    expect(exitCodeFor([verdict()], [grant()], delivery({ state: "unreachable" }))).toBe(0);
+  });
+
+  it("says a misdirected webhook loses later news, not the payment itself", () => {
+    const page = renderCapabilities([grant()], delivery({ state: "points-elsewhere" }));
+    expect(page).toContain("NOT HERE");
+    expect(page).toContain("nothing will say so");
+    expect(page).toContain("pnpm paypal:webhook");
+    // It must not claim the checkout is broken: the resolver reads an order back by id.
+    expect(page).toContain("Nothing needs it to take a payment");
+  });
+
+  it("stays quiet about a webhook that is where it should be", () => {
+    const page = renderCapabilities([grant()], delivery());
+    expect(page).toContain("Nothing Slip reads from PayPal is turned off.");
+    expect(page).not.toContain("pnpm paypal:webhook");
+  });
+
+  it("reports both faults at once rather than only the first", () => {
+    const page = renderCapabilities(
+      [grant({ state: "not-granted" })],
+      delivery({ state: "points-elsewhere" }),
+    );
+    expect(page).toContain("Turn on:");
+    expect(page).toContain("Re-point it:");
+    expect(page).not.toContain("Nothing Slip reads from PayPal is turned off.");
   });
 
   it("prints no part of any credential, and no prices", () => {

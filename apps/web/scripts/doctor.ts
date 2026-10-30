@@ -14,10 +14,15 @@ import { exitCodeFor, probeAll, renderCheckup } from "./credentials";
  * invisible from inside the application, because every adapter folds one into the same no-answer a
  * slow service produces, and the rules then hold the purchase for the owner (D92, SPEC §19.6).
  *
- * It also asks what PayPal has *granted* this application, which is a quieter question than
- * whether a key works: *Transaction Search* is off by default, and without it the daily reconcile
- * cannot read PayPal's records at all and will never say so (`search.ts` reads a refusal as "not
- * known", which is the only safe reading and a silent one).
+ * It also asks two quieter questions than whether a key works, because a credential can be
+ * perfect while the two ends are not pointed at each other:
+ *
+ * - What PayPal has **granted** this application. *Transaction Search* is off by default, and
+ *   without it the daily reconcile cannot read PayPal's records at all and will never say so
+ *   (`search.ts` reads a refusal as "not known", the only safe reading and a silent one).
+ * - Where PayPal would **deliver** events. A webhook left pointing at yesterday's tunnel is
+ *   retried out of sight, and a `PAYPAL_WEBHOOK_ID` that names a different subscription refuses
+ *   every delivery that did arrive — which looks from here exactly like none arriving.
  *
  * Exit 0 when everything configured was accepted, 1 when any of it was refused — a credential or a
  * feature — 2 when there is no `apps/web/.env.local` to read. A variable that is not set is
@@ -46,4 +51,4 @@ function loadEnv(file: string): void {
 
 const checkup = await probeAll(process.env, AbortSignal.timeout(DEADLINE_MS));
 process.stdout.write(renderCheckup(checkup));
-process.exit(exitCodeFor(checkup.credentials, checkup.capabilities));
+process.exit(exitCodeFor(checkup.credentials, checkup.capabilities, checkup.webhook));

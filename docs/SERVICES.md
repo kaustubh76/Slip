@@ -39,15 +39,30 @@ A deliberate miss is the cheapest proof there is that authentication succeeded: 
 settles the base url, the path, the `x-api-key` header and the key at once, and PayPal's settles the
 client id and secret, because the token has to be minted before the order can be missing.
 
-### And what PayPal has *granted*, which is quieter still
+### And the two quieter questions
 
-A second section asks whether this PayPal application may use the feature Slip reads its records
-with. **A missing grant is quieter than a bad key.** A bad key fails every payment. A missing grant
-leaves the checkout working perfectly and disables only the parts that look *backwards*:
+A credential can be perfect while the two ends are not pointed at each other, so a second section
+asks what PayPal has **granted** this application and where it would **deliver** events. Both are
+quieter than a bad key: a bad key fails every payment, while these leave the checkout working
+perfectly and disable only what happens around it.
 
-| Feature | Asked | What stops without it |
-|---|---|---|
-| Transaction Search | a one-hour reporting window, which is free | the daily reconcile, and the last-resort lookup for a payment whose order id was never learned |
+| Asked | What stops without it |
+|---|---|
+| **Transaction Search** — a one-hour reporting window, which is free | the daily reconcile, and the last-resort lookup for a payment whose order id was never learned |
+| **Webhook** — the registered url and events, compared against this deployment's own address | hearing what happens *later* — a capture completing, an authorization voided, a vault token deleted — without waiting for the next sweep |
+
+The webhook check asks both halves, because either one is "no event ever arrives": PayPal delivers
+to whatever url is registered on the application, and a quick tunnel's address changes on every run,
+so yesterday's webhook is retried into a host that no longer resolves; and this deployment accepts a
+delivery only if `PAYPAL_WEBHOOK_ID` names the subscription it arrived under, so a stale id refuses
+every delivery that *did* arrive. It reuses `planWebhook` — the same plan `pnpm paypal:webhook`
+makes — so the two agree by construction rather than by both having been written carefully on
+separate days.
+
+**A deployment PayPal cannot reach is not misconfigured for failing to be reachable.** Events arrive
+only over https, so when `SLIP_BASE_URL` is `http://localhost:3000` the webhook is reported as
+having no address to compare and is *not* a failure. An ordinary local run that failed the gate
+would teach everyone to stop reading the exit code, which is the thing this command is for.
 
 Neither announces itself. `packages/paypal/src/search.ts` maps a refusal to `unknown` and never to
 "no such payment" — the only safe reading, since Slip has not looked and may not conclude anything,
@@ -61,8 +76,8 @@ the resolver depends on the grant. An operator told that everything is broken fi
 command says which half is which.
 
 Exit **0** when everything configured was accepted, **1** when anything this deployment needs was
-refused — a credential **or** a feature — **2** when there is no `apps/web/.env.local`. A missing
-feature counts even though it breaks no checkout: a probe that finds a silent failure and then exits
+refused — a credential, a feature, or a webhook pointed somewhere this deployment is not — **2**
+when there is no `apps/web/.env.local`. A missing feature counts even though it breaks no checkout: a probe that finds a silent failure and then exits
 0 has only moved the silence up a level, where a pre-deploy script still passes and nobody reads the
 paragraph. A variable that is not set is reported and is **not** a failure — "real prices, simulated
 payment" is a state Slip is meant to be in. `PAYPAL_ENV=live` is never probed; the command says so

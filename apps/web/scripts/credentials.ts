@@ -1,6 +1,8 @@
 import { createChannel3Offers } from "@slip/offers";
-import { createPayPalApi } from "@slip/paypal";
+import { createPayPalApi, SLIP_WEBHOOK_EVENTS } from "@slip/paypal";
 import { checkSteeringCredential } from "@slip/steering";
+import { publicBaseUrl, publicUrl } from "../src/server/public-url";
+import { type ExistingWebhook, planWebhook, WEBHOOK_PATH } from "./paypal-admin";
 
 /**
  * Does each outside service accept the credential this deployment holds? — asked for nothing, and
@@ -78,6 +80,42 @@ export interface CapabilityVerdict {
   /** Where it is turned on, since it is not a variable. */
   where: string;
   state: CapabilityState;
+  detail: string;
+}
+
+export type WebhookState =
+  /** PayPal will deliver to this deployment, and this deployment will accept it. */
+  | "points-here"
+  /** PayPal will deliver somewhere else, or here to a deployment that will reject it. */
+  | "points-elsewhere"
+  /** This PayPal application has no webhook for Slip's path. */
+  | "unregistered"
+  /** This deployment has no public https address, so neither of the above can be true of it. */
+  | "not-addressable"
+  /** Nobody said no — PayPal could not be reached, or answered something unexpected. */
+  | "unreachable"
+  /** There are no PayPal credentials here to ask with. */
+  | "absent"
+  /** Deliberately not asked. */
+  | "skipped";
+
+/**
+ * Will PayPal's events reach this deployment? Two silences in one question, because either answer
+ * is "no event ever arrives" and neither says so:
+ *
+ * - PayPal delivers to the **url registered on the application**, which is wherever it was last
+ *   pointed. A quick tunnel's address changes every run, so a webhook left over from yesterday
+ *   points at a host that no longer resolves, and PayPal retries into nothing.
+ * - This deployment accepts a delivery only if `PAYPAL_WEBHOOK_ID` names the webhook it arrived
+ *   under, because verification is per-subscription. A stale id rejects every delivery that *did*
+ *   arrive, which looks the same from here as none arriving.
+ *
+ * Nothing in Slip depends on this to take a payment: the resolver reads an order back itself. What
+ * webhooks add is hearing about what happens *later* — a capture completing, an authorization
+ * voided, a vault token deleted — without waiting for the next sweep.
+ */
+export interface WebhookVerdict {
+  state: WebhookState;
   detail: string;
 }
 
@@ -296,10 +334,95 @@ export async function probeReporting(
   return verdict("unreachable", `PayPal answered ${answer.status} to a reporting query`);
 }
 
-/** What `probeAll` found: two different kinds of answer, which are read differently. */
+export async function probeWebhook(
+  env: Env,
+  signal: AbortSignal,
+  options: ProbeOptions = {},
+): Promise<WebhookVerdict> {
+  const clientId = value(env, "PAYPAL_CLIENT_ID");
+  const clientSecret = value(env, "PAYPAL_CLIENT_SECRET");
+  if (clientId === "" || clientSecret === "") {
+    return { state: "absent", detail: "no PayPal credentials here, so no webhook to ask about" };
+  }
+  if (value(env, "PAYPAL_ENV").toLowerCase() === "live") {
+    return {
+      state: "skipped",
+      detail: "PAYPAL_ENV=live, and this command only ever asks the sandbox",
+    };
+  }
+  // PayPal will not deliver to anything but https, so a deployment without a public https address
+  // cannot be a webhook's destination and is not misconfigured for failing to be one. Saying
+  // otherwise would fail the ordinary local run, which is how an exit code stops being read.
+  const base = publicBaseUrl(env as NodeJS.ProcessEnv);
+  const ours = base === "" ? null : safeUrl(publicUrl(base, WEBHOOK_PATH).href);
+  if (ours === null || ours.protocol !== "https:") {
+    return {
+      state: "not-addressable",
+      detail:
+        base === ""
+          ? "neither SLIP_BASE_URL nor RENDER_EXTERNAL_URL is set, so PayPal has no address to reach"
+          : `SLIP_BASE_URL is ${base}, which PayPal cannot deliver to: events arrive only over https`,
+    };
+  }
+  const answer = await createPayPalApi({
+    clientId,
+    clientSecret,
+    ...(options.fetch === undefined ? {} : { fetch: options.fetch }),
+  }).call({ path: "/v1/notifications/webhooks" }, signal);
+  if (answer.outcome === "no-answer") {
+    return { state: "unreachable", detail: `PayPal was not reached: ${answer.detail}` };
+  }
+  if (answer.outcome !== "ok") {
+    return { state: "unreachable", detail: `PayPal answered ${answer.status} listing webhooks` };
+  }
+  const listed = (answer.body as { webhooks?: ExistingWebhook[] } | null)?.webhooks ?? [];
+  // The same plan the registration script makes, so this agrees with `pnpm paypal:webhook` by
+  // construction rather than by both of them being written carefully on separate days.
+  const plan = planWebhook(listed, ours.href, SLIP_WEBHOOK_EVENTS);
+  if (plan.action === "create") {
+    return {
+      state: "unregistered",
+      detail: `this PayPal application has no webhook for ${WEBHOOK_PATH}`,
+    };
+  }
+  const registered = listed.find((hook) => hook.id === plan.id);
+  const host = registered === undefined ? null : (safeUrl(registered.url)?.host ?? null);
+  if (plan.action === "update") {
+    return {
+      state: "points-elsewhere",
+      detail:
+        host === null || host === ours.host
+          ? `the webhook is registered but does not match: PayPal would not send every event Slip acts on`
+          : `PayPal would deliver to ${host}, and this deployment is ${ours.host}`,
+    };
+  }
+  return plan.id === value(env, "PAYPAL_WEBHOOK_ID")
+    ? {
+        state: "points-here",
+        detail: `PayPal would deliver to ${ours.host}, which is this deployment`,
+      }
+    : {
+        state: "points-elsewhere",
+        detail:
+          "PayPal would deliver here, but PAYPAL_WEBHOOK_ID names a different webhook, so every" +
+          " delivery fails verification and is refused",
+      };
+}
+
+/** A url that may be nonsense, since PayPal returns whatever was registered. */
+function safeUrl(href: string): URL | null {
+  try {
+    return new URL(href);
+  } catch {
+    return null;
+  }
+}
+
+/** What `probeAll` found: three kinds of answer, which are read differently. */
 export interface Checkup {
   credentials: readonly CredentialVerdict[];
   capabilities: readonly CapabilityVerdict[];
+  webhook: WebhookVerdict;
 }
 
 /** All of it at once: they share a deadline and have nothing to say to each other. */
@@ -308,13 +431,14 @@ export async function probeAll(
   signal: AbortSignal,
   options: ProbeOptions = {},
 ): Promise<Checkup> {
-  const [steering, channel3, paypal, reporting] = await Promise.all([
+  const [steering, channel3, paypal, reporting, webhook] = await Promise.all([
     probeSteering(env, signal, options),
     probeChannel3(env, signal, options),
     probePayPal(env, signal, options),
     probeReporting(env, signal, options),
+    probeWebhook(env, signal, options),
   ]);
-  return { credentials: [steering, channel3, paypal], capabilities: [reporting] };
+  return { credentials: [steering, channel3, paypal], capabilities: [reporting], webhook };
 }
 
 const MARK: Record<CredentialState, string> = {
@@ -332,6 +456,19 @@ const GRANT: Record<CapabilityState, string> = {
   absent: "not configured",
   skipped: "skipped",
 };
+
+const DELIVERY: Record<WebhookState, string> = {
+  "points-here": "ok",
+  "points-elsewhere": "NOT HERE",
+  unregistered: "NONE",
+  "not-addressable": "no address",
+  unreachable: "unreachable",
+  absent: "not configured",
+  skipped: "skipped",
+};
+
+/** A misdirected webhook is only a fault where PayPal could have reached this deployment. */
+const WEBHOOK_AT_FAULT: readonly WebhookState[] = ["points-elsewhere", "unregistered"];
 
 export function renderCredentials(verdicts: readonly CredentialVerdict[]): string {
   const lines = verdicts.map(
@@ -354,26 +491,44 @@ export function renderCredentials(verdicts: readonly CredentialVerdict[]): strin
 }
 
 /**
- * The second section, and a separate one on purpose: a feature PayPal has not granted is not a
- * credential anybody can fix, and printing it among them would have an operator checking
- * `.env.local` for a checkbox.
+ * The second section, and a separate one on purpose: what PayPal has granted this application, and
+ * where it would deliver events, are not credentials anybody can fix. Printing them among the
+ * credentials would have an operator searching `.env.local` for a checkbox.
  */
-export function renderCapabilities(verdicts: readonly CapabilityVerdict[]): string {
-  if (verdicts.length === 0) {
+export function renderCapabilities(
+  verdicts: readonly CapabilityVerdict[],
+  webhook?: WebhookVerdict,
+): string {
+  if (verdicts.length === 0 && webhook === undefined) {
     return "";
   }
   const lines = [
-    "What PayPal lets this application do:",
+    "How this PayPal application is set up:",
     "",
     ...verdicts.map(
       (row) => `  ${row.capability.padEnd(18)} ${GRANT[row.state].padEnd(14)} ${row.detail}`,
     ),
+    ...(webhook === undefined
+      ? []
+      : [`  ${"Webhook".padEnd(18)} ${DELIVERY[webhook.state].padEnd(14)} ${webhook.detail}`]),
     "",
   ];
   const missing = verdicts.filter((row) => row.state === "not-granted");
-  if (missing.length === 0) {
+  const misdirected = webhook !== undefined && WEBHOOK_AT_FAULT.includes(webhook.state);
+  if (missing.length === 0 && !misdirected) {
     lines.push("Nothing Slip reads from PayPal is turned off.");
-  } else {
+  }
+  if (misdirected) {
+    lines.push(
+      "No PayPal event will reach this deployment, and nothing will say so: an undelivered" +
+        " webhook is retried out of sight, and a delivery refused for the wrong subscription id" +
+        " looks from here exactly like one that never came. Nothing needs it to take a payment —" +
+        " the resolver reads an order back itself — so what is lost is hearing what happens" +
+        " *later* without waiting for the next sweep. Re-point it:",
+      "  - pnpm paypal:webhook https://<this deployment> --save",
+    );
+  }
+  if (missing.length > 0) {
     lines.push(
       "The checkout is unaffected: a payment Slip knows the order id of is read straight back," +
         " and that needs no feature. What stops is every look *backwards* — the daily reconcile" +
@@ -386,10 +541,10 @@ export function renderCapabilities(verdicts: readonly CapabilityVerdict[]): stri
   return `${lines.join("\n")}\n`;
 }
 
-/** Both sections, in the order an operator should read them. */
+/** Both sections, in the order an operator should read them: the keys, then the setup. */
 export function renderCheckup(checkup: Checkup): string {
-  const capabilities = renderCapabilities(checkup.capabilities);
-  return `${renderCredentials(checkup.credentials)}${capabilities === "" ? "" : `\n${capabilities}`}`;
+  const setup = renderCapabilities(checkup.capabilities, checkup.webhook);
+  return `${renderCredentials(checkup.credentials)}${setup === "" ? "" : `\n${setup}`}`;
 }
 
 /**
@@ -404,9 +559,11 @@ export function renderCheckup(checkup: Checkup): string {
 export function exitCodeFor(
   verdicts: readonly CredentialVerdict[],
   capabilities: readonly CapabilityVerdict[] = [],
+  webhook?: WebhookVerdict,
 ): 0 | 1 {
   const refused =
     verdicts.some((row) => row.state === "rejected") ||
-    capabilities.some((row) => row.state === "not-granted");
+    capabilities.some((row) => row.state === "not-granted") ||
+    (webhook !== undefined && WEBHOOK_AT_FAULT.includes(webhook.state));
   return refused ? 1 : 0;
 }
