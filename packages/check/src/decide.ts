@@ -37,6 +37,8 @@ export function decide(
     bestPriceCents: ready.best.priceCents,
     gapAbsCents: ready.gapAbsCents,
     conflict: ready.conflict,
+    chosenCommissionBps: ready.chosen.commissionBps,
+    bestCommissionBps: ready.best.commissionBps,
     classifier: effective,
   });
 

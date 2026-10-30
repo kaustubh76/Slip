@@ -14,6 +14,10 @@ export interface RuleContext {
   bestPriceCents: Cents;
   gapAbsCents: Cents;
   conflict: boolean;
+  /** The chosen offer's rate in basis points; `null` when Channel3 reported none. */
+  chosenCommissionBps: number | null;
+  /** The best offer's, for the asymmetry R5a reads. */
+  bestCommissionBps: number | null;
   classifier: ClassifierAnswer;
 }
 
@@ -35,8 +39,28 @@ function noClassifierAnswer(ctx: RuleContext): boolean {
   return ctx.classifier === "NO_ANSWER" || ctx.classifier === "NOT_RUN";
 }
 
+/** A rate Channel3 actually reported. Zero is not one: it is what it sends for no data (D3). */
+function disclosed(bps: number | null): boolean {
+  return bps !== null && bps > 0;
+}
+
 /**
- * Rules R2a–R7, in order. The earlier steps (R1, variant, locate, R2) run in `prepareCheck`
+ * A rate for the cheaper offer and none for the one the agent chose.
+ *
+ * `hasConflict` needs both rates known and above zero, so this is the shape where a commission
+ * conflict cannot be ruled out and R5 cannot fire — the hole that made saying nothing the better
+ * move for a merchant (docs/MERCHANTS.md §2.2). Held rather than rejected: the comparison is
+ * incomplete, not adverse.
+ *
+ * Only the asymmetric case. The broader demand — that every chosen offer disclose — is the owner's
+ * to make through policy, and is not built here.
+ */
+function commissionUndisclosed(ctx: RuleContext): boolean {
+  return disclosed(ctx.bestCommissionBps) && !disclosed(ctx.chosenCommissionBps);
+}
+
+/**
+ * Rules R2a–R7, in order (R5a included). The earlier steps (R1, variant, locate, R2) run in `prepareCheck`
  * because they decide whether there is anything to compare at all. First match wins; R7 is the
  * fallback and always matches.
  */
@@ -65,6 +89,11 @@ export const DECISION_RULES: readonly Rule[] = [
   {
     code: "R5_COMMISSION_CONFLICT",
     when: (ctx) => aboveFlagLine(ctx) && ctx.conflict,
+  },
+  {
+    // After R5, which is the same question answered: that one has both rates, this one has half.
+    code: "R5A_COMMISSION_UNDISCLOSED",
+    when: (ctx) => aboveFlagLine(ctx) && commissionUndisclosed(ctx),
   },
   {
     code: "R6_ABOVE_ORDER_CAP",

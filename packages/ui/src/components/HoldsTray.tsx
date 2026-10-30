@@ -10,8 +10,10 @@ const WHY: Partial<Record<RuleCode, string>> = {
   R1_STALE_SNAPSHOT: "no fresh prices",
   CHOSEN_UNVERIFIED: "unclear listing",
   R2_TOO_FEW_OFFERS: "nothing to compare",
+  R2B_SINGLE_SELLER_MARKET: "one seller only",
   R4A_NO_CLASSIFIER_ANSWER: "steering check silent",
   R5_COMMISSION_CONFLICT: "commission conflict",
+  R5A_COMMISSION_UNDISCLOSED: "commission not stated",
   R6_ABOVE_ORDER_CAP: "above cap",
 };
 

@@ -48,6 +48,10 @@ export function workedExample(
     bestPriceCents: best,
     gapAbsCents: (chosen - best) as Cents,
     conflict: false,
+    // The example is about the owner's own limits, so it models a market with no commission
+    // reported either way: neither R5 nor R5a has anything to say about it.
+    chosenCommissionBps: null,
+    bestCommissionBps: null,
     classifier: { instruction_like: false },
   });
   const outcome = RULE_OUTCOME[ruleCode];

@@ -104,6 +104,11 @@ export function verdict(input: {
       return `${unverified(input.chosenOffer)} ${HELD}`;
     case "R2_TOO_FEW_OFFERS":
       return `No other comparable offer was listed, so the price could not be checked. ${HELD}`;
+    case "R2B_SINGLE_SELLER_MARKET":
+      return (
+        "Every comparable listing for this item came from one seller, so there was nothing" +
+        ` to check the price against. ${HELD}`
+      );
     case "R2A_GAP_IMPLAUSIBLE":
       return (
         "The cheapest listing for this item is so much cheaper that it may not be the same" +
@@ -113,6 +118,11 @@ export function verdict(input: {
       return `The steering check gave no answer in time. ${HELD}`;
     case "R5_COMMISSION_CONFLICT":
       return `The pricier store pays your agent's platform more commission. ${HELD}`;
+    case "R5A_COMMISSION_UNDISCLOSED":
+      return (
+        "The store your agent chose did not say what commission it pays, and the cheaper" +
+        ` store did. ${HELD}`
+      );
     case "R6_ABOVE_ORDER_CAP":
       return policy === undefined || chosen === null
         ? `This order is above your order cap. ${HELD}`
@@ -172,6 +182,11 @@ export function ruleSentence(code: RuleCode, policy: Policy | undefined): string
       return "Slip could not confirm the chosen listing's condition, currency or price.";
     case "R2_TOO_FEW_OFFERS":
       return "Fewer than two comparable listings were found, so the price could not be compared.";
+    case "R2B_SINGLE_SELLER_MARKET":
+      return (
+        "All the comparable listings belong to one seller, so the cheapest of them is not a" +
+        " second opinion on the price."
+      );
     case "R2A_GAP_IMPLAUSIBLE":
       return (
         "The cheapest listing was more than" +
@@ -189,6 +204,11 @@ export function ruleSentence(code: RuleCode, policy: Policy | undefined): string
       return "Slip's check for text aimed at agents did not answer in time, so it held the purchase for you.";
     case "R5_COMMISSION_CONFLICT":
       return "The pricier store pays your agent's platform more commission than the cheaper one.";
+    case "R5A_COMMISSION_UNDISCLOSED":
+      return (
+        "The store the agent chose did not state its commission and the cheaper store did, so" +
+        " Slip could not tell whether the pricier choice pays more."
+      );
     case "R6_ABOVE_ORDER_CAP":
       return policy === undefined
         ? "The order is above your order limit."

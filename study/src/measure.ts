@@ -1,4 +1,4 @@
-import { comparableOffers } from "@slip/check";
+import { comparableOffers, offerDomain } from "@slip/check";
 import {
   type Cents,
   cents,
@@ -9,6 +9,7 @@ import {
   type Offer,
   type ProductOffers,
 } from "@slip/domain";
+import { inferSellerEdges, sellerCount } from "@slip/graph";
 import type { Fetch } from "@slip/http";
 import { createChannel3Offers } from "@slip/offers";
 import type { Snapshot } from "./snapshots.js";
@@ -59,6 +60,11 @@ export interface ProductMeasure {
   commissionKnown: number;
   topCommissionIsDearer: boolean | null;
   domains: string[];
+  /**
+   * Distinct sellers among the comparable offers, under the collapse R2b reads. Below two, the
+   * offers are not a market and the check now holds rather than comparing a seller with itself.
+   */
+  sellers: number;
 }
 
 export interface QueryDensity {
@@ -99,6 +105,11 @@ export interface StudyNumbers {
   commissionConsidered: number;
   commissionConflicts: number;
   commissionConflictPctHundredths: number | null;
+  /**
+   * G6: products with two or more comparable offers that are all one seller. Each one is a
+   * purchase the check used to pay against a market of one (docs/MERCHANTS.md §2.1).
+   */
+  singleSellerMarkets: number;
 }
 
 /** G1's bar: at least this share of sampled products must carry two or more comparable offers. */
@@ -183,6 +194,8 @@ export function measureOne(product: ProductOffers, foundBy: string): ProductMeas
         }
       : null;
   const withCommission = comparable.filter((offer) => offer.commissionBps !== null);
+  // `offerDomain`, not the raw field, because that is the seller the check itself reasons about.
+  const sellerDomains = comparable.map(offerDomain);
   const listed = Array.isArray((product.raw as { offers?: unknown } | null)?.offers)
     ? (product.raw as { offers: unknown[] }).offers.length
     : product.offers.length;
@@ -199,6 +212,7 @@ export function measureOne(product: ProductOffers, foundBy: string): ProductMeas
     commissionKnown: withCommission.length,
     topCommissionIsDearer: topPaysMore(withCommission),
     domains: comparable.map((offer) => offer.domain),
+    sellers: sellerCount(sellerDomains, inferSellerEdges(sellerDomains)),
   };
 }
 
@@ -316,5 +330,6 @@ export function summarise(measures: readonly ProductMeasure[]): StudyNumbers {
     commissionConflicts: conflicts,
     commissionConflictPctHundredths:
       considered.length === 0 ? null : Math.round((conflicts / considered.length) * 10_000),
+    singleSellerMarkets: measures.filter((m) => m.comparable >= 2 && m.sellers < 2).length,
   };
 }

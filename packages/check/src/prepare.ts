@@ -12,10 +12,11 @@ import {
   SlipError,
   type SnapshotId,
 } from "@slip/domain";
+import { inferSellerEdges, sellerCount } from "@slip/graph";
 import { type ComparableOffer, dedupeByNormalizedUrl, isComparable } from "./comparable.js";
 import { computeGap, hasConflict, pickBest } from "./compute.js";
 import { isSnapshotFresh } from "./freshness.js";
-import { locateChosen, type MatchedBy } from "./locate.js";
+import { locateChosen, type MatchedBy, offerDomain } from "./locate.js";
 import { variantMatches } from "./variant.js";
 
 export interface PrepareInput {
@@ -95,7 +96,7 @@ function stop(code: RuleCode, policy: Policy, detail: StopDetail): Stopped {
  * (nothing to compare, or the chosen offer cannot be paid for) or a `Ready` for `decide`.
  *
  * Order: R1 stale/missing snapshot → variant mismatch → offer not found → chosen unavailable →
- * chosen unverified → R2 too few offers → ready.
+ * chosen unverified → R2 too few offers → R2B one seller → ready.
  */
 export function prepareCheck(input: PrepareInput): Prepared {
   const { snapshot, request, policy, now } = input;
@@ -132,6 +133,15 @@ export function prepareCheck(input: PrepareInput): Prepared {
   }
   if (best === null || comparable.length < 2) {
     return stop("R2_TOO_FEW_OFFERS", policy, { ...common, chosen });
+  }
+
+  // Offers are not a market: one seller behind several storefronts would clear the count above,
+  // and `pickBest` would then compare its listing with its own (docs/MERCHANTS.md §2.1). The
+  // collapse only ever lowers the count, so it can only hold — and it is deliberately kept away
+  // from `best` and the gap, which stay computed over every comparable offer (§4.4).
+  const domains = comparable.map(offerDomain);
+  if (sellerCount(domains, inferSellerEdges(domains)) < 2) {
+    return stop("R2B_SINGLE_SELLER_MARKET", policy, { ...common, chosen });
   }
 
   const { gapAbsCents, gapPctHundredths } = computeGap(chosen, best);
