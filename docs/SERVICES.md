@@ -104,6 +104,11 @@ those values. Only the search case spends a credit, and only when asked for.
 
 1. At <https://developer.paypal.com/dashboard/applications/sandbox>, create a REST app and tick
    **Vault** under *Accept payments → Advanced options*. Without it, vaulting a wallet is refused.
+   Tick **Transaction Search** in the same list. Slip reads PayPal's own records twice — the daily
+   reconcile, and the last-resort lookup that stops a timed-out order being charged a second time —
+   and without that feature both calls answer `NOT_AUTHORIZED`. Nothing breaks loudly: the adapter
+   maps a refusal to *unknown*, never to *no such payment*, so the resolver holds rather than
+   risking a double charge. It simply never reconciles, and nothing on screen says why.
 2. Copy the client id and secret. Leave `PAYPAL_ENV=sandbox`: only `live` sends real money, and
    only `live` makes the disclosure band stop saying "no real money moves".
 3. Point the app's webhook at Slip and keep its **webhook id**. `pnpm paypal:webhook
@@ -133,7 +138,20 @@ as a refund ([RAILS.md](RAILS.md) §8). **[VERIFIED 30 Oct 2026, by reading.]**
 ### The one manual step
 
 The live contract suite charges a vaulted wallet, and a wallet can only be vaulted by its owner
-approving it at PayPal. Nothing can automate that, so produce one once:
+approving it at PayPal. Nothing can automate that, so produce one once.
+
+**There is no API shortcut, and it is worth knowing before looking for one** — measured against a
+sandbox app on 30 Oct 2026, all three doors are shut without a buyer:
+
+| Attempt | PayPal's answer |
+|---|---|
+| Vault a PayPal wallet | `PAYER_ACTION_REQUIRED` — waiting for the buyer, which is the point |
+| Vault a card instead | `NOT_ENABLED_TO_VAULT_PAYMENT_SOURCE` |
+| Pay with a card directly, no vault | `PAYEE_NOT_ENABLED_FOR_CARD_PROCESSING` |
+
+Card paths need Advanced Credit and Debit Card Payments, which a plain sandbox app does not carry.
+So the approval below is structural, not a convenience: a sandbox **buyer** must click it, and a
+developer login will not do.
 
 ```sh
 PAYPAL_CLIENT_ID=… PAYPAL_CLIENT_SECRET=… PAYPAL_WEBHOOK_ID=… \
