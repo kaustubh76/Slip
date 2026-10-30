@@ -11,9 +11,11 @@ Every number below is recomputed from `study/snapshots/` by `pnpm study:report`,
 | Products with 2+ comparable offers | **18.33%** (44 of 240) |
 | Typical gap, cheapest to priciest | **17.02%** · $12.31 |
 | Middle half of those gaps | 0% to 50.03% |
-| Dearer offer pays more commission | **47.5%** (19 of 40 comparable) |
+| Dearer offer pays more commission | **47.5%** (19 of 40 where rates differ) |
 
 Every product in the sample had at least one comparable offer.
+
+That share is of the 40 products where two offers stated **different** commission rates, not of the 240 sampled or the 44 with two or more comparable offers. The other 4 could not show a conflict at all — fewer than two of their offers stated a rate, or every rate was the same — so they are left out of the denominator rather than counted as agreement.
 
 A quarter of the comparable products are priced identically at every store (0% gap), so the median is doing real work here: where there is a difference it is usually large.
 
@@ -56,6 +58,16 @@ Channel3 listed 321 offers across the 240 products. The adapter read 321 of them
 | 5 | 1 |
 | 6 | 1 |
 | 9 | 1 |
+
+## Markets of one seller (G6)
+
+Comparable products whose offers all belong to one seller: **1 of 44**. The check used to compare those offers with each other — the count cleared R2, and the cheapest of one seller's own listings became the market it was measured against. `R2B_SINGLE_SELLER_MARKET` holds them instead.
+
+The collapse joins two domains when one is a subdomain of the other, and otherwise only when they are the same domain. Nothing here rests on a guess about who owns what (docs/MERCHANTS.md §4.2).
+
+| Product | Comparable offers | Stores |
+|---|---|---|
+| Ribbed Merino Wool Socks | 2 | cos.com |
 
 ## What was searched, and how dense each one was
 

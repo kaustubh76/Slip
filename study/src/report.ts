@@ -49,13 +49,14 @@ export function renderReport(input: {
     `| Middle half of those gaps | ${pct(numbers.quartileGapPctHundredths.lower)} to` +
       ` ${pct(numbers.quartileGapPctHundredths.upper)} |`,
     `| Dearer offer pays more commission | **${pct(numbers.commissionConflictPctHundredths)}**` +
-      ` (${numbers.commissionConflicts} of ${numbers.commissionConsidered} comparable) |`,
+      ` (${numbers.commissionConflicts} of ${numbers.commissionConsidered} where rates differ) |`,
     "",
     numbers.priced === numbers.products
       ? `Every product in the sample had at least one comparable offer.`
       : `Products with at least one comparable offer: ${numbers.priced} of ${numbers.products}.` +
         " The rest cannot be checked at all — nothing in them is in stock, new and priced in USD.",
     "",
+    ...commissionDenominator(numbers),
     `A quarter of the comparable products are priced identically at every store` +
       ` (${pct(numbers.quartileGapPctHundredths.lower)} gap), so the median is doing real work here:` +
       ` where there is a difference it is usually large.`,
@@ -112,6 +113,7 @@ export function renderReport(input: {
   }
 
   const queryText = new Map(manifest.queries.map((query) => [query.slug, query.query]));
+  const singleSeller = input.measures.filter((m) => m.comparable >= 2 && m.sellers < 2);
   lines.push(
     "",
     "## Why so few comparisons",
@@ -132,6 +134,30 @@ export function renderReport(input: {
     "| Comparable offers | Products |",
     "|---|---|",
     ...numbers.countsByComparable.map((row) => `| ${row.comparable} | ${row.products} |`),
+    "",
+    "## Markets of one seller (G6)",
+    "",
+    "Comparable products whose offers all belong to one seller:" +
+      ` **${numbers.singleSellerMarkets} of ${numbers.withTwoOrMore}**. The check used to compare` +
+      " those offers with each other — the count cleared R2, and the cheapest of one seller's own" +
+      " listings became the market it was measured against." +
+      " `R2B_SINGLE_SELLER_MARKET` holds them instead.",
+    "",
+    "The collapse joins two domains when one is a subdomain of the other, and otherwise only when" +
+      " they are the same domain. Nothing here rests on a guess about who owns what" +
+      " (docs/MERCHANTS.md §4.2).",
+    ...(singleSeller.length === 0
+      ? []
+      : [
+          "",
+          "| Product | Comparable offers | Stores |",
+          "|---|---|---|",
+          ...singleSeller.map(
+            (measure) =>
+              `| ${measure.title} | ${measure.comparable} |` +
+              ` ${[...new Set(measure.domains)].join(", ")} |`,
+          ),
+        ]),
     "",
     "## What was searched, and how dense each one was",
     "",
@@ -260,4 +286,32 @@ export function renderReport(input: {
     "",
   );
   return `${lines.join("\n")}\n`;
+}
+
+/**
+ * What the commission figure is a percentage *of*, since that is the number the pitch leans on and
+ * the first thing a reader challenges.
+ *
+ * `topPaysMore` answers null for a product whose offers state fewer than two commission rates, or
+ * state the same rate throughout: there is no conflict to find in either case, and counting them
+ * would dilute the figure with products that could never have shown one. That is a deliberate
+ * choice, and it makes the denominator smaller than the comparable set — so the difference is
+ * stated here rather than left for someone to discover in `measure.ts`.
+ */
+function commissionDenominator(numbers: StudyNumbers): string[] {
+  if (numbers.commissionConsidered === 0) {
+    return ["No product in this sample had two offers stating different commission rates.", ""];
+  }
+  const indeterminate = numbers.withTwoOrMore - numbers.commissionConsidered;
+  const of =
+    `That share is of the ${numbers.commissionConsidered} products where two offers stated` +
+    ` **different** commission rates, not of the ${numbers.products} sampled or the` +
+    ` ${numbers.withTwoOrMore} with two or more comparable offers.`;
+  const excluded =
+    indeterminate <= 0
+      ? ""
+      : ` The other ${indeterminate} could not show a conflict at all — fewer than two of their` +
+        " offers stated a rate, or every rate was the same — so they are left out of the" +
+        " denominator rather than counted as agreement.";
+  return [`${of}${excluded}`, ""];
 }

@@ -150,6 +150,7 @@
     "medianGapPctHundredthsExcludingSuspect": 1667,
     "commissionConsidered": 40,
     "commissionConflicts": 19,
-    "commissionConflictPctHundredths": 4750
+    "commissionConflictPctHundredths": 4750,
+    "singleSellerMarkets": 1
   }
 }
