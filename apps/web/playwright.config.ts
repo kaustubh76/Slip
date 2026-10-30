@@ -36,6 +36,21 @@ export default defineConfig({
     baseURL: BASE,
     trace: "retain-on-failure",
   },
+  /**
+   * Both servers get 120 s to answer `/sign-in`, and that number is **not** a guess waiting to be
+   * raised. Measured on 30 Oct 2026 at load average 61: the demo server answered in **1.5 s** and
+   * the owner server in **1.0 s** — the budget is some eighty times the cost.
+   *
+   * It did fail once today, at load average 201, and the temptation then was to raise it. That
+   * would have been fitting the repo to a machine in a state where nothing else passed either: the
+   * same hour produced eleven browser "failures" that were all timeouts and no defects. A startup
+   * budget is the one that fails the whole file before a single test runs, so it reports nothing
+   * when it trips — which is a reason to leave it generous, not a reason to keep inflating it.
+   *
+   * The owner server answers this quickly because it does not build its database at startup; the
+   * first request that touches it does, which is what COLD_DATABASE in `owner-start.spec.ts` pays
+   * for.
+   */
   webServer: [
     {
       command: `pnpm exec next start -p ${PORT}`,
