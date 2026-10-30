@@ -114,6 +114,10 @@ lost most of a day to this, each discovering it by accident. What it looks like:
   value to a union leaves every exhaustive switch over it broken until they finish.
 - **`EADDRINUSE` on 3100 or 3101.** Use `SLIP_E2E_PORT` and `SLIP_E2E_OWNER_PORT`; the override
   exists because an unrelated server held 3100 all day.
+- **A browser test that passes without proving anything.** `next start` serves whatever `.next`
+  already holds, so a page change verified without `pnpm web:build` first is tested against the
+  *old* page — and a green run then means nothing. This bites hardest when somebody else built
+  last: the build is as shared as the directories above it.
 
 For a gate you can actually trust, verify exactly what you are about to commit, somewhere nobody
 else is writing:
