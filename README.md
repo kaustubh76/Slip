@@ -23,7 +23,9 @@ keys it runs in the sandbox with Slip as the seller; no order reaches a retailer
 moves. Read [docs/SPEC.md](docs/SPEC.md) for the full spec,
 [docs/diagram.png](docs/diagram.png) for the execution flow — which wins over the spec where they
 disagree, and which [docs/DIAGRAM.md](docs/DIAGRAM.md) maps box by box onto the code and the tests
-— and [docs/UI.md](docs/UI.md) for the owner UI. Agents connect through Slip's MCP server: [TOOLS.md](TOOLS.md). Design decisions are
+— and [docs/UI.md](docs/UI.md) for the owner UI. Agents connect through Slip's MCP server: [TOOLS.md](TOOLS.md). The merchant side — standing,
+the seller graph, and the two defects in the current check it exists to close — is designed in
+[docs/MERCHANTS.md](docs/MERCHANTS.md), and not yet built. Design decisions are
 logged in [docs/DECISIONS.md](docs/DECISIONS.md), and [docs/DEMO.md](docs/DEMO.md) is the shot
 list for the video — including the one beat still waiting on a vaulted sandbox buyer.
 
@@ -95,6 +97,36 @@ Schema changes: edit `packages/db/src/schema.ts`, run `pnpm db:generate`, commit
 `packages/db/drizzle/`. Triggers and lookup tables live in hand-written migrations.
 
 Requires Node ≥ 22.12 and pnpm 10 (`corepack enable` picks the pinned version).
+
+### More than one of you in this checkout
+
+Several people — or several agent sessions — working in one clone is normal here, and it produces
+failures that look exactly like defects and are not. On 30 Oct 2026 four sessions between them lost
+most of a day to this, each discovering it by accident. What it looks like:
+
+- **A red suite whose failing set moves between runs.** That is a timeout, not a defect. The load
+  average on that machine ran between 61 and 659; at 659 even a server's 120 s startup budget
+  failed. **Re-run the file alone before believing it** — every one of those failures passed
+  in isolation.
+- **`ENOENT` on a Playwright trace, or "Could not find a production build".** Another run cleared
+  `apps/web/test-results/` or `.next` underneath yours. They are shared; only one run owns them.
+- **A typecheck error in a package you never touched.** Someone's half-finished change — adding a
+  value to a union leaves every exhaustive switch over it broken until they finish.
+- **`EADDRINUSE` on 3100 or 3101.** Use `SLIP_E2E_PORT` and `SLIP_E2E_OWNER_PORT`; the override
+  exists because an unrelated server held 3100 all day.
+
+For a gate you can actually trust, verify exactly what you are about to commit, somewhere nobody
+else is writing:
+
+```sh
+git worktree add -q <somewhere>/verify origin/main
+cd <somewhere>/verify && pnpm install --frozen-lockfile   # ~25 s with the store warm
+git apply <(cd - >/dev/null && git diff --cached)          # your staged change, and only that
+pnpm lint && pnpm test
+```
+
+And stage explicit paths — never `git add -A` — or you will commit someone else's unfinished work
+under your own message.
 
 ## Run the demo
 
