@@ -105,13 +105,19 @@ running. That is the designed local workflow rather than a misconfiguration: a q
 address changes on every run, which is why the script re-points the same id. But while no tunnel is
 up, **every delivery PayPal attempts fails.**
 
-So three mechanisms, and **only one of them works right now**:
+**`pnpm doctor:keys` answers this now**, and it is the first thing to run — it asks what PayPal has
+*granted this application*, not only whether the credential is accepted.
 
-| mechanism | what it does | state |
+The resolver is four branches, not one path, so the honest picture is per branch
+(`packages/app/src/resolver.ts:449` onward):
+
+| path | what it does | state |
 |---|---|---|
-| Webhook → `POST /api/webhooks/paypal` | PayPal reports what became of orders, captures, authorizations and vault tokens; every delivery verified against the webhook id | **not arriving** — the registered address is a dead tunnel |
-| Resolver polling | finishes an unknown payment by asking PayPal about *that order*; every 30 s in a long-lived process, every 5 min on the schedule | **working** |
-| `reconcile` | nets settlements by invoice against Slip's own records; stamps `reconciledAt` and `reconcileUnmatched` on the permission page | **cannot run** — see below |
+| Webhook → `POST /api/webhooks/paypal` | PayPal reports what became of orders, captures, authorizations and vault tokens, each delivery verified against the webhook id | **not arriving** — the registered address is a dead tunnel |
+| Resolver, known order id | `getOrder(orderId)` through `/v2/checkout/orders` | **working** — needs no feature |
+| Resolver, inside the resend window | re-sends with the *same* `PayPal-Request-Id`, the only repeat PayPal will not charge twice for | **working** |
+| Resolver, last resort | `findOrderByInvoice` — reached only when Slip never learned an order id **and** the resend window has closed | **dead** — Transaction Search |
+| `reconcile` | nets settlements by invoice against PayPal's own records; stamps `reconciledAt` and `reconcileUnmatched` | **dead** — Transaction Search |
 
 **Reconcile is not slow, it is off.** It reads PayPal's Transaction Search, and that feature is not
 enabled on this sandbox app. Measured 30 Oct 2026, directly against the endpoint the code calls:
@@ -127,15 +133,24 @@ the outside, from a reconcile that looked and found nothing wrong. `createOrderL
 double-charge check, reads the same endpoint and is equally off. `docs/SERVICES.md` carries this
 with PayPal's exact error names, alongside the three closed vaulting doors.
 
-**So a purchase is not lost, and the gap is narrower than it sounds.** The resolver still learns a
-payment's fate, because it asks about a specific order through `/v2/checkout/orders` — a different
-endpoint, and one this app *is* authorized for. What is missing is everything that needs a *sweep*
-rather than a lookup: the webhook's promptness, and the events polling cannot reconstruct at all —
-`PAYMENT.CAPTURE.REFUNDED` above all, which was supposed to reach Slip through the daily reconcile
-and currently reaches it nowhere.
+**So the checkout and the ordinary resolve are both intact, and "nothing is tracked" would overstate
+it as badly as "it is only slow" did.** A payment whose order id Slip knows is read straight back,
+and that needs no feature. What is dead is everything that looks *backwards by invoice* rather than
+forwards by id: the daily reconcile, and the narrow last-resort branch.
 
-**To fix reconcile:** enable **Transaction Search** on the sandbox REST app (PayPal dashboard →
-the app → Features). It is a tick-box, and nothing in Slip changes.
+That branch has a consequence worth stating, because it is another silent one: with the grant off it
+can never conclude, and `afterLookup` only fails a payment on a *definite* not-found. So a payment
+whose order id was never learned and whose resend window has closed **stays open for ever** rather
+than being wrongly failed. That is the right way round — Slip has not looked, so it may not conclude
+— but nothing says so out loud.
+
+And `PAYMENT.CAPTURE.REFUNDED` currently reaches Slip nowhere at all: the webhook is not arriving,
+and the daily reconcile that was meant to catch it as an amount that disagrees cannot run.
+
+**To fix it:** enable **Transaction Search** on the sandbox REST app — PayPal dashboard → Apps &
+Credentials → your app → Features. It is a tick-box, nothing in Slip changes, and `pnpm doctor:keys`
+will stop reporting it. Note that a missing grant now makes that command **exit 1**, on the grounds
+that a probe which finds a silent failure and then exits 0 has only moved the silence up a level.
 
 **To restore it locally:** start a tunnel, then re-run the command in §2.3 with its address.
 **To stop needing a tunnel:** finish §2, and point it at the deployment once.
@@ -175,8 +190,14 @@ Channel3  ok             Channel3 accepted the key and has no such product, as e
 PayPal    ok             the PayPal sandbox minted a token and has no such order, as expected
 ```
 
-All three accepted, which is the first time that has been true. Run it before any deployment and
-before the live switch:
+All three accepted, which is the first time that has been true — **and accepted is not the same as
+sufficient.** The same command now also asks what PayPal has granted this application, and reports
+Transaction Search as not granted (§3). A credential is the loud half: a bad key fails every
+payment. A missing grant is the quiet half, and strictly worse to debug, because it leaves the
+checkout perfect and kills only the backwards-looking parts, where a refusal is correctly read as
+"not known" and therefore says nothing.
+
+Run it before any deployment and before the live switch:
 
 ```sh
 pnpm doctor:keys   # free; prints no part of any credential; never touches live
