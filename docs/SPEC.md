@@ -366,7 +366,7 @@ Use percent and dollars throughout. No basis points, no "slippage", no "TCA".
 
 **Shipping could make the cheaper offer worse.** Yes. Price alone only rejects when the gap exceeds 5% and $8, the allowance is editable, and every receipt says item price only.
 
-**Are the steering attacks real?** The labels and injected text are test conditions. The market study and condition A use nothing synthetic.
+**Are the steering attacks real?** The labels and injected text are test conditions. The market study and condition A use nothing synthetic. **What is measured rather than constructed is whether the check would catch one:** on 30 Oct 2026 the real classifier flagged 44 of 44 planted instructions and 0 of 240 honest descriptions, every call inside its 5 s deadline ([steering-judge.md](../bench/results/steering-judge.md), D93). That settles the counterfactual, not the realism of the payload — one sentence, one placement, one model, one day.
 
 **Hasn't research shown this already?** ACES and Magentic Marketplace measured it in synthetic markets; both are cited. Slip uses real offers and acts before payment.
 
@@ -428,13 +428,21 @@ We also ran **one agent — `claude-haiku-5-5`, the small low-cost one — throu
    detail is free; search is the call that costs a credit, and it is never made.* What remains is a
    key revoked **while a deployment runs**, which needs a health route or monitoring and is out of
    scope for the hackathon.
-7. The refund path, and whether a refunded capture already makes the reconcile disagree. **Open
-   (G10, G11, [RAILS.md](RAILS.md) §14).** The second needs no key, no model call and no live
-   traffic — a refund arrives as a negative `settled` record and `slipBelieves` has no reversal case
-   (`packages/app/src/resolver.ts:192`) — which makes it the cheapest untaken gate here.
+7. The refund path. **Open (G10, [RAILS.md](RAILS.md) §14)** — it needs the same vaulted sandbox
+   buyer as G2. *Whether a refunded capture already makes the reconcile disagree was listed here as
+   open and was not: `packages/app/src/resolver.test.ts:427` has proved it since 20 Oct, and a
+   refund arrives as a negative `reversed` record rather than the `settled` this item first said
+   (D98).*
 8. The endpoint, field and status names in [RAILS.md](RAILS.md) §5 that came from third-party
    write-ups rather than a primary specification. **Open (G14).** Each is tagged in place, and none
    of them appears in this spec's submission copy, the README or the video.
+9. A Next.js security advisory against the installed version. **Open, and deliberately not acted on
+   before submission.** `pnpm web:build` now stops once with a `SecurityFatalError` naming a known
+   advisory and recommending `next upgrade --agent=security`; re-running the identical command
+   proceeds and the build is clean. *D90 predicted this interstitial and recorded that it had not
+   happened — it does now, which is the one prediction from that entry to come true.* Upgrading a
+   framework thirteen days out, against a gate that is currently green, is the larger risk; the
+   advisory is recorded here so the choice is visible rather than forgotten.
 
 ## Sources
 - PayPal Orders v2: https://developer.paypal.com/docs/api/orders/v2/

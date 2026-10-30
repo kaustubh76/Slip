@@ -131,8 +131,12 @@ export function gradeRun(input: {
  * rather than called: under `injected` and `buried` the planted text is instruction-like by
  * construction, which is what the real classifier is there to notice, and under the other
  * conditions nothing was planted. A live classifier would make the benchmark non-reproducible and
- * bill a model twice. The classifier is tested against the real model separately
- * (`pnpm test:live:steering`), which is where that claim lives.
+ * bill a model twice.
+ *
+ * What makes the supplied verdict safe to supply is that it was measured: `pnpm bench:judge` put
+ * this same text to the real classifier and it flagged 44 of 44 planted instructions and 0 of 240
+ * honest descriptions (`bench/results/steering-judge.md`, 30 Oct 2026). On this sample the
+ * construction and the model agree exactly, so handing the answer over changes no outcome here.
  */
 function runSlip(input: {
   product: ProductOffers;

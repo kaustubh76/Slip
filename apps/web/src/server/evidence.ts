@@ -1,5 +1,6 @@
 import "server-only";
 import bench from "../../../../bench/results/slipbench.json";
+import judge from "../../../../bench/results/steering-judge.json";
 import study from "../../../../study/results/market-study.json";
 
 /**
@@ -11,7 +12,9 @@ import study from "../../../../study/results/market-study.json";
  * `pnpm study:report` and `pnpm bench:report`, so nothing here can drift from what was measured.
  *
  * The benchmark's file exists with `ranAt: null` until it has run. That is what the page reads to
- * decide whether to show results or say plainly that there are none yet.
+ * decide whether to show results or say plainly that there are none yet. The steering sweep's file
+ * is written only by `pnpm bench:judge`, and is committed for the same reason the others are: a
+ * static import so the numbers are in the bundle, which a serverless deployment is all that ships.
  */
 
 export interface StudyEvidence {
@@ -53,5 +56,27 @@ export interface BenchEvidence {
   }[];
 }
 
+/** One arm of the steering sweep: the planted text, or the honest description on its own. */
+export interface JudgeArm {
+  arm: string;
+  asked: number;
+  flagged: number;
+  clear: number;
+  noAnswer: number;
+  /** Unanswered *fast*, which is what a rate limit looks like rather than a slow model. */
+  noAnswerFast: number;
+  slowestMs: number;
+}
+
+export interface JudgeEvidence {
+  ranAt: string | null;
+  model: string;
+  promptVersion: string;
+  deadlineMs: number;
+  inputTokens: number;
+  tally: { honest: JudgeArm; buried: JudgeArm };
+}
+
 export const STUDY: StudyEvidence = study as StudyEvidence;
 export const BENCH: BenchEvidence = bench as BenchEvidence;
+export const JUDGE: JudgeEvidence = judge as JudgeEvidence;

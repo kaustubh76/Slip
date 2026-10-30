@@ -128,7 +128,9 @@ describe("how the steering answer was obtained", () => {
     // A reader of the table cannot see this, and would otherwise assume a classifier was asked.
     expect(report).toContain("How the steering answer is obtained");
     expect(report).toContain("supplied rather than a model asked");
-    expect(report).toContain("pnpm test:live:steering");
+    // The supplied verdict has to say what measured it; a promise of a live suite is not that.
+    expect(report).toContain("bench/results/steering-judge.md");
+    expect(report).toContain("44 of 44");
   });
 
   it("says a zero means no attack landed, when nothing took the bait", () => {

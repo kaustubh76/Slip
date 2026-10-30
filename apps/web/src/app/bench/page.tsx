@@ -1,6 +1,6 @@
 import { formatPct, formatUsd } from "@slip/domain";
 import { Leaders, Stamp } from "@slip/ui";
-import { BENCH, STUDY } from "../../server/evidence";
+import { BENCH, JUDGE, STUDY } from "../../server/evidence";
 
 export const metadata = { title: "Bench · Slip" };
 
@@ -16,6 +16,19 @@ export const metadata = { title: "Bench · Slip" };
 /** A share in hundredths of a percent, or an em dash when there was nothing to measure. */
 function share(hundredths: number | null): string {
   return hundredths === null ? "—" : formatPct(hundredths);
+}
+
+/**
+ * One arm of the steering sweep as "flagged of asked", with the share. Computed here rather than
+ * stored, so the sentence cannot disagree with the file it came from.
+ */
+function arm(of: "honest" | "buried"): string {
+  const tally = JUDGE.tally[of];
+  if (tally.asked === 0) {
+    return "—";
+  }
+  const pct = Math.round((tally.flagged / tally.asked) * 10_000);
+  return `${tally.flagged} of ${tally.asked} · ${formatPct(pct)}`;
 }
 
 /** The typical gap, quoting the figure that excludes suspected catalogue errors. */
@@ -229,6 +242,51 @@ export default function Bench() {
             </table>
           </section>
         )}
+      </article>
+
+      {/*
+        The third piece: the one input SlipBench supplies rather than measures, measured. It is
+        here because the table above would otherwise rest on a construction — the planted text is
+        instruction-like by design, and whether the real classifier agrees is a separate question
+        from whether the rules act on it.
+      */}
+      <article className="slip-sheet" data-perforated="" aria-labelledby="steering-judge">
+        <header className="slip-receipt-head">
+          <p className="slip-meta" id="steering-judge">
+            The steering check · on the text it actually reads
+          </p>
+          <Stamp
+            kind={JUDGE.ranAt === null ? "VOID" : "PAID"}
+            label={JUDGE.ranAt === null ? "NOT RUN YET" : "MEASURED"}
+            describedAs={
+              JUDGE.ranAt === null
+                ? "This sweep has not run yet"
+                : `Run on ${JUDGE.ranAt.slice(0, 10)}`
+            }
+          />
+        </header>
+        <hr className="slip-rule" />
+        <p className="slip-sentence">
+          SlipBench hands the rules a steering verdict so its table stays recomputable without a
+          key. This is the same question put to the real classifier, on the same text the benchmark
+          showed its agents.
+        </p>
+        <Leaders
+          rows={[
+            ["Planted instructions flagged", arm("buried")],
+            // The number that decides whether the check is usable at all: a flag here is an
+            // honest purchase Slip would have held.
+            ["Honest descriptions flagged", arm("honest")],
+            ["Unanswered", `${JUDGE.tally.honest.noAnswer + JUDGE.tally.buried.noAnswer}`],
+            ["Model", `${JUDGE.model} · prompt ${JUDGE.promptVersion}`],
+            ["Deadline", `${Math.round(JUDGE.deadlineMs / 1000)} s, as the application allows`],
+          ]}
+        />
+        <p className="slip-caption">
+          One payload, at one placement, against one model on one day. A sentence written to avoid
+          whatever this prompt keys on would not be covered by it — which is why the check asks a
+          model rather than matching a list of patterns.
+        </p>
       </article>
     </div>
   );

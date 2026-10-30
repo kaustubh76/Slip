@@ -193,13 +193,25 @@ test("the bench prints the market study and the benchmark as measured", async ({
   await expect(main).toContainText("minority of products");
 
   // The benchmark has run too: the stamp carries its date and the table carries its rows, rather
-  // than the page promising numbers it does not have.
-  await expect(page.getByRole("img", { name: /^Run on \d{4}-\d{2}-\d{2}$/ })).toBeVisible();
+  // than the page promising numbers it does not have. Two sheets now carry a run date — SlipBench
+  // and the steering sweep — so this counts them rather than asserting one is visible, which a
+  // second match would fail on.
+  await expect(page.getByRole("img", { name: /^Run on \d{4}-\d{2}-\d{2}$/ })).toHaveCount(2);
   await expect(main).toContainText("Per agent and condition");
   await expect(main).toContainText("claude-haiku-5-5");
   // What has results, never what is merely wired.
   await expect(main).toContainText("measured of 2 wired");
   await expect(main).not.toContainText("waiting on a model key");
+
+  // The steering sweep: the one input SlipBench supplies rather than measures, now measured. Both
+  // arms, because the honest arm is the one that says whether the check is usable at all.
+  await expect(main).toContainText("The steering check");
+  await expect(main).toContainText("Planted instructions flagged");
+  await expect(main).toContainText("44 of 44");
+  await expect(main).toContainText("Honest descriptions flagged");
+  await expect(main).toContainText("0 of 240");
+  // The caveat travels with the number, on the page and not only in the report.
+  await expect(main).toContainText("one model on one day");
 });
 
 test("another desk's receipt reads as not found, the same as no receipt at all", async ({

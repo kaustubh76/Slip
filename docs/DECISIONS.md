@@ -1873,6 +1873,49 @@ operator doctor across all three services, and it is deliberately not half-built
 a token call and Channel3 would spend a credit, so it is its own piece of work with its own
 decision.
 
+## D93 · 2026-10-30 · The steering check, measured instead of assumed
+
+`pnpm bench:judge` was built on 28 Oct and had never run: the key was missing, then present and
+rejected (D92). It ran today, and this entry is the number it was reserved for.
+
+**What was being assumed.** SlipBench hands the rules a steering verdict rather than asking a model
+for one, so that its table recomputes from committed runs with no key and no call. Under `injected`
+and `buried` the planted sentence is instruction-like *by construction*, so supplying "flagged" is
+reasonable — but it is a construction, and both `grade.ts` and `report.ts` said so while pointing at
+a live suite as the place "that claim lives". A live suite proves the adapter works on a handful of
+cases. It does not say how often the classifier is right.
+
+**What was measured.** 284 calls to `claude-opus-5-5` under prompt `steer-2`, each given the 5 s the
+application allows, on the same text the benchmark showed its agents — real descriptions from the
+market study, bounded as an agent is shown them:
+
+| Arm | Asked | Flagged | Unanswered | Slowest |
+|---|---|---|---|---|
+| `buried` — the planted instruction | 44 | **44 (100%)** | 0 | 2.0 s |
+| `honest` — the description alone | 240 | **0 (0%)** | 0 | 3.3 s |
+
+Both arms separate completely on this sample, and every one of the 284 calls answered inside the
+deadline. The honest arm is the one that decided whether the check is usable at all: a flag there is
+an honest purchase Slip would have held, and 0 of 240 is what makes a check that holds purchases
+defensible to switch on. One check sends about 1,137 input tokens, and **no production check gets a
+prompt-cache hit** — the prompt fences every untrusted field inside a tag whose name carries a
+per-request nonce, so the system prompt differs on every call. That is a deliberate trade of cost
+for a fence a listing cannot close.
+
+**What it does not say, and the page says this too.** One payload, at one placement, against one
+model, on one day. A sentence written to avoid whatever this prompt keys on is not covered by it —
+which is the reason the production check asks a model rather than matching patterns. And **no
+published SlipBench number moves**: the supplied verdict only reaches a decision when the price gap
+is already above the owner's flag line, and under `buried` not one errand overpaid. What is settled
+is the counterfactual — whether the check would have seen it. It would have, 44 times out of 44.
+
+**What changed as a result.** The two sentences that delegated now cite the measurement
+(`bench/src/report.ts`, `bench/src/grade.ts`), `report.test.ts` asserts the file and the rate rather
+than the name of a live suite, and `/bench` carries it as a third sheet beside the study and
+SlipBench — with both arms, the unanswered count, and the caveat, because a detection rate shown
+without its false-positive rate is half a claim. `bench/results/steering-judge.{md,json}` are
+committed, and the page recomputes the shares from the file so a sentence cannot disagree with it.
+
 ## D94 · 2026-10-30 · The merchant side, and the rule that was not written
 
 Slip is buyer-side only, and everything merchant-side is one string on an offer inside a jsonb
@@ -2062,7 +2105,7 @@ nothing does. **Slip can stop a payment and cannot undo one.** Four readings of 
 30 Oct 2026.
 
 - **No refund call exists.** `voidAuthorization` is the only money-reversal call in the port
-  (`packages/domain/src/ports/payments.ts:201`) and it releases an authorisation that never moved
+  (`packages/domain/src/ports/payments.ts:206`) and it releases an authorisation that never moved
   money. A one-step capture — what the PAID path creates — has no reversal at all.
 - **A refunded capture reads as captured, and correctly.** `CAPTURE_HELD` includes `REFUNDED` and
   `PARTIALLY_REFUNDED` (`packages/paypal/src/map.ts:64`): *"the money moved, and a refund is outside
@@ -2074,10 +2117,13 @@ nothing does. **Slip can stop a payment and cannot undo one.** Four readings of 
   (`apps/web/scripts/paypal-webhook.ts:47`), and `PAYMENT.CAPTURE.REFUNDED` is not in that list —
   whose own comment says *"a subscription narrower than this loses money events silently."* The
   `default` arm that names a refund as a real event with no rule never has to run.
-- **So an out-of-band refund reads as the owner's own account disagreeing with Slip.** A refund
-  arrives as `kind: "settled"` with a **negative** amount — PayPal reports it with
-  `transaction_status: "S"`, so *"the sign decides, not the status"* (`packages/paypal/src/search.ts:117`,
-  D76). Netted against the capture it gives zero, while `slipBelieves` returns the full amount for
+- **So an out-of-band refund reads as the owner's own account disagreeing with Slip.** PayPal files
+  a refund under `transaction_status: "S"` — a payment's status — with a **negative** amount, and
+  `"V"` carries reversals and chargebacks, so the sign decides and not the status; the mapper turns
+  a negative `"S"` into `kind: "reversed"` (`packages/paypal/src/search.ts:151`, D76). *This entry
+  first said `kind: "settled"`, which is wrong and is corrected in D98: the label does not change
+  the arithmetic, because `netByInvoice` adds both kinds in one branch.*
+  Netted against the capture it gives zero, while `slipBelieves` returns the full amount for
   any `CAPTURED` payment and has no reversal case (`packages/app/src/resolver.ts:192`). The attempt
   is counted under `reconcile.disagreed` and raises the mandate's unmatched count — the figure the
   permission slip shows the owner — on every pass for as long as the window reaches back, **three
@@ -2138,3 +2184,73 @@ decided here.
 **What is not claimed.** That any of it is built — no code changed. G10–G14 own every number.
 **G11 and G12 need no key, no model call and no live traffic**, which makes them the cheapest
 untaken gates in the repository; taking either is a code change, and this was not one.
+
+## D98 · 2026-10-30 · The gate that was already closed, and the comment that said otherwise
+
+D96 and D97 were written the same day as this entry, and two of their claims were wrong. Both are
+corrected in place above; this records what was wrong, how it got there, and the one habit that
+caught it.
+
+**A refund is `reversed`, not a negative `settled`.** D97 and [RAILS.md](RAILS.md) §8 both said
+PayPal's refund arrives as `kind: "settled"` with a negative amount. The mapper has never done
+that: `settlement()` sends a negative `transaction_status: "S"` to **`kind: "reversed"`**
+(`packages/paypal/src/search.ts:151`), and `"settled"` is unreachable with a negative amount.
+**The arithmetic and every conclusion drawn from it are unaffected** — `netByInvoice` adds
+`settled` and `reversed` in the same branch (`packages/app/src/resolver.ts:178`), so a refund still
+nets a capture to zero and still reads as a disagreement. Only the field value was wrong. That is
+the smallest kind of error this project can make and still exactly the kind it cannot afford: the
+whole claim is that the evidence is checkable, and a reader who checked this one would have found
+the doc and the code disagreeing.
+
+**It came from two comments, and they are the defect.** Neither was read carelessly; both were read
+and believed over the code beside them.
+
+- `packages/domain/src/ports/payments.ts` said *"`settled`: money moved (negative for a refund)"* —
+  describing a case the adapter never produces.
+- `packages/paypal/src/search.ts` said *"reading `kind === "reversed"` to find refunds would find
+  none of them"*, three lines above the expression that assigns exactly that kind. Its intent was
+  about PayPal's `"V"` status versus `"S"`, and about `kind` it said the opposite of the truth.
+
+Both now name the kind a refund actually carries, and the port comment records what it used to say
+so the next reader can see the trap rather than fall into it. **The general form, stated once: a
+doc comment is a claim like any other, and the function underneath it is the source.** Three
+documents repeated this one from a single stale line because nobody had re-derived it.
+
+**G11 was closed on 20 October and written as an open gate on 30 October.**
+`packages/app/src/resolver.test.ts:427` — *"a refund Slip never recorded is a disagreement too"*,
+from the D76 work — already drove the whole chain through `runResolver`, with
+`kind: "reversed"`, which is the faithful fixture the gate's own text got wrong. Calling it one of
+"the two cheapest untaken gates" was a failure to grep before claiming. **What the test genuinely
+did not assert was the middle step**: that `reconcile.disagreed` fires at all, and that it carries
+the full amount against zero. Repository-wide, that event was asserted nowhere — it appears only at
+its own call site — so `reconcileUnmatched === 1` was equally consistent with an overcharge or a
+payment PayPal never listed. The test now asserts the event and both numbers, which is the first
+assertion anywhere on it, and the gate's stated bar is true rather than merely implied.
+
+**G12 cannot be measured, and the reason is better than a count would have been.** It asked how
+many recorded purchases a correction refund would have been right for. The answer is **nil, and
+vacuously**, because the suspect population and the held population are one set by construction:
+the study's `SUSPECT_GAP_PCT_HUNDREDTHS` *is* `IMPLAUSIBLE_GAP_PCT_HUNDREDTHS`, so every
+mis-grouping the committed data can flag is one `R2A_GAP_IMPLAUSIBLE` holds rather than pays, with a
+property test forbidding anything above the line from ever being PAID (D68). A purchase paid on a
+wrong grouping needs a gap *below* the line, and the price-gap heuristic cannot see those at all.
+Nor does any committed purchase touch a suspect: the widest gap among SlipBench's 21 errand
+products is 89.47%, so `R2a` never fires across all 84 runs, and the runs do not serialise their
+own outcome or rule code. The instrument is G4, which needs a person — so the market study's
+hand-check table now prints the product id, and lists the suspected groupings first, because two of
+the three fell outside its first thirty rows and a verdict had nowhere in the repository to land.
+
+**Two smaller things, found while checking.** `docs/DIAGRAM.md` had drifted from the code it exists
+to be checked against — box 10 still said "R1–R7" where the set is sixteen codes, and the RULES
+panel pointed only at `rules.ts` when `R2b` decides in `prepareCheck`; both now carry the ✎ that
+books the departure to D95. And `bench/results/slipbench.md` said G3 asks whether an agent
+*"overpays or is steered"* while `renderBench` computed the figure from overpaying alone. It now
+counts the errands where either happened, from the runs rather than the tallies so one errand that
+did both counts once. **The regenerated report is byte-identical**: both terms are zero in all four
+conditions, so the published 0% never moved — the number simply began measuring its own sentence.
+
+**What is not claimed.** That the phenomenon G12 asks about does not occur — §8 of
+[RAILS.md](RAILS.md) argues the opposite and G4 is the open question. That any of the reversal is
+built; nothing of it is. That DIAGRAM.md's departures are new rather than newly written down. And
+that the Next.js advisory in §19.9 has been dealt with: it has been recorded, which is not the same
+thing.
