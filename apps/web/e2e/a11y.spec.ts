@@ -32,12 +32,28 @@ for (const theme of ["original", "carbon"] as const) {
   });
 }
 
+/**
+ * Both audits below are marked slow, and the number is a measurement rather than a cushion.
+ *
+ * Each one opens a desk and runs a full axe analysis over every page, which is far and away the
+ * heaviest thing this suite does. Measured on 30 Oct 2026: **22.0 s and 19.5 s** for the two themes
+ * of the page sweep on an idle machine at `--workers=1`, against the file's inherited 60 s — but
+ * **1.3 to 1.8 minutes** for the same tests under the config's three workers, which is how this
+ * suite normally runs. So the default budget passes only when nothing else is happening, and these
+ * were red all day for that reason while reporting no violation at all.
+ *
+ * `test.slow()` triples it to 180 s. That is deliberately well clear of the 1.8 minutes, because
+ * the cost scales with whatever else holds the machine. An audit that times out proves nothing: it
+ * reports neither a clean page nor a violation, and the only honest states for an accessibility
+ * gate are "clean" and "here is the violation".
+ */
 for (const theme of ["original", "carbon"] as const) {
   test(`every page has no serious accessibility problem (${theme})`, async ({
     page,
     context,
     baseURL,
   }) => {
+    test.slow();
     await page.emulateMedia({ reducedMotion: "reduce" });
     await openDesk(page);
     await context.addCookies([{ name: "slip-theme", value: theme, url: origin(baseURL) }]);
@@ -92,6 +108,7 @@ for (const theme of ["original", "carbon"] as const) {
     context,
     baseURL,
   }) => {
+    test.slow();
     await page.emulateMedia({ reducedMotion: "reduce" });
     await openDesk(page);
     await context.addCookies([{ name: "slip-theme", value: theme, url: origin(baseURL) }]);
