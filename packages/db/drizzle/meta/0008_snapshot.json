@@ -73,12 +73,8 @@
           "name": "agents_mandate_id_mandates_id_fk",
           "tableFrom": "agents",
           "tableTo": "mandates",
-          "columnsFrom": [
-            "mandate_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["mandate_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -88,17 +84,12 @@
         "agents_api_key_hash_unique": {
           "name": "agents_api_key_hash_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "api_key_hash"
-          ]
+          "columns": ["api_key_hash"]
         },
         "agents_id_mandate_unique": {
           "name": "agents_id_mandate_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "id",
-            "mandate_id"
-          ]
+          "columns": ["id", "mandate_id"]
         }
       },
       "policies": {},
@@ -351,12 +342,8 @@
           "name": "attempts_snapshot_id_offer_snapshots_id_fk",
           "tableFrom": "attempts",
           "tableTo": "offer_snapshots",
-          "columnsFrom": [
-            "snapshot_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["snapshot_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -364,14 +351,8 @@
           "name": "attempts_agent_mandate_fk",
           "tableFrom": "attempts",
           "tableTo": "agents",
-          "columnsFrom": [
-            "agent_id",
-            "mandate_id"
-          ],
-          "columnsTo": [
-            "id",
-            "mandate_id"
-          ],
+          "columnsFrom": ["agent_id", "mandate_id"],
+          "columnsTo": ["id", "mandate_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -379,14 +360,8 @@
           "name": "attempts_policy_fk",
           "tableFrom": "attempts",
           "tableTo": "policies",
-          "columnsFrom": [
-            "mandate_id",
-            "policy_version"
-          ],
-          "columnsTo": [
-            "mandate_id",
-            "version"
-          ],
+          "columnsFrom": ["mandate_id", "policy_version"],
+          "columnsTo": ["mandate_id", "version"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -394,12 +369,8 @@
           "name": "attempts_parent_fk",
           "tableFrom": "attempts",
           "tableTo": "attempts",
-          "columnsFrom": [
-            "parent_attempt_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["parent_attempt_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -409,28 +380,17 @@
         "attempts_parent_unique": {
           "name": "attempts_parent_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "parent_attempt_id"
-          ]
+          "columns": ["parent_attempt_id"]
         },
         "attempts_payment_target": {
           "name": "attempts_payment_target",
           "nullsNotDistinct": false,
-          "columns": [
-            "id",
-            "outcome",
-            "chosen_price_cents",
-            "agent_id",
-            "product_id"
-          ]
+          "columns": ["id", "outcome", "chosen_price_cents", "agent_id", "product_id"]
         },
         "attempts_hold_target": {
           "name": "attempts_hold_target",
           "nullsNotDistinct": false,
-          "columns": [
-            "id",
-            "outcome"
-          ]
+          "columns": ["id", "outcome"]
         }
       },
       "policies": {},
@@ -513,12 +473,8 @@
           "name": "checkout_leases_agent_id_agents_id_fk",
           "tableFrom": "checkout_leases",
           "tableTo": "agents",
-          "columnsFrom": [
-            "agent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["agent_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -526,10 +482,7 @@
       "compositePrimaryKeys": {
         "checkout_leases_pk": {
           "name": "checkout_leases_pk",
-          "columns": [
-            "agent_id",
-            "product_id"
-          ]
+          "columns": ["agent_id", "product_id"]
         }
       },
       "uniqueConstraints": {},
@@ -607,14 +560,8 @@
           "name": "holds_attempt_fk",
           "tableFrom": "holds",
           "tableTo": "attempts",
-          "columnsFrom": [
-            "attempt_id",
-            "attempt_outcome"
-          ],
-          "columnsTo": [
-            "id",
-            "outcome"
-          ],
+          "columnsFrom": ["attempt_id", "attempt_outcome"],
+          "columnsTo": ["id", "outcome"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -748,12 +695,8 @@
           "name": "mandates_owner_id_owners_id_fk",
           "tableFrom": "mandates",
           "tableTo": "owners",
-          "columnsFrom": [
-            "owner_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["owner_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -763,16 +706,12 @@
         "mandates_setup_order_unique": {
           "name": "mandates_setup_order_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "setup_order_id"
-          ]
+          "columns": ["setup_order_id"]
         },
         "mandates_vault_hmac_unique": {
           "name": "mandates_vault_hmac_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "vault_id_hmac"
-          ]
+          "columns": ["vault_id_hmac"]
         }
       },
       "policies": {},
@@ -929,9 +868,7 @@
         "owners_email_unique": {
           "name": "owners_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -1018,12 +955,8 @@
           "name": "payment_events_attempt_id_payments_attempt_id_fk",
           "tableFrom": "payment_events",
           "tableTo": "payments",
-          "columnsFrom": [
-            "attempt_id"
-          ],
-          "columnsTo": [
-            "attempt_id"
-          ],
+          "columnsFrom": ["attempt_id"],
+          "columnsTo": ["attempt_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1069,12 +1002,8 @@
           "name": "payment_operations_attempt_id_payments_attempt_id_fk",
           "tableFrom": "payment_operations",
           "tableTo": "payments",
-          "columnsFrom": [
-            "attempt_id"
-          ],
-          "columnsTo": [
-            "attempt_id"
-          ],
+          "columnsFrom": ["attempt_id"],
+          "columnsTo": ["attempt_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1082,19 +1011,14 @@
       "compositePrimaryKeys": {
         "payment_operations_pk": {
           "name": "payment_operations_pk",
-          "columns": [
-            "attempt_id",
-            "kind"
-          ]
+          "columns": ["attempt_id", "kind"]
         }
       },
       "uniqueConstraints": {
         "payment_operations_request_unique": {
           "name": "payment_operations_request_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "request_id"
-          ]
+          "columns": ["request_id"]
         }
       },
       "policies": {},
@@ -1252,13 +1176,7 @@
             "agent_id",
             "product_id"
           ],
-          "columnsTo": [
-            "id",
-            "outcome",
-            "chosen_price_cents",
-            "agent_id",
-            "product_id"
-          ],
+          "columnsTo": ["id", "outcome", "chosen_price_cents", "agent_id", "product_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1268,23 +1186,17 @@
         "payments_paypal_order_unique": {
           "name": "payments_paypal_order_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "paypal_order_id"
-          ]
+          "columns": ["paypal_order_id"]
         },
         "payments_authorization_unique": {
           "name": "payments_authorization_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "authorization_id"
-          ]
+          "columns": ["authorization_id"]
         },
         "payments_capture_unique": {
           "name": "payments_capture_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "capture_id"
-          ]
+          "columns": ["capture_id"]
         }
       },
       "policies": {},
@@ -1375,12 +1287,8 @@
           "name": "policies_mandate_id_mandates_id_fk",
           "tableFrom": "policies",
           "tableTo": "mandates",
-          "columnsFrom": [
-            "mandate_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["mandate_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1388,10 +1296,7 @@
       "compositePrimaryKeys": {
         "policies_pk": {
           "name": "policies_pk",
-          "columns": [
-            "mandate_id",
-            "version"
-          ]
+          "columns": ["mandate_id", "version"]
         }
       },
       "uniqueConstraints": {},
@@ -1467,12 +1372,8 @@
           "name": "search_impressions_agent_id_agents_id_fk",
           "tableFrom": "search_impressions",
           "tableTo": "agents",
-          "columnsFrom": [
-            "agent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["agent_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1480,10 +1381,7 @@
       "compositePrimaryKeys": {
         "search_impressions_pk": {
           "name": "search_impressions_pk",
-          "columns": [
-            "agent_id",
-            "product_id"
-          ]
+          "columns": ["agent_id", "product_id"]
         }
       },
       "uniqueConstraints": {},
