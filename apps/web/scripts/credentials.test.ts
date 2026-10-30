@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
+  type CapabilityVerdict,
   type CredentialVerdict,
   exitCodeFor,
   probeChannel3,
   probePayPal,
+  probeReporting,
   probeSteering,
+  renderCapabilities,
   renderCredentials,
 } from "./credentials";
 
@@ -144,6 +147,57 @@ describe("PayPal", () => {
   });
 });
 
+/**
+ * The feature, which is a different question from the credential. A working key with no
+ * *Transaction Search* grant is the state this sandbox was actually in, undetected, for a day:
+ * every checkout fine, every look backwards refused, and nothing anywhere saying so.
+ */
+describe("Transaction Search", () => {
+  const env = { PAYPAL_CLIENT_ID: "id", PAYPAL_CLIENT_SECRET: "shh" };
+
+  it("asks the question the reconcile asks, so it is refused where the reconcile would be", async () => {
+    const { fetch, calls } = stub(token, json(200, { transaction_details: [] }));
+    expect(await probeReporting(env, live(), { fetch })).toMatchObject({ state: "granted" });
+    expect(calls[1]).toContain("/v1/reporting/transactions");
+    // The reconcile counts authorizations, which move no balance; a probe that filtered them out
+    // could be granted where the reconcile is refused.
+    expect(calls[1]).toContain("balance_affecting_records_only=N");
+    expect(calls[1]).toMatch(/start_date=\d{4}-\d{2}-\d{2}T\d{2}%3A\d{2}%3A\d{2}Z/);
+  });
+
+  it("reads PayPal's refusal as a feature nobody ticked", async () => {
+    const { fetch } = stub(token, json(403, { name: "NOT_AUTHORIZED" }));
+    const verdict = await probeReporting(env, live(), { fetch });
+    expect(verdict).toMatchObject({ state: "not-granted" });
+    expect(verdict.where).toContain("Features");
+  });
+
+  it("sends an operator to the credential line, not the dashboard, when the token is the problem", async () => {
+    const { fetch } = stub(json(401, { error: "invalid_client" }));
+    const verdict = await probeReporting(env, live(), { fetch });
+    // Calling the feature missing here would be a wrong instruction, not merely a vague one.
+    expect(verdict).toMatchObject({ state: "unreachable" });
+    expect(verdict.detail).toContain("credentials");
+  });
+
+  it("does not call a feature missing because PayPal is unwell", async () => {
+    const { fetch } = stub(token, json(500, { name: "INTERNAL_SERVICE_ERROR" }));
+    expect(await probeReporting(env, live(), { fetch })).toMatchObject({ state: "unreachable" });
+  });
+
+  it("asks nothing when there is no credential to ask with, or when it would be live", async () => {
+    const absent = stub(token);
+    expect(await probeReporting({}, live(), { fetch: absent.fetch })).toMatchObject({
+      state: "absent",
+    });
+    const onLive = stub(token);
+    expect(
+      await probeReporting({ ...env, PAYPAL_ENV: "live" }, live(), { fetch: onLive.fetch }),
+    ).toMatchObject({ state: "skipped" });
+    expect([...absent.calls, ...onLive.calls]).toHaveLength(0);
+  });
+});
+
 describe("the report", () => {
   const verdict = (over: Partial<CredentialVerdict> = {}): CredentialVerdict => ({
     service: "Anthropic",
@@ -169,6 +223,37 @@ describe("the report", () => {
 
   it("says plainly when there is nothing to do", () => {
     expect(renderCredentials([verdict()])).toContain("Nothing was spent asking.");
+  });
+
+  const grant = (over: Partial<CapabilityVerdict> = {}): CapabilityVerdict => ({
+    capability: "Transaction Search",
+    where: "PayPal dashboard \u2192 Apps & Credentials \u2192 your app \u2192 Features",
+    state: "granted",
+    detail: "PayPal answered a reporting query",
+    ...over,
+  });
+
+  it("fails on a feature nobody granted, which breaks no checkout and is still a failure", () => {
+    // Exiting 0 here would move the silence up a level: the script passes, nobody reads the text.
+    expect(exitCodeFor([verdict()], [grant()])).toBe(0);
+    expect(exitCodeFor([verdict()], [grant({ state: "not-granted" })])).toBe(1);
+    expect(exitCodeFor([verdict()], [grant({ state: "unreachable" })])).toBe(0);
+    // The old single-argument contract still means what it meant.
+    expect(exitCodeFor([verdict()])).toBe(0);
+  });
+
+  it("says what a missing feature stops, and what it does not stop", () => {
+    const page = renderCapabilities([grant({ state: "not-granted" })]);
+    expect(page).toContain("NOT GRANTED");
+    expect(page).toContain("The checkout is unaffected");
+    expect(page).toContain("Neither will complain");
+    expect(page).toContain("Features");
+  });
+
+  it("does not send anyone to a dashboard when the feature is there", () => {
+    const page = renderCapabilities([grant()]);
+    expect(page).toContain("Nothing Slip reads from PayPal is turned off.");
+    expect(page).not.toContain("Turn on:");
   });
 
   it("prints no part of any credential, and no prices", () => {

@@ -39,10 +39,34 @@ A deliberate miss is the cheapest proof there is that authentication succeeded: 
 settles the base url, the path, the `x-api-key` header and the key at once, and PayPal's settles the
 client id and secret, because the token has to be minted before the order can be missing.
 
-Exit **0** when everything configured was accepted, **1** when any of it was refused, **2** when
-there is no `apps/web/.env.local`. A variable that is not set is reported and is **not** a failure —
-"real prices, simulated payment" is a state Slip is meant to be in. `PAYPAL_ENV=live` is never
-probed; the command says so and asks nothing.
+### And what PayPal has *granted*, which is quieter still
+
+A second section asks whether this PayPal application may use the feature Slip reads its records
+with. **A missing grant is quieter than a bad key.** A bad key fails every payment. A missing grant
+leaves the checkout working perfectly and disables only the parts that look *backwards*:
+
+| Feature | Asked | What stops without it |
+|---|---|---|
+| Transaction Search | a one-hour reporting window, which is free | the daily reconcile, and the last-resort lookup for a payment whose order id was never learned |
+
+Neither announces itself. `packages/paypal/src/search.ts` maps a refusal to `unknown` and never to
+"no such payment" — the only safe reading, since Slip has not looked and may not conclude anything,
+and a perfectly silent one. **A reconcile that cannot look is indistinguishable, from outside, from
+one that looked and found nothing wrong.** This sandbox was in exactly that state for a day, with
+every credential green.
+
+What does *not* stop is the checkout: a payment Slip knows the order id of is read back through
+`/v2/checkout/orders`, which every application may do, so only the `findOrderByInvoice` branch of
+the resolver depends on the grant. An operator told that everything is broken fixes nothing, so the
+command says which half is which.
+
+Exit **0** when everything configured was accepted, **1** when anything this deployment needs was
+refused — a credential **or** a feature — **2** when there is no `apps/web/.env.local`. A missing
+feature counts even though it breaks no checkout: a probe that finds a silent failure and then exits
+0 has only moved the silence up a level, where a pre-deploy script still passes and nobody reads the
+paragraph. A variable that is not set is reported and is **not** a failure — "real prices, simulated
+payment" is a state Slip is meant to be in. `PAYPAL_ENV=live` is never probed; the command says so
+and asks nothing.
 
 It is named `doctor:keys` rather than `doctor` because pnpm has a built-in `doctor` that shadows a
 script of that name silently — it never runs, and the exit code is pnpm's.

@@ -48,6 +48,39 @@ export interface CredentialVerdict {
   detail: string;
 }
 
+export type CapabilityState =
+  /** PayPal let this application use it. */
+  | "granted"
+  /** PayPal refused: the application does not have the feature. */
+  | "not-granted"
+  /** Nobody said no — PayPal could not be reached, or answered something unexpected. */
+  | "unreachable"
+  /** There are no PayPal credentials here to ask with. */
+  | "absent"
+  /** Deliberately not asked. */
+  | "skipped";
+
+/**
+ * A feature PayPal grants an *application*, which is a different question from a credential it
+ * accepts. There is no environment variable in here, because there is nothing in a deployment to
+ * fix: the fix is a checkbox on somebody's dashboard.
+ *
+ * It is asked for the same reason the credentials are, only more so — **a missing grant is quieter
+ * than a bad key.** A bad key fails every payment. A missing grant leaves the checkout working
+ * perfectly and disables only the parts that look *backwards* at what PayPal already has, where
+ * `packages/paypal/src/search.ts` maps a refusal to `unknown` and never to "no such payment". That
+ * is the only safe reading — Slip has not looked, so it may not conclude anything — and it is also
+ * a perfectly silent one. A reconcile that cannot look is indistinguishable, from outside, from
+ * one that looked and found nothing wrong.
+ */
+export interface CapabilityVerdict {
+  capability: "Transaction Search";
+  /** Where it is turned on, since it is not a variable. */
+  where: string;
+  state: CapabilityState;
+  detail: string;
+}
+
 /**
  * Only what a probe reads. Narrower than `NodeJS.ProcessEnv` on purpose: Next augments that type to
  * require `NODE_ENV`, which would make every caller — and every test fixture — carry a variable
@@ -63,6 +96,11 @@ export interface ProbeOptions {
 const NO_SUCH_PRODUCT = "slip_no_such_product_000";
 /** The same trick at PayPal: a 404 here means the token was minted, which is the whole question. */
 const NO_SUCH_ORDER = "SLIPNOSUCHORDER00";
+/** Smaller than any window the reconcile asks for. The question is the permission, not the rows. */
+const REPORTING_PROBE_WINDOW_MS = 60 * 60 * 1000;
+
+/** PayPal's reporting wants seconds and no fraction of one, as `search.ts` also has to know. */
+const reportingDate = (when: Date): string => `${when.toISOString().slice(0, 19)}Z`;
 
 const value = (env: Env, name: string): string => env[name]?.trim() ?? "";
 
@@ -183,22 +221,113 @@ export async function probePayPal(
     : verdict("unreachable", `the PayPal sandbox answered ${answer.status}`);
 }
 
-/** All three at once: they share a deadline and have nothing to say to each other. */
+/**
+ * Can this deployment read PayPal's own records? — asked the way the reconcile asks it, so that
+ * the probe is refused in exactly the cases the reconcile would be.
+ *
+ * *Transaction Search* is off by default on a new PayPal application, and two things here need it:
+ * the daily reconcile that compares Slip's ledger against PayPal's, and the last-resort lookup for
+ * a payment whose order id Slip never learned (`resolver.ts`, the `findOrderByInvoice` branch).
+ * The resolver's other branches do not need it — a known order id is read through
+ * `/v2/checkout/orders`, which every application may do. So this is not a demo blocker, and
+ * saying so is part of the answer: an operator told that everything is broken fixes nothing.
+ *
+ * Free. Reporting is not billed, and one hour is a smaller window than anything the reconcile
+ * asks for.
+ */
+export async function probeReporting(
+  env: Env,
+  signal: AbortSignal,
+  options: ProbeOptions = {},
+): Promise<CapabilityVerdict> {
+  const verdict = (state: CapabilityState, detail: string): CapabilityVerdict => ({
+    capability: "Transaction Search",
+    where: "PayPal dashboard \u2192 Apps & Credentials \u2192 your app \u2192 Features",
+    state,
+    detail,
+  });
+  const clientId = value(env, "PAYPAL_CLIENT_ID");
+  const clientSecret = value(env, "PAYPAL_CLIENT_SECRET");
+  if (clientId === "" || clientSecret === "") {
+    // The stand-in gateway keeps its own records, so there is nothing to reconcile against.
+    return verdict("absent", "no PayPal credentials here, so payment is the stand-in gateway");
+  }
+  if (value(env, "PAYPAL_ENV").toLowerCase() === "live") {
+    return verdict("skipped", "PAYPAL_ENV=live, and this command only ever asks the sandbox");
+  }
+  const to = new Date();
+  const from = new Date(to.getTime() - REPORTING_PROBE_WINDOW_MS);
+  const answer = await createPayPalApi({
+    clientId,
+    clientSecret,
+    ...(options.fetch === undefined ? {} : { fetch: options.fetch }),
+  }).call(
+    {
+      path: "/v1/reporting/transactions",
+      headers: { "paypal-enforce-iso8601-format": "true" },
+      query: {
+        start_date: reportingDate(from),
+        end_date: reportingDate(to),
+        fields: "transaction_info",
+        balance_affecting_records_only: "N",
+        page_size: "1",
+        page: "1",
+      },
+    },
+    signal,
+  );
+  if (answer.outcome === "ok") {
+    return verdict("granted", "PayPal answered a reporting query, so the reconcile can look");
+  }
+  if (answer.outcome === "no-answer") {
+    return verdict("unreachable", `PayPal was not reached: ${answer.detail}`);
+  }
+  if (answer.status === 403 || answer.name === "NOT_AUTHORIZED") {
+    return verdict(
+      "not-granted",
+      "PayPal refused the query: this application does not have the feature",
+    );
+  }
+  if (answer.status === 401) {
+    // The credential itself is the problem, and its own line above says so. Claiming the feature
+    // is missing would send an operator to the wrong dashboard page.
+    return verdict("unreachable", "the credentials were refused, so this could not be asked");
+  }
+  return verdict("unreachable", `PayPal answered ${answer.status} to a reporting query`);
+}
+
+/** What `probeAll` found: two different kinds of answer, which are read differently. */
+export interface Checkup {
+  credentials: readonly CredentialVerdict[];
+  capabilities: readonly CapabilityVerdict[];
+}
+
+/** All of it at once: they share a deadline and have nothing to say to each other. */
 export async function probeAll(
   env: Env,
   signal: AbortSignal,
   options: ProbeOptions = {},
-): Promise<CredentialVerdict[]> {
-  return Promise.all([
+): Promise<Checkup> {
+  const [steering, channel3, paypal, reporting] = await Promise.all([
     probeSteering(env, signal, options),
     probeChannel3(env, signal, options),
     probePayPal(env, signal, options),
+    probeReporting(env, signal, options),
   ]);
+  return { credentials: [steering, channel3, paypal], capabilities: [reporting] };
 }
 
 const MARK: Record<CredentialState, string> = {
   works: "ok",
   rejected: "REJECTED",
+  unreachable: "unreachable",
+  absent: "not configured",
+  skipped: "skipped",
+};
+
+const GRANT: Record<CapabilityState, string> = {
+  granted: "ok",
+  "not-granted": "NOT GRANTED",
   unreachable: "unreachable",
   absent: "not configured",
   skipped: "skipped",
@@ -224,7 +353,60 @@ export function renderCredentials(verdicts: readonly CredentialVerdict[]): strin
   return `${lines.join("\n")}\n`;
 }
 
-/** 0 when everything configured answered, 1 when any of it was refused. */
-export function exitCodeFor(verdicts: readonly CredentialVerdict[]): 0 | 1 {
-  return verdicts.some((row) => row.state === "rejected") ? 1 : 0;
+/**
+ * The second section, and a separate one on purpose: a feature PayPal has not granted is not a
+ * credential anybody can fix, and printing it among them would have an operator checking
+ * `.env.local` for a checkbox.
+ */
+export function renderCapabilities(verdicts: readonly CapabilityVerdict[]): string {
+  if (verdicts.length === 0) {
+    return "";
+  }
+  const lines = [
+    "What PayPal lets this application do:",
+    "",
+    ...verdicts.map(
+      (row) => `  ${row.capability.padEnd(18)} ${GRANT[row.state].padEnd(14)} ${row.detail}`,
+    ),
+    "",
+  ];
+  const missing = verdicts.filter((row) => row.state === "not-granted");
+  if (missing.length === 0) {
+    lines.push("Nothing Slip reads from PayPal is turned off.");
+  } else {
+    lines.push(
+      "The checkout is unaffected: a payment Slip knows the order id of is read straight back," +
+        " and that needs no feature. What stops is every look *backwards* — the daily reconcile" +
+        " against PayPal's own records, and the last-resort lookup for a payment whose order id" +
+        ' was never learned. Neither will complain. A refusal is read as "not known" rather than' +
+        ' as "no such payment", which is the only safe reading and a silent one. Turn on:',
+      ...missing.map((row) => `  - ${row.capability} \u2014 ${row.where}`),
+    );
+  }
+  return `${lines.join("\n")}\n`;
+}
+
+/** Both sections, in the order an operator should read them. */
+export function renderCheckup(checkup: Checkup): string {
+  const capabilities = renderCapabilities(checkup.capabilities);
+  return `${renderCredentials(checkup.credentials)}${capabilities === "" ? "" : `\n${capabilities}`}`;
+}
+
+/**
+ * 0 when everything configured answered, 1 when anything this deployment needs was refused —
+ * a credential or a feature.
+ *
+ * A missing feature counts. It would be easier to leave it out, since it breaks no checkout, but
+ * a probe that finds the silent failure and then exits 0 has moved the silence up one level: the
+ * pre-deploy script still passes and nobody reads the paragraph. The two are told apart in the
+ * text, which is where the difference belongs, and not in the code a machine reads.
+ */
+export function exitCodeFor(
+  verdicts: readonly CredentialVerdict[],
+  capabilities: readonly CapabilityVerdict[] = [],
+): 0 | 1 {
+  const refused =
+    verdicts.some((row) => row.state === "rejected") ||
+    capabilities.some((row) => row.state === "not-granted");
+  return refused ? 1 : 0;
 }
