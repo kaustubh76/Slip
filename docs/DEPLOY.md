@@ -81,8 +81,16 @@ Environment variables, Production and Preview:
 | `CHANNEL3_API_KEY` | the Channel3 key |
 | `SLIP_BASE_URL` | the deployment's own https address — see below |
 
-Also set `ANTHROPIC_API_KEY`, which as of 30 Oct 2026 is accepted — see §5. **Not set:**
-`SLIP_DEMO`, since demo mode is refused on Vercel anyway.
+Also set `ANTHROPIC_API_KEY`, which as of 30 Oct 2026 is accepted — see §5.
+
+**Deliberately not set:** `SLIP_DEMO`, since demo mode is refused on Vercel anyway — and
+**`SLIP_AGENT_SEARCH`**, which is what offers agents `search_products` (D106). A search costs a
+Channel3 credit per call where the rest of a checkout costs nothing, and sign-up is open, so leaving
+it unset is what stops an address that got out from spending the account's credits. Prices and
+receipts are unaffected: re-pricing reads Channel3's free product-detail endpoint. With it unset the
+MCP server does not register the tool at all, so an agent on this deployment has to be handed a
+product id rather than looking one up. Set it to `1` for a judged run if the search-then-buy story
+is wanted, and unset it afterwards.
 
 The rule that key has to follow is worth keeping even now that it works. A *missing* key makes the
 steering check the scripted stand-in, which every receipt then says plainly. A **rejected** key is

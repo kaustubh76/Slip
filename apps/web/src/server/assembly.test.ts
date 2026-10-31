@@ -30,11 +30,22 @@ function assemble(services: Services, demo = false) {
   });
 }
 
+/** The ordinary deployment shape these tests vary one axis of at a time. */
+const plain = (over: Partial<Services> = {}): Services => ({
+  prices: "simulated",
+  payment: "sandbox",
+  steering: "simulated",
+  catalogueSearch: false,
+  ...over,
+});
+
 const COMBINATIONS: Services[] = [];
 for (const prices of ["simulated", "channel3"] as const) {
   for (const payment of ["simulated", "sandbox"] as const) {
     for (const steering of ["simulated", "claude"] as const) {
-      COMBINATIONS.push({ prices, payment, steering });
+      // `catalogueSearch` is its own axis and is covered below; this sweep is about which
+      // adapter stands behind each service.
+      COMBINATIONS.push({ prices, payment, steering, catalogueSearch: false });
     }
   }
 }
@@ -62,7 +73,12 @@ describe("assembleServices", () => {
   it("a real service whose key is missing is refused rather than built empty", () => {
     expect(() =>
       assembleServices({
-        services: { prices: "simulated", payment: "sandbox", steering: "simulated" },
+        services: {
+          prices: "simulated",
+          payment: "sandbox",
+          steering: "simulated",
+          catalogueSearch: false,
+        },
         env: {
           PAYPAL_CLIENT_ID: "pp-id",
           PAYPAL_CLIENT_SECRET: "pp-secret",
@@ -77,21 +93,18 @@ describe("assembleServices", () => {
   });
 
   it("outside the demo, the stand-in catalogue holds every product under its plain id", () => {
-    const built = assemble({ prices: "simulated", payment: "sandbox", steering: "simulated" });
+    const built = assemble(plain());
     expect(built.standIns.offers?.product("trail-shoe")?.title).toBe("Trail shoe");
     expect(built.standIns.offers?.product("headphones")?.offers).toHaveLength(2);
   });
 
   it("in the demo it holds nothing under plain ids: each desk gets its own copies at sign-in", () => {
-    const built = assemble(
-      { prices: "simulated", payment: "simulated", steering: "simulated" },
-      true,
-    );
+    const built = assemble(plain({ payment: "simulated" }), true);
     expect(built.standIns.offers?.product("trail-shoe")).toBeUndefined();
   });
 
   it("the stand-in classifier flags the demo's planted note, and nothing else", async () => {
-    const built = assemble({ prices: "simulated", payment: "sandbox", steering: "simulated" });
+    const built = assemble(plain());
     const ask = (listingText: string) =>
       built.classifier.classify(
         { listingText, productTitle: "Phone case", searchContext: null },
@@ -105,20 +118,22 @@ describe("assembleServices", () => {
 });
 
 describe("the catalogue agents search", () => {
-  it("is Channel3 when there is a key for it", () => {
-    const built = assemble({ prices: "channel3", payment: "simulated", steering: "simulated" });
+  it("is Channel3 when the deployment asked for a searchable catalogue", () => {
+    const built = assemble(plain({ prices: "channel3", catalogueSearch: true }));
     expect(built.catalogue).not.toBeNull();
+  });
+
+  it("is nothing when the prices are real but nobody asked to search them", () => {
+    // A key is necessary and not sufficient: a search costs a credit per call where the rest of a
+    // checkout costs nothing, and sign-up is open. Real prices, real receipts, no search.
+    const built = assemble(plain({ prices: "channel3" }));
+    expect(built.catalogue).toBeNull();
   });
 
   it("is nothing with simulated prices, in or out of the demo", () => {
     // A stand-in catalogue outside the demo would offer an agent product ids Channel3 has never
     // heard of, and the checkout would then answer NOT_FOUND.
-    expect(
-      assemble({ prices: "simulated", payment: "sandbox", steering: "simulated" }).catalogue,
-    ).toBeNull();
-    expect(
-      assemble({ prices: "simulated", payment: "simulated", steering: "simulated" }, true)
-        .catalogue,
-    ).toBeNull();
+    expect(assemble(plain({ catalogueSearch: true })).catalogue).toBeNull();
+    expect(assemble(plain({ payment: "simulated" }), true).catalogue).toBeNull();
   });
 });

@@ -12,6 +12,7 @@ describe("which services are real", () => {
       prices: "simulated",
       payment: "simulated",
       steering: "simulated",
+      catalogueSearch: false,
     });
   });
 
@@ -66,7 +67,43 @@ describe("which services are real", () => {
         PAYPAL_WEBHOOK_ID: "WH",
       }),
     );
-    expect(demo).toEqual({ prices: "simulated", payment: "simulated", steering: "simulated" });
+    expect(demo).toEqual({
+      prices: "simulated",
+      payment: "simulated",
+      steering: "simulated",
+      catalogueSearch: false,
+    });
+  });
+
+  /**
+   * Search is the only thing an agent can do that spends money — a checkout prices from the free
+   * product-detail endpoint — so the key is necessary and not sufficient. Sign-up is open, and the
+   * rate limiter lives in the process, which on serverless resets with every cold instance.
+   */
+  it("will not let an agent search just because there is a key to search with", () => {
+    expect(resolveServices(env({ CHANNEL3_API_KEY: "ch3" })).catalogueSearch).toBe(false);
+    expect(
+      resolveServices(env({ CHANNEL3_API_KEY: "ch3", SLIP_AGENT_SEARCH: "1" })).catalogueSearch,
+    ).toBe(true);
+  });
+
+  it("still prices from the real catalogue while refusing to search it", () => {
+    // The point of the flag: real prices and real receipts, and nothing that costs a credit.
+    const asked = resolveServices(env({ CHANNEL3_API_KEY: "ch3" }));
+    expect(asked.prices).toBe("channel3");
+    expect(asked.catalogueSearch).toBe(false);
+  });
+
+  it("does not search on a flag that is set to anything else", () => {
+    for (const value of ["", " ", "0", "true", "yes", "on"]) {
+      expect(
+        resolveServices(env({ CHANNEL3_API_KEY: "ch3", SLIP_AGENT_SEARCH: value })).catalogueSearch,
+      ).toBe(false);
+    }
+  });
+
+  it("asking to search without a key to search with is still no search", () => {
+    expect(resolveServices(env({ SLIP_AGENT_SEARCH: "1" })).catalogueSearch).toBe(false);
   });
 });
 
@@ -75,6 +112,7 @@ describe("combinations a deployment must not run", () => {
     prices: "channel3",
     payment: "live",
     steering: "claude",
+    catalogueSearch: false,
     ...over,
   });
 

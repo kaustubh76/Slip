@@ -6,6 +6,7 @@ const all = (over: Partial<Services> = {}): Services => ({
   prices: "simulated",
   payment: "simulated",
   steering: "simulated",
+  catalogueSearch: false,
   ...over,
 });
 

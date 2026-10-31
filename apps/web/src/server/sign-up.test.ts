@@ -3,7 +3,12 @@ import { demoWorld } from "./demo/__fixtures__/world";
 import { DeskLimiter } from "./demo/desks";
 import { startOwner } from "./sign-up";
 
-const SANDBOX = { prices: "channel3", payment: "sandbox", steering: "simulated" } as const;
+const SANDBOX = {
+  prices: "channel3",
+  payment: "sandbox",
+  steering: "simulated",
+  catalogueSearch: false,
+} as const;
 const limiter = () => new DeskLimiter({ maxDesks: 100, perAddress: 2, windowMs: 60_000 });
 
 describe("starting as an owner outside the demo", () => {

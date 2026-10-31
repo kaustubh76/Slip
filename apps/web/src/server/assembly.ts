@@ -35,9 +35,12 @@ export interface Assembled {
   gateway: PaymentGateway;
   classifier: SteeringClassifier;
   /**
-   * The catalogue agents search, when there is a real one. Null with simulated prices: the demo
-   * serves its own desk catalogue, and a stand-in catalogue outside the demo would offer an agent
-   * product ids Channel3 has never heard of.
+   * The catalogue agents search, when this deployment asked for one. Null with simulated prices —
+   * the demo serves its own desk catalogue, and a stand-in catalogue outside the demo would offer
+   * an agent product ids Channel3 has never heard of — and null without `SLIP_AGENT_SEARCH`, since
+   * a search costs a credit where the rest of a checkout costs nothing (`Services.catalogueSearch`).
+   * When it is null the MCP server does not register `search_products` at all, so an agent is told
+   * the tool does not exist rather than being refused when it calls it.
    */
   catalogue: CatalogueSearch | null;
   /** The stand-in behind each simulated service; null where the service is real. */
@@ -73,8 +76,11 @@ export function assembleServices(input: {
     classifier: services.steering === "simulated" ? simulatedClassifier() : null,
   };
   return {
+    // Both, and not either: `catalogueSearch` says a search was asked for, and real prices are
+    // what make the ids in its answers ones Channel3 has heard of. `resolveServices` never sets
+    // the flag without a key, but this does not depend on it having been careful.
     catalogue:
-      services.prices === "channel3"
+      services.prices === "channel3" && services.catalogueSearch
         ? createCatalogueSearch({
             apiKey: required(env, "CHANNEL3_API_KEY"),
             clock: input.clock,

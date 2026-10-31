@@ -26,16 +26,39 @@ export interface Services {
   prices: PricesMode;
   payment: PaymentMode;
   steering: SteeringMode;
+  /**
+   * Whether agents may search the real catalogue — off unless a deployment asks for it, because
+   * **search is the only thing an agent can do here that spends money.** A checkout prices from
+   * Channel3's product-detail endpoint, which is free; `POST /v1/search` costs a credit per call,
+   * which is why `packages/offers/src/search.ts` is a separate entry point rather than part of the
+   * adapter. So a key is necessary and not sufficient.
+   *
+   * Sign-up is open, so without this an address that got out would let any visitor spend the
+   * account's credits, and the rate limiter is no answer: it lives in the process, and on
+   * serverless that resets with every cold instance. The live tests already require
+   * `CHANNEL3_LIVE_SEARCH=1` so "a keyed run never spends one by accident" — this is that guard
+   * for a deployment rather than a test run.
+   *
+   * The shared demo is unaffected either way: it serves each visitor's own desk catalogue through
+   * a different path, which spends nothing.
+   */
+  catalogueSearch: boolean;
 }
 
 export function resolveServices(env: NodeJS.ProcessEnv = process.env): Services {
   if (isDemo(env)) {
-    return { prices: "simulated", payment: "simulated", steering: "simulated" };
+    return {
+      prices: "simulated",
+      payment: "simulated",
+      steering: "simulated",
+      catalogueSearch: false,
+    };
   }
   return {
     prices: set(env["CHANNEL3_API_KEY"]) ? "channel3" : "simulated",
     payment: paymentMode(env),
     steering: set(env["ANTHROPIC_API_KEY"]) ? "claude" : "simulated",
+    catalogueSearch: set(env["CHANNEL3_API_KEY"]) && env["SLIP_AGENT_SEARCH"]?.trim() === "1",
   };
 }
 

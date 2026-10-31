@@ -2760,3 +2760,58 @@ state now that Neon and https are live. **They do not.** Every occurrence in bot
 `README.md`, is a local-development command or a conditional describing behaviour when the base URL
 is not https — all still correct. No edit was made, and the absence is logged so the next pass does
 not re-run the same search.
+
+## D106 · 2026-10-31 · The one agent call that spends money, and the opt-in it never had
+
+Auditing the new deployment for half-wired parts turned up something that was not a deployment
+problem at all: **`search_products` was offered to any agent whenever a Channel3 key existed.**
+`assembleServices` built the catalogue on `services.prices === "channel3"`
+(`apps/web/src/server/assembly.ts`), so the same variable that makes prices real also made search
+available.
+
+**Search is the only thing an agent can do here that spends money.** The adapter is built so that
+this is true by construction rather than by care: `packages/offers/src/search.ts` is a *separate
+entry point* (`@slip/offers/search`) and not part of `OffersSource`, with the reason written down —
+*"a checkout prices from `fetchProduct` and nothing it does can spend a credit. Only code that means
+to pay for a search"* reaches the other file. `POST /v1/search` costs a credit; product detail is
+free (`channel3.ts:17`).
+
+**And sign-up is open.** Starting as an owner needs no credential at all —
+`apps/web/e2e/owner-start.spec.ts` is named for it. **A correction to the first version of this
+finding, which said the exposure was uncapped: it is not.** `apps/web/src/server/search.ts` holds a
+five-minute cache and `BUDGET_PER_HOUR = 60` uncached searches per permission, refused as
+`RATE_LIMITED`. What is true is weaker and still worth acting on: that file says the budget is "per
+process, so several replicas get several allowances", and on serverless a cold instance is a fresh
+allowance. With open sign-up a visitor can also hold more than one permission. So the ceiling is
+60 an hour multiplied by permissions and by instances — bounded at each point and unbounded in
+aggregate, through a tool advertised in `tools/list`. The flag takes it to nil, which is a different
+thing from lowering it.
+
+**The repository already held this judgment — in its tests.** The live Channel3 suite requires
+`CHANNEL3_LIVE_SEARCH=1` and is "opt-in twice precisely so that a keyed run never spends one by
+accident". A test run was protected from an accidental credit; a public deployment was not. That
+inconsistency is the finding, more than the exposure itself.
+
+**So `Services.catalogueSearch`** (`apps/web/src/server/services.ts`), true only when
+`CHANNEL3_API_KEY` is set **and** `SLIP_AGENT_SEARCH=1`. Default off, and **not set on the live
+deployment**. A key stays necessary and stops being sufficient.
+
+**Nothing downstream needed changing, which is the evidence the seam was in the right place.**
+`packages/mcp/src/server.ts` already registers `search_products` only when the host supplies a
+catalogue — *"without it there is no `search_products`"* — and `tests/src/mcp.test.ts:77` already
+pinned `tools/list` to `checkout, get_receipt, get_report` for that case. So an agent is told the
+tool does not exist rather than being refused after calling it, and no refusal path had to be
+invented.
+
+**One change was defensive rather than required.** `assembleServices` now builds the catalogue only
+when prices are real **and** the flag is set. `resolveServices` never sets the flag without a key,
+so the second condition is redundant today — but a `Services` assembled by hand with stand-in prices
+and the flag on would otherwise have produced a real catalogue behind invented prices, which is the
+"product ids Channel3 has never heard of" failure the old comment warned about, arriving from the
+direction it did not guard.
+
+**What this costs:** on the live deployment an agent must be handed a product id, because it cannot
+look one up. The full search-then-buy story is still told by the demo, whose catalogue is per visitor
+(`apps/web/src/server/demo/search.ts`) and spends nothing. Turning search on for a judged run is one
+variable, and the one-line revert is deliberate: the flag exists so the spend is a decision somebody
+makes, not a default somebody inherits.

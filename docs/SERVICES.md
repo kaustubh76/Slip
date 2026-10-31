@@ -122,6 +122,14 @@ searches an hour per permission, refused as `RATE_LIMITED`; Channel3's own 402 i
 The allowance is held in memory, so several replicas each get their own — the trade D66 accepted
 for resolving.
 
+**And the tool is offered only where a deployment asks for it.** `SLIP_AGENT_SEARCH=1` alongside the
+key is what builds the catalogue; without it `search_products` is never registered, so an agent is
+told the tool does not exist rather than being refused on use (D106). The reason is that the budget
+above is per permission *and per process*: on serverless a cold instance is a fresh allowance, and
+with open sign-up a visitor can hold several permissions, so the aggregate ceiling is not bounded by
+60 an hour. Prices and receipts do not depend on the flag — re-pricing reads the free product-detail
+endpoint — so the ordinary deployment is "real prices, no searching".
+
 Three tests, two of them conditional. The first asks for a product id that cannot exist and
 requires `NOT_FOUND`, which proves the base url, the path, the header and the key at once — a
 rejected key answers `UNAVAILABLE` instead. The second runs only with `CHANNEL3_LIVE_SEARCH=1` and
