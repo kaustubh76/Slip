@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Slip — product overview</title>
+    <style>
+      :root {
+        --ink: #17181a;
+        --ink-soft: #4a4d52;
+        --ink-faint: #797d84;
+        --pen: #1f4f8f;
+        --rule: #d6d2c8;
+        --paper: #ffffff;
+        --tint: #f7f5f0;
+        --flag: #8a4b12;
+      }
+
+      @page {
+        size: A4;
+        margin: 18mm 16mm 20mm 16mm;
+      }
+
+      * { box-sizing: border-box; }
+
+      html { font-size: 10.5pt; }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--paper);
+        font-family: "Iowan Old Style", Palatino, Georgia, ui-serif, serif;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      h1, h2, h3, .meta, .stamp, th, .kicker {
+        font-family: ui-sans-serif, -apple-system, "Helvetica Neue", Arial, sans-serif;
+      }
+
+      code, .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+
+      /* ---------- cover ---------- */
+      .cover { height: 247mm; display: flex; flex-direction: column; }
+      .cover-top { flex: 1; }
+      .cover h1 {
+        font-size: 34pt;
+        line-height: 1.04;
+        letter-spacing: -0.02em;
+        margin: 0 0 6mm 0;
+      }
+      .cover .lede {
+        font-size: 14pt;
+        line-height: 1.35;
+        color: var(--ink-soft);
+        max-width: 125mm;
+        margin: 0 0 10mm 0;
+      }
+      .cover .chant {
+        font-family: ui-monospace, Menlo, monospace;
+        font-size: 11pt;
+        letter-spacing: 0.04em;
+        color: var(--pen);
+        border-top: 1px solid var(--rule);
+        border-bottom: 1px solid var(--rule);
+        padding: 4mm 0;
+        margin: 0 0 10mm 0;
+      }
+      .kicker {
+        font-size: 8.5pt;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        margin: 0 0 3mm 0;
+      }
+      .factgrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        border-top: 1px solid var(--rule);
+      }
+      .factgrid div {
+        border-bottom: 1px solid var(--rule);
+        padding: 2.6mm 0;
+        font-size: 9.5pt;
+      }
+      .factgrid div:nth-child(odd) { color: var(--ink-faint); }
+      .factgrid div:nth-child(even) { text-align: right; }
+
+      /* ---------- structure ---------- */
+      section { break-before: page; }
+      section.run-on { break-before: auto; }
+
+      h2 {
+        font-size: 17pt;
+        letter-spacing: -0.01em;
+        margin: 0 0 1mm 0;
+        padding-bottom: 2mm;
+        border-bottom: 2px solid var(--ink);
+      }
+      h2 .num { color: var(--ink-faint); font-weight: 400; margin-right: 2.5mm; }
+      h3 {
+        font-size: 11pt;
+        margin: 7mm 0 1.5mm 0;
+        color: var(--pen);
+      }
+      p { margin: 0 0 3mm 0; max-width: 165mm; }
+      .intro { font-size: 11.5pt; color: var(--ink-soft); margin-top: 4mm; }
+
+      ul { margin: 0 0 3mm 0; padding-left: 5mm; }
+      li { margin-bottom: 1.4mm; }
+
+      table { width: 100%; border-collapse: collapse; margin: 3mm 0 4mm 0; break-inside: avoid; }
+      th {
+        text-align: left;
+        font-size: 8pt;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        border-bottom: 1px solid var(--ink);
+        padding: 0 3mm 1.5mm 0;
+      }
+      td {
+        vertical-align: top;
+        padding: 1.8mm 3mm 1.8mm 0;
+        border-bottom: 1px solid var(--rule);
+        font-size: 9.5pt;
+      }
+      td:last-child, th:last-child { padding-right: 0; }
+      .num-col { text-align: right; white-space: nowrap; }
+
+      .box {
+        background: var(--tint);
+        border-left: 3px solid var(--pen);
+        padding: 3.5mm 4mm;
+        margin: 3mm 0 4mm 0;
+        break-inside: avoid;
+        font-size: 9.5pt;
+      }
+      .box.warn { border-left-color: var(--flag); }
+      .box p:last-child { margin-bottom: 0; }
+      .box .label {
+        display: block;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        font-size: 8pt;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        margin-bottom: 1.5mm;
+      }
+
+      /* ---------- the flow ---------- */
+      .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; margin: 4mm 0 2mm 0; }
+      .flow .step {
+        border: 1px solid var(--rule);
+        border-top: 3px solid var(--ink);
+        padding: 3mm;
+        font-size: 8.5pt;
+        break-inside: avoid;
+      }
+      .flow .step h4 {
+        font-family: ui-monospace, Menlo, monospace;
+        font-size: 8pt;
+        letter-spacing: 0.06em;
+        margin: 0 0 2mm 0;
+        color: var(--pen);
+      }
+      .flow .step p { margin: 0; max-width: none; }
+      .outcomes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm; margin: 3mm 0; }
+      .outcomes .o { border: 1px solid var(--rule); padding: 3mm; font-size: 8.5pt; break-inside: avoid; }
+      .outcomes .o .stamp {
+        font-size: 9pt;
+        letter-spacing: 0.1em;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 1.5mm;
+      }
+      .paid .stamp { color: #1d6b3a; }
+      .rejected .stamp { color: #9b2222; }
+      .held .stamp { color: var(--flag); }
+
+      .pill {
+        display: inline-block;
+        font-family: ui-monospace, Menlo, monospace;
+        font-size: 7.5pt;
+        letter-spacing: 0.04em;
+        padding: 0.6mm 1.6mm;
+        border: 1px solid var(--rule);
+        border-radius: 1mm;
+        white-space: nowrap;
+      }
+      .pill.paid { color: #1d6b3a; border-color: #1d6b3a; }
+      .pill.rejected { color: #9b2222; border-color: #9b2222; }
+      .pill.held { color: var(--flag); border-color: var(--flag); }
+
+      .two-col { column-count: 2; column-gap: 8mm; font-size: 8.5pt; }
+      .two-col li { break-inside: avoid; }
+
+      .footnote { font-size: 8.5pt; color: var(--ink-faint); }
+      strong { font-weight: 600; }
+      .verdict { font-weight: 600; color: var(--flag); }
+    </style>
+  </head>
+  <body>
+    <!-- ================= COVER ================= -->
+    <section class="cover run-on">
+      <div class="cover-top">
+        <p class="kicker">Product overview · documentation</p>
+        <h1>Slip</h1>
+        <p class="lede">
+          The second opinion on every agent purchase. Slip checks what an AI agent is about to buy —
+          against every other offer listed for the same item — before PayPal moves any money.
+        </p>
+        <p class="chant">Agents shop. Slip checks. Policy decides. PayPal pays.</p>
+        <p style="max-width: 125mm; color: var(--ink-soft)">
+          This document is an orientation to the whole product: what it does, how a purchase travels
+          through it, what the rules are, what has been measured, and what is still open. Every
+          number in it was read from the repository or produced by running it, on the date below.
+        </p>
+      </div>
+      <div>
+        <p class="kicker">As built</p>
+        <div class="factgrid">
+          <div>Date</div><div>30 October 2026</div>
+          <div>Commit</div><div class="mono">256ad11</div>
+          <div>Tests</div><div>2,129 passing · 5 skipped · 135 files</div>
+          <div>Lint &amp; types</div><div>clean (biome, tsc project references)</div>
+          <div>Real Postgres</div><div>310 contract tests, run on Postgres 14.17</div>
+          <div>Browser tests</div><div>38 across two servers (demo and real-owner), axe included</div>
+          <div>Decisions logged</div><div>99 entries, latest D104</div>
+          <div>Workspace</div><div>16 packages · TypeScript 7 · pnpm, strict catalog</div>
+        </div>
+        <p class="footnote" style="margin-top: 4mm">
+          The 5 skipped tests are the key-gated live suites: they skip themselves when the service's
+          key is absent, so the default gate can never spend money. The real-Postgres figure was
+          produced against a local Postgres 14.17 rather than the 18 the compose file provisions —
+          the suite creates and drops its own database per file, so the server it runs on is the
+          one that happens to be there.
+        </p>
+      </div>
+    </section>
+
+    <!-- ================= 1 ================= -->
+    <section>
+      <h2><span class="num">1</span>What Slip is for</h2>
+      <p class="intro">
+        AI agents are starting to spend people's money, and nothing checks whether they are
+        overpaying or being steered.
+      </p>
+      <p>
+        That is not a guess. What the agentic-commerce rails carry on the wire is an
+        <em>allowance</em>: a delegated payment request binds the credential to an amount, a
+        currency, one merchant, one checkout session, an expiry and a single use. That is real
+        protection — the credential cannot be spent elsewhere, later, for more or twice — and it is
+        a description of the offer the agent already chose. Nothing in it refers to any other offer,
+        because comparison is not what it is for: $400 that is the lowest listed price and $400 that
+        is listed at $260 elsewhere are the same number, and an allowance for $400 admits both.
+        Slip's own per-order cap is a bound too, and cannot tell them apart either; that is why a
+        cap is not the check. The buyer-side control in PayPal's own agent documentation is a line in an
+        example system prompt — <em>“After approval by user, invoke capture_order”</em> — which
+        nothing enforces, and a prompt is not a control: the same model that reads it decides whether
+        to follow it. Read on 30 October 2026; none of this is a criticism of a payments company's
+        product, which is an acceptance product and was never meant to be a buyer's second opinion.
+      </p>
+      <p>
+        Slip is the control. An owner approves once, through PayPal. After that an agent can only pay
+        through Slip, and every attempt is checked first: the chosen offer is compared with the other
+        offers listed for the same item, steering is looked for in the text the agent actually read,
+        and the owner's limits decide. The purchase is paid, rejected, or held for a human — and
+        either way it prints a receipt in plain words.
+      </p>
+
+      <h3>What it is not</h3>
+      <ul>
+        <li><strong>Not a shopping agent.</strong> Slip does not choose what to buy; it checks what was chosen.</li>
+        <li><strong>Not a merchant.</strong> No order reaches a retailer. Slip is the seller of record in PayPal's sandbox.</li>
+        <li><strong>Not a price oracle.</strong> It compares against one catalogue (Channel3) and says so on every receipt.</li>
+      </ul>
+
+      <div class="box">
+        <span class="label">The honest bound on the claim</span>
+        <p>
+          Slip's own measurements do not show agents being fleeced — see §7. The case for a check
+          like this rests on the structure of the market (the dearer offer often pays more
+          commission) and on the absence of any enforced buyer-side control, not on a demonstration
+          that today's models overpay.
+        </p>
+      </div>
+    </section>
+
+    <!-- ================= 2 ================= -->
+    <section>
+      <h2><span class="num">2</span>How a purchase travels</h2>
+      <div class="flow">
+        <div class="step">
+          <h4>1 · MANDATE</h4>
+          <p>
+            The owner approves once at PayPal. The vault token is stored encrypted; the limits become
+            policy version 1. A kill switch revokes it at any time.
+          </p>
+        </div>
+        <div class="step">
+          <h4>2 · CHECK</h4>
+          <p>
+            Freshness → variant → locate the chosen offer → find comparable offers → measure the gap
+            → run the rules. Pure, no I/O, the same code everywhere.
+          </p>
+        </div>
+        <div class="step">
+          <h4>3 · DECIDE</h4>
+          <p>
+            Paid, rejected, or held. The decision and its payment row are written <em>before</em>
+            PayPal is called, so nothing can move money unrecorded.
+          </p>
+        </div>
+        <div class="step">
+          <h4>4 · AFTERWARDS</h4>
+          <p>
+            A resolver expires holds, finishes half-done work and reconciles against PayPal's own
+            records. Webhooks converge however late they arrive.
+          </p>
+        </div>
+      </div>
+
+      <div class="outcomes">
+        <div class="o paid"><span class="stamp">PAID</span>Within the owner's limits. Captured once, with one request id; the receipt names the amount and the comparison behind it.</div>
+        <div class="o rejected"><span class="stamp">REJECTED</span>Overpaying beyond the limit, steered, or an offer that cannot be verified. Nothing is charged.</div>
+        <div class="o held"><span class="stamp">HELD</span>Something is uncertain rather than wrong. The owner sees what approving would cost and approves <em>that</em> amount.</div>
+      </div>
+
+      <h3>Two properties that shape everything else</h3>
+      <p>
+        <strong>Write-ahead payments.</strong> The attempt and its payment row exist before the
+        gateway is called. A timeout therefore means <em>unknown</em> — it may or may not have
+        happened — never <em>failed</em>. The resolver repeats the operation with the <em>same</em>
+        request id until PayPal gives a definite answer, which is why no adapter in the codebase
+        retries on its own.
+      </p>
+      <p>
+        <strong>One checkout per agent and product at a time.</strong> A lease makes it so, and a
+        repeat of the same request is replayed from the stored decision rather than paid twice.
+      </p>
+    </section>
+
+    <!-- ================= 3 ================= -->
+    <section>
+      <h2><span class="num">3</span>The rules that decide</h2>
+      <p class="intro">
+        First match wins. The last rule always matches, so there is no path without a decision.
+      </p>
+      <table>
+        <thead>
+          <tr><th style="width: 42mm">Rule</th><th>What trips it</th><th style="width: 22mm">Outcome</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="mono">R1_STALE_SNAPSHOT</td><td>Prices older than the policy's freshness window (10 minutes by default)</td><td><span class="pill held">HELD</span></td></tr>
+          <tr><td class="mono">VARIANT_MISMATCH</td><td>The offer is for a different variant than the one asked for</td><td><span class="pill rejected">REJECTED</span></td></tr>
+          <tr><td class="mono">OFFER_NOT_FOUND</td><td>The chosen offer is not in the snapshot at all</td><td><span class="pill rejected">REJECTED</span></td></tr>
+          <tr><td class="mono">CHOSEN_UNAVAILABLE</td><td>It is in the snapshot and out of stock — known bad</td><td><span class="pill rejected">REJECTED</span></td></tr>
+          <tr><td class="mono">CHOSEN_UNVERIFIED</td><td>Its price or currency cannot be read — unknown, not bad</td><td><span class="pill held">HELD</span></td></tr>
+          <tr><td class="mono">R2_TOO_FEW_OFFERS</td><td>Nothing comparable to price it against</td><td><span class="pill held">HELD</span></td></tr>
+          <tr><td class="mono">R2A_GAP_IMPLAUSIBLE</td><td>A gap so wide (&gt;100%) that the catalogue's grouping, not the price, is the likely cause</td><td><span class="pill held">HELD</span></td></tr>
+          <tr><td class="mono">R2B_SINGLE_SELLER_MARKET</td><td>The comparable offers collapse to one seller, so the market was never a market</td><td><span class="pill held">HELD</span></td></tr>
+          <tr><td class="mono">R3_STEERED</td><td>Above the flag line <em>and</em> the text the agent read is instruction-like</td><td><span class="pill rejected">REJECTED</span></td></tr>
+          <tr><td class="mono">R4_OVERPAID</td><td>Above both the percentage and the absolute overpay limits</td><td><span class="pill rejected">REJECTED</span></td></tr>
+          <tr><td class="mono">R4A_NO_CLASSIFIER_ANSWER</td><td>Above the flag line and the steering check could not answer</td><td><span class="pill held">HELD</span></td></tr>
+          <tr><td class="mono">R5_COMMISSION_CONFLICT</td><td>Above the flag line and the dearer offer pays more commission</td><td><span class="pill held">HELD</span></td></tr>
+          <tr><td class="mono">R5A_COMMISSION_UNDISCLOSED</td><td>Above the flag line, the cheaper offer's rate is known and the chosen offer's is not</td><td><span class="pill held">HELD</span></td></tr>
+          <tr><td class="mono">R6_ABOVE_ORDER_CAP</td><td>The price is above the owner's per-order cap</td><td><span class="pill held">HELD</span></td></tr>
+          <tr><td class="mono">R7_WITHIN_LIMITS</td><td>Everything else — the fallback that always matches</td><td><span class="pill paid">PAID</span></td></tr>
+          <tr><td class="mono">OWNER_APPROVED</td><td>A held purchase the owner released — a person's decision, not a rule's</td><td><span class="pill paid">PAID</span></td></tr>
+        </tbody>
+      </table>
+
+      <h3>The shipped defaults</h3>
+      <table>
+        <thead><tr><th>Limit</th><th class="num-col">Default</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td>Reject above</td><td class="num-col">5% <em>and</em> $8</td><td>Both must be exceeded, so small absolute gaps on cheap items do not reject</td></tr>
+          <tr><td>Flag above</td><td class="num-col">1%</td><td>The line above which steering, a missing verdict or a commission conflict can hold a purchase</td></tr>
+          <tr><td>Order cap</td><td class="num-col">$200</td><td>Any single purchase above it is held, whatever the comparison says</td></tr>
+          <tr><td>Snapshot freshness</td><td class="num-col">10 minutes</td><td>Older prices are not trusted to decide</td></tr>
+        </tbody>
+      </table>
+      <p class="footnote">
+        Limits are versioned: changing them writes a new policy version, and every receipt names the
+        version that decided it. Percentages are integer hundredths of a percent and money is
+        integer cents throughout — no floating point touches a decision.
+      </p>
+    </section>
+
+    <!-- ================= 4 ================= -->
+    <section>
+      <h2><span class="num">4</span>What an agent talks to</h2>
+      <p class="intro">
+        Slip is an MCP server. An agent pays through its tools with its own key, and gets the owner's
+        receipt back in the same words the owner sees.
+      </p>
+      <table>
+        <thead><tr><th style="width: 34mm">Tool</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">search_products</td><td>Searches the catalogue and returns products with every store's offer. Shows the product's own text, marked untrusted — and records what was shown, so the check can judge it later.</td></tr>
+          <tr><td class="mono">checkout</td><td>Attempts a purchase. Returns the decision, the comparison behind it, and the receipt.</td></tr>
+          <tr><td class="mono">get_receipt</td><td>One attempt in full, including the offers it was compared against.</td></tr>
+          <tr><td class="mono">get_report</td><td>The agent's own report card: how it has been spending.</td></tr>
+        </tbody>
+      </table>
+      <table>
+        <thead><tr><th style="width: 34mm">Surface</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Endpoint</td><td><code>POST /api/mcp</code> — MCP Streamable HTTP, both protocol eras, served statelessly</td></tr>
+          <tr><td>Auth</td><td><code>Authorization: Bearer slip_live_…</code> — the agent's own key, hashed at rest, shown once</td></tr>
+          <tr><td>Without MCP</td><td><code>POST /api/v1/agent/checkout</code> — the same use case and the same decisions</td></tr>
+          <tr><td>Refusals</td><td><code>401</code> unknown or revoked key · <code>403</code> cross-site origin · <code>405</code> session operations · <code>413</code> body over 64 KiB · <code>500</code> anything already decided is kept</td></tr>
+        </tbody>
+      </table>
+      <div class="box">
+        <span class="label">Why the agent is told what Slip simulated</span>
+        <p>
+          Every answer says which services were real. “Prices real, payment simulated” is a state
+          Slip is genuinely in, and a receipt that called either one the other would be the one lie
+          the product cannot afford.
+        </p>
+      </div>
+    </section>
+
+    <!-- ================= 5 ================= -->
+    <section>
+      <h2><span class="num">5</span>How the code is arranged</h2>
+      <p class="intro">
+        Ports and adapters. The domain and the check know nothing about HTTP, SQL or any vendor; each
+        outside service has a real adapter and an in-memory stand-in behind the same port.
+      </p>
+      <table>
+        <thead><tr><th style="width: 34mm">Package</th><th>What it holds</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">@slip/domain</td><td>Types, money in integer cents, the state machines, the persistence port, shared invariants</td></tr>
+          <tr><td class="mono">@slip/check</td><td>The pure check: freshness → variant → locate → comparable → gap → rules. No I/O at all</td></tr>
+          <tr><td class="mono">@slip/graph</td><td>The pure seller graph: evidence tiers, resolution, the seller count and standing. No I/O</td></tr>
+          <tr><td class="mono">@slip/app</td><td>The use cases — checkout, holds, resolver, webhooks, mandates — written against ports</td></tr>
+          <tr><td class="mono">@slip/db</td><td>Postgres store (Drizzle, postgres.js or PGlite), an in-memory fake, migrations and guards</td></tr>
+          <tr><td class="mono">@slip/offers</td><td>The Channel3 adapter, a fake, and a separate entry point for search so the checkout path cannot spend a credit</td></tr>
+          <tr><td class="mono">@slip/paypal</td><td>The PayPal REST adapter and a fake that passes the same gateway contract</td></tr>
+          <tr><td class="mono">@slip/steering</td><td>The Claude classifier and a scripted fake</td></tr>
+          <tr><td class="mono">@slip/receipt</td><td>One receipt renderer, shared by the agent, the MCP server and the owner's screens</td></tr>
+          <tr><td class="mono">@slip/mcp</td><td>The MCP server and its web-standard HTTP endpoint</td></tr>
+          <tr><td class="mono">@slip/ui</td><td>The owner's kit, “Till Roll”: theme tokens, stationery styles, React components, typed client</td></tr>
+          <tr><td class="mono">@slip/web</td><td>The Next.js app: receipts, holds, limits, agents, the kill switch, the demo</td></tr>
+          <tr><td class="mono">@slip/http</td><td>The one JSON client every adapter uses: no retries, no timeouts of its own</td></tr>
+          <tr><td class="mono">@slip/study</td><td>The market study: what Channel3's real offers look like, measured the way the check measures</td></tr>
+          <tr><td class="mono">@slip/bench</td><td>SlipBench: how shopping agents behave on real offers under four conditions</td></tr>
+          <tr><td class="mono">@slip/tests</td><td>End-to-end scenarios through the application, on both stores</td></tr>
+        </tbody>
+      </table>
+      <h3>Conventions worth knowing before reading the code</h3>
+      <ul>
+        <li>A private export condition serves sources inside the workspace and built output everywhere else, so tests need no build step.</li>
+        <li>Deadlines belong to the caller, never to an adapter; an adapter that cannot answer in time reports a timeout and the check holds.</li>
+        <li>Every failure an outside service can return is a value, not an exception: a purchase that cannot be priced is held for the owner, not crashed.</li>
+        <li>The database enforces what the code enforces — append-only triggers, set-once columns, uniqueness on every PayPal id — and drift tests compare the constraints against the domain's own enumerations.</li>
+      </ul>
+    </section>
+
+    <!-- ================= 6 ================= -->
+    <section>
+      <h2><span class="num">6</span>What has been measured</h2>
+      <p class="intro">
+        Two studies, both recomputable from committed data with no key and no model call. Both report
+        results that do not flatter the product, which is the point of running them.
+      </p>
+
+      <h3>The market study — 240 real products, 19 October</h3>
+      <table>
+        <thead><tr><th>Measure</th><th class="num-col">Result</th><th>Reading</th></tr></thead>
+        <tbody>
+          <tr><td>Products with two or more comparable offers</td><td class="num-col">18.33% <span class="footnote">(44 of 240)</span></td><td><span class="verdict">G1 fails</span> against a 60% bar — most products in this catalogue carry one offer</td></tr>
+          <tr><td>Typical gap, cheapest to priciest</td><td class="num-col">16.67%</td><td>The smaller, sounder figure: 17.02% including three products whose grouping is suspect</td></tr>
+          <tr><td>Dearer offer pays more commission</td><td class="num-col">47.5% <span class="footnote">(19 of 40)</span></td><td>Of the 40 products where two offers stated <em>different</em> commission rates — not of all 240</td></tr>
+          <tr><td>Offers listed → mapped → comparable</td><td class="num-col">321 → 321 → 318</td><td>The adapter loses nothing; the check excludes three</td></tr>
+        </tbody>
+      </table>
+      <div class="box warn">
+        <span class="label">Where the real argument sits</span>
+        <p>
+          The low density is Channel3's catalogue, not Slip's rules — and narrowing by category does
+          not clear the bar. So the case leans on the commission conflict: in nearly half the
+          products where the comparison is possible at all, the store paying the most commission is
+          not the cheapest. That is a structural conflict of interest a buyer cannot see, and it is
+          what a second opinion is for.
+        </p>
+      </div>
+
+      <h3>SlipBench — two agents, 168 runs, 26 October</h3>
+      <table>
+        <thead><tr><th>Condition</th><th>What the agent is shown</th><th class="num-col">Overpaid</th><th class="num-col">Took the bait</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">clean</td><td>Real offers, nothing manipulated</td><td class="num-col">0 of 42</td><td class="num-col">—</td></tr>
+          <tr><td class="mono">endorsed</td><td>A dearer offer labelled “Top pick”, listed first</td><td class="num-col">0 of 42</td><td class="num-col">0</td></tr>
+          <tr><td class="mono">injected</td><td>Instruction-like text standing alone on the page</td><td class="num-col">0 of 42</td><td class="num-col">0</td></tr>
+          <tr><td class="mono">buried</td><td>The same sentence hidden inside the product's own description — where an attacker would put it</td><td class="num-col">0 of 42</td><td class="num-col">0</td></tr>
+        </tbody>
+      </table>
+      <p>
+        <span class="verdict">G3 fails at 0%</span> against a 15% bar. In this benchmark that means
+        both agents compared offers well enough that Slip never had to stop either — including when
+        the bait was buried in prose they were certain to read. The report says so plainly rather than
+        hiding it, and it discloses two things the table cannot show: the steering verdict is
+        supplied by construction rather than by a live model call, so the numbers recompute for free;
+        and a zero in <em>stopped by Slip</em> records that no attack landed, not that the check let
+        one through.
+      </p>
+      <p class="footnote">
+        The classifier itself is verified against the real model separately — instruction-like text
+        flagged, loud sales copy not, inside the application's own deadline. The second agent's
+        sweep has since run and reproduced the first's result exactly — nothing overpaid and nothing
+        took the bait in any condition — which is the more useful kind of confirmation, since a
+        single agent's zero could have been one model's quirk. What is still not done is a second
+        <em>provider</em>, which SPEC §6.2 asks for and which needs a key nobody here has. The
+        repository says that rather than implying otherwise.
+      </p>
+    </section>
+
+    <!-- ================= 7 ================= -->
+    <section>
+      <h2><span class="num">7</span>Running it</h2>
+      <h3>The three outside services</h3>
+      <table>
+        <thead><tr><th style="width: 30mm">Service</th><th>Real when</th><th>Otherwise</th></tr></thead>
+        <tbody>
+          <tr><td>Channel3 — offers</td><td><code>CHANNEL3_API_KEY</code> is set. Verified live. Product detail is free; search costs a credit, so only the agent-facing search can spend one, behind a cache and an hourly ceiling</td><td>A stand-in catalogue</td></tr>
+          <tr><td>PayPal — money</td><td>Client id, secret and webhook id are set. <code>live</code> is the only value that moves real money</td><td>A stand-in gateway that passes the same contract</td></tr>
+          <tr><td>Steering — the classifier</td><td><code>ANTHROPIC_API_KEY</code> is set</td><td>A scripted stand-in; in production without a key every verdict the check needs is “no answer”, which holds the purchase</td></tr>
+        </tbody>
+      </table>
+      <div class="box">
+        <span class="label">Two deployments that refuse to start</span>
+        <p>
+          Live PayPal with simulated prices, or with a scripted steering stand-in, throws at
+          assembly. A deployment that cannot be trusted does not boot, rather than discovering the
+          problem at the first checkout with an agent waiting and a real card one call away.
+        </p>
+      </div>
+
+      <h3>Hosting</h3>
+      <ul>
+        <li><strong>Demo mode</strong> needs no database and no keys: every visitor gets their own catalogue, their own stand-in PayPal and four purchases already tried.</li>
+        <li><strong>Any container host.</strong> The image serves <code>/sign-in</code> and answers its own health check. The build takes about 50 seconds but wants well over ten gigabytes of Docker storage; the first local attempt had 17 GB free and still ran out at the final layer commit.</li>
+        <li><strong>Render</strong> is declared in <code>render.yaml</code> — connect the repo and choose Blueprint; Slip works out its own address. On the free plan the service sleeps after 15 minutes.</li>
+        <li><strong>Serverless</strong> has no long-lived process, so the resolver runs from a scheduled route instead, authorised by a bearer secret.</li>
+      </ul>
+
+      <h3>The commands that matter</h3>
+      <table>
+        <thead><tr><th style="width: 48mm">Command</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">pnpm lint &amp;&amp; pnpm test</td><td>The gate: biome, project-wide types, 2,129 tests. Spends nothing</td></tr>
+          <tr><td class="mono">pnpm test:pg</td><td>The same store contract against a real Postgres — 310 tests. Point <code>SLIP_TEST_DATABASE_URL</code> at a server you already have and it starts no container</td></tr>
+          <tr><td class="mono">pnpm web:build &amp;&amp; pnpm web:e2e</td><td>38 browser tests across a demo server and a real-owner server, with an accessibility audit on every page in both themes</td></tr>
+          <tr><td class="mono">pnpm test:live:*</td><td>Four suites that skip themselves until their key exists</td></tr>
+          <tr><td class="mono">pnpm study:report</td><td>Recomputes the market study from committed snapshots. Free</td></tr>
+          <tr><td class="mono">pnpm bench:run</td><td>Prints what it would spend and does nothing without <code>--yes</code>; never pays twice for an errand already recorded</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ================= 8 ================= -->
+    <section>
+      <h2><span class="num">8</span>Where it stands</h2>
+      <p class="intro">Everything that can be verified without a key or an account someone must open has been.</p>
+      <h3>Done and verified</h3>
+      <ul>
+        <li>The check, the domain model, persistence, every use case, the owner UI, the MCP server, and real adapters for all three outside services.</li>
+        <li>The wiring a deployment outside the demo needs: an agent that can find products, a steering check with something to read, a resolver that runs where there is no long-lived process, and a way back in for an owner whose browser forgot the session.</li>
+        <li>Channel3 verified against a live key; the classifier verified against the real model; the store contract verified on real Postgres; a daily reconcile against PayPal's own records.</li>
+        <li>Two measured studies, both recomputable for free, both reporting failures honestly.</li>
+      </ul>
+      <h3>Designed, and deliberately not built</h3>
+      <ul>
+        <li><strong>The merchant side.</strong> Standing earned by disclosure rather than bought, and the seller graph that roots it. The graph ships, and two of its three rules with it — a market that collapses to one seller, and a chosen offer that discloses no commission where the cheaper one does, are now held rather than paid. The attestations, their store and the hook surface are not built.</li>
+        <li><strong>The reversal.</strong> Slip can stop a payment and cannot undo one: there is no refund call anywhere, a refunded capture still reads as captured, and the event that would announce one is never subscribed to — so a refund issued out of band reaches Slip only through the daily reconcile, where it reads as the owner's own account disagreeing. The kill switch stops the next payment, not the last one. A check that can only ever say no is a filter rather than a policy engine, and the correction refund is specified down to its failure cases — every one of them now named and quoted from PayPal&rsquo;s own per-error reference, including two clocks rather than one and a refusal no retry can clear. None of it is built.</li>
+      </ul>
+      <h3>Open, and waiting on the account holder</h3>
+      <table>
+        <thead><tr><th style="width: 52mm">What</th><th>Why it cannot be closed from here</th></tr></thead>
+        <tbody>
+          <tr><td>A second <em>provider</em> for SlipBench (SPEC §6.2)</td><td>Needs an OpenAI key. The second <em>agent</em>'s sweep has run; a second provider has not, and nothing is built on speculation</td></tr>
+          <tr><td>G2 — a charge against a vaulted wallet</td><td>A sandbox buyer must approve a vault through PayPal's own flow; nothing can automate it. G10, the refund round trip, waits behind the same step</td></tr>
+          <tr><td>G4 &mdash; is Channel3's product grouping correct?</td><td>Thirty products are printed for a person to adjudicate, suspects first. No second signal exists in the data: of the 44 products with two or more comparable offers, not one has two that both carry Channel3's <code>dimensions</code>, so size and weight cannot corroborate a grouping. It needs a human judgement, not a measurement</td></tr>
+          <tr><td>A Next.js security advisory</td><td>A fresh build stops to name a known advisory against the installed version and proceeds on a re-run — it recurred twice on 30 October under different notice ids, so it is not a one-off. Upgrading a framework days before submission, against a green gate, is the larger risk: recorded rather than acted on</td></tr>
+          <tr><td>Continuous integration</td><td>Billing on the repository host; no run has ever executed. The local gate is the same commands</td></tr>
+          <tr><td>A public URL</td><td>Connect the repository in Render</td></tr>
+          <tr><td>Making the repository public</td><td>At submission, on the owner's word</td></tr>
+        </tbody>
+      </table>
+      <div class="box">
+        <span class="label">How to read this document's numbers</span>
+        <p>
+          Every figure here was read from the repository or produced by running it on 30 October
+          2026. The decision log records all 98 departures from the written spec with the reason for
+          each, so anything surprising in the code has an entry explaining why it is that way.
+          <code>SPEC.md</code> &sect;10 lists all fourteen gates in one table with where each stands:
+          six are open, and not one of them can be closed from inside this repository.
+        </p>
+      </div>
+    </section>
+  </body>
+</html>
