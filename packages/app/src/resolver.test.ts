@@ -435,6 +435,15 @@ describe("checking Slip's books against PayPal's own", () => {
     h.clock.advance(25 * HOUR);
     await resolve(h);
     expect((await mandateOf(h, seeded)).reconcileUnmatched).toBe(1);
+    // The count alone would also be a 1 for an overcharge or a payment PayPal never listed, so
+    // name the two numbers: Slip's books say the whole amount, PayPal's say the money came back.
+    expect(h.logs).toContainEqual(
+      expect.objectContaining({
+        level: "error",
+        event: "reconcile.disagreed",
+        fields: expect.objectContaining({ attemptId: id, slipCents: paid, paypalCents: 0 }),
+      }),
+    );
   });
 
   it("a hold the owner declined is not money gone astray", async () => {
