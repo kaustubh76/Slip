@@ -223,7 +223,11 @@ And `PAYMENT.CAPTURE.REFUNDED` currently reaches Slip nowhere at all, by two ind
 daily reconcile that was meant to catch it as an amount that disagrees cannot run, and the webhook
 would not carry it even from a working address — that event is not one of the eight in
 `SLIP_WEBHOOK_EVENTS` (`packages/paypal/src/webhooks.ts`), so fixing the delivery above does not fix
-this one. [RAILS.md](RAILS.md) §8 is what it would take.
+this one. That route has a second lock behind the first: even subscribed, `interpretWebhook` has no
+rule for the event and answers `{kind: "ignored"}`, which `packages/paypal/src/webhooks.test.ts:221`
+pins under the name *"a real event Slip has no rule for"* — so the subscription list and the
+interpreter would both have to change, not just the list. [RAILS.md](RAILS.md) §8 is what it would
+take.
 
 **To fix it:** enable **Transaction Search** on the sandbox REST app — PayPal dashboard → Apps &
 Credentials → your app → Features. It is a tick-box, nothing in Slip changes, and `pnpm doctor:keys`
