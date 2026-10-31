@@ -2715,3 +2715,48 @@ rewritten to correct the attribution, because the history is accurate about *wha
 where it is wrong about *who*. The procedural lesson is the peer's and worth keeping: **in a shared
 worktree, `git add <path>` stages whatever is in the file now, not what you were working on.** Check
 `git diff --name-only` in the same breath as the add, or stage hunks.
+
+## D105 · 2026-10-31 · The cron frequency cap, and the gate it closes behind the other four
+
+**Slip is deployed** (`6b1218d`, another session's work): real Channel3, real PayPal sandbox, Neon
+Postgres migrated, the steering check live at `https://slip-two-chi.vercel.app`. That session also
+found the thing this entry is for, and it belongs in the ledger because it changes a reader's
+instructions, not just a runbook.
+
+**Vercel's Hobby plan refuses any cron that runs more than once a day**, so the committed schedule
+in `apps/web/vercel.json` is `0 3 * * *`. Verified from source rather than taken on report: a daily
+sweep **is not a slower version of the same job**. In `resolveOnePayment`
+(`packages/app/src/resolver.ts:455`) a payment with no `paypalOrderId` takes one of three branches —
+resend while `age < orderResendWindowMs` (**30 minutes**, `config.ts:32`), wait while
+`age < reportingLagMs` (**3 hours**, `config.ts:44`), and otherwise ask Transaction Search through
+`findOrderByInvoice`. A run at 03:00 only ever reaches the resend branch for a payment created after
+02:30. Everything older falls to the lookup — **which needs the Transaction Search grant that is
+still unticked (G2)**. So on Hobby, with that grant off, an unknown payment has no working
+resolution path at all.
+
+That makes **five** in the family, not four: the vault, the grant, the webhook address, the
+unmigrated database, and now a schedule cap that shuts the last door the other four left ajar. Each
+is invisible from a green build.
+
+**[README.md](../README.md) was telling readers the wrong thing** and is corrected. It said to set
+`SLIP_CRON_SECRET` and schedule `/api/cron/resolve`, then — reassuringly — that "the endpoint takes
+a bearer token and nothing else". True of the endpoint, false of the outcome: the frequency is the
+part that decides whether housekeeping works, and the document that gets read first did not mention
+it. It now says every few minutes, names the Hobby cap, and gives the 30-minute window as the reason.
+
+**The `PAYMENT.CAPTURE.REFUNDED` paragraph in [DEPLOY.md](DEPLOY.md) §3 gained the step it was
+missing.** It said the event reaches Slip by neither route, which is right — it is not one of the
+eight in `SLIP_WEBHOOK_EVENTS`, and the reconcile that would catch it cannot run. The step it left
+out is that subscribing would not be enough either: `interpretWebhook` has no rule for the event and
+answers `{kind: "ignored"}`, pinned by `packages/paypal/src/webhooks.test.ts:221` under *"a real
+event Slip has no rule for"*. Two routes, three locks. **Written by this session at the other
+session's request rather than by the session that owns the file** — the deliberate opposite of what
+produced the attribution mess in D104, and the right division: whoever verified the evidence writes
+the sentence, once.
+
+**A negative finding worth recording, because checking it was the work.** That session warned that
+`SPEC.md` or `SERVICES.md` might still present `pglite://` or `http://localhost:3000` as the current
+state now that Neon and https are live. **They do not.** Every occurrence in both files, and in
+`README.md`, is a local-development command or a conditional describing behaviour when the base URL
+is not https — all still correct. No edit was made, and the absence is logged so the next pass does
+not re-run the same search.
