@@ -35,7 +35,8 @@ Paths are from the repository root. "Scenario Sn" means
 | 7 Filter and locate | `packages/check/src/comparable.ts`, `locate.ts`, `variant.ts`, `url.ts`; the price always comes from the snapshot | `packages/check/src/locate.test.ts`, scenarios S7, S8, S14 |
 | 8 Compute | `packages/check/src/compute.ts` — integer cents, no network, no model | `packages/check/src/boundaries.test.ts`, scenario S15 |
 | 9 Steering classifier | `packages/steering/src/claude.ts` + `prompt.ts`; runs only above a 1 % gap, no tools, fixed output, 5 s to "no answer" | `packages/steering/src/claude.test.ts`, `live.test.ts`, scenarios S5, S5b |
-| 10 Apply rules R1–R7 | `packages/check/src/rules.ts` + `decide.ts`; the attempt, check result and decision are written in one transaction, before any PayPal call | `packages/check/src/scenarios.test.ts`, `rules.property.test.ts`, all of S1–S15 |
+| 7b Collapse the sellers | **✎ D95** — after the `R2` count, `prepareCheck` resolves the comparable offers' domains to sellers through `@slip/graph` (`inferSellerEdges`, `sellerCount`) and stops on `R2B_SINGLE_SELLER_MARKET` when they come to fewer than two (`packages/check/src/prepare.ts:144`). So that one rule is decided in `prepare.ts`, not `rules.ts`, and deliberately never touches `best` or the gap | `packages/check/src/sellers.test.ts`, `packages/graph/src/resolve.test.ts`, `invariant.property.test.ts` |
+| 10 Apply the rules | `packages/check/src/rules.ts` + `decide.ts`; the attempt, check result and decision are written in one transaction, before any PayPal call. The drawing's "R1–R7" is now sixteen codes: `R2a` (D68), `R2b` and `R5a` (D95) joined `R4a`, and `RULE_CODES` in `packages/domain/src/attempt.ts` is the list | `packages/check/src/scenarios.test.ts`, `rules.property.test.ts`, `sellers.test.ts`, all of S1–S15 |
 | retry cap | `maxAttemptsPerRetryWindow` in `packages/app/src/config.ts` — four attempts on one product in an hour, which is the drawing's "3 retries" | `packages/app/src/checkout/gate.test.ts` |
 
 ## 3A · PAID
@@ -84,7 +85,16 @@ Paths are from the repository root. "Scenario Sn" means
 
 | Panel | Where it lives |
 |---|---|
-| RULES R1–R7 (+ R4a) | `packages/check/src/rules.ts`; `RULE_OUTCOME` is the single rule→outcome map, and the database CHECK is generated from it rather than hand-listed | `packages/db/src/__contract__/sql-guards.ts` |
+| RULES R1–R7 (+ R2a, R2b, R4a, R5a) | `packages/check/src/rules.ts`, except `R2b`, which decides in `prepareCheck` (**✎ D95**, box 7b); `RULE_OUTCOME` in `packages/domain/src/attempt.ts` is the single rule→outcome map, and the database CHECK is generated from it rather than hand-listed | `packages/db/src/__contract__/sql-guards.ts` |
+
+**The panel names eleven and box 10 says sixteen, and both are right.** `RULE_CODES`
+(`packages/domain/src/attempt.ts:19`) is the list, and five of its entries were never R-numbered
+because they are not comparison rules. `VARIANT_MISMATCH`, `OFFER_NOT_FOUND`, `CHOSEN_UNAVAILABLE`
+and `CHOSEN_UNVERIFIED` are the four ways the agent's chosen offer fails to be found and usable
+inside the snapshot, and all four stop in `packages/check/src/prepare.ts:118-133` — box 7's work,
+before any comparison happens. `OWNER_APPROVED` is the code a held purchase carries once a person
+releases it (`packages/app/src/holds.ts:402`, box H4a), which is a decision the owner made rather
+than one a rule reached. Seven R-numbers, four suffixed, five unnumbered.
 | WHEN THINGS BREAK | each line is a scenario or a resolver task; the timeouts are `packages/app/src/config.ts` (Channel3 5 s, classifier 5 s, PayPal 15 s), tied together by a guard that keeps the lease longer than all three |
 | ALWAYS TRUE | the agent never holds credentials (keys are hashed), no model decides an outcome (D4), prices come from the snapshot, the decision is written before money moves, one PayPal order per attempt |
 | PAYMENT STATUS | `packages/domain/src/payment.ts` — the ten words and the legal moves between them |
@@ -94,7 +104,10 @@ Paths are from the repository root. "Scenario Sn" means
 
 The diagram's own `NOT YET RUN — TEST FIRST` panel listed five things. Two are answered: Channel3's
 offer URLs do **not** survive between calls (D70), and the market study measured comparable-offer
-density at 18.33 % with D68 on the grouping. The other three — paying with a vault id in one step,
+density at 18.33 % with D68 on the grouping. Since the drawing, the same sample has also answered
+G6 — one market in the 44 comparable products collapses to a single seller, and it is one store
+listing an item twice rather than a seller faking a market ([MERCHANTS.md](MERCHANTS.md) §9). The
+other three — paying with a vault id in one step,
 AUTHORIZE then void, and whether `stored_credential` is needed — are `pnpm test:live:paypal`,
 which skips until `PAYPAL_TEST_VAULT_ID` exists. That needs a sandbox buyer's wallet vaulted
 through the approval flow, which is the one step in the whole diagram that no code can take.

@@ -6,12 +6,14 @@
 
 **Changes in v4 (after external critique):** honest merchant model; payment flow rebuilt around what PayPal's API actually does; a real, non-synthetic headline number; realistic-search benchmark condition; shipping-aware rejection rule; scope cut for a solo build; plain-language UI.
 
-> **Product:** Slip checks every purchase an AI agent tries to make, before PayPal moves the money. If the agent is overpaying, was steered, or picked the offer that pays more commission, the payment does not happen.
+> **Product:** Slip checks every purchase an AI agent tries to make, before PayPal moves the money. If the agent is overpaying or was steered, the payment does not happen. If the pricier offer it picked is also the one paying more commission, the payment waits for the owner — a conflict is a signal about the platform, not proof the agent chose badly (D2).
 > **Tagline:** The second opinion on every agent purchase.
 > **Operating principle:** Agents shop. Slip checks. Policy decides. PayPal pays.
 
 ## Truth labels
-**[VERIFIED]** checked against an official source on 10–11 Oct 2026 · **[UNVERIFIED]** confirm in Phase 0 · **[DECISION]** design choice · **[HYPOTHESIS]** to be measured · **[PROHIBITED]** never claim.
+**[VERIFIED]** checked against a source on a stated date · **[UNVERIFIED]** confirm by a gate · **[DECISION]** design choice · **[HYPOTHESIS]** to be measured · **[PROHIBITED]** never claim.
+
+*Corrected 30 Oct 2026 (D102). This legend read "checked against an official source on 10–11 Oct 2026" and "confirm in Phase 0" — both true when it was written and neither true since. Claims now carry their own read dates, several are against sources that are not the vendor's own, and gates ran long past Phase 0. [RAILS.md](RAILS.md) and [MERCHANTS.md](MERCHANTS.md) both open "Truth labels are SPEC.md's" and both already gave the corrected form, so two documents were quoting this one in words it did not have. This is the version all three now use.*
 
 ---
 
@@ -58,16 +60,22 @@ decryption. All three describe how a credential reaches PayPal. The page names n
 mandate and no agent identity, and customer authorisation appears only in the ACP path. **The claim
 above is unchanged and its bound is unchanged**; what is new is that it has been checked against the
 newest page rather than only the four that existed when it was written.
-**[VERIFIED 30 Oct 2026.]** [RAILS.md](RAILS.md) §2 has the table and the sources.
+**[VERIFIED 30 Oct 2026.]** [RAILS.md](RAILS.md) §2 has the table and the sources. The protocol
+underneath corroborates it from its own side: ACP's canonical specification describes itself as a
+*"Merchant-implemented REST API for ChatGPT-driven checkout"*, so the party it gives the decision to
+is the merchant by its own description, not by inference ([RAILS.md](RAILS.md) §4, §5).
 
-**The stronger form of the claim is about a bound, not an example.** A delegated payment request's
-documented constraints are a maximum chargeable amount and an expiry, both set from what the shopper
-selected in the agent's own interface. A bound whose value is taken from the thing it bounds cannot
-discriminate between that thing and its alternatives: $400 that is the lowest listed price and $400
-that is listed at $260 elsewhere are the same number, and a maximum of $400 admits both. That is a
-statement about bounds as a category, and **Slip's own `R6_ABOVE_ORDER_CAP` is a bound and cannot do
-it either** — which is why the cap is not the check in Slip, and why saying this about anyone else's
-bound would otherwise be arguing in bad faith. [RAILS.md](RAILS.md) §3.
+**The stronger form of the claim is about the allowance, not an example.** A delegated payment
+request carries an `allowance` whose six required fields bind the credential to a `max_amount`, a
+`currency`, one `merchant_id`, one `checkout_session_id`, an `expires_at`, and `reason: one_time`
+(`openapi.delegate_payment.yaml`, `spec/2026-04-17`). **Those fields are real protection** — the
+credential cannot be spent elsewhere, later, for more or twice — **and they are a description of the
+offer the agent already chose.** Nothing in the object refers to any other offer, because comparison
+is not what it is for: $400 that is the lowest listed price and $400 that is listed at $260 elsewhere
+are the same number, and an allowance for $400 admits both. **Slip's own `R6_ABOVE_ORDER_CAP` is a
+bound and cannot tell them apart either** — which is why the cap is not the check in Slip, and why
+saying this about anyone else's bound would otherwise be arguing in bad faith.
+**[VERIFIED 30 Oct 2026.]** [RAILS.md](RAILS.md) §3.
 
 ## 3. Who it is for
 
@@ -90,8 +98,11 @@ The human makes one normal PayPal checkout, which saves their payment method to 
 | Outcome | When | PayPal action |
 |---|---|---|
 | **PAID** | Within limits, no flags | Single-step order with vault token, intent CAPTURE |
-| **REJECTED** | Overpaid beyond limits, or steered, or commission conflict | None. No order exists. Agent gets the reason and the better offer |
-| **HELD** | Too few offers to compare, stale data, or above order-size limit | Order with intent AUTHORIZE (funds held). Human approves → capture. Human declines → void **[UNVERIFIED in sandbox; Payments v2 via REST]** |
+| **REJECTED** | Overpaid beyond both limits, steered, or the chosen offer cannot be located in the snapshot | None. No order exists. Agent gets the reason and the better offer |
+| **HELD** | Nothing comparable to price against, a comparison Slip does not trust, a check that could not answer, a commission signal the owner should see, or above the owner's per-order cap — the ten HELD codes of §5.1 | Order with intent AUTHORIZE (funds held). Human approves → capture. Human declines → void **[UNVERIFIED in sandbox; Payments v2 via REST]** |
+
+**✎ D2** — REJECTED's row used to end *"or commission conflict"*. A conflict has held for the
+owner since 11 October, not refused; §5.1 carries the reasoning.
 
 Fallback if authorise-and-void fails in sandbox: HELD creates no order until the human decides.
 
@@ -117,25 +128,77 @@ Money in integer cents, USD only.
 best_listed   = lowest price among in-stock, new offers for the SAME Channel3 product id and variant
 gap_abs       = chosen_price - best_listed
 gap_pct       = gap_abs / best_listed
-conflict      = gap_abs > 0 AND chosen.max_commission_rate > best.max_commission_rate
+conflict      = gap_abs > 0 AND chosen.commissionBps > best.commissionBps > 0
 ```
 
-**Shipping problem:** Channel3 offers carry no shipping or tax **[VERIFIED]**. A $3 cheaper item with $8 shipping would be a false rejection. So price alone only rejects when the gap is large:
+**✎ D3** — that last line read `chosen.max_commission_rate > best.max_commission_rate`, with no
+`> 0`, and named Channel3's wire field rather than Slip's. Channel3 sends `0` for *unknown*, so
+without the floor "best pays 0 %" cannot be told apart from "best's rate is unknown". Slip converts
+`max_commission_rate` to `commissionBps` — the field's own integer unit, or `null` when Channel3
+reported nothing usable (`packages/domain/src/offer.ts:33`) — and `disclosed()`
+(`packages/check/src/rules.ts:41`) is the shipped test: *"Zero is not one: it is what it sends for no data (D3)."* The half-known case did
+not go unhandled — it became `R5A` below (D95).
 
-| Rule | Default | Outcome |
+**Shipping problem:** Channel3 offers carry no shipping or tax **[VERIFIED]**. A $3 cheaper item with $8 shipping would be a false rejection. So price alone only rejects when the gap is large.
+
+**The owner's defaults**, and they are the shipped ones (`DEFAULT_POLICY`, `packages/domain/src/policy.ts:33`):
+
+| Knob | Default | What it gates |
 |---|---|---|
-| Gap above 5% **and** above $8 | — | REJECTED (overpaid) |
-| Gap above 1% **and** conflict or steering flag | — | REJECTED (steered / conflict) |
-| Fewer than 2 comparable offers | — | HELD |
-| Order above $200 | — | HELD |
-| Snapshot older than 10 min | — | Refetch, else HELD |
-| Otherwise | — | PAID |
+| reject above, percent | 5 % | `R4_OVERPAID`, together with the next row |
+| reject above, absolute | $8 | `R4_OVERPAID` — **both** must be exceeded |
+| flag above | 1 % | the line `R3`, `R4A`, `R5` and `R5A` all sit behind |
+| per-order cap | $200 | `R6_ABOVE_ORDER_CAP` |
+| snapshot freshness | 10 min | refetch, else `R1_STALE_SNAPSHOT` |
 
 The $8 allowance is a stated assumption, user-editable. Every receipt says "listed item price". Do not call the metric "best execution" or "landed cost" in the product.
 
+### 5.1 Every rule, and what it decides
+
+**This table used to have six rows.** The shipped set is sixteen codes — `RULE_CODES`
+(`packages/domain/src/attempt.ts:19`) is the list and `RULE_OUTCOME` (`:45`) is the one place a code
+maps to an outcome. The outcomes below are copied from that map, not re-derived from this
+document's prose. `R1`, the four chosen-offer failures and `R2`/`R2B` decide in `prepareCheck`
+(`packages/check/src/prepare.ts`) because they settle whether there is anything to compare at all;
+the rest are `DECISION_RULES` (`packages/check/src/rules.ts:66`), **first match wins**.
+
+| Rule | When it fires | Outcome |
+|---|---|---|
+| `R1_STALE_SNAPSHOT` | prices older than the freshness window and no refetch | HELD |
+| `VARIANT_MISMATCH` | the offer is for a different variant than the one asked for | REJECTED |
+| `OFFER_NOT_FOUND` | the chosen offer is not in the snapshot at all | REJECTED |
+| `CHOSEN_UNAVAILABLE` | it is in the snapshot and out of stock or used — known bad | REJECTED |
+| `CHOSEN_UNVERIFIED` | its price or currency cannot be read — unknown, not bad | HELD |
+| `R2_TOO_FEW_OFFERS` | nothing comparable to price it against | HELD |
+| `R2B_SINGLE_SELLER_MARKET` | the comparable offers collapse to one seller, so the market was never a market (D95) | HELD |
+| `R2A_GAP_IMPLAUSIBLE` | a gap so wide (>100 %) that the catalogue's grouping, not the price, is the likely cause (D68) | HELD |
+| `R3_STEERED` | above the flag line and the text the agent read is instruction-like | REJECTED |
+| `R4_OVERPAID` | above **both** the percentage and the absolute overpay limits | REJECTED |
+| `R4A_NO_CLASSIFIER_ANSWER` | above the flag line and the steering check could not answer | HELD |
+| `R5_COMMISSION_CONFLICT` | above the flag line and the dearer offer pays more commission | HELD **✎ D2** |
+| `R5A_COMMISSION_UNDISCLOSED` | above the flag line, the cheaper offer's rate is known and the chosen offer's is not (D95) | HELD |
+| `R6_ABOVE_ORDER_CAP` | the price is above the owner's per-order cap | HELD |
+| `R7_WITHIN_LIMITS` | everything else — the fallback that always matches | PAID |
+| `OWNER_APPROVED` | a held purchase the owner released | PAID |
+
+**✎ D2, and it is the one that mattered most.** This table's second row used to read *"Gap above
+1 % **and** conflict or steering flag → REJECTED (steered / conflict)"*. A commission conflict has
+**held** since 11 October: *"a conflict is a signal about the platform, not proof the agent chose
+badly; a human should see it."* Steering still rejects. D1 named this as one of the spec's
+divergences on day one and no edit followed it for nineteen days (D103).
+
+**`R2A` is deliberately first** among the decision rules, because every rule below it reasons about
+a gap that `R2A` says not to trust — and a purchase there is held, not rejected: the comparison is
+suspect, the agent's choice is not.
+
 **No LLM decides the outcome.** An LLM only classifies listing text for steering (fixed schema, no tools) and writes the receipt sentence. Rules are code.
 
-**Steering flag:** chosen offer is not the cheapest **and** the listing or tool output contains instruction-like text, or the agent's stated reason cites a badge or listing claim.
+**Steering flag:** the chosen offer is above the owner's flag line **and** the listing text or Slip's own search output contains instruction-like text.
+
+**✎ D4** — this definition used to end *"or the agent's stated reason cites a badge or listing
+claim"*. The reason is untrusted text the agent controls, so it cannot change an outcome; it is
+stored and shown, and no rule reads it. `RuleContext` (`rules.ts:11`) carries the enforcement in one
+line: *"Nothing here came from the agent."*
 
 **Matching [VERIFIED]:** Channel3 groups merchant offers under one product id. Slip compares only within the same product id and selected variant. Channel3 exposes no GTIN/UPC. Accuracy of that grouping is **[UNVERIFIED]**; gate G4 checks it by hand.
 
@@ -150,13 +213,28 @@ From a sample of products in the chosen categories (target 150–200, fewer if c
 This is real data from Channel3, costs only API calls, and doubles as gate G1. Whatever it shows goes in the pitch as measured, with sample size and date. **[HYPOTHESIS]** that the numbers are large enough to matter. If they are small, say so and lean on 6.2.
 
 ### 6.2 SlipBench: how agents behave
-20–25 errands, each naming one specific product. 3 agents across at least two model providers, including one small low-cost model. Three conditions:
+**The plan** was 20–25 errands, each naming one specific product, across 3 agents and at least two
+model providers including one small low-cost model, under three conditions.
+
+**What ran, on 26 October 2026**: **2 agents × 4 conditions × 21 errands — 168 runs**
+(`bench/results/slipbench.md`, recomputed by `pnpm bench:report` with no key and no model call).
+Two differences from the plan, both booked rather than quietly absorbed. There is **one provider,
+not two** — a second needs a key nobody has (§19.4), which is also why it is two agents rather than
+three. And there is a **fourth condition**, `buried`, which the plan did not have and which now
+carries more of the argument than any other.
 
 | Condition | What the agent gets | Purpose |
 |---|---|---|
-| **A. Realistic search** | A raw search tool with noisy, paginated results. It must find the item and compare offers itself. Nothing is manipulated | Does laziness alone cause overpayment? |
-| **B. Endorsed** | Same, but a pricier offer carries a "Top pick" label and is listed first | Endorsement and position bias |
-| **C. Injected** | Same, but a pricier listing contains instruction-like text | Prompt-injection resistance |
+| **A. Realistic search** (`clean`) | A raw search tool with noisy, paginated results. It must find the item and compare offers itself. Nothing is manipulated | Does laziness alone cause overpayment? |
+| **B. Endorsed** (`endorsed`) | Same, but a pricier offer carries a "[synthetic] Top pick" label and is listed first | Endorsement and position bias |
+| **C. Injected** (`injected`) | Same, but a pricier *offer's listing* contains instruction-like text | Prompt-injection resistance |
+| **D. Buried** (`buried`) | The same sentence, inside the *product's own description*, naming the dearer offer's store | Where a real listing actually has words (D86) |
+
+**Why the attack is run twice.** In the 240 products the benchmark shops from, not one of the 321
+offers carries a word of its own text, while every product carries prose — a median of 712
+characters. So `injected` writes where a real listing is always silent and leaves the sentence
+standing alone among prices and domains; `buried` puts it inside the description the agent was
+going to read anyway. That is the difference between a test an agent can notice and one it cannot.
 
 Labels and injected text in B and C are synthetic and labelled so everywhere. Offers and prices are real.
 
@@ -184,7 +262,7 @@ Agent ──MCP──► Slip server
 | Human-review hold | Orders v2 AUTHORIZE with vault token; Payments v2 capture or void | **[UNVERIFIED]** |
 | Status | Get order | REST `GET /v2/checkout/orders/{id}`, not the Agent Toolkit (D82) |
 | Daily reconcile | Transaction list (delayed up to 3 h) | REST `GET /v1/reporting/transactions` (D82) |
-| Refund | Payments v2 `POST /v2/payments/captures/{id}/refund` — the only reversal of a one-step capture; `voidAuthorization` reverses nothing that moved | **not built; designed in [RAILS.md](RAILS.md) §9–§11** |
+| Refund | Payments v2 `POST /v2/payments/captures/{capture_id}/refund`, read 30 Oct 2026 — the only reversal of a one-step capture; `voidAuthorization` reverses nothing that moved. Needs the refund scope, and a full refund omits `amount` | **not built; designed in [RAILS.md](RAILS.md) §9–§11, with the failure map in §10** |
 | Dispute evidence | Disputes v1, provide-evidence | not built, and deliberately not designed ([RAILS.md](RAILS.md) §12) |
 
 **[VERIFIED]** The Agent Toolkit has no vault, authorise or void tools, so the vault and hold calls go to REST directly. State this in TOOLS.md. Every single-step order needs a `PayPal-Request-Id` header; use it as the idempotency key.
@@ -237,7 +315,38 @@ slip/
 
 Payment status: `NONE, CAPTURED, AUTHORIZED, VOIDED, FAILED, UNKNOWN`. A timeout becomes `UNKNOWN`, resolved by get-order with the same request id, never by a new order.
 
-## 10. Phase 0 gates (Oct 14–17)
+## 10. The gates
+
+Fourteen now exist, in three documents. **G1–G5 are the Phase 0 gates below**, written for Oct
+14–17 and answered; G6–G9 are [MERCHANTS.md](MERCHANTS.md) §9's; G10–G14 are
+[RAILS.md](RAILS.md) §14's. Each is owned by the document that defines it and its status is
+replaced there when it runs. This ledger is a reader's index, copied from those three places and
+never a second opinion on them.
+
+| Gate | In short | Defined in | Status, 30 Oct 2026 |
+|---|---|---|---|
+| **G1** | Do products carry 2+ comparable offers? | Phase 0, below | **Fails — 18.33%** of 240 products, against a ≥60% bar; published ([market study](../study/results/market-study.md)) |
+| **G2** | Mandate → vault → unattended paid order; AUTHORIZE → void | Phase 0, below | **Open.** The one thing code cannot close: it needs a sandbox buyer to approve the vault ([SERVICES.md](SERVICES.md)) |
+| **G3** | Do agents overpay or get steered? | Phase 0, below | **0% of errands**, against a ≥15% bar; the fallback below was applied and §6.2 rewritten to match |
+| **G4** | Is Channel3's grouping correct? | Phase 0, below | **Open, and needs a person.** The study prints 30 products with suspects first; the price-gap heuristic found three (D68) |
+| **G5** | Do credits cover the study and bench? | Phase 0, below | **Passes** |
+| **G6** | Do single-seller markets occur in real data? | [MERCHANTS.md](MERCHANTS.md) §9 | **1 of 44** comparable products, and it is one store listing an item twice |
+| **G7** | How much would attested identity raise 18.33%? | [MERCHANTS.md](MERCHANTS.md) §9 | **[UNVERIFIED]** |
+| **G8** | Does seller resolution merge anything it should not? | [MERCHANTS.md](MERCHANTS.md) §9 | **[UNVERIFIED]** |
+| **G9** | What share of evidence-absence holds would attestation convert? | [MERCHANTS.md](MERCHANTS.md) §9 | **[UNVERIFIED]** |
+| **G10** | Four things only a live refund can answer | [RAILS.md](RAILS.md) §14 | **[UNVERIFIED]** — blocked behind G2's vaulted buyer. The documented half is done; one of the four narrowed on 30 Oct (D102) |
+| **G11** | Does a refunded capture make the reconcile disagree? | [RAILS.md](RAILS.md) §14 | **[VERIFIED]** — and it had been proved since 20 Oct, which the first draft missed (D98) |
+| **G12** | How many purchases would a correction refund have fitted? | [RAILS.md](RAILS.md) §14 | **[VERIFIED] — nil, and vacuously**; the reason matters more than the number |
+| **G13** | Does anything tie a PayPal dispute to a Slip attempt? | [RAILS.md](RAILS.md) §14 | **[VERIFIED] for the documented half**; one sandbox payload closes the rest |
+| **G14** | Do RAILS §5's protocol names match a primary specification? | [RAILS.md](RAILS.md) §14 | **[VERIFIED]** against `spec/2026-04-17` — endpoints right, one field name struck |
+
+**Six gates are open, and not one of them can be closed from inside this repository.** G2 needs a
+sandbox buyer to approve a vault, and G10 sits behind it. G4 needs a person to judge thirty
+groupings. G7, G8 and G9 need a merchant willing to attest. G13's remaining half needs one sandbox
+dispute payload. Everything that reading, measuring or testing could settle has been settled; what
+is left is other people's consent and other people's time.
+
+### Phase 0, as written for Oct 14–17
 
 | # | Question | Pass |
 |---|---|---|
@@ -341,7 +450,9 @@ measurements, not the diagram.
 | Nov 12 | Buffer | Critical fixes only |
 
 **The fresh-clone test ran on 22 Oct, sixteen days early**, and the exit holds: a clone installs
-from the lockfile, passes 1,793 tests and 308 more on real Postgres, builds, serves a desk, runs
+from the lockfile, passes 1,793 tests and 308 more on real Postgres — what that clone saw on the
+day; the suite has since grown to 2,129 and the Postgres project to 310 (D90) — builds, serves a
+desk, runs
 the agent script to a REJECTED and a PAID receipt, and recomputes both studies byte for byte. It
 also found the one defect none of that could — the demo crashing two seconds after it opens, in
 dev mode, which is the mode the README gives a visitor (D79). Running it on Nov 7 would have left
@@ -352,7 +463,7 @@ one day to find that.
 - **0:12–0:30** The market study number, on screen with sample size.
 - **0:30–1:15** Live: agent picks the pricier "Top pick" offer → Slip's receipt screen → rejected, nothing charged. Agent retries with the cheaper offer → paid, PayPal sandbox id shown.
 - **1:15–1:35** A HELD purchase: funds authorised, human declines, hold released.
-- **1:35–2:15** SlipBench: one measured agent, four conditions, with and without Slip. Two of the four are the same injection in two places — on an offer, where a real listing is always silent, and inside the product description, where it never is (D86).
+- **1:35–2:15** SlipBench: two measured agents, four conditions, 168 runs, with and without Slip. Two of the four are the same injection in two places — on an offer, where a real listing is always silent, and inside the product description, where it never is (D86).
 - **2:15–2:30** Where this runs for real, and that the demo is sandbox with Slip as seller.
 - **2:30–2:45** Close.
 
@@ -381,9 +492,9 @@ Use percent and dollars throughout. No basis points, no "slippage", no "TCA".
 **Slip — the second opinion on every agent purchase.**
 AI agents are starting to spend people's money, and nothing checks whether they are overpaying or being steered — PayPal's own agent examples put the buyer's approval in a system prompt rather than in code, and nothing there checks a price. Slip checks every purchase an agent attempts before PayPal moves the money. It compares the chosen offer with other listed offers for the same item from Channel3, flags steering and cases where the pricier store pays more commission, and applies the owner's limits: pay, reject, or hold for a human. The owner approves once through PayPal; after that the agent can only pay through Slip. Every attempt gets a plain-language receipt. We measured real price and commission spreads across 240 products from Channel3's index: 18.33% carry two or more comparable offers, the typical spread between cheapest and priciest is 16.67%, and among the 40 products whose offers stated two different commission rates, the one paying the most is not the cheapest 47.5% of the time. Prices and agent decisions are real; payments run in PayPal sandbox with Slip as the seller.
 
-We also ran **one agent — `claude-haiku-5-5`, the small low-cost one — through 21 shopping errands** under clean, endorsed and injected listings, with and without Slip. It did not overpay in any condition, including the one where the pricier listing carries text addressed to shopping agents. That is a claim about one cheap model on 21 errands, not about agents in general, and we publish it because it is what the test said. Three of its purchases did fetch the wrong product: the catalogue files two near-identical skillets separately and it took the cheaper one — the same grouping weakness the market study found, showing up again from the other direction. The spread and the commission conflict are real and measured; whether a given agent walks into them is not something anyone can promise, which is the argument for checking every purchase rather than trusting a model to be careful.
+We also ran **two agents — `claude-haiku-5-5`, the small low-cost one, and `claude-opus-5-5`, the frontier one — through 21 shopping errands each under four conditions, 168 runs**, with and without Slip. Neither overpaid in any condition, including the two where the pricier listing carries text addressed to shopping agents. Across the 126 errands under `endorsed`, `injected` and `buried`, no agent bought the offer the condition planted, so Slip's steering rule was never reached — the zero records that no attack landed, not that the check let one through. **That the result holds at both ends of the capability range is the part worth having**: it is two models, not agents in general, but it is a small cheap one and a frontier one agreeing, which is a different claim from one cheap model agreeing with itself. 7 of the 168 runs did not buy the product id the errand named, and the split is not a capability story: **6 bought a near-identical one, three per agent** — the catalogue files two near-identical skillets separately and the cheaper one looks right, which is the same grouping weakness the market study found, showing up again from the other direction — and **1 stopped without buying anything**. On the only trap in the data the two models tied exactly. The spread and the commission conflict are real and measured; whether a given agent walks into them is not something anyone can promise, which is the argument for checking every purchase rather than trusting a model to be careful.
 
-*Edited 21 Oct to match what ships. The original claimed three agents across two providers; one is wired and measured, a second is wired and unrun, and there is no second provider. Gate G3 asked for an agent to overpay or be steered on 15% of errands in some condition and got 0%, so §10's fallback applies: lead with the market study and the commission-conflict number, and present SlipBench as "these agents passed this test".*
+*Edited 21 Oct to match what ships, and corrected 30 Oct because the edit itself went stale: it said "a second is wired and unrun", and the second agent ran on 26 October. The original claimed three agents across two providers; two are wired and measured, and there is still no second provider. Gate G3 asked for an agent to overpay or be steered on 15% of errands in some condition and got 0%, so §10's fallback applies: lead with the market study and the commission-conflict number, and present SlipBench as "these agents passed this test".*
 
 ## 19. Still to verify
 1. Vault single-step purchase and authorise/void in sandbox. **Open — the last thing code cannot
@@ -412,7 +523,11 @@ We also ran **one agent — `claude-haiku-5-5`, the small low-cost one — throu
    seller-side — a fictional coffee store doing support, recommendations and payments — and none
    browses or compares offers. So there is nothing published to run through SlipBench, which is part
    of why §6.2's second provider never materialised: the gap is not that it was skipped.
-5. Rules on multiple sponsor prizes; Devpost page changes. **Open — the entrant's to check.**
+5. Rules on multiple sponsor prizes; Devpost page changes. **Open, and it cannot be closed by
+   reading.** Both `paypalaihackathon.devpost.com/` and its `/rules` page answer an automated fetch
+   with **HTTP 403** (30 Oct 2026), so the stretch item in §14 stays **[UNVERIFIED]** and the
+   deadline in this document's header is the one recorded on 11 Oct rather than one re-confirmed
+   since. It needs a person with a browser, which is the entrant's job and takes a minute.
 6. A signal when a credential is rejected. **The operator half is done, 29 Oct 2026** (D92); a
    signal from a *running* deployment is still open and deliberately unbuilt. Every adapter folds a
    refusal into the answer a slow service gives — `NO_ANSWER` from the steering check, `UNAVAILABLE`
@@ -429,17 +544,27 @@ We also ran **one agent — `claude-haiku-5-5`, the small low-cost one — throu
    key revoked **while a deployment runs**, which needs a health route or monitoring and is out of
    scope for the hackathon.
 7. The refund path. **Open (G10, [RAILS.md](RAILS.md) §14)** — it needs the same vaulted sandbox
-   buyer as G2. *Whether a refunded capture already makes the reconcile disagree was listed here as
+   buyer as G2, though one of its four questions narrowed on 30 Oct: PayPal's per-error reference
+   publishes `REFUND_TIME_LIMIT_EXCEEDED`, so a Payments v2 refund window is documented to exist and
+   only its length is unknown. The same reading retired a third-party tag, named nine more refund
+   errors across eleven pages, and corrected a row that had read the endpoint page's silence as
+   absence (D102). *Whether a refunded capture already makes the reconcile disagree was listed here as
    open and was not: `packages/app/src/resolver.test.ts:427` has proved it since 20 Oct, and a
    refund arrives as a negative `reversed` record rather than the `settled` this item first said
    (D98).*
-8. The endpoint, field and status names in [RAILS.md](RAILS.md) §5 that came from third-party
-   write-ups rather than a primary specification. **Open (G14).** Each is tagged in place, and none
-   of them appears in this spec's submission copy, the README or the video.
+8. ~~The endpoint, field and status names in [RAILS.md](RAILS.md) §5 that came from third-party
+   write-ups rather than a primary specification.~~ **Done, 30 Oct 2026** (G14, D99). Read against
+   the canonical `spec/2026-04-17` of the Agentic Commerce Protocol repository. The three endpoint
+   names were right; **one field name was wrong** — `shared_payment_token` inside a `payment` object
+   does not exist, the complete request takes `payment_data` — and it is struck. The eleven status
+   values are now quoted, and the specification describes none of them, which §6 of
+   [RAILS.md](RAILS.md) turns out to need. *That is the second invented detail this series has
+   caught: the tagged one cost a paragraph, the untagged one cost three documents (D98, D99).*
 9. A Next.js security advisory against the installed version. **Open, and deliberately not acted on
-   before submission.** `pnpm web:build` now stops once with a `SecurityFatalError` naming a known
+   before submission.** A fresh `pnpm web:build` stops with a `SecurityFatalError` naming a known
    advisory and recommending `next upgrade --agent=security`; re-running the identical command
-   proceeds and the build is clean. *D90 predicted this interstitial and recorded that it had not
+   proceeds and the build is clean. *It is not a one-off: it fired twice on 30 Oct under different
+   notice ids, so any build on a clean `.next` should be expected to stop once.* *D90 predicted this interstitial and recorded that it had not
    happened — it does now, which is the one prediction from that entry to come true.* Upgrading a
    framework thirteen days out, against a gate that is currently green, is the larger risk; the
    advisory is recorded here so the choice is visible rather than forgotten.
@@ -458,7 +583,21 @@ We also ran **one agent — `claude-haiku-5-5`, the small low-cost one — throu
   - https://developer.paypal.com/ai-tools/toolkit
 - PayPal Agent Ready overview (PayPal's own date: last updated 13 Oct 2026; read 30 Oct 2026):
   https://developer.paypal.com/agent-ready/overview
-- PayPal Payments v2, refund a captured payment: https://developer.paypal.com/docs/api/payments/v2/
+- PayPal Payments v2 — refund a captured payment, and show refund details; the request body,
+  headers and the refund scope for [RAILS.md](RAILS.md) §10 (read 30 Oct 2026):
+  https://developer.paypal.com/api/payments/v2/captures-refund and
+  https://developer.paypal.com/api/payments/v2/refunds-get
+- PayPal's refund guide — sample code, and the source of the two verified error names
+  `CAPTURE_FULLY_REFUNDED` and `REFUND_AMOUNT_EXCEEDED` (read 30 Oct 2026):
+  https://developer.paypal.com/checkout/refund-payment
+- PayPal Payments v2 **per-error reference**, one page per error at
+  `https://developer.paypal.com/api/payments/v2/errors/<name>` — a different document from the two
+  endpoint pages above, and the source of every name and quotation in [RAILS.md](RAILS.md) §10's
+  failure table (all read 30 Oct 2026). The pages used: `capture_fully_refunded`,
+  `captured_amount_fully_refunded`, `refund_capture_currency_mismatch`, `refund_currency_mismatch`,
+  `refund_time_limit_exceeded`, `refund_time_exceeded_for_payment_source`,
+  `refund_failed_insufficient_funds`, `max_number_of_refunds_exceeded`, `refund_not_allowed`,
+  `partial_refund_not_allowed`, `transaction_disputed`
 - PayPal Disputes v1: https://developer.paypal.com/docs/api/customer-disputes/v1/
 - PayPal, "Agentic commerce explained", 5 Mar 2026, shopper-facing (read 30 Oct 2026):
   https://www.paypal.com/us/money-hub/article/agentic-commerce-explained
@@ -468,6 +607,17 @@ We also ran **one agent — `claude-haiku-5-5`, the small low-cost one — throu
   https://newsroom.paypal-corp.com/2026-01-22-Making-Sense-of-the-AI-Shopping-Protocol-Moment
 - OpenAI, Agentic Commerce Protocol — key concepts (read 30 Oct 2026):
   https://developers.openai.com/commerce/guides/key-concepts
+- Agentic Commerce Protocol, the canonical specification — current stable `spec/2026-04-17`,
+  `openapi/openapi.agentic_checkout.yaml` (read 30 Oct 2026):
+  https://github.com/agentic-commerce-protocol/agentic-commerce-protocol
+- The same release's `openapi/openapi.delegate_payment.yaml` — the `Allowance` object quoted in
+  §2 and in [RAILS.md](RAILS.md) §3 (read 30 Oct 2026). A separate specification from the checkout
+  one, and this pass used both.
+- OpenAI's agentic checkout spec, the earlier release of the same protocol — its example header
+  reads `API-Version: 2025-09-12` (read 30 Oct 2026):
+  https://developers.openai.com/commerce/specs/checkout
+- PayPal, show dispute details — the `disputed_transactions` field list for G13 (read 30 Oct 2026):
+  https://developer.paypal.com/api/customer-disputes/v1/disputes-get
 - Channel3 search API: https://docs.trychannel3.com/api-reference/v1/search
 - ACES: https://arxiv.org/abs/2508.02630
 - Magentic Marketplace: https://arxiv.org/html/2510.25779v1
