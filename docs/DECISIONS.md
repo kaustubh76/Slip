@@ -2254,3 +2254,464 @@ conditions, so the published 0% never moved — the number simply began measurin
 built; nothing of it is. That DIAGRAM.md's departures are new rather than newly written down. And
 that the Next.js advisory in §19.9 has been dealt with: it has been recorded, which is not the same
 thing.
+
+## D99 · 2026-10-30 · The spec was published all along, and one field name was invented
+
+D96 wrote Slip's interface in the shape of a checkout session and tagged every endpoint and field
+name it could not source: **[UNVERIFIED: third-party write-up]**, with G14 to retire each tag. G14
+was a reading task from the start. It has now been read, and it found one invention.
+
+**`shared_payment_token` inside a `payment` object does not exist.** The complete request of the
+Agentic Commerce Protocol takes **`payment_data`**, required. That name came from a blog post, was
+labelled as coming from a blog post, and was wrong. The three endpoint spellings beside it —
+`POST /checkout_sessions`, `.../complete`, `.../cancel` — were right.
+
+**The lesson is the tag, not the error.** A guess marked as a guess cost one paragraph to fix and
+nothing downstream, because §5 also carried a standing rule that none of its names may appear in
+the README, the submission copy or the video. D98's error was the same species and carried no tag,
+and it reached three documents. Tagging is cheap and it is the difference.
+
+**The canonical specification was two searches away, and the gate stood open for a day because
+nobody looked.** It is `agentic-commerce-protocol/agentic-commerce-protocol`, current stable
+release **`spec/2026-04-17`**, in `openapi/openapi.agentic_checkout.yaml`: `openapi: 3.1.0`,
+`version: 2026-04-17`, *"Agentic Checkout API"*, *"Merchant-implemented REST API for ChatGPT-driven
+checkout."* OpenAI's own published checkout spec is an **earlier** release of the same protocol —
+its example header reads `API-Version: 2025-09-12` — so a version and a read date belong with this
+claim exactly as they belong with every other. Two corrections of detail came with it: an update is
+a `POST` to the session's own path rather than a PATCH, and a retrieval is a `GET` on it.
+
+**The schema and its own examples disagree, and that is recorded rather than resolved.**
+`PaymentData` carries `handler_id`, `instrument` and `billing_address`, with the credential at
+`instrument.credential.token`; the examples show `{token, provider}` in one place and
+`{type: vault_token, token}` in another. The payment-handler indirection arrived in
+`spec/2026-01-30`. Nothing in this project needs the question settled, and picking a winner is how
+the struck name got in.
+
+**§6's claim was too strong, and the truth is better.** It said the documented lifecycle has no
+state for *the money's owner has not answered yet*. It has one: **`pending_approval`**, beside
+`authentication_required` and `requires_escalation`, among eleven statuses — `incomplete`,
+`not_ready_for_payment`, `requires_escalation`, `authentication_required`, `ready_for_payment`,
+`pending_approval`, `complete_in_progress`, `completed`, `canceled`, `in_progress`, `expired`.
+**The specification describes none of them.** The description belongs to the property, *"Current
+status of the checkout session"*, and no value carries one. So the slot is named and empty, which is
+a more useful fact than its absence: every implementer decides for itself whose approval
+`pending_approval` waits on, and Slip's HELD is one answer with the parties written in — the owner's
+approval, an explicit decision rather than a timeout, forty-eight hours, and the rule code on the
+receipt. A claim that had to be weakened came back stronger.
+
+**G13 closes on its structural half only.** PayPal's *show dispute details* reference lists each
+`disputed_transactions` entry as carrying `buyer_transaction_id`, `seller_transaction_id`,
+`reference_id`, `invoice_number` and `custom`. Slip already sets `invoice_id` and `custom_id` on
+every order to the attempt id, so a dispute has somewhere for a Slip attempt to survive, and
+`disputed_transaction_id` filters a list. What the reading cannot settle is whether PayPal fills
+those two from the capture's own, and which of them a caller is shown: the reference gives the names
+with placeholder values and no descriptions, and says *"the fields that appear in the response
+depend on the access."* One sandbox payload answers both. **A tie that exists is not a reason to
+build a dispute integration**, and §12 of [RAILS.md](RAILS.md) is unchanged.
+
+**What is not claimed.** That Slip conforms to, implements, or has run against any agent-commerce
+protocol — §12 of [SPEC.md](SPEC.md) forbids all three and reading a specification is none of them.
+That the `PaymentData` divergence is resolved. That G13's payload half is done. Or that G10 has
+moved: it needs a charge against a vaulted wallet, which needs the sandbox buyer that has blocked G2
+from the start, and it is now the only gate in [RAILS.md](RAILS.md) §14 that reading cannot close.
+
+## D100 · 2026-10-30 · The refund call, read at last, and the row it deleted
+
+[RAILS.md](RAILS.md) §10 specified the refund call in operational detail — endpoint, headers, body,
+a six-row failure table — and almost none of it had been read. Three PayPal error-code names sat in
+that table untagged, with nothing in the adapter to check them against: a grep for `REFUND` across
+`packages/paypal/src` finds `CAPTURE_HELD` and a webhook test, and no error name at all. Read
+against PayPal's *refund captured payment* reference and its refund guide on 30 Oct 2026.
+
+**One of the three was invented.** `PERMISSION_DENIED` is not corroborated for this endpoint, and is
+struck. The failure it stood for is real and narrower: the reference says the call needs the
+**refund scope**, so an app without it fails at the refund and nowhere earlier. `CAPTURE_FULLY_REFUNDED`
+and `REFUND_AMOUNT_EXCEEDED` were both right, and they were right for a reason worth noticing — they
+are the two codes PayPal's own refund guide handles in its sample code, which is where a guess
+would have had to come from to be correct by accident.
+
+**Four passes, four invented details, and the tag is the whole difference.** D98's was untagged and
+reached three documents. D99's was tagged and cost a paragraph. This one was untagged, in the most
+operational-looking part of the document, which is where all four have been. **The rule, stated once
+and meant generally: a name that cannot be traced to a schema, to sample code, or to a line in this
+repository gets a tag or does not get written.** §5 already had that rule and §10 did not, and the
+difference in cost is the argument.
+
+**The reading improved the design rather than only confirming it.** Three things fell out:
+
+- **`amount` is optional, and omitting it is how the reference spells a full refund.** A correction
+  refund returns the whole capture, because Slip captures once in full — `finalCapture` is the
+  literal `true`. So the port input loses `amountCents`, and `REFUND_AMOUNT_EXCEEDED` becomes
+  unreachable: a failure row deleted rather than handled. It is named anyway, because a partial
+  refund would bring it back, which is one more reason to keep partials out.
+- **The tie to an attempt was never an inheritance question.** The refund request takes its own
+  `invoice_id` and `custom_id`, so Slip sets them instead of hoping PayPal copies the capture's —
+  and `custom_id` is documented as the field *"used for reconciliation"*, which is precisely what §8
+  needs. That closes half of §9's tag. The other half stays open, and with it a discrepancy between
+  PayPal's own two pages: the refund-create response example carries `custom_id`, the refund-lookup
+  example carries `invoice_id` and not `custom_id`. **So the design keys on the refund id Slip
+  stored, with `invoice_id` corroborating**, and never on `custom_id` alone.
+- **`note_to_payer` belongs here.** At most 255 characters, and it *"appears in the payer's
+  transaction history and emails"*. For a product whose argument is that the person whose money
+  moved should be able to see why, putting the correction's reason where they already look is not
+  decoration.
+
+**The window is left open, and that is the disciplined answer.** 180 days is well documented — for
+the legacy NVP/SOAP `RefundTransaction`, for deprecated PayPal Standard, and for Braintree. The
+Payments v2 reference states no limit. Carrying the legacy figure across an API generation and
+calling it verified is exactly the move that produced D98 and D99, so §10 records the number with
+its provenance and leaves v2 **[UNVERIFIED]** for G10.
+
+**G10's bar is narrower now, and says so.** The documented half is done; what is left is four things
+only a live call can answer — the refund scope, idempotency under a replayed request id, whether the
+delivered webhook carries the attempt id, and the v2 window. It is still blocked behind G2's vaulted
+sandbox buyer, and it is still the only gate in §14 that reading cannot close.
+
+**What is not claimed.** That any of the reversal is built; nothing of it is. That the v2 refund
+window is 180 days. That the sandbox app has the refund scope — that is the first thing G10 finds
+out. That the `custom_id` discrepancy between PayPal's two examples is resolved. Or that G10 has
+moved: its bar is narrower, which is not the same as nearer.
+
+## D101 · 2026-10-30 · The allowance, read in full, and the protection it was not credited with
+
+[RAILS.md](RAILS.md) §3 carried the project's most load-bearing sentence and a `[UNVERIFIED]` beside
+it: whether a delegated payment credential is bound to one merchant. The specification that answers
+it — `spec/2026-04-17/openapi/openapi.delegate_payment.yaml` — sits in the same repository as the
+checkout spec D99 read, and had not been opened.
+
+**It is bound to a merchant, and to four other things.** `POST /agentic_commerce/delegate_payment`
+takes an `allowance` with six properties, all required: `max_amount` as an integer in minor units,
+`currency` as a lowercase ISO-4217 code, `merchant_id` — *"Unique identifier for the merchant
+authorized to use this token"* — `checkout_session_id`, `expires_at`, and `reason`, an enum
+admitting only `one_time`. There is **no usage or transaction count** in the object; `reason` is the
+only usage control. Session binding was in no draft of §3; nobody had guessed it because nobody had
+looked.
+
+**The correction this entry exists for: the allowance protects something real, and four documents
+walked past it.** Those six fields stop a credential being spent somewhere else, later, for more,
+twice, or against a different session. For a credential handed to software, bounding its blast
+radius is the protection that matters most. §3, §2 of [SPEC.md](SPEC.md), the README's opening and
+the printed overview all went straight from "a maximum chargeable amount and an expiry" to "a cap is
+not a comparison", and all four now say what the allowance does before saying what it does not.
+**Understating another party's product is the same failure as overstating this one.** D89's
+prohibition has been read here four times as a rule about not disparaging PayPal; it is equally a
+rule about not shaving the other side's case to make this one land.
+
+**The argument is stronger for the correction, not weaker.** The allowance is a *description of the
+offer the agent already chose* — how much, in what currency, to which merchant, for which session,
+until when — and nothing in it refers to any other offer, because comparison is not what it is for.
+Binding a credential harder to one choice cannot make that choice a better one. The claim is now
+exact: **the allowance bounds what may be done with the credential; it says nothing about whether
+the purchase was a good one.** `R6_ABOVE_ORDER_CAP` remains the proof that this is a statement about
+an instrument rather than about anyone's product.
+
+**Two interop notes worth having.** `max_amount` in minor units is the integer-cents discipline this
+repository already holds in `packages/domain`. And `currency` matching `^[a-z]{3}$` against PayPal's
+uppercase `"USD"` in Orders v2 is a real seam for anyone mapping between the two, which is the kind
+of detail that is cheap now and expensive at three in the morning.
+
+**One thing narrowed and not resolved.** The delegate-payment response returns its `id` as a
+vault-token identifier, `vt_…`, which is the shape the checkout spec's flatter
+`{type: vault_token, token: vt_…}` example uses. The two specifications cohere on the prefix. That
+is **not** a resolution of which shape `complete` requires, because the `PaymentData` schema still
+says `instrument.credential.token`, and §5 says so rather than picking the convenient reading.
+
+**Also fixed: a contradiction between two documents, in its surviving form.** `docs/DEPLOY.md` says
+the sandbox webhook is subscribed correctly — eight events, a clean match for
+`SLIP_WEBHOOK_EVENTS` — and then that `PAYMENT.CAPTURE.REFUNDED` is not arriving. Both are true and
+together they mislead: that event is not one of the eight, so repairing the delivery address would
+not deliver it. The line now names both routes and says that fixing the one above does not fix this
+one. It was flagged twice and left alone while that file was being actively written, and edited only
+once it had been committed and idle.
+
+**What is not claimed.** That the `PaymentData` divergence is resolved. That Slip conforms to,
+implements, or has run against ACP — reading two of its specifications is none of those, and §12 of
+[SPEC.md](SPEC.md) forbids all three. That G10 has moved. Or that the allowance is inadequate: it
+does what it is for, and what it is for is not a second opinion.
+
+---
+
+## D102 · 2026-10-30 · The error reference nobody opened, and the labels three documents disagreed about
+
+**The same failure as D101, twelve hours later, and that is the finding.** D101 booked a
+`[UNVERIFIED]` on merchant binding that an unread OpenAPI in an already-cited repository answered.
+[RAILS.md](RAILS.md) §10 — the refund failure table, the most operationally detailed thing in this
+project — was written from PayPal's **endpoint** reference (`captures-refund`, `refunds-get`) and
+its refund guide, and congratulated itself in writing for being *"written from it rather than
+around it"*. PayPal also publishes a **per-error reference**, one page per error at
+`developer.paypal.com/api/payments/v2/errors/<name>`. Nobody opened it. It retired one tag,
+corrected one row, and added nine error names across eleven pages.
+
+**The habit this is worth writing down:** when a vendor publishes a reference *directory*, the
+endpoint page is an index into it, not a substitute for it. Twice now the answer has been one URL
+away from a page already cited.
+
+**The correction, first, because it is a claim this project was making.** The window row read
+*"180 days is the documented figure for the legacy `RefundTransaction` and for Braintree, not for
+Payments v2, whose reference states no limit."* The provenance half stands and still matters — 180
+days belongs to two other products. The rest read silence as absence.
+`REFUND_TIME_LIMIT_EXCEEDED` is published: *"You are over the time limit to perform a refund on
+this capture."* So **Payments v2 documents that a limit exists, and no page read on 30 Oct 2026
+states how long it is.** G10's fourth question narrows from *is there a window* to *how long*,
+which is smaller and better.
+
+**A second clock nothing had anticipated.** `REFUND_TIME_EXCEEDED_FOR_PAYMENT_SOURCE` —
+*"The time limit set by the payer's selected payment source to refund this transaction has
+expired"*, with PayPal's own instruction to *"Contact the payer directly to arrange a refund via
+alternative means."* It belongs to the vaulted wallet's funding source, not to the capture, so Slip
+cannot see it, did not choose it, and cannot retry past it. It is the only row in §10 with **no
+automated remedy at all**, and therefore the only one that has to reach the owner as an action
+rather than a record. That changes what §8's reversal owes.
+
+**Nine names where there were three, prose and gaps.** `REFUND_FAILED_INSUFFICIENT_FUNDS` replaces
+"insufficient balance"; `MAX_NUMBER_OF_REFUNDS_EXCEEDED` and `REFUND_NOT_ALLOWED` are new rows;
+`CAPTURE_FULLY_REFUNDED` moves from the guide to the reference. And two conditions turn out to have
+**two names each** — `CAPTURE_FULLY_REFUNDED` / `CAPTURED_AMOUNT_FULLY_REFUNDED`, and
+`REFUND_CAPTURE_CURRENCY_MISMATCH` / `REFUND_CURRENCY_MISMATCH`, the last pair carrying the
+identical message on both pages.
+
+**Slip already had the idiom, which is why this specifies rather than invents.**
+`packages/paypal/src/orders.ts:55` and `:68` hold `ORDER_DECLINED` and `VOID_REFUSED` as named
+arrays of issue codes, and `orders.ts:118` already reads
+`said(answer, "DUPLICATE_INVOICE_ID", "INVALID_INVOICE_ID")` — one condition, two names, handled.
+So §10 specifies `REFUND_DECLINED` in that shape. **The cost of a missed name, stated exactly
+rather than dramatically:** the branch falls through to `{ kind: "unknown" }` (`orders.ts:126`),
+never to success, so the price is a wasted retry and a vaguer record — not money reported returned
+that never returned.
+
+**What got stronger.** Omitting `amount` was already §10's choice; it now puts **three** documented
+failures out of reach rather than one, because `REFUND_AMOUNT_EXCEEDED`, `PARTIAL_REFUND_NOT_ALLOWED`
+and `TRANSACTION_DISPUTED` are all partial-refund failures. And the corroboration is PayPal's own:
+`PARTIAL_REFUND_NOT_ALLOWED`'s resolution text reads *"Specify an amount equal to the capture amount
+or omit the `amount` object from the request."* A vendor's reference documenting this design's
+choice as the way out of an error is a better source for it than the design's own reasoning. §12
+gains one line from the same page: an open dispute blocks a *partial* refund, which Slip never
+issues.
+
+**The second half of this entry is about this project's own apparatus, not anyone else's.**
+[SPEC.md](SPEC.md)'s truth-label legend read *"checked against an official source on 10–11 Oct
+2026"* and *"confirm in Phase 0"*. [RAILS.md](RAILS.md) and [MERCHANTS.md](MERCHANTS.md) both open
+**"Truth labels are SPEC.md's"** and both then gave a different legend — *"checked against a source
+on a stated date"*, *"confirm by a gate"*. **Two documents were quoting a third in words it did not
+have**, and the third's version was the stale one: claims carry their own dates now, several are
+against sources that are not the vendor's own, and gates ran long past a phase that ended 17 Oct.
+SPEC's legend is corrected to the form the companions already used. For a project whose whole
+credibility mechanism is five labels, three definitions of them was the one inconsistency that
+could not stand.
+
+**Fourteen gates lived in three tables with three shapes**, SPEC's without a Status column at all,
+under a heading reading *"Phase 0 gates (Oct 14–17)"*. §10 is retitled, Phase 0 kept as the history
+of G1–G5 that it is, and a fourteen-row ledger added: gate, where it is defined, status. The ledger
+copies the owning document and never second-guesses it. Reading them in one place produced one
+sentence worth having: **six gates are open and not one can be closed from inside this
+repository** — two need a sandbox buyer, one needs a person's judgement, three need a merchant
+willing to attest, and a half-gate needs one dispute payload.
+
+**Two smaller things.** [DIAGRAM.md](DIAGRAM.md) contradicted itself: its panel row named eleven
+rule codes, its box 10 said sixteen, and `RULE_CODES` has sixteen. The five the drawing never
+numbered are the four chosen-offer failures in `prepare.ts` and `OWNER_APPROVED`, which is a
+person's decision rather than a rule's; the file now says so. And [SPEC.md](SPEC.md) §19.5 cannot
+be closed by reading: both Devpost URLs return **HTTP 403** to an automated fetch, so the
+multiple-sponsor-prize question and the header's deadline need a person with a browser. Recording
+*checked and unreachable* is worth more than leaving it bare.
+
+**What is not claimed.** That G10 has moved — it still needs the charge nothing can automate. That
+the v2 window's length is known; only that a window is documented. That any of §§8–11 is built;
+none of it is, and this pass changed no product code. That `REFUND_CURRENCY_MISMATCH` and
+`REFUND_CAPTURE_CURRENCY_MISMATCH` are confirmed to be two names for one condition rather than two
+conditions — the pages carry the same message and say nothing more, and a list that holds both is
+correct either way. Nor is any of this a criticism: a payments company publishing a page per error
+code, with the remedy on it, is the thing working as intended, and this document had simply not
+read it.
+
+---
+
+## D103 · 2026-10-30 · The spec, read against this project's own first three decisions
+
+**Six passes checked other people's documents. This one checked ours, and found something older
+than anything outside.** [SPEC.md](SPEC.md) §5 — the section that defines what Slip decides —
+carried three statements this project corrected on **11 October 2026** and never marked. D1 names
+them: *"Where the two disagree, the code follows the diagram. The differences are D2–D4 below."*
+D1 told the reader exactly where to look, and for nineteen days nobody did.
+
+**D2 — the one with the widest reach.** §5's table read *"Gap above 1 % **and** conflict or
+steering flag → REJECTED (steered / conflict)"*. D2 moved a commission conflict to **HELD** the day
+after the spec was written: *"a conflict is a signal about the platform, not proof the agent chose
+badly; a human should see it."* `RULE_OUTCOME` (`packages/domain/src/attempt.ts:45`) has held it
+ever since. **The error had reached the product sentence** — line 9's blurb said *"picked the offer
+that pays more commission… the payment does not happen"*, and the payment does happen, once the
+owner approves it. §4.2's outcome table said it a third time. Three statements of a thing settled
+on day two.
+
+**D3.** §5's pseudocode read `chosen.max_commission_rate > best.max_commission_rate`, with no
+`> 0` floor and naming Channel3's wire field rather than Slip's. Channel3 sends `0` for *unknown*,
+so without the floor "best pays 0 %" cannot be told from "best's rate is unknown". `disclosed()`
+(`packages/check/src/rules.ts:41`) is the shipped test and says so in a comment: *"Zero is not one:
+it is what it sends for no data (D3)."* The half-known case did not go unhandled — it became `R5A`
+(D95), which holds. So the spec's loose line and the rule that closed its hole were both already
+right in code; only the prose lagged.
+
+**D4.** §5's steering definition still ended *"or the agent's stated reason cites a badge or listing
+claim"*. D4 struck that: the reason is text the agent controls, so it cannot change an outcome. The
+enforcement is one line of `RuleContext` (`rules.ts:11`): *"Nothing here came from the agent."*
+
+**And the same table was six rules of sixteen.** `RULE_CODES` has sixteen entries; §5 listed six.
+Missing: `R2A` (D68), `R2B` and `R5A` (D95, five days old), `R4A`, the four chosen-offer failures,
+and `OWNER_APPROVED`. **The inversion is the finding**: `docs/Slip-overview.html` already carried
+fifteen of the sixteen with every outcome right, so the printed pitch document was accurate and the
+one titled *"Final Ideation and Build Spec"* was not. §5.1 is now the full set, with outcomes copied
+from `RULE_OUTCOME` rather than re-derived from prose.
+
+**What this fix is not.** Not a code change — D2, D3 and D4 are implemented correctly, and the
+spec is the stale artifact; D1 settled that authority deliberately. And not a deletion:
+[DIAGRAM.md](DIAGRAM.md) has had a working convention for this since D2 — departures marked **✎**
+with the decision that booked them — and §5 and §4.2 simply never received the marks they were
+owed. Each superseded line is now kept, marked, and attributed.
+
+**The second strand: a measurement ran and four places never heard.**
+`bench/results/slipbench.md` records **2 agents × 4 conditions × 21 errands, 168 runs**, on 26
+October. §6.2's body still described the original plan — three agents, two providers, three
+conditions — and had no row for `buried`, the fourth condition, which D86 argues carries more of
+the argument than any other because it puts the sentence where a real listing actually has words.
+§6.2's results paragraph said *one agent* and *one cheap model*, and counted *three* wrong products
+where the real figure is **10 of 168** (3 haiku, 7 opus — the more capable model missing more
+often, which is worth not hiding). §16 said *one measured agent*. [DEMO.md](DEMO.md), the script a
+judge actually hears, said **84 runs** — and so did [README.md](../README.md) in three places and
+[SERVICES.md](SERVICES.md) in two, which this entry originally failed to name.
+
+**And §6.2's own correction note had gone stale**, which is the small joke in this entry: it read
+*"a second is wired and unrun"*, and the second agent ran four days later. A note written to fix a
+claim became a claim needing fixing. Corrected and dated.
+
+**Why this makes the argument stronger rather than weaker.** *"Slip is the check that does not
+depend on which model you point at it"* was a hope when one cheap model had been measured. With a
+small low-cost model **and** a frontier model clean across all four conditions, it is a measurement
+— still two models rather than agents in general, and the documents say so, but two models at
+opposite ends of the capability range agreeing is a different claim from one model agreeing with
+itself. DEMO.md's narration can stop hedging, and it gains the classifier's own numbers — **44 of
+44 planted instructions flagged, 0 of 240 honest descriptions, every call inside the 5 s the
+application allows** (`bench/results/steering-judge.md`) — which were measured on 30 October and
+reached the tape nowhere.
+
+**Two rules that ship and the script never showed.** `R5A_COMMISSION_UNDISCLOSED` and
+`R2B_SINGLE_SELLER_MARKET` have decided real purchases since D95 and appear in no beat.
+DEMO.md now carries them as an optional section: `R5A` because closing [MERCHANTS.md](MERCHANTS.md)
+§2.2's incentive hole is visible on screen, `R2B` as one sentence because it fired once in 44 real
+products and the honest reading is a duplicate listing rather than a seller faking a market.
+
+**What is not claimed.** That the second *provider* ran — it did not, and needs a key nobody has.
+That any blocked gate moved. That sixteen codes is the final set. That the code needed changing
+anywhere in this pass; it did not. And **[UI.md](UI.md) was checked and needed nothing**: its
+`data-slip-rule` row gives *"the deciding rule code, e.g. `R4_OVERPAID`"* — an example, not an
+enumeration — so it defers to `RULE_CODES` correctly and does not go stale when the set grows. That
+check is recorded here so the next pass does not repeat it.
+
+**Amended later the same day: the figure was in four documents, not two.** The plan for this pass
+was built by grepping `SPEC.md` and `DEMO.md` for the *claim*, and the repository-wide sweep for the
+*number* was scheduled as the last verification step. It found three more in `README.md` and two in
+`SERVICES.md`, including one that had gone from true to false — *"`claude-opus-5-5` was piloted on
+2 errands and then left unrun"*. The lesson is cheap and worth keeping: **when a measurement
+changes, sweep for the number first and plan second.** A claim can be paraphrased five different
+ways; a figure like `84` cannot hide.
+
+**And the miss breakdown was wrong in the first draft of this fix, which is worth recording because
+it was nearly shipped.** The correction said *"10 of 168 — 3 for haiku, 7 for opus, the more capable
+model missing more often"*, with the catalogue's near-identical skillets as the reason. Reading
+`bench/results/slipbench.md`'s per-miss list rather than its total shows something else: **6 bought
+a near-identical product — three per agent, an exact tie on the only trap in the data — 1 stopped
+without buying anything, and 3 never got an answer because an account's API usage limit refused the
+call.** So three of opus's four extra misses are a billing limit rather than a model, and there is
+no capability difference to report. A total is not a breakdown, and the suggestive split had a
+tidy explanation waiting that the primary artifact did not support.
+
+**The cost projection, scored.** `SERVICES.md` recorded haiku's sweep — 573,456 input, 44,500
+output, 253 turns — as the basis `pnpm bench:run` projected an Opus sweep from, when nothing
+measured existed. The sweep has since run and **the projection erred in the safe direction**: Opus
+came in under haiku on all three, at 523,778 input, 30,365 output and 241 turns, recomputed per
+agent from the 84 committed runs in each `bench/runs/<model>/`. Two cross-checks keep it honest —
+haiku's row reproduces the published figure exactly, and the two sum to the 1,097,234 / 74,865 / 494
+that `slipbench.md` publishes for all 168 runs. **Why Opus needed fewer turns is not claimed**: the
+runs do not say, and the same model also stopped short or hit the account limit on four errands.
+
+## D104 · 2026-10-31 · The eighth sweep, and the guard that should make it the last
+
+**Seven passes found the same defect seven times.** A figure gets written into prose, the thing it
+measures changes, and the prose does not. D103 booked the lesson — sweep for the number first — and
+this pass finally acts on it rather than booking it again.
+
+**The last instance.** [DEPLOY.md](DEPLOY.md) said the live bench smoke test runs *"before
+`pnpm bench:run` spends tokens on 126 errands."* `bench:run` sweeps `CONDITIONS`
+(`bench/src/conditions.ts:12`, four of them) across both agents: **168 runs**. 126 is the
+three-planted-condition share, correct in `slipbench.md` and §6.2 where it means that, and wrong
+here where it meant the whole sweep. Fixed.
+
+**[SPEC.md](SPEC.md) §15 was accurate and still misleading**, which is a distinction worth keeping.
+*"A clone installs from the lockfile, passes 1,793 tests and 308 more on real Postgres"* is a true
+record of the 22 Oct fresh-clone run, but it sits in the section arguing the exit holds, so a reader
+takes 1,793 for today's suite. It is 2,129, and the Postgres project is 310 (D90). Both dated
+figures stay; today's are now beside them. **Overwriting a record to correct a reading of it would
+have destroyed the evidence that the exit was met** — the same reason D2–D4 were marked rather than
+deleted.
+
+**Three near-misses that are not defects**, recorded so the ninth pass does not re-flag them.
+`bench/src/report.test.ts:40` asserts ``1 agent × …`` from a single-agent fixture, and `report.ts:44`
+pluralises properly — the published file reads *"2 agents × 4 conditions × 21 errands"*.
+`DEPLOY.md`'s *"five examples … and eight ordinary listings"* beside **14 passed** is not an
+arithmetic slip: it counts classifications, not tests — `STEERING` holds 5 and `PLAIN` 6, plus one
+honest judgement in the D67 case and one in the buried pair makes 8, and the fourteenth test is the
+deadline assertion. The schedule's `| Oct 16–17 | 10 errands × 3 agents × 3 conditions |`, gate G3's
+`≥15% of 10 errands` and `SERVICES.md`'s *"63 runs committed on 21 Oct"* are all dated records of a
+past or planned shape.
+
+**The guard** is `bench/src/doc-figures.test.ts`, in the package that owns the figures and beside
+`report.test.ts`, which already pins generated prose to `CONDITIONS.length`. It derives every
+expected number — agents and errands from `slipbench.json`, conditions from `CONDITIONS`, rules from
+`RULE_OUTCOME`, decisions from this file's own headings — and retypes none of them. It reads only the
+living documents: this ledger is excluded, because an entry that still says `84 runs` is a record of
+what was believed that day, and lines that date themselves or say *the plan* or *piloted* are
+skipped for the same reason.
+
+**What each half is actually worth, since the weaker half reads stronger than it is.** The slice
+test catches a figure matching nothing the bench can produce — a typo, a `5 conditions`, a leftover
+from a differently shaped sweep. **It would have caught none of the seven**, because `84` and `126`
+are both real slices that were merely in the wrong sentence; the pinned-headline test is what
+catches that, and so the one that earns its place. A third check — cross-multiplying lines that
+state their own factors — was written, measured and dropped: exactly two sentences in the corpus
+state all their factors as digits, and one says *"each"*, so it reported a false mismatch on correct
+prose. **A guard that cries wolf on a true sentence is worse than no guard**, and the arithmetic it
+would have verified is already covered by pinning the sentence.
+
+The guard also absorbs the sixteen-row diff part seven ran by hand, against both the spec's table
+and the printed one-pager, and it was verified by reverting `126` and watching it fail before being
+trusted to pass.
+
+**It caught its own entry.** Adding this decision moved the ledger to 99 entries and D104, which
+made the one-pager's *"98 entries, latest D103"* stale on the spot — the first thing the new test
+flagged was the commit that added it.
+
+**Amended hours later, by a change from another session.** `c03a30e` finished the Opus `buried`
+arm: the three runs that an account spend cap had eaten were re-run, all three bought correctly, and
+every cell of the table is now 20 or 21 of 21. **The non-purchase count fell from 10 to 7** — six
+runs bought the near-identical skillet, three per agent, and one Opus `clean` run stopped without
+buying — so the infrastructure half of that list is gone and what remains is behaviour. Token totals
+rose with the retries, to **1,118,897 in, 76,086 out, 503 turns**, and Opus's share to 545,441 /
+31,586 / 250. The projection verdict above survives — Opus still came in under haiku on all three —
+but **the turn margin fell from 12 to 3, which is not a difference these runs establish**, so the
+claim is now stated as a bill that would have been overestimated rather than as fewer turns.
+[README.md](../README.md), [SPEC.md](SPEC.md) and [SERVICES.md](SERVICES.md) are corrected. The
+figures in D103 above stay as written: they are what was true on 30 Oct, and this is what changed.
+
+**The guard did not catch this, and that is the useful part.** It pinned the sweep's *shape* —
+agents, conditions, errands, runs — and the shape did not move; only the findings did. A guard is
+only as wide as the quantities someone thought to pin, which is an argument for widening it at the
+moment a figure moves rather than at the moment one breaks. `MISSES` and the three cost totals are
+now derived from `slipbench.md` and pinned in `README.md`, `SPEC.md` and `SERVICES.md`, so this
+particular change would fail next time.
+
+**And the other half of the lesson belongs to the worktree, not the prose.** This session's
+`docs/DEPLOY.md` edit was committed inside `c4e5fff` by a peer session that staged the file by path
+while it was dirty. Nothing was lost — the edit is in `main` verbatim — and main is not being
+rewritten to correct the attribution, because the history is accurate about *what* changed even
+where it is wrong about *who*. The procedural lesson is the peer's and worth keeping: **in a shared
+worktree, `git add <path>` stages whatever is in the file now, not what you were working on.** Check
+`git diff --name-only` in the same breath as the add, or stage hunks.
