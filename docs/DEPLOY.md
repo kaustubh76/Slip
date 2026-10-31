@@ -79,6 +79,20 @@ a real classifier while holding every purchase whose price gap needed one, with 
 exactly like a slow model (SPEC §19.6). Only `pnpm doctor:keys` tells the two apart — so it is the
 pre-flight before a deployment, not only before going live.
 
+**Migrate the database before anything serves.** This step was missing from this runbook until
+31 Oct 2026, and it is the one omission that produces a deployment which builds, serves, and fails
+every request:
+
+```sh
+DATABASE_URL=<the connection string> pnpm db:migrate
+```
+
+`openStore` in `apps/web/src/server/runtime.ts` migrates **PGlite only**, and deliberately: a
+PGlite database is the process's own, while *"a web server that migrates on boot would race its own
+replicas"*. So a Postgres deployment is never migrated by the app. A fresh database that nobody has
+migrated has no tables, and every page and every endpoint fails against it — while the build is
+green and the host reports a successful deploy.
+
 **`SLIP_BASE_URL` is a two-step.** It is the only place Slip knows its own scheme and host, and
 PayPal is handed it as the brand name on a checkout and uses it to build the approval's return URL
 (D76). So: deploy, take the assigned address, set the variable, redeploy.
@@ -156,8 +170,11 @@ whose order id was never learned and whose resend window has closed **stays open
 than being wrongly failed. That is the right way round — Slip has not looked, so it may not conclude
 — but nothing says so out loud.
 
-And `PAYMENT.CAPTURE.REFUNDED` currently reaches Slip nowhere at all: the webhook is not arriving,
-and the daily reconcile that was meant to catch it as an amount that disagrees cannot run.
+And `PAYMENT.CAPTURE.REFUNDED` currently reaches Slip nowhere at all, by two independent routes: the
+daily reconcile that was meant to catch it as an amount that disagrees cannot run, and the webhook
+would not carry it even from a working address — that event is not one of the eight in
+`SLIP_WEBHOOK_EVENTS` (`packages/paypal/src/webhooks.ts`), so fixing the delivery above does not fix
+this one. [RAILS.md](RAILS.md) §8 is what it would take.
 
 **To fix it:** enable **Transaction Search** on the sandbox REST app — PayPal dashboard → Apps &
 Credentials → your app → Features. It is a tick-box, nothing in Slip changes, and `pnpm doctor:keys`
@@ -232,7 +249,7 @@ calls them the gate before any demo that claims to be real. **Three of the four 
 |---|---|---|
 | `pnpm test:live:channel3` | **2 passed, 1 skipped** | the base url, the path, the `x-api-key` header and the key, via a product id Channel3 cannot have. The skip is the search case, which costs a credit and is opt-in twice so a keyed run never spends one by accident |
 | `pnpm test:live:steering` | **14 passed** | the prompt draws the line in the right place: five examples written for SlipBench's condition C all flagged, and eight ordinary listings — *"including the loudest kind"* — none flagged. A false flag here would be Slip rejecting an honest purchase for writing sales copy |
-| `pnpm test:live:bench` | **1 passed** | the agent tool loop works against the real API, asserting the mechanism and never the model's choice, before `pnpm bench:run` spends tokens on 126 errands |
+| `pnpm test:live:bench` | **1 passed** | the agent tool loop works against the real API, asserting the mechanism and never the model's choice, before `pnpm bench:run` spends tokens on 168 runs — two agents across all four conditions |
 | `pnpm test:live:paypal` | **skipped** — `skipped: set PAYPAL_TEST_VAULT_ID (pnpm test:live:paypal)` | nothing yet. This is **gate G2** |
 
 ### The three preconditions, all detected by `pnpm doctor:keys`
