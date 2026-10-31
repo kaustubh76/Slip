@@ -2,8 +2,9 @@
 
 **Prepared:** 30 October 2026 · **Companion to:** [SERVICES.md](SERVICES.md) (the three outside
 services), [SPEC.md](SPEC.md) §19.6 (the credential hole)
-**Status:** the demo Blueprint and the container are built and verified; the Vercel project is
-**not created** — see §2.1. Nothing here sets `PAYPAL_ENV=live`.
+**Status:** **deployed and live at <https://slip-two-chi.vercel.app>** (31 Oct 2026) on real
+Channel3 prices, the real PayPal sandbox and the real steering check. The Render demo is still
+**not connected** — §1 is one dashboard action. Nothing here sets `PAYPAL_ENV=live`.
 
 Two deployments, because they cannot be one. Demo mode keeps its stand-ins for Channel3 and PayPal
 in the process and gives every visitor a throwaway desk, so `isDemo()` refuses wherever `VERCEL` is
@@ -34,20 +35,31 @@ judged demo, `plan: 0.5c-512mb` in `render.yaml` avoids that.
 
 ## 2 · Vercel — the real services, for the money path
 
-### 2.1 Blocked, and on what
+### 2.1 Done, and how the block was got round
 
-**The project does not exist yet.** Creating it returned **403 forbidden** — the Vercel connector
-available here can read projects but not create them, and `list_integration_configurations` is
-likewise forbidden, so a database cannot be provisioned through it either. There is no Vercel CLI
-installed locally to fall back to. Any one of these unblocks it:
+**The MCP connector is read-only and that has not changed** — `PATCH /v9/projects` still answers
+**403 forbidden**, as project creation did. What unblocked it was the third option below: the Vercel
+CLI carries its own credentials, and `vercel api <path> --method PATCH` reaches every endpoint the
+connector refuses. Worth knowing before anyone widens a connector's scope to solve this.
 
-- create the project in the Vercel dashboard, then grant the connector write access to it;
-- widen the connector's scope to allow project creation;
-- `npm i -g vercel && vercel login`, after which the whole of §2.2 can be done from here.
+```
+project          slip (prj_VB7qOXZz…), team kaustubh76s-projects
+root directory   apps/web          node 22.x          framework nextjs
+database         Neon slip-db, Free plan, iad1 — 16 tables, 9 migrations applied
+webhook          re-pointed to the deployment, 8 events, id unchanged
+```
 
-**And `DATABASE_URL` must be a real Postgres.** PGlite is a single-process file store, so on
-serverless each instance would get its own copy and the app would be incoherent. Any connection
-string works; Neon and Supabase both have a free tier.
+**Two production domains, and only one of them is public.** Vercel Authentication is on for
+`all_except_custom_domains`, so `slip-kaustubh76s-projects.vercel.app` answers **302** into
+`vercel.com/sso-api` — and PayPal cannot deliver to that, nor can a judge open it. The short alias
+`slip-two-chi.vercel.app` is **not** covered and serves publicly. `SLIP_BASE_URL` is the short one.
+Check this with `curl` rather than assuming, because the protected domain fails in a way that looks
+like a working site to anyone already signed in to Vercel.
+
+**`DATABASE_URL` must be a real Postgres.** PGlite is a single-process file store, so on serverless
+each instance would get its own copy and the app would be incoherent. `vercel integration add neon
+--billing-plan free_v3` provisions one and connects it to all three environments without a
+dashboard; the integration sets `DATABASE_URL` itself.
 
 ### 2.2 The settings, once it can be created
 
@@ -108,17 +120,54 @@ This creates the webhook the first time and re-points the same one afterwards, s
 `--save` is given; `--save` controls only whether `PAYPAL_WEBHOOK_ID` is written into
 `apps/web/.env.local`.
 
-**A webhook already exists, and that is the problem rather than the solution.** It is subscribed
-correctly — 8 events, a clean match for `SLIP_WEBHOOK_EVENTS`, and its id is the one in
-`.env.local` — but its address is a Cloudflare quick tunnel from an earlier session that no longer
-resolves. Everything about the subscription is right except the only part that matters.
-`pnpm doctor:keys` reports this now, and `GET /v1/notifications/webhooks-events` returning **0
-events** is not reassurance: it means nothing has yet happened *to* deliver. So this has never bitten
-and would bite on the first real transaction — which is to say, the moment G2 completes.
+**Done, 31 Oct 2026.** The webhook had been subscribed correctly — 8 events, a clean match for
+`SLIP_WEBHOOK_EVENTS`, its id the one in `.env.local` — and pointed at a Cloudflare quick tunnel
+from an earlier session that no longer resolved. Everything about it was right except the only part
+that mattered, and `GET /v1/notifications/webhooks-events` returning **0 events** was not
+reassurance: it meant nothing had yet happened *to* deliver. It is now on the deployment's own
+address, with the **same webhook id**, so `PAYPAL_WEBHOOK_ID` did not have to change anywhere.
+`pnpm doctor:keys` confirms it:
 
-So **re-pointing is a precondition of deploying, not a follow-up.** On Render or a serverless host
-the address is stable and this is a one-off; on a quick tunnel it is every run, since the hostname
-changes each time. Nobody has re-pointed it yet, because doing so needs the app publicly exposed.
+```
+Webhook            ok             PayPal would deliver to slip-two-chi.vercel.app, which is this deployment
+```
+
+On a serverless host the address is stable and this is a one-off; on a quick tunnel it is every run.
+
+### 2.4 Housekeeping runs **once a day**, not every five minutes
+
+`vercel.json` asked for `*/5 * * * *` and the deploy was **refused**:
+
+> Hobby accounts are limited to daily cron jobs. This cron expression (\*/5 \* \* \* \*) would run
+> more than once per day.
+
+So the committed schedule is now `0 3 * * *`, which deploys. **That is a real loss and not a
+slower version of the same thing.** `orderResendWindowMs` is **30 minutes**
+(`packages/app/src/config.ts`), and the resolver's second branch re-sends an unknown order inside
+that window with the same request id. A sweep that fires once a day misses the window outright for
+all but a few minutes of the day, and the branch after it waits on `reportingLagMs` (3 h) and then
+asks **Transaction Search** — which is the box nobody has ticked. So on a Hobby plan with the grant
+off, an unknown payment has *no* working resolution path. Each piece is individually defensible and
+together they close every door.
+
+Either of these restores it, and until one is done the "somewhere for housekeeping" gate in §4 is
+**not** shut:
+
+- **Vercel Pro**, then put `*/5 * * * *` back — a one-line revert in `apps/web/vercel.json`;
+- **an external scheduler** calling the endpoint every five minutes, which needs no plan change:
+
+  ```sh
+  curl -X POST -H "Authorization: Bearer $CRON_SECRET" \
+    https://slip-two-chi.vercel.app/api/cron/resolve
+  ```
+
+  `authoriseCron` accepts `CRON_SECRET` *or* `SLIP_CRON_SECRET` as a bearer, so any pinger will do.
+  `CRON_SECRET` is stored as a **config** variable rather than a secret precisely so it can be read
+  back for this; a sensitive one cannot, and an unrecoverable secret would force a rotation to get a
+  pinger working.
+
+Verified on the deployment: unauthenticated `POST /api/cron/resolve` answers **401**, and with the
+bearer it answers the resolver's own report across all nine task groups.
 
 ---
 
@@ -196,11 +245,13 @@ app — no money can move from a deployment it refuses.
 |---|---|---|
 | Real prices (`CHANNEL3_API_KEY`) | the stand-in catalogue's stores are invented, so a live charge would be measured against a made-up market | **shut** — the key works |
 | A real steering check (`ANTHROPIC_API_KEY`) | a scripted stand-in is a receipt claiming a listing was checked when one phrase was matched | **shut** — accepted 30 Oct 2026; it was rejected earlier the same day, and the guard could not see the difference |
-| Postgres, not PGlite | one process, no lock, no backup; two of them corrupt it | **open** — currently `pglite://` |
-| `https` base URL | PayPal is told this hostname, and the session cookie carrying the kill switch is issued without `Secure` otherwise | **open** — currently `http://localhost:3000` |
-| Somewhere for housekeeping | without it nothing expires a hold or finishes an unknown payment, so a real authorization sits on a real card | **open** — no cron secret set |
+| Postgres, not PGlite | one process, no lock, no backup; two of them corrupt it | **shut** — Neon `slip-db`, migrated 31 Oct |
+| `https` base URL | PayPal is told this hostname, and the session cookie carrying the kill switch is issued without `Secure` otherwise | **shut** — `https://slip-two-chi.vercel.app` |
+| Somewhere for housekeeping | without it nothing expires a hold or finishes an unknown payment, so a real authorization sits on a real card | **open** — the secret is set and the endpoint answers, but a Hobby plan sweeps **daily** and the resend window is 30 minutes (§2.4) |
 
-Finishing §2 shuts the remaining three. **What is then left is one thing, and it is yours:**
+§2 shut two of those three. Housekeeping is the one still open, and it is open for a reason worth
+reading rather than ticking: a daily sweep is not a slow sweep, it is a missed one (§2.4). **Beyond
+it, what is left is one thing and it is yours:**
 
 **Live PayPal app credentials** — a separate app from the sandbox one, with an approved business
 account. The repository has sandbox credentials only, and no amount of configuration here
