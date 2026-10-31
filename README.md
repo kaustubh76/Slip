@@ -271,9 +271,14 @@ to `plan: 0.5c-512mb` in `render.yaml` to stop both.
 two more things. Migrate first — `pnpm db:migrate` against your `DATABASE_URL`, because the server
 does not migrate Postgres itself. And give housekeeping a way to run: a long-lived process does it
 on a timer, but anywhere an instance does not outlive a request, set `SLIP_CRON_SECRET` (or
-`CRON_SECRET`, which Vercel injects) and schedule `/api/cron/resolve`. Without it holds never
-expire and authorizations sit on real cards; with it, the endpoint takes a bearer token and
-nothing else.
+`CRON_SECRET`, which Vercel injects) and schedule `/api/cron/resolve` — **every few minutes, and a
+daily sweep will not do**. Vercel's Hobby plan refuses any cron more often than once a day, and
+once a day is not a slower version of the same job: the resolver only resends an order while it is
+under 30 minutes old (`orderResendWindowMs`, `packages/app/src/config.ts:32`), waits below three
+hours, and past that asks PayPal's Transaction Search — so a daily run misses the resend branch for
+all but half an hour of the day and lands on the branch that needs a grant the sandbox may not have.
+Without any of it, holds never expire and authorizations sit on real cards; with it, on a plan that
+allows the frequency, the endpoint takes a bearer token and nothing else.
 
 What to get where, what each suite proves and what it costs: [docs/SERVICES.md](docs/SERVICES.md).
 The PayPal one needs one step nothing can automate — a sandbox buyer whose wallet has been
