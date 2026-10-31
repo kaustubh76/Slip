@@ -114,10 +114,11 @@ function allowed(window: { from: Date; to: Date }): { from: Date; to: Date } {
  * What a record says became of the money. The per-order lookup deliberately treats a reversal as
  * proof the money moved; a reconcile has to keep them apart, or a refund is invisible to it.
  *
- * **A refund is a success, not a reversal.** PayPal reports one as its own transaction with
- * `transaction_status: "S"` and a *negative* amount; `"V"` is for reversals and chargebacks. So
- * the sign decides, not the status — reading `kind === "reversed"` to find refunds would find
- * none of them (D76).
+ * **PayPal files a refund as a success, not as a reversal.** It arrives as its own transaction with
+ * `transaction_status: "S"` — a payment's status — and a *negative* amount; `"V"` is for
+ * chargebacks and voided authorizations. So the sign decides and not the status: looking for
+ * PayPal's `"V"` to find refunds would find none of them (D76). A negative `"S"` becomes
+ * `kind: "reversed"` below, which is the kind a refund carries out of this adapter.
  *
  * The sign decides inside `"V"` too. A chargeback takes money back and is negative; **a voided
  * authorization is the positive amount of money that was never taken**, which is not a reversal

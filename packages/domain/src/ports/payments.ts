@@ -66,10 +66,15 @@ export interface SettlementRecord {
   invoiceId: string;
   amountCents: number;
   /**
-   * `settled`: money moved (negative for a refund). `reversed`: money came back. **`voided`: an
-   * authorization released before any money moved** — not a reversal of anything, so a reconcile
-   * that counts it is accusing an owner of losing money that never left. `pending`: PayPal is
-   * still deciding. `denied`: it refused.
+   * `settled`: money moved out, and the amount is positive. `reversed`: money came back, and the
+   * amount is negative — **which is what a refund is**, because the adapter decides on the sign
+   * rather than on PayPal's status, and PayPal files a refund under a payment's own status
+   * (`packages/paypal/src/search.ts`, D76). **`voided`: an authorization released before any money
+   * moved** — not a reversal of anything, so a reconcile that counts it is accusing an owner of
+   * losing money that never left. `pending`: PayPal is still deciding. `denied`: it refused.
+   *
+   * This comment said "`settled`: money moved (negative for a refund)" until 30 Oct 2026, which
+   * the mapper has never done, and three documents repeated it from here (D98).
    */
   kind: "settled" | "pending" | "reversed" | "voided" | "denied" | "other";
   transactionId: string | null;
