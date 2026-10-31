@@ -158,24 +158,86 @@ asks **Transaction Search** — which is the box nobody has ticked. So on a Hobb
 off, an unknown payment has *no* working resolution path. Each piece is individually defensible and
 together they close every door.
 
-Either of these restores it, and until one is done the "somewhere for housekeeping" gate in §4 is
-**not** shut:
+**The chosen fix is an external scheduler**, every five minutes, which needs no plan change. Any
+pinger will do — `authoriseCron` accepts `CRON_SECRET` *or* `SLIP_CRON_SECRET` as a bearer:
 
-- **Vercel Pro**, then put `*/5 * * * *` back — a one-line revert in `apps/web/vercel.json`;
-- **an external scheduler** calling the endpoint every five minutes, which needs no plan change:
+| | |
+|---|---|
+| URL | `https://slip-two-chi.vercel.app/api/cron/resolve` |
+| Method | `POST` |
+| Header | `Authorization: Bearer <CRON_SECRET>` |
+| Every | 5 minutes |
 
-  ```sh
-  curl -X POST -H "Authorization: Bearer $CRON_SECRET" \
-    https://slip-two-chi.vercel.app/api/cron/resolve
-  ```
+Read the value out of the gitignored local env rather than from here, and do not paste it into a
+page or a URL — it is a bearer token:
 
-  `authoriseCron` accepts `CRON_SECRET` *or* `SLIP_CRON_SECRET` as a bearer, so any pinger will do.
-  `CRON_SECRET` is stored as a **config** variable rather than a secret precisely so it can be read
-  back for this; a sensitive one cannot, and an unrecoverable secret would force a rotation to get a
-  pinger working.
+```sh
+grep '^CRON_SECRET=' apps/web/.env.local | cut -d= -f2-
+```
+
+It is stored on Vercel as a **config** variable and not a secret, precisely so it can be read back
+for this. A sensitive variable cannot be, and an unrecoverable secret would force a rotation just to
+get a pinger working — which is a mistake worth not repeating, because it was made here first.
+
+The daily Vercel cron stays as a backstop. **The gate in §4 shuts when a sweep driven by the pinger
+has been seen, not when the pinger is configured** — the endpoint answering by hand proves the door,
+not the schedule. The alternative remains **Vercel Pro** plus a one-line revert of
+`apps/web/vercel.json` to `*/5 * * * *`.
 
 Verified on the deployment: unauthenticated `POST /api/cron/resolve` answers **401**, and with the
 bearer it answers the resolver's own report across all nine task groups.
+
+---
+
+### 2.5 Is it actually wired? `pnpm verify:deployment`
+
+```sh
+pnpm verify:deployment                        # the production address
+pnpm verify:deployment https://slip.example   # anywhere else
+```
+
+`doctor:keys` asks the outside services what they make of this deployment's credentials and grants.
+It cannot tell you whether a **write** works, because it writes nothing — and after a deploy with
+green credentials, a database with no tables would look exactly like a working site. So this starts
+an owner, takes a real PayPal setup token, issues a real agent key and speaks MCP with it. Observed
+on 31 Oct 2026:
+
+```
+  owner started       ok       PayPal took the browser to www.sandbox.paypal.com
+  permission stored   ok       PENDING · 51cf82ae-acf2-4ba4-b2ca-3809a63f967b
+  agent key issued    ok       shown once, and not printed here
+  MCP handshake       ok       3 tools: checkout, get_receipt, get_report
+  search_products     absent   not offered, so no agent here can spend a credit
+  checkout            refused  MANDATE_NOT_ACTIVE — correct, and only the vault approval is missing
+```
+
+Each line is a wire nothing else exercises. "owner started" means PayPal took the browser, which a
+stand-in cannot do. "permission stored" is the first proof that Neon takes a **write**. The three
+tools are the D106 gate holding in production rather than in a test. And the refusal is the correct
+answer, from `packages/app/src/checkout/gate.ts` — a key resolving to an agent, to a permission, to
+a gate that then declines because no vault is approved. **It is not a purchase**, and nothing here
+should be written up as one.
+
+It costs nothing: a checkout prices from the free product-detail endpoint, and the one call that
+spends a credit is not offered. It leaves a real owner behind on each run, which is the point —
+nothing can prove a sign-up works without signing up — and the mandate it leaves is on the
+deployment, so approving its link gives the deployment something it can actually charge.
+
+**The webhook is the one wire this cannot finish.** The endpoint is provably there and provably
+checking:
+
+```
+POST /api/webhooks/paypal  (unsigned body)  →  400 {"status":"rejected","reason":"BAD_SIGNATURE"}
+```
+
+A `404` would have meant the stand-in path with no PayPal keys (D74), so a `400` also proves
+`PAYPAL_WEBHOOK_ID` is set — `paymentMode` needs all three PayPal values or the door is not there at
+all. What it does **not** prove is that the id is the *right* one, because only a delivery that
+verifies can show that. PayPal's simulator (`POST /v1/notifications/simulate-event`) does not help:
+it reports the event as sent, records nothing in `/v1/notifications/webhooks-events`, and a
+simulated signature can legitimately fail a correct check. So the happy path waits on a real
+transaction, which is to say on G2. Hobby retains no runtime logs to inspect either — a 25-minute
+window came back empty.
 
 ---
 
@@ -259,7 +321,7 @@ app — no money can move from a deployment it refuses.
 | A real steering check (`ANTHROPIC_API_KEY`) | a scripted stand-in is a receipt claiming a listing was checked when one phrase was matched | **shut** — accepted 30 Oct 2026; it was rejected earlier the same day, and the guard could not see the difference |
 | Postgres, not PGlite | one process, no lock, no backup; two of them corrupt it | **shut** — Neon `slip-db`, migrated 31 Oct |
 | `https` base URL | PayPal is told this hostname, and the session cookie carrying the kill switch is issued without `Secure` otherwise | **shut** — `https://slip-two-chi.vercel.app` |
-| Somewhere for housekeeping | without it nothing expires a hold or finishes an unknown payment, so a real authorization sits on a real card | **open** — the secret is set and the endpoint answers, but a Hobby plan sweeps **daily** and the resend window is 30 minutes (§2.4) |
+| Somewhere for housekeeping | without it nothing expires a hold or finishes an unknown payment, so a real authorization sits on a real card | **open** — the secret is set and the endpoint answers by hand, but a Hobby plan sweeps **daily** against a 30-minute resend window, and no pinger-driven sweep has been seen yet (§2.4) |
 
 §2 shut two of those three. Housekeeping is the one still open, and it is open for a reason worth
 reading rather than ticking: a daily sweep is not a slow sweep, it is a missed one (§2.4). **Beyond
