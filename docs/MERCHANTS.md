@@ -43,7 +43,7 @@ reason not to.
 ### 2.1 A seller can manufacture its own market [VERIFIED 30 Oct 2026, by reading]
 
 `prepareCheck` dedupes offers by normalised URL only (`packages/check/src/comparable.ts:8`) and
-counts `comparable.length` as the market (`packages/check/src/prepare.ts:133`). One seller
+counts `comparable.length` as the market (`packages/check/src/prepare.ts:134`). One seller
 operating three storefront domains therefore clears `R2_TOO_FEW_OFFERS`. `pickBest`
 (`packages/check/src/compute.ts:24`) then selects that seller's own cheapest listing, so the gap
 against it is whatever the seller chose to make it — zero, if it lists the same price twice — and
@@ -213,7 +213,7 @@ tests exist to defend. **[DECISION]**
 
 It also matches what the code already decided for itself: an implausible gap is HELD rather than
 REJECTED, because "the comparison is suspect, the agent's choice is not"
-(`packages/check/src/rules.ts:46`, D68). Uncertainty's destination is a human, in both directions.
+(`packages/check/src/rules.ts:71`, D68). Uncertainty's destination is a human, in both directions.
 
 ### 4.4 The subtlety the invariant hides
 
