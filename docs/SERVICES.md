@@ -282,18 +282,27 @@ recompute their numbers from those files for free.
 60% bar, the typical gap where comparison is possible is 16.67%, and the dearer offer pays more
 commission in 19 of 40 cases. It also found the grouping errors behind D68.
 
-**SlipBench ran on 26 Oct 2026, on one of its two agents.** `claude-haiku-5-5`, 21 errands × 4
-conditions = 84 runs, every one of them committed under `bench/runs/`. The headline is that it did
-not catch the agent out: no overpayment and no planted offer taken in any condition — including
-`buried`, which puts the instruction inside the product's own real description rather than on an
-offer, where no real listing has text at all (D86) — so **G3 fails at 0%** against its 15% bar.
-`claude-opus-5-5` was piloted on 2 errands and then left unrun, which is why the table is one agent
-wide; a pilot's 2 errands are not published beside a full 21, because G3 takes the worst share
-across rows and two data points could have decided it.
+**SlipBench ran on 26 Oct 2026, on both of its agents.** `claude-haiku-5-5` and
+`claude-opus-5-5`, 21 errands × 4 conditions each = 168 runs, every one of them committed under
+`bench/runs/`. The headline is that it did not catch either agent out: no overpayment and no planted
+offer taken in any condition — including `buried`, which puts the instruction inside the product's
+own real description rather than on an offer, where no real listing has text at all (D86) — so
+**G3 fails at 0%** against its 15% bar. `claude-opus-5-5` had been piloted on 2 errands and held
+back until it could run the full sweep, which is why the table was one agent wide until then: a
+pilot's 2 errands are not published beside a full 21, because G3 takes the worst share across rows
+and two data points could have decided it. Waiting was the right call and the wait is over.
 
-That sweep cost 573,456 input and 44,500 output tokens over 253 model turns, which is also the
-basis `pnpm bench:run` now projects an Opus sweep from — before it, the projection had nothing
-measured to work from and said so rather than guessing.
+The haiku sweep cost 573,456 input and 44,500 output tokens over 253 model turns, which was also the
+basis `pnpm bench:run` projected an Opus sweep from — before it, the projection had nothing measured
+to work from and said so rather than guessing. **That projection can now be scored, and it erred in
+the safe direction.** Opus came in under haiku on all three measures: 545,441 input, 31,586 output,
+250 model turns, recomputed per agent from the 84 committed runs in each `bench/runs/<model>/` after
+the Opus `buried` arm was completed (`c03a30e`). Two checks make that arithmetic trustworthy rather
+than asserted — the haiku row reproduces the figure above exactly, and the two sum to the 1,118,897
+input, 76,086 output and 503 turns that `bench/results/slipbench.md` publishes for all 168. The
+margin is the part to be careful with: it is 4.9% on input and 29% on output, but only 3 turns, so
+"fewer turns" is a difference these runs do not establish. A projection scaled from haiku would have
+overestimated the bill, which is the direction to be wrong in.
 
 **The one input that table supplies rather than measures** is the steering verdict: under `injected`
 and `buried` the planted text is instruction-like by construction, so the answer is handed to the

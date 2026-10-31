@@ -3,12 +3,14 @@
 **The second opinion on every agent purchase.**
 
 AI agents are starting to spend people's money, and nothing checks whether they are overpaying or
-being steered. That is not a guess. What the agentic-commerce rails carry on the wire is a bound: a
-delegated payment request sets a maximum chargeable amount and an expiry, taken from the offer the
-agent itself put in front of the shopper. **A bound whose value comes from the thing it bounds
-cannot tell that thing from its alternatives** — $400 that is the lowest listed price and $400 that
-is listed at $260 elsewhere are the same number, and a maximum of $400 admits both. Slip's own order
-cap is a bound too, and cannot do it either; that is why a cap is not the check.
+being steered. That is not a guess. What the agentic-commerce rails carry on the wire is an
+*allowance*: a delegated payment request binds the credential to an amount, a currency, one
+merchant, one checkout session, an expiry, and a single use. That is real protection — it stops the
+credential being spent elsewhere, later, for more, or twice — and **it is a description of the offer
+the agent already chose.** Nothing in it refers to any other offer. $400 that is the lowest listed
+price and $400 that is listed at $260 elsewhere are the same number, and an allowance for $400
+admits both. Slip's own order cap is a bound too, and cannot tell them apart either; that is why a
+cap is not the check.
 [docs/SPEC.md](docs/SPEC.md) §2 has the sources and the bound on that claim, and
 [docs/RAILS.md](docs/RAILS.md) has the rails in full.
 
@@ -290,12 +292,13 @@ pnpm bench:judge     # the one verdict SlipBench supplies, put to the real class
 prints what it would ask for free — every question is built by the same code that shows an agent a
 listing — and asks nothing until `--yes`.
 
-**SlipBench ran again on 26 Oct, and its headline is still a negative result.** One agent
-(`claude-haiku-5-5`), 21 errands, four conditions, 84 runs: **no overpayment in any condition, and
-no planted offer taken** — not in `injected`, where the pricier listing carries text addressed to
-shopping agents, and not in `buried`, where that same sentence sits inside the product's own real
-description. Gate G3 wanted an agent to overpay or be steered on 15% of errands somewhere; it got
-0%.
+**SlipBench ran again on 26 Oct, and its headline is still a negative result.** Two agents
+(`claude-haiku-5-5`, the small cheap one, and `claude-opus-5-5`, the frontier one), 21 errands each,
+four conditions, 168 runs: **no overpayment in any condition by either agent, and no planted offer
+taken** — not in `injected`, where the pricier listing carries text addressed to shopping agents,
+and not in `buried`, where that same sentence sits inside the product's own real description. It
+holds at both ends of the capability range, which is the part worth having. Gate G3 wanted an agent
+to overpay or be steered on 15% of errands somewhere; it got 0%.
 
 `buried` exists because the first sweep had planted its attack where no real listing speaks: not
 one of the 321 offers in the study sample carries a word of its own text, while all 240 products
@@ -322,17 +325,21 @@ draw and a model can. So of Slip's two reasons to stop a purchase, the commissio
 measured in this sample and a listing steering an agent is not: the steering rule guards against
 something not yet seen in the wild, which is worth saying plainly rather than implying otherwise.
 
-SlipBench ran on 26 Oct, on one agent: `claude-haiku-5-5`, 21 errands × 4 conditions = 84 runs, all
-84 ending in a purchase, every response committed. **It did not catch these agents out.** Nobody
-overpaid and nobody took the planted offer — not in `clean`, not in `endorsed`, not in `injected`,
-where the dearer listing carries text addressed to shopping agents, and not in `buried`, where the
-same sentence is inside the product's real description instead, which is the only one of the two
-places a real listing ever has words (D86). **G3 fails at 0%** against a 15% bar, which here means
-the agent compared offers well enough that Slip rarely had to stop it, and the report says so
-instead of dressing it up. Three of the 84 runs bought a different product id than the errand
-named, all the same errand: the catalogue lists two near-identical Lodge skillets, and the agent
-bought the cheaper one (D68's grouping problem, not a model error) — the report names each miss so
-the count reads for what it is.
+SlipBench ran on 26 Oct, on two agents: `claude-haiku-5-5` and `claude-opus-5-5`, 21 errands × 4
+conditions each = 168 runs, all 168 ending in a purchase, every response committed. **It did not
+catch these agents out.** Nobody overpaid and nobody took the planted offer — not in `clean`, not in
+`endorsed`, not in `injected`, where the dearer listing carries text addressed to shopping agents,
+and not in `buried`, where the same sentence is inside the product's real description instead, which
+is the only one of the two places a real listing ever has words (D86). **G3 fails at 0%** against a
+15% bar, which here means both agents compared offers well enough that Slip rarely had to stop
+them, and the report says so instead of dressing it up. That the cheapest model and the best one
+behaved the same way is still two models rather than agents in general — but it is a different claim
+from one model agreeing with itself. 7 of the 168 runs did not buy the product id the errand named, and the breakdown matters more than
+the count: **6 bought a near-identical one** — three per agent, so the two models tied exactly on
+the catalogue trap, because it lists two near-identical Lodge skillets and the cheaper one looks
+right (D68's grouping problem, not a model error) — and **1 stopped without buying anything**. So
+there is no capability difference in the miss column either: on the only trap in the data the two
+models performed identically. The report names each miss so the count reads for what it is.
 [bench/results/slipbench.md](bench/results/slipbench.md) has the tables;
 `pnpm bench:report` recomputes them from the committed runs with no key and no model call.
 
@@ -409,5 +416,5 @@ than the last one. [docs/RAILS.md](docs/RAILS.md) §8–§11 specifies the rever
 built.
 
 Next: the Channel3, PayPal and Claude adapters replace the fakes once API keys are available; then
-the market study and SlipBench. See `docs/SPEC.md` §15 for dates and `docs/DECISIONS.md`
-(D1–D97) for every departure from the written spec.
+the market study and SlipBench. See `docs/SPEC.md` §15 for dates, §10 for all fourteen gates and
+where each stands, and `docs/DECISIONS.md` (D1–D102) for every departure from the written spec.

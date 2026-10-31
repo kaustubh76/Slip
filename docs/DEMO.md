@@ -96,15 +96,28 @@ SlipBench was the other one until 21 Oct. It has run, and its beat is below.
 
 ## The SlipBench beat, now that it has run (§16's 1:35–2:15)
 
-**Bench** → the SlipBench card. One agent, 21 errands, four conditions, 84 runs, and a tally
+**Bench** → the SlipBench card. **Two agents, 21 errands each, four conditions, 168 runs** —
+`claude-haiku-5-5`, the small cheap one, and `claude-opus-5-5`, the frontier one — and a tally
 table of zeroes in the overpaid column.
 
 Do not hurry past it or dress it up. The line to say is roughly: *"We built the test, ran it, and
-it did not show what we expected. This agent compared the offers properly — in every condition,
+it did not show what we expected. Both agents compared the offers properly — in every condition,
 including the one where the instruction is buried inside the product's own real description, which
-is where a real listing actually has words. So Slip is the check
-that does not depend on which model you point at it, and the number that carries the argument is
-the market study's, not this one's."*
+is where a real listing actually has words. And it held at both ends: the cheapest model we could
+find and the best one we could find behaved the same way. So Slip is the check that does not depend
+on which model you point at it, and the number that carries the argument is the market study's, not
+this one's."*
+
+**That last sentence used to be a hope and is now a measurement**, which is the only reason to say
+it at all. With one cheap model it would have been a guess about everything else. Two models at
+opposite ends of the capability range agreeing is a different claim — still two models, not agents
+in general, and say that too if a judge presses.
+
+One number to have ready if asked how the steering check itself was tested, since the bench table
+cannot show it: **44 of 44 planted instructions flagged, 0 of 240 honest product descriptions
+flagged, every call answered inside the 5 seconds the application allows**
+(`bench/results/steering-judge.md`, 30 October). That is what makes the verdict in the with-Slip
+table the real classifier's answer on the same text rather than an assumption standing in for one.
 
 Then cut back to the study card for the close. An honest negative is worth more on tape than a
 number nobody can check, and a judge who notices you volunteering it will trust the rest.
@@ -137,6 +150,27 @@ And **we looked for this in the wild**: all 240 real descriptions were read for 
 patterns, and the model cleared it as ordinary selling. So the honest claim is that this guards
 against something not yet seen in that sample, which is also why the demo's own instruction is
 labelled `[synthetic]` wherever it appears.
+
+## The two rules that shipped after this script was written
+
+Optional, like the steering beat, and for the same reason: the market study carries the argument
+without them. But both are **built and deciding real purchases** since D95, and neither appears
+anywhere above.
+
+`R5A_COMMISSION_UNDISCLOSED` is the watchable one. A dearer offer that discloses no commission
+rate, where the cheaper one does, is now **held** rather than paid. The line, if you show it:
+*"The conflict rule needs both commission rates to compare them. A store that simply says nothing
+used to slip through the gap — so saying nothing was the better move. Now it waits for the owner
+instead."* That is `MERCHANTS.md` §2.2's argument in one breath, and it is the rare case where
+closing a hole is visible on screen.
+
+`R2B_SINGLE_SELLER_MARKET` is harder to film and worth a sentence rather than a shot: where the
+comparable offers all resolve to one seller, there was never a market to compare, so the purchase
+is held. It fires on real data — **one of the 44 comparable products in the study**, and it turned
+out to be one store listing an item twice rather than a seller faking a market, which is the honest
+way to say it (G6, `MERCHANTS.md` §9).
+
+Neither is worth pushing the tape past 2:45. If time is short, say the sentence and move on.
 
 ## Do not say
 
