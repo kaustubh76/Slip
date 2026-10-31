@@ -270,10 +270,22 @@ export function renderReport(input: {
       ` ${HAND_CHECK} products with two or more comparable offers to look at by hand. G4 passes at` +
       ` one wrong grouping or fewer.`,
     "",
-    "| Product | Gap | Stores |",
-    "|---|---|---|",
+    `The product id is printed so a verdict has somewhere to land: a checker can name the id rather` +
+      ` than the title, and two of the titles here are the same words. Nothing else in the` +
+      ` repository records which grouping is right, which is why G4 is still open and why the gate` +
+      ` that depends on it cannot be counted ([RAILS.md](../../docs/RAILS.md) §14, G12).`,
+    "",
+    `The products the gap heuristic already suspects come first, so the list cannot leave out the` +
+      ` cases most worth a person's time — two of the three fell outside the first thirty in sample` +
+      ` order. They are the ones the check holds rather than pays, so a verdict on them settles what` +
+      ` R2a is doing, not whether a purchase was wrong.`,
+    "",
+    "| Product id | Product | Gap | Stores |",
+    "|---|---|---|---|",
     ...input.measures
       .filter((measure) => measure.spread !== null)
+      // Suspects first, otherwise sample order: a stable sort keeps the rest where they were.
+      .sort((a, b) => Number(b.suspectGrouping) - Number(a.suspectGrouping))
       .slice(0, HAND_CHECK)
       .map((measure) => {
         const spread = measure.spread;
@@ -281,7 +293,10 @@ export function renderReport(input: {
           spread === null
             ? "—"
             : `${formatPct(spread.gapPctHundredths)} · ${formatUsd(spread.gapCents)}`;
-        return `| ${measure.title.replace(/\|/g, "/")} | ${gap} | ${measure.domains.join(", ")} |`;
+        return (
+          `| \`${measure.productId}\` | ${measure.title.replace(/\|/g, "/")} |` +
+          ` ${gap} | ${measure.domains.join(", ")} |`
+        );
       }),
     "",
   );

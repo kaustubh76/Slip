@@ -128,36 +128,40 @@ Each candidate was put to the production classifier — the same model, the same
 
 Channel3 groups each merchant's offer under one product id, and Slip compares only within one id. Whether that grouping is right cannot be measured from the data itself, so here are 30 products with two or more comparable offers to look at by hand. G4 passes at one wrong grouping or fewer.
 
-| Product | Gap | Stores |
-|---|---|---|
-| Cast Iron Skillet | 75.62% · $15.05 | lodgecastiron.com, surlatable.com |
-| Lodge Blacklock '63 Cast-iron Skillet | 1492.89% · $597.01 | basspro.com, atbbq.com, lodgecastiron.com, cabelas.com |
-| Lodge Cast Iron Skillet | 27.92% · $13.96 | jcpenney.com, slt-sfcc-react-production.mobify-storefront.com |
-| Lodge Chef Collection Cast Iron Skillet | 17.02% · $5.09 | lodgecastiron.com, bestbuy.com, dillards.com, worldmarket.com |
-| Lodge Seasoned Skillet | 0% · $0.00 | surlatable.com, williams-sonoma.com |
-| Cast Iron Skillet | 62.78% · $25.05 | lodgecastiron.com, cabelas.com, basspro.com, crateandbarrel.com |
-| Keychron P6 Ultra 8k Wireless Custom Mechanical Keyboard | 0% · $0.00 | bestbuy.com, keychron.com |
-| Logitech K845 Mechanical Illuminated Keyboard | 42.86% · $30.00 | logitech.com, newegg.com |
-| Merino Wool Midweight Hunting Boot Socks | 31.89% · $7.01 | cabelas.com, basspro.com |
-| Wide Open Merino Wool Vintage Stripe Cushioned Crew Socks | 31.66% · $6.01 | cabelas.com, basspro.com |
-| Ribbed Merino Wool Socks | 0% · $0.00 | cos.com, cos.com |
-| Garvee Comfortable Office Desk Chair | 17.93% · $22.96 | walmart.com, garvee.ca |
-| HOMCOM Leather Home Office Desk Chair | 1.75% · $2.00 | aosom.com, bestbuy.com |
-| Executive Office Desk Chair | 13.89% · $14.17 | walmart.com, lowes.com |
-| Lyncott Home Office Desk Chair | 29.28% · $35.11 | 1stopbedrooms.com, afastores.com, furniturepick.com |
-| Ergonomic Leather Office Chair with Rocking Function | 53.1% · $45.13 | giantex.com, bestbuy.com, kohls.com, homedepot.com |
-| Taytum Faux Leather Upholstered Mid-Back Executive Office Chair | 89.47% · $118.05 | homedepot.com, walmart.com, bestbuy.com, staples.com, officedepot.com |
-| Tova Desk Chair | 0.1% · $1.00 | luluandgeorgia.com, highfashionhome.com, shoppeamberlewis.com |
-| Circa 3581 Office Chair | 17.65% · $164.93 | skybygramophone.com, lumens.com, luxedecor.com, crutchfield.com |
-| Great Wave Stainless Steel Water Bottle | 24.5% · $4.90 | kohls.com, hottopic.com |
-| GEOJUG Stainless Steel Vacuum-Insulated Water Bottle | 41.1% · $12.31 | academy.com, belk.com, bestbuy.com |
-| Wide Loop Cap | 0% · $0.00 | kleankanteen.com, bestbuy.com |
-| Owala 24 oz. FreeSip Stainless Steel Water Bottle | 16.67% · $5.00 | publiclands.com, golfgalaxy.com, dickssportinggoods.com |
-| Nova 4 Trail Running Shoes | 0% · $0.00 | cabelas.com, basspro.com, dickssportinggoods.com |
-| Nike Acg Pegasus Trail Men's Trail Running Shoes | 16.2% · $21.62 | kickscrew.com, academy.com, nike.com |
-| Experience Wild 3+ Trail Running Shoes | 0% · $0.00 | dickssportinggoods.com, publiclands.com |
-| Men's GEL-TRABUCO 13 Trail Running Shoes | 0% · $0.00 | dickssportinggoods.com, publiclands.com |
-| Kestrel Trail running shoes | 0% · $0.00 | backcountry.com, steepandcheap.com |
-| Trinity FKT Trail Running Shoes | 17.82% · $18.00 | dickssportinggoods.com, publiclands.com |
-| Norda 001 Trail Running Shoes | 50.19% · $128.00 | article-london.com, garmentory.com |
+The product id is printed so a verdict has somewhere to land: a checker can name the id rather than the title, and two of the titles here are the same words. Nothing else in the repository records which grouping is right, which is why G4 is still open and why the gate that depends on it cannot be counted ([RAILS.md](../../docs/RAILS.md) §14, G12).
+
+The products the gap heuristic already suspects come first, so the list cannot leave out the cases most worth a person's time — two of the three fell outside the first thirty in sample order. They are the ones the check holds rather than pays, so a verdict on them settles what R2a is doing, not whether a purchase was wrong.
+
+| Product id | Product | Gap | Stores |
+|---|---|---|---|
+| `YGRXk8Z` | Lodge Blacklock '63 Cast-iron Skillet | 1492.89% · $597.01 | basspro.com, atbbq.com, lodgecastiron.com, cabelas.com |
+| `lRPLrNw` | Premium Yoga Mat | 101% · $19.09 | bestbuy.com, lowes.com |
+| `USvisFV` | Power Systems 68" x 24" Premium Yoga Mat, 1/8" Thick Non Slip Lightweight Sticky Exercise Mat | 376.13% · $71.09 | lowes.com, kohls.com, homedepot.com |
+| `IgMpes8` | Cast Iron Skillet | 75.62% · $15.05 | lodgecastiron.com, surlatable.com |
+| `a8bvjjd` | Lodge Cast Iron Skillet | 27.92% · $13.96 | jcpenney.com, slt-sfcc-react-production.mobify-storefront.com |
+| `B7XotZl` | Lodge Chef Collection Cast Iron Skillet | 17.02% · $5.09 | lodgecastiron.com, bestbuy.com, dillards.com, worldmarket.com |
+| `XVgmAC7` | Lodge Seasoned Skillet | 0% · $0.00 | surlatable.com, williams-sonoma.com |
+| `0K3Ri7y` | Cast Iron Skillet | 62.78% · $25.05 | lodgecastiron.com, cabelas.com, basspro.com, crateandbarrel.com |
+| `SV31FoZ` | Keychron P6 Ultra 8k Wireless Custom Mechanical Keyboard | 0% · $0.00 | bestbuy.com, keychron.com |
+| `bSPSF3y` | Logitech K845 Mechanical Illuminated Keyboard | 42.86% · $30.00 | logitech.com, newegg.com |
+| `fkBA6Sh` | Merino Wool Midweight Hunting Boot Socks | 31.89% · $7.01 | cabelas.com, basspro.com |
+| `QXkv3Xy` | Wide Open Merino Wool Vintage Stripe Cushioned Crew Socks | 31.66% · $6.01 | cabelas.com, basspro.com |
+| `gNJX86Y` | Ribbed Merino Wool Socks | 0% · $0.00 | cos.com, cos.com |
+| `w3RKdTx` | Garvee Comfortable Office Desk Chair | 17.93% · $22.96 | walmart.com, garvee.ca |
+| `5vzpb9w` | HOMCOM Leather Home Office Desk Chair | 1.75% · $2.00 | aosom.com, bestbuy.com |
+| `Ft0Bfbl` | Executive Office Desk Chair | 13.89% · $14.17 | walmart.com, lowes.com |
+| `fy2VzgO` | Lyncott Home Office Desk Chair | 29.28% · $35.11 | 1stopbedrooms.com, afastores.com, furniturepick.com |
+| `l8XeZv8` | Ergonomic Leather Office Chair with Rocking Function | 53.1% · $45.13 | giantex.com, bestbuy.com, kohls.com, homedepot.com |
+| `QgVNPKc` | Taytum Faux Leather Upholstered Mid-Back Executive Office Chair | 89.47% · $118.05 | homedepot.com, walmart.com, bestbuy.com, staples.com, officedepot.com |
+| `NTqGuio` | Tova Desk Chair | 0.1% · $1.00 | luluandgeorgia.com, highfashionhome.com, shoppeamberlewis.com |
+| `awGi5Qs` | Circa 3581 Office Chair | 17.65% · $164.93 | skybygramophone.com, lumens.com, luxedecor.com, crutchfield.com |
+| `S3nfI6e` | Great Wave Stainless Steel Water Bottle | 24.5% · $4.90 | kohls.com, hottopic.com |
+| `etcDx0c` | GEOJUG Stainless Steel Vacuum-Insulated Water Bottle | 41.1% · $12.31 | academy.com, belk.com, bestbuy.com |
+| `K077vJL` | Wide Loop Cap | 0% · $0.00 | kleankanteen.com, bestbuy.com |
+| `dzojWma` | Owala 24 oz. FreeSip Stainless Steel Water Bottle | 16.67% · $5.00 | publiclands.com, golfgalaxy.com, dickssportinggoods.com |
+| `il6goj7` | Nova 4 Trail Running Shoes | 0% · $0.00 | cabelas.com, basspro.com, dickssportinggoods.com |
+| `zr4B9BV` | Nike Acg Pegasus Trail Men's Trail Running Shoes | 16.2% · $21.62 | kickscrew.com, academy.com, nike.com |
+| `t1SLQyj` | Experience Wild 3+ Trail Running Shoes | 0% · $0.00 | dickssportinggoods.com, publiclands.com |
+| `u5cSkdm` | Men's GEL-TRABUCO 13 Trail Running Shoes | 0% · $0.00 | dickssportinggoods.com, publiclands.com |
+| `zgfwZKe` | Kestrel Trail running shoes | 0% · $0.00 | backcountry.com, steepandcheap.com |
 
