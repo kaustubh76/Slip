@@ -2933,3 +2933,21 @@ defect it was written for, checked against `70a6c5b` before the fix.
 could legitimately sit, a wrong path that happens to be well-formed, and anything inside a fenced
 block, which the check blanks out. It is a rendering check, not a correctness one — it cannot tell
 whether `route.ts` exists, only whether a reader will be shown a path that was never written.
+
+**Amended twice the same day, both times by measurement.** The other session added `-` and `@`,
+counting every one of the repository's **2,577** code spans: `@` is clean, and 214 spans contain a
+hyphenated token, which matters because this project's filenames are hyphen-heavy
+(`verify-deployment.ts`, `owner-start.spec.ts`, `doc-figures.test.ts`) — any of those paragraphs is
+one reflow from the original defect. Re-counting independently reproduced its totals exactly for
+`:`, `,` and `=` (75, 35, 7) **but not for the hyphen: three spans do have a legitimate space after
+`-`**, all arithmetic — `scrollWidth - clientWidth`, `calc(100vw - 32px)` and a list bullet. So the
+hyphen is flagged only when it is **not preceded by whitespace**, which separates a token from an
+operator. Without that the three would have become false alarms at their first reflow, failing the
+very test that kept `:`, `,` and `=` out. **A measurement is worth re-taking even when it comes
+from someone applying the right method** — the method was right and one of the four counts was not.
+
+**And rendering now covers the ledger, while figures still do not.** `LIVING` excludes this file
+from the figure checks because a dated entry is allowed to keep what was believed that day. That
+exemption does not extend to a line wrap: a broken path is not a record of anything, and it
+misleads a reader of a 20 Oct entry exactly as much as a reader of today's. Scanning all fourteen
+documents finds seven wrapped spans and no violations.
