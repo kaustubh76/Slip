@@ -2955,3 +2955,47 @@ from the figure checks because a dated entry is allowed to keep what was believe
 exemption does not extend to a line wrap: a broken path is not a record of anything, and it
 misleads a reader of a 20 Oct entry exactly as much as a reader of today's. Scanning all fourteen
 documents finds seven wrapped spans and no violations.
+
+## D109 · 2026-11-01 · A fix that stopped at the example that prompted it
+
+**The other session found a printed instruction that cannot succeed.** `verify:deployment` was
+emitting, beside a production mandate id:
+
+```
+PAYPAL_TEST_VAULT_ID=$(pnpm -s paypal:vault-id <id>) pnpm test:live:paypal
+```
+
+Verified from source rather than taken on report: `apps/web/scripts/paypal-vault-id.ts:16` loads
+`apps/web/.env.local` and reads `DATABASE_URL` from it, so it opens the *local* database; and line
+53 builds its cipher with `VaultCipher.fromEnv(process.env)`, so it decrypts with the *local*
+`SLIP_ENCRYPTION_KEY`. The deployment's master key was generated in a subshell and stored as a
+Vercel Secret, never written down. **So the deployment is the only thing that can read its own vault
+ids** — which is the right property for a key protecting the thing that can charge an owner, and is
+not being rotated. The consequence is that the deployment's G2 proof is **a real purchase, not the
+contract suite**, which is the stronger claim anyway. `DEPLOY.md` §6 now separates the two routes;
+`SERVICES.md`'s local flow is untouched and still correct, because there the key is the reader's.
+
+**The finding is not the instruction. It is that this was the same mistake twice in one day.** That
+session had already hit it with `CRON_SECRET` — set sensitive, discarded, then unable to test the
+endpoint or hand it to a pinger — and fixed *that variable* by storing it as config. It did not then
+ask which other variable it had made unreadable. **A correction applied to the instance and not to
+the class**, which is the third species this exchange has collected: the first was a pattern too
+narrow to return the thing it was searching for, the second a rule written from one example, and
+this is a fix that stops at the example that prompted it.
+
+**So the class-level sweep, run here rather than assumed.** Of the documents this session owns,
+`README.md` and `SERVICES.md` are the only ones that cite `test:live:paypal`, and both describe the
+local flow, which still works. No G2 claim needed changing — recorded because checking it was the
+work, and because "nothing of mine was affected" is only worth saying once it has been looked for.
+
+**And a sixth check, for the mechanical half of the class.** `doc-figures.test.ts` now derives every
+`scripts` key from every workspace manifest and requires each `pnpm …` command cited in a document
+to exist: 23 cited, 23 defined today. Commands are extracted **only from inside a fenced block or a
+code span**, because in prose *"because pnpm has a built-in `doctor`"* reads as a citation of a
+script named `has`, and did on the first run.
+
+**Its scope is narrower than the finding that prompted it, and saying so is the point.** It proves a
+script exists, never that it can work. `pnpm test:live:paypal` is defined and still cannot run
+against the deployment. **A command that exists and fails for want of a credential, a grant or a
+database is exactly what this cannot see** — that remains a question for a person, and this entry is
+the record that it was asked today.
