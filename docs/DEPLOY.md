@@ -433,7 +433,28 @@ exact error names):
 | vault a card instead | `NOT_ENABLED_TO_VAULT_PAYMENT_SOURCE` |
 | pay by card without vaulting | `PAYEE_NOT_ENABLED_FOR_CARD_PROCESSING` |
 
-So G2 needs a **sandbox buyer account login**, which is a human step at PayPal's approval page.
+So G2 needs a **sandbox buyer account login**, and that cannot be reached through the API either —
+established on 1 Nov 2026 rather than assumed, because "a human must do it" is the kind of claim
+worth closing properly:
+
+| asked | answer |
+|---|---|
+| the token's own `scope` list | **29 scopes, none** matching `sandbox`, `account`, `reporting` or `transaction` |
+| `GET /v1/sandbox/accounts` | `404` |
+| `GET /v2/sandbox/accounts` | `404` |
+
+The account-management API is not there for this app, and no scope would let it be. **A browser must
+sign in as a sandbox buyer.** That is a person's step by default — or this session's, given
+credentials: `pnpm verify:deployment` drives the approval itself when
+`PAYPAL_SANDBOX_BUYER_EMAIL` and `PAYPAL_SANDBOX_BUYER_PASSWORD` are set in the gitignored
+`apps/web/.env.local`. They are read into `fill()` and never printed, and the script starts no
+Playwright trace, video or screenshot, because a failure screenshot of a login form is how a
+password reaches an artifact nobody meant to keep.
+
+**One byproduct worth keeping.** That scope list is a better check on Transaction Search than the
+403 in §3: the grant would appear as a `reporting` scope on the token, and there is none. A refusal
+tells you the call failed; the scope list tells you what this application may do before you call
+anything.
 
 **Once it exists, the route depends on which mandate was approved, and the two are not
 interchangeable.**

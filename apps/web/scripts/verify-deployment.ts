@@ -77,9 +77,22 @@ let mandateId: string | null = null;
 let agentKey: string | null = null;
 /** MCP's answer to a checkout, so the REST path can be held to the same one. */
 let mcpRefusal: string | null = null;
+/** True once a sandbox buyer has approved the vault, which is what lets a checkout pay. */
+let mandateActive = false;
+/** The receipt a purchase returned, so it can be read back and looked up at PayPal. */
+let receiptId: string | null = null;
 /** A real offer for the test product, so a run after approval is a purchase and not a rejection. */
 let offerUrl = "https://example.invalid/offer";
 let offerIsReal = false;
+
+/**
+ * A **sandbox** buyer, so the approval PayPal insists a person performs can be performed here.
+ * Read from the gitignored `apps/web/.env.local` and never printed: `fill()` keeps the value in
+ * memory, and this script starts no Playwright trace, video or screenshot — a failure screenshot of
+ * a login form is how a password ends up in an artifact nobody meant to keep.
+ */
+const buyerEmail = process.env["PAYPAL_SANDBOX_BUYER_EMAIL"]?.trim() ?? "";
+const buyerPassword = process.env["PAYPAL_SANDBOX_BUYER_PASSWORD"] ?? "";
 
 const productId = process.env["CHANNEL3_TEST_PRODUCT_ID"] ?? "t1SLQyj";
 const channel3Key = process.env["CHANNEL3_API_KEY"]?.trim() ?? "";
@@ -188,6 +201,60 @@ try {
     );
   }
 
+  // The one step PayPal insists a person takes. It cannot be done through the API — this app's
+  // token carries no `sandbox` or `account` scope and `/v1/sandbox/accounts` answers 404 — so a
+  // browser signs in as a sandbox buyer instead. The *same* context, because PayPal redirects to
+  // `/mandates/<id>/return`, which reads the owner's session.
+  if (approval !== null && buyerEmail !== "" && buyerPassword !== "") {
+    try {
+      await page.goto(approval, { waitUntil: "domcontentloaded" });
+      const email = page.locator("#email");
+      if ((await email.count()) > 0) {
+        await email.fill(buyerEmail);
+        const next = page.locator("#btnNext");
+        if ((await next.count()) > 0 && (await next.isVisible())) {
+          await next.click();
+        }
+      }
+      const password = page.locator("#password");
+      await password.waitFor({ state: "visible", timeout: PATIENCE_MS });
+      await password.fill(buyerPassword);
+      await page.locator("#btnLogin").click();
+      // Either PayPal asks to confirm, or it redirects straight back to Slip.
+      const agree = page.getByRole("button", { name: /Agree|Continue|Approve/i });
+      await Promise.race([
+        page.waitForURL((url) => url.origin === base, { timeout: PATIENCE_MS }),
+        agree.first().waitFor({ state: "visible", timeout: PATIENCE_MS }),
+      ]);
+      if (new URL(page.url()).origin !== base) {
+        await agree.first().click();
+        await page.waitForURL((url) => url.origin === base, { timeout: PATIENCE_MS });
+      }
+      const after = await page.request.get(`${base}/api/v1/mandate`);
+      const status = after.ok() ? ((await after.json()) as { status?: string }).status : undefined;
+      mandateActive = status === "ACTIVE";
+      say(
+        "buyer approval",
+        mandateActive ? "ok" : "FAILED",
+        mandateActive
+          ? `approved as a sandbox buyer; the permission reads ACTIVE and can be charged`
+          : `came back to ${new URL(page.url()).pathname} with the permission ${status ?? "unreadable"}`,
+      );
+    } catch (error) {
+      // A login form refusing automation is not a defect to work around: say so and let the
+      // owner click the link themselves.
+      say("buyer approval", "FAILED", `PayPal's login did not complete: ${message(error)}`);
+    }
+  } else {
+    say(
+      "buyer approval",
+      "absent",
+      approval === null
+        ? "no approval link to follow"
+        : "set PAYPAL_SANDBOX_BUYER_EMAIL and PAYPAL_SANDBOX_BUYER_PASSWORD in apps/web/.env.local to drive it",
+    );
+  }
+
   await page.goto("/agents", { waitUntil: "domcontentloaded" });
   const main = page.getByRole("main");
   if (new URL(page.url()).pathname !== "/agents") {
@@ -267,19 +334,33 @@ if (agentKey !== null) {
 
     // The gate. A purchase needs an approved vault, so a refusal is the correct answer and proves
     // the whole chain behind it: key → agent → permission → gate.
-    const text = await callText(client, "checkout", {
+    const bought = await call(client, "checkout", {
       product_id: productId,
       chosen_offer_url: offerUrl,
       reason: "verifying this deployment's wiring",
     });
-    mcpRefusal = reasonIn(text);
-    say(
-      "checkout over MCP",
-      mcpRefusal === "MANDATE_NOT_ACTIVE" ? "refused" : "FAILED",
-      mcpRefusal === "MANDATE_NOT_ACTIVE"
-        ? "MANDATE_NOT_ACTIVE — correct, and only the vault approval is missing"
-        : first(text),
-    );
+    mcpRefusal = reasonIn(bought.text);
+    receiptId = bought.receiptId;
+    if (mandateActive) {
+      // The permission can be charged, so a refusal is no longer the right answer. Any of PAID,
+      // HELD or REJECTED is Slip deciding; only a refusal means the chain did not reach the rules.
+      const decided = bought.outcome ?? (mcpRefusal === null ? "a decision" : null);
+      say(
+        "checkout over MCP",
+        decided !== null && mcpRefusal !== "MANDATE_NOT_ACTIVE" ? "ok" : "FAILED",
+        decided !== null && mcpRefusal !== "MANDATE_NOT_ACTIVE"
+          ? `${decided}${receiptId === null ? "" : ` · receipt ${receiptId}`} — real prices, real classifier, real PayPal`
+          : first(bought.text),
+      );
+    } else {
+      say(
+        "checkout over MCP",
+        mcpRefusal === "MANDATE_NOT_ACTIVE" ? "refused" : "FAILED",
+        mcpRefusal === "MANDATE_NOT_ACTIVE"
+          ? "MANDATE_NOT_ACTIVE — correct, and only the vault approval is missing"
+          : first(bought.text),
+      );
+    }
 
     // Read tools, never called on this deployment. `get_report` aggregates over an owner with no
     // purchases at all, which is the shape a Postgres deployment can get wrong where PGlite does not.
@@ -291,15 +372,27 @@ if (agentKey !== null) {
         ? "answered nothing"
         : `answers for an owner with no purchases: ${first(report)}`,
     );
-    const receipt = await callText(client, "get_receipt", { receipt_id: `verify-${stamp}` });
-    const declined = /NOT_FOUND|no receipt|not yours|refused/i.test(receipt);
-    say(
-      "get_receipt",
-      declined ? "refused" : receipt === "" ? "FAILED" : "ok",
-      declined
-        ? "declines an id that is not this agent's, which is the right answer"
-        : first(receipt),
-    );
+    // With a receipt of its own, read that one back: it is the owner's record of the purchase and
+    // what PayPal has said about it so far. Without one, an id that is not this agent's must be
+    // declined, which proves the tool runs and scopes its answer.
+    const askFor = receiptId ?? `verify-${stamp}`;
+    const receipt = await callText(client, "get_receipt", { receipt_id: askFor });
+    if (receiptId !== null) {
+      say(
+        "get_receipt",
+        receipt === "" ? "FAILED" : "ok",
+        receipt === "" ? "answered nothing for its own receipt" : first(receipt),
+      );
+    } else {
+      const declined = /NOT_FOUND|no receipt|not yours|refused/i.test(receipt);
+      say(
+        "get_receipt",
+        declined ? "refused" : receipt === "" ? "FAILED" : "ok",
+        declined
+          ? "declines an id that is not this agent's, which is the right answer"
+          : first(receipt),
+      );
+    }
     await client.close();
   } catch (error) {
     say("MCP handshake", "FAILED", message(error));
@@ -340,10 +433,32 @@ async function callText(
   name: string,
   args: Record<string, unknown>,
 ): Promise<string> {
+  return (await call(client, name, args)).text;
+}
+
+/** A tool's answer in both forms: the text written for a model, and what it carries structurally. */
+async function call(
+  client: Client,
+  name: string,
+  args: Record<string, unknown>,
+): Promise<{ text: string; receiptId: string | null; outcome: string | null }> {
   const answer = (await client.callTool({ name, arguments: args })) as {
     content?: { text?: string }[];
+    structuredContent?: { receipt_id?: unknown; outcome?: unknown; status?: unknown };
   };
-  return answer.content?.map((part) => part.text ?? "").join(" ") ?? "";
+  const text = answer.content?.map((part) => part.text ?? "").join(" ") ?? "";
+  const structured = answer.structuredContent ?? {};
+  const str = (value: unknown) => (typeof value === "string" && value !== "" ? value : null);
+  return {
+    text,
+    receiptId:
+      str(structured.receipt_id) ?? text.match(/\breceipt_id[:=]?\s*([\w-]{6,})/i)?.[1] ?? null,
+    outcome:
+      str(structured.outcome) ??
+      str(structured.status) ??
+      text.match(/\b(PAID|HELD|REJECTED)\b/)?.[1] ??
+      null,
+  };
 }
 
 /** The refusal code Slip names in a tool's own words, so both paths can be compared on it. */
@@ -369,7 +484,18 @@ function render(): string {
   } else {
     out.push("Every wire that can work without a buyer's consent does.");
   }
-  if (approval !== null) {
+  if (mandateActive) {
+    out.push(
+      "",
+      "Nothing is left: a sandbox buyer approved the vault in this run, the permission reads ACTIVE,",
+      "and the checkout above went through the rules rather than being refused.",
+      ...(receiptId === null
+        ? []
+        : [
+            `Read the receipt at ${base}/receipts/${receiptId}, or ask PayPal about the order itself.`,
+          ]),
+    );
+  } else if (approval !== null) {
     out.push(
       "",
       "One step is left, and it is a person's: approve the vault signed in as a **sandbox buyer**",
