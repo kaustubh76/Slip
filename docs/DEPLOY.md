@@ -199,24 +199,45 @@ pnpm verify:deployment https://slip.example   # anywhere else
 `doctor:keys` asks the outside services what they make of this deployment's credentials and grants.
 It cannot tell you whether a **write** works, because it writes nothing — and after a deploy with
 green credentials, a database with no tables would look exactly like a working site. So this starts
-an owner, takes a real PayPal setup token, issues a real agent key and speaks MCP with it. Observed
-on 31 Oct 2026:
+an owner, takes a real PayPal setup token, issues a real agent key, and then exercises every
+surface this deployment advertises. Observed 1 Nov 2026:
 
 ```
-  owner started       ok       PayPal took the browser to www.sandbox.paypal.com
-  permission stored   ok       PENDING · 51cf82ae-acf2-4ba4-b2ca-3809a63f967b
-  agent key issued    ok       shown once, and not printed here
-  MCP handshake       ok       3 tools: checkout, get_receipt, get_report
-  search_products     absent   not offered, so no agent here can spend a credit
-  checkout            refused  MANDATE_NOT_ACTIVE — correct, and only the vault approval is missing
+  owner started         ok       PayPal took the browser to www.sandbox.paypal.com
+  permission stored     ok       PENDING · 73090fb1-e23c-4ab3-ae08-c4638d40f90a
+  owner read API        ok       5 of 5 answered 200 with nothing recorded yet: stamp, receipts, policies, holds, agents
+  PayPal's return leg   ok       lands on /mandate?setup=not-approved — the owner's approval will arrive here
+  agent key issued      ok       shown once, and not printed here
+  sign out and back in  ok       the credential returns the owner to the same permission
+  MCP handshake         ok       3 tools: checkout, get_receipt, get_report
+  search_products       absent   not offered, so no agent here can spend a credit
+  checkout over MCP     refused  MANDATE_NOT_ACTIVE — correct, and only the vault approval is missing
+  get_report            ok       answers for an owner with no purchases: No purchases checked yet.
+  get_receipt           refused  declines an id that is not this agent's, which is the right answer
+  checkout over REST    refused  403 MANDATE_NOT_ACTIVE — the same decision MCP gave
 ```
 
-Each line is a wire nothing else exercises. "owner started" means PayPal took the browser, which a
-stand-in cannot do. "permission stored" is the first proof that Neon takes a **write**. The three
-tools are the D106 gate holding in production rather than in a test. And the refusal is the correct
-answer, from `packages/app/src/checkout/gate.ts` — a key resolving to an agent, to a permission, to
-a gate that then declines because no vault is approved. **It is not a purchase**, and nothing here
-should be written up as one.
+Each line is a wire nothing else exercises:
+
+- **owner started** means PayPal took the browser, which a stand-in cannot do, and **permission
+  stored** is the first proof that Neon takes a *write*.
+- **owner read API** matters because this owner has *nothing* recorded. An aggregate over no rows is
+  where a Postgres deployment can differ from the PGlite every local test runs on, and `get_report`
+  answering *"No purchases checked yet"* is the same check from the agent's side.
+- **PayPal's return leg** is `/mandates/<id>/return`, the address Slip hands PayPal and the one the
+  owner's browser lands on after approving. `owner-start.spec.ts` calls it *"the only place the real
+  redirect leg is exercised"*, and it had never run here. Had `publicBaseUrl` or the session been
+  wrong, the owner would have approved and met an error page; `?setup=not-approved` is the correct
+  answer before consent.
+- **sign out and back in** is D71 — the credential an owner sets is the only way back in, and an
+  owner who cannot return is locked out of their own money.
+- **checkout over REST** answering exactly what MCP answered is the only thing that makes
+  TOOLS.md's "same decisions" safe to advertise. The two take different body shapes — camelCase
+  here, snake_case over MCP (`docs/UI.md`) — so agreement is a result, not a tautology.
+- The three tools are the D106 gate holding in production rather than in a test, and the refusal is
+  the correct answer from `packages/app/src/checkout/gate.ts`: a key resolving to an agent, to a
+  permission, to a gate that declines because no vault is approved. **It is not a purchase**, and
+  nothing here should be written up as one.
 
 It costs nothing: a checkout prices from the free product-detail endpoint, and the one call that
 spends a credit is not offered. It leaves a real owner behind on each run, which is the point —
