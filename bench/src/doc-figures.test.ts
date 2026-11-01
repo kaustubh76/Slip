@@ -220,6 +220,12 @@ describe("the figures in prose", () => {
     // hyphen-heavy (`verify-deployment.ts`, `owner-start.spec.ts`, `doc-figures.test.ts`), so the
     // character is worth having with that restriction.
     //
+    // The restriction is `(?<=[^\s])` and not `(?<!\s)`, which is not pedantry: a *negative*
+    // lookbehind is satisfied by the absence of any character, so `(?<!\s)-$` fires on a left half
+    // that is only the hyphen — the `- store: …` bullet wrapped immediately after the bullet.
+    // Requiring a character that exists and is not whitespace is the whole fix, and the empty-left
+    // case is its only behavioural difference: every token case above fires either way.
+    //
     // `:`, `,` and `=` are deliberately **out**, by the rule that a check must not condemn correct
     // prose: 75 spans read `plan: free` or similar, 35 read `{ store, url, price }`, and 7 read
     // `reconcileUnmatched === 1`. None of them wraps at that point today, so each would be a
@@ -247,7 +253,7 @@ describe("the figures in prose", () => {
         if (index % 2 === 1 && part.includes("\n")) {
           const halves = part.split(/\s*\n\s*/);
           const left = halves[0] ?? "";
-          if (/[/._@]$|(?<!\s)-$/.test(left)) {
+          if (/[/._@]$|(?<=[^\s])-$/.test(left)) {
             const line = text.slice(0, offset).split("\n").length;
             offenders.push(`${path}:${line} renders as "${part.replace(/\s*\n\s*/g, " ")}"`);
           }
