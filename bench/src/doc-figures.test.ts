@@ -194,6 +194,42 @@ describe("the figures in prose", () => {
     }
   });
 
+  it("breaks no file path across a line, where markdown would insert a space", () => {
+    // Markdown renders a newline inside a code span as a space, so a path wrapped mid-way renders
+    // as `.../checkout/ route.ts` — a path that does not exist, in the sentence telling a reader
+    // which file to open. These documents wrap at 100 characters and the paths are long, so any
+    // path near a wrap point is a candidate.
+    //
+    // The rule is deliberately the narrowest one that works: flag only a break immediately after
+    // `/`, `.` or `_`, where a space is never part of the token. Two looser rules were measured
+    // and rejected — "the span has no other whitespace" and "either half starts or ends mid-token"
+    // each flag `POST` + `/api/v1/agent/checkout`, `vercel … --billing-plan free_v3` and
+    // `--errands 2 --conditions clean`, all of which want the space they have. This rule flags
+    // none of the seven wrapped spans in the repository today and does flag the defect it was
+    // written for.
+    const offenders: string[] = [];
+    for (const path of [...LIVING, "bench/results/slipbench.md", "study/results/market-study.md"]) {
+      // Blank out fenced blocks, preserving newlines so reported line numbers stay true.
+      const text = read(path).replace(/```[\s\S]*?```/g, (block) => block.replace(/[^\n]/g, " "));
+      const parts = text.split("`");
+      let offset = 0;
+      for (const [index, part] of parts.entries()) {
+        // Backticks alternate, so odd indices are span contents. Pairing them by regex instead
+        // matches the prose *between* two spans and reports hundreds of phantom hits.
+        if (index % 2 === 1 && part.includes("\n")) {
+          const halves = part.split(/\s*\n\s*/);
+          const left = halves[0] ?? "";
+          if (/[/._]$/.test(left)) {
+            const line = text.slice(0, offset).split("\n").length;
+            offenders.push(`${path}:${line} renders as "${part.replace(/\s*\n\s*/g, " ")}"`);
+          }
+        }
+        offset += part.length + 1;
+      }
+    }
+    expect(offenders.join("\n")).toBe("");
+  });
+
   it("lists in every rule table exactly the rules the code implements", () => {
     // The mechanical diff that part seven ran by hand: `RULE_OUTCOME` is the only source, and the
     // spec's table and the printed one-pager must both agree with it on code and outcome.
