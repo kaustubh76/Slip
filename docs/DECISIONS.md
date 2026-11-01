@@ -2815,3 +2815,73 @@ look one up. The full search-then-buy story is still told by the demo, whose cat
 (`apps/web/src/server/demo/search.ts`) and spends nothing. Turning search on for a judged run is one
 variable, and the one-line revert is deliberate: the flag exists so the spend is a decision somebody
 makes, not a default somebody inherits.
+
+## D107 · 2026-11-01 · The gate that landed in code, and the sentence that kept the old condition
+
+**D106 put `search_products` behind a second switch** — `catalogueSearch` is true only when
+`CHANNEL3_API_KEY` is set *and* `SLIP_AGENT_SEARCH=1` (`apps/web/src/server/services.ts:61`),
+because search is the one agent call that spends money. The code change was another session's and
+is right. This entry is about what it left behind in the prose, which is this project's standing
+failure: **a condition changed in code, and the sentences describing it did not all follow.**
+
+**[SERVICES.md](SERVICES.md) contradicted itself**, which is the part worth noticing. Its §4
+paragraph already said the tool is offered only where a deployment asks for it and named the flag.
+Two hundred lines later §9 still read *"`search_products` searches Channel3 when `CHANNEL3_API_KEY`
+is set"* — the pre-D106 condition, in the same file as its own correction. Neither session would see
+that from the diff: the new paragraph was added, the old one was not touched, and nothing compares
+them. Fixed.
+
+**[README.md](../README.md) described the capability as unconditional** — *"outside the demo
+`search_products` searches Channel3 itself"* — which was true until D106 and is the first thing a
+reader meets. It now leads with the opt-in and says why the default is off. §12's *"where a
+catalogue is available"* was not wrong, only silent about what makes one available, and now names
+the deployment's choice.
+
+**The one-pager needed nothing**, and checking that was part of the work: its `search_products` row
+describes what the tool does, not when it is offered, so there was no condition in it to go stale.
+
+**A co-occurrence check, and an honest account of how weak it is.** `doc-figures.test.ts` now reads
+the flag *out of the `catalogueSearch` condition* — so renaming the variable cannot strand the
+test — and requires the two documents that describe when the tool exists to name it. It is a
+presence check, not a semantic one: it would not have caught §9's sentence while the file's other
+paragraph named the flag, because the file as a whole would still have contained the string. **What
+it does catch is the whole-file omission**, which is the shape the next gate will arrive in, and it
+costs four lines. The case it misses — one stale sentence beside a correct one in the same file —
+is the case this entry is about, and the only honest guard against it is reading the file. That is
+worth writing down rather than implying the test closed the hole.
+
+**Not a defect, carried here because the first telling of D106 overstated it.** The search exposure
+was never uncapped: `apps/web/src/server/search.ts` caches identical queries for five minutes and
+allows 60 uncached searches an hour per permission. The true and weaker statement is that the
+budget is per permission *and per process*, so a cold serverless instance is a fresh allowance and
+open sign-up lets one visitor hold several permissions — bounded at every point, unbounded in
+aggregate. D106 states it that way; this is a pointer so nobody re-derives the stronger claim.
+
+**Amended: there was a third stale sentence, in `TOOLS.md`, and both sessions walked past it.**
+Fixed in `47126ef` (the other session's). It read *"the tool exists where the host has a catalogue:
+Channel3 when `CHANNEL3_API_KEY` is set"* — the pre-D106 condition, in the one document an agent
+author reads to find out whether `search_products` will be there at all.
+
+**Why both sweeps missed it is the lesson, and my half of it is the worse half.** That sentence
+never repeats the tool's name, so a grep for `search_products` cannot see it; the other session ran
+exactly that grep, got a clean result and believed it. **This session's failure was cruder: it ran
+`ls TOOLS.md`, confirmed the file exists, and then left it out of the very next command** — the
+sweep covered `README.md`, `docs/*.md` and the one-pager. Knowing a document exists and not
+searching it is not a pattern problem, it is not looking. The guard's document list now includes it,
+for both the figure check and the flag check.
+
+**The sharper search strategy that came out of it — and why it does not become a test.** The right
+sweep is for every *statement of the condition*, not for the name of the thing the condition
+governs. As a habit for a person that is correct and worth keeping. As an automated check it fails:
+requiring any paragraph naming `CHANNEL3_API_KEY` near the word *search* to also name the flag
+raises two false alarms out of four matches in `SERVICES.md` alone — a service-config key table and
+a shell example, neither of which states a condition. **Mentioning the key near the word search is
+not the same as stating when the tool exists**, and a guard that cries wolf on a true sentence is
+worse than no guard. The file-level presence check stays, with its reach stated rather than implied.
+
+**A fourth false accusation was nearly filed, in the other direction.** The other session's first
+grep showed `SERVICES.md` still reading *"searches Channel3 when `CHANNEL3_API_KEY` is set"* and was
+about to report the correction as missing; the sentence continues onto the next line with *"and
+`SLIP_AGENT_SEARCH=1` asks for it"*. A hard-wrapped document defeats a line-oriented grep in both
+directions — the same wrapping that made the guard's own pinned phrases need whitespace collapsing.
+Read the surrounding lines before reporting a stale string.
