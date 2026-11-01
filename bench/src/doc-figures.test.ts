@@ -200,13 +200,25 @@ describe("the figures in prose", () => {
     // which file to open. These documents wrap at 100 characters and the paths are long, so any
     // path near a wrap point is a candidate.
     //
-    // The rule is deliberately the narrowest one that works: flag only a break immediately after
-    // `/`, `.` or `_`, where a space is never part of the token. Two looser rules were measured
-    // and rejected — "the span has no other whitespace" and "either half starts or ends mid-token"
-    // each flag `POST` + `/api/v1/agent/checkout`, `vercel … --billing-plan free_v3` and
-    // `--errands 2 --conditions clean`, all of which want the space they have. This rule flags
-    // none of the seven wrapped spans in the repository today and does flag the defect it was
-    // written for.
+    // The rule is deliberately the narrowest one that works: flag a break immediately after
+    // `/`, `.`, `_`, `-` or `@`, where a space is never part of the token. Two looser rules were
+    // measured and rejected — "the span has no other whitespace" and "either half starts or ends
+    // mid-token" each flag `POST` + `/api/v1/agent/checkout`, `vercel … --billing-plan free_v3`
+    // and `--errands 2 --conditions clean`, all of which want the space they have. This rule
+    // flags none of the seven wrapped spans in the repository today and does flag the defect it
+    // was written for.
+    //
+    // `-` and `@` earn their place by the same measurement, over all 2,577 code spans in the
+    // repository's Markdown: **not one** has a legitimate space after either character, while
+    // **214** contain a hyphenated token. This project's filenames are hyphen-heavy —
+    // `verify-deployment.ts`, `owner-start.spec.ts`, `doc-figures.test.ts` — so a reflow of any
+    // paragraph citing one reproduces the original defect exactly, and `@slip/ui` wrapped after
+    // the `@` does the same for a package name.
+    //
+    // `:`, `,` and `=` are deliberately **out**, by the rule that a check must not condemn correct
+    // prose: 75 spans read `plan: free` or similar, 35 read `{ store, url, price }`, and 7 read
+    // `reconcileUnmatched === 1`. None of them wraps at that point today, so each would be a
+    // cry-wolf waiting for a reflow rather than a defect waiting to be caught.
     const offenders: string[] = [];
     for (const path of [...LIVING, "bench/results/slipbench.md", "study/results/market-study.md"]) {
       // Blank out fenced blocks, preserving newlines so reported line numbers stay true.
@@ -219,7 +231,7 @@ describe("the figures in prose", () => {
         if (index % 2 === 1 && part.includes("\n")) {
           const halves = part.split(/\s*\n\s*/);
           const left = halves[0] ?? "";
-          if (/[/._]$/.test(left)) {
+          if (/[/._@-]$/.test(left)) {
             const line = text.slice(0, offset).split("\n").length;
             offenders.push(`${path}:${line} renders as "${part.replace(/\s*\n\s*/g, " ")}"`);
           }
