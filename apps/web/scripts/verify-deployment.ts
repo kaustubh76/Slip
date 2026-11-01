@@ -376,6 +376,10 @@ function render(): string {
       "(PayPal dashboard → Testing tools → Sandbox accounts → a Personal account).",
       `  ${approval}`,
       "",
+      "**That link is perishable.** PayPal answered RESOURCE_NOT_FOUND for two setup tokens less",
+      "than a day old, so a link kept from an earlier run is probably already dead and the mandate",
+      "behind it is stranded. Run this again for a fresh one rather than clicking a saved one.",
+      "",
       ...(offerIsReal
         ? [
             "Then run this again. The mandate reads ACTIVE, and `checkout` stops refusing and",

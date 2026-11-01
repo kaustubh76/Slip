@@ -457,6 +457,14 @@ and cannot be read back. It was generated in a subshell and never written down �
 key that protects the thing that can charge an owner, and the consequence is that the deployment is
 the only thing that can read its own vault ids.
 
+**And the approval link is perishable, which is why the instruction is a command and not a URL.**
+Measured on 1 Nov 2026: of six setup tokens this deployment had created, the four from that day
+answered `PAYER_ACTION_REQUIRED` and carried an approve link, while **both from the day before
+answered `RESOURCE_NOT_FOUND`** — PayPal had expired them inside 24 hours, and the mandates behind
+them are stranded `PENDING` until the resolver gives up on them after three days
+(`packages/app/src/mandates.ts`). So never hand somebody a saved link: run
+`pnpm verify:deployment` and use the one it prints, which it now says in its own output.
+
 So the deployment's proof is **a real purchase**, not the contract suite: approve, then
 `pnpm verify:deployment` again, where the mandate reads ACTIVE and `checkout` buys instead of
 refusing. That is the stronger claim anyway — a real agent paying through the real endpoint against
