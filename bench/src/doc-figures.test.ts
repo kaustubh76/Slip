@@ -209,18 +209,34 @@ describe("the figures in prose", () => {
     // was written for.
     //
     // `-` and `@` earn their place by the same measurement, over all 2,577 code spans in the
-    // repository's Markdown: **not one** has a legitimate space after either character, while
-    // **214** contain a hyphenated token. This project's filenames are hyphen-heavy —
-    // `verify-deployment.ts`, `owner-start.spec.ts`, `doc-figures.test.ts` — so a reflow of any
-    // paragraph citing one reproduces the original defect exactly, and `@slip/ui` wrapped after
-    // the `@` does the same for a package name.
+    // repository's Markdown. `@` is clean: not one span has a legitimate space after it, and
+    // `@slip/ui` wrapped after the `@` ruins a package name. The hyphen needed one more turn —
+    // a re-count found **three** spans with a legitimate space after `-`, all of them arithmetic:
+    // `scrollWidth - clientWidth`, `calc(100vw - 32px)` and a list bullet. So the hyphen is
+    // flagged only when it is *not* preceded by whitespace, which is the difference between a
+    // token (`verify-deployment.ts`) and an operator (`a - b`). Without that guard the three
+    // would have become false alarms on their first reflow — the same test that kept `:`, `,`
+    // and `=` out. 214 spans contain a hyphenated token, and this project's filenames are
+    // hyphen-heavy (`verify-deployment.ts`, `owner-start.spec.ts`, `doc-figures.test.ts`), so the
+    // character is worth having with that restriction.
     //
     // `:`, `,` and `=` are deliberately **out**, by the rule that a check must not condemn correct
     // prose: 75 spans read `plan: free` or similar, 35 read `{ store, url, price }`, and 7 read
     // `reconcileUnmatched === 1`. None of them wraps at that point today, so each would be a
     // cry-wolf waiting for a reflow rather than a defect waiting to be caught.
     const offenders: string[] = [];
-    for (const path of [...LIVING, "bench/results/slipbench.md", "study/results/market-study.md"]) {
+    // Every document, the ledger included. `LIVING` excludes `docs/DECISIONS.md` from the *figure*
+    // checks because a dated entry is allowed to keep what was believed that day — but a path
+    // broken by a line wrap is not a record of anything, it is just broken, and it misleads a
+    // reader of an old entry exactly as much as a new one.
+    const rendering = [
+      ...LIVING,
+      "docs/DECISIONS.md",
+      "bench/results/slipbench.md",
+      "bench/results/steering-judge.md",
+      "study/results/market-study.md",
+    ];
+    for (const path of rendering) {
       // Blank out fenced blocks, preserving newlines so reported line numbers stay true.
       const text = read(path).replace(/```[\s\S]*?```/g, (block) => block.replace(/[^\n]/g, " "));
       const parts = text.split("`");
@@ -231,7 +247,7 @@ describe("the figures in prose", () => {
         if (index % 2 === 1 && part.includes("\n")) {
           const halves = part.split(/\s*\n\s*/);
           const left = halves[0] ?? "";
-          if (/[/._@-]$/.test(left)) {
+          if (/[/._@]$|(?<!\s)-$/.test(left)) {
             const line = text.slice(0, offset).split("\n").length;
             offenders.push(`${path}:${line} renders as "${part.replace(/\s*\n\s*/g, " ")}"`);
           }
