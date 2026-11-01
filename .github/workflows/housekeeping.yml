@@ -1,0 +1,62 @@
+name: Housekeeping
+
+# Slip's resolver expires holds, finishes unknown payments, completes half-done revokes and re-runs
+# failed webhooks. A long-lived process does that on a timer; a serverless one cannot, so
+# `/api/cron/resolve` exists for a scheduler to call (D66).
+#
+# Vercel's Hobby plan refuses any cron running more than once a day, and the resolver's resend
+# window is **30 minutes** (`orderResendWindowMs`), so a daily sweep does not merely run late — it
+# misses that branch outright, and the branch after it needs the Transaction Search grant that is
+# not ticked (D105). This is the external scheduler that closes the gap without a paid plan or a
+# third-party account.
+on:
+  schedule:
+    # Five minutes is GitHub's minimum, and it delays scheduled runs under load — so this is a
+    # request rather than a guarantee. Against a 30-minute window it is still ample.
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+# It calls a URL. It needs nothing from the repository, and does not even check the code out.
+permissions: {}
+
+concurrency:
+  # One sweep at a time: the resolver is idempotent, but two overlapping passes would each do work
+  # the other has already taken a lease on.
+  group: housekeeping
+  cancel-in-progress: false
+
+jobs:
+  resolve:
+    name: Expire holds and finish unknown payments
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: One pass of the resolver
+        env:
+          # A repository variable, so a different deployment needs no edit here.
+          BASE: ${{ vars.SLIP_BASE_URL || 'https://slip-two-chi.vercel.app' }}
+          # `authoriseCron` accepts CRON_SECRET or SLIP_CRON_SECRET as a bearer; this is the name
+          # Vercel also injects, so one value serves both schedulers.
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          set -u
+          if [ -z "${CRON_SECRET}" ]; then
+            echo "::warning title=Housekeeping is not configured::Add CRON_SECRET under Settings → Secrets and variables → Actions. Until then this deployment sweeps once a day on Vercel's cron, which misses the resolver's 30-minute resend window (D105)."
+            # Deliberately not a failure. A scheduled job that fails every five minutes until
+            # somebody configures it sends hundreds of notifications and gets itself disabled,
+            # which is a worse outcome than a warning. The honest record of "not yet working" is
+            # the housekeeping gate in docs/DEPLOY.md §4, which stays open until a sweep driven
+            # from here has actually been seen — configuring a scheduler is not evidence that it ran.
+            exit 0
+          fi
+          code=$(curl -sS -o response.json -m 60 -w '%{http_code}' -X POST \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            "${BASE}/api/cron/resolve")
+          echo "POST ${BASE}/api/cron/resolve → ${code}"
+          # The endpoint answers with the resolver's own report, so the log shows what moved.
+          head -c 2000 response.json || true
+          echo
+          if [ "${code}" != "200" ]; then
+            echo "::error title=Housekeeping failed::The endpoint answered ${code}. 401 means the secret does not match the deployment's; 404 means this deployment has no PayPal keys and the route is not there."
+            exit 1
+          fi

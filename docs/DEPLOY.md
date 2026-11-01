@@ -179,6 +179,27 @@ It is stored on Vercel as a **config** variable and not a secret, precisely so i
 for this. A sensitive variable cannot be, and an unrecoverable secret would force a rotation just to
 get a pinger working — which is a mistake worth not repeating, because it was made here first.
 
+**That pinger is committed, so it needs no third-party account.**
+`.github/workflows/housekeeping.yml` runs on `schedule: */5 * * * *` and posts to the endpoint with
+`secrets.CRON_SECRET`. It checks nothing out and asks for no repository permissions, because it
+calls a URL. One action is left: add **`CRON_SECRET`** under *Settings → Secrets and variables →
+Actions*, with the same value the Vercel project holds — one secret serves both schedulers, since
+`cronSecrets()` accepts `CRON_SECRET` or `SLIP_CRON_SECRET`.
+
+Two honest limits, both written into the file:
+
+- **Whether Actions runs here is unverified.** This project's notes say CI has never run for billing
+  reasons, and a private repository's workflow runs cannot be queried from here. If it does not
+  run, nothing is lost but a file and cron-job.org remains the fallback.
+- **Unconfigured, it warns and exits 0 rather than failing.** A scheduled job that fails every five
+  minutes until somebody adds a secret sends hundreds of notifications and gets itself disabled,
+  which is a worse outcome than a warning. The honest record of "not yet working" is the gate below,
+  not the exit code.
+
+Verified by running the workflow's own command against the deployment: `200` with the resolver's
+report, and `401` with no bearer — the door is shut rather than open. What that does **not** prove is
+that GitHub's scheduler fires it.
+
 The daily Vercel cron stays as a backstop. **The gate in §4 shuts when a sweep driven by the pinger
 has been seen, not when the pinger is configured** — the endpoint answering by hand proves the door,
 not the schedule. The alternative remains **Vercel Pro** plus a one-line revert of

@@ -345,4 +345,58 @@ describe("the figures in prose", () => {
     for (const [code, outcome] of printed) expect(outcome).toBe(expected.get(code));
     expect(html).toContain(`${DECISIONS} entries, latest D${LATEST}`);
   });
+
+  it("declares in .env.example every variable the application reads", () => {
+    // `doctor.ts` tells an operator to copy this file, so a variable it omits is one they will
+    // never set. Four were omitted: `CRON_SECRET`, whose absence stops all housekeeping and whose
+    // name only Vercel decides (D76); `SLIP_AGENT_SEARCH`, which decides whether an agent is
+    // offered the one tool that spends money (D106); and the two sandbox buyer credentials, asked
+    // for in a message and documented nowhere.
+    //
+    // It demands a fillable `NAME=` line rather than a mention, because a mention is exactly how
+    // `CRON_SECRET` hid: the prose named it while the only line to fill in was `SLIP_CRON_SECRET`,
+    // which is the name that answers 401 to its own cron on Vercel for ever.
+    //
+    // What it cannot do: it checks that a variable is named, never that the comment beside it is
+    // true or that a value would be sane. The same narrowness as the pnpm-script check above.
+    const PLATFORM = [
+      "NODE_ENV", // the runtime sets it
+      "VERCEL", // Vercel sets it; Slip reads it only to know where it is
+      "RENDER_EXTERNAL_URL", // Render sets it, and `publicBaseUrl` prefers SLIP_BASE_URL anyway
+      "SLIP_E2E_PORT", // playwright.config.ts — a test harness, not a deployment
+      "SLIP_E2E_OWNER_PORT", // the same
+    ];
+    const sources: string[] = [];
+    const walk = (dir: string) => {
+      for (const entry of readdirSync(join(root, dir), { withFileTypes: true })) {
+        const next = `${dir}/${entry.name}`;
+        if (entry.isDirectory()) {
+          // `__contract__` and a test file read variables to drive themselves, which is not a
+          // promise to anybody deploying this.
+          if (!["node_modules", "dist", "__contract__"].includes(entry.name)) walk(next);
+        } else if (/\.tsx?$/.test(entry.name) && !/\.test\.tsx?$/.test(entry.name)) {
+          sources.push(next);
+        }
+      }
+    };
+    walk("apps");
+    walk("packages");
+    const wanted = new Map<string, string>();
+    for (const path of sources) {
+      const reads = read(path).matchAll(
+        /env\s*\[\s*"([A-Z][A-Z0-9_]{2,})"\s*\]|\benv\.([A-Z][A-Z0-9_]{2,})\b/g,
+      );
+      for (const found of reads) {
+        const name = found[1] ?? found[2] ?? "";
+        if (name !== "" && !wanted.has(name)) wanted.set(name, path);
+      }
+    }
+    const declared = new Set(
+      [...read(".env.example").matchAll(/^([A-Z][A-Z0-9_]{2,})=/gm)].map((m) => m[1]),
+    );
+    const undeclared = [...wanted]
+      .filter(([name]) => !declared.has(name) && !PLATFORM.includes(name))
+      .map(([name, path]) => `${name} is read by ${path} and is not in .env.example`);
+    expect(undeclared.join("\n")).toBe("");
+  });
 });
