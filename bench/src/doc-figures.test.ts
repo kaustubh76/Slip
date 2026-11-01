@@ -66,6 +66,7 @@ const LATEST = Math.max(...DECISION_NUMBERS);
  */
 const LIVING = [
   "README.md",
+  "TOOLS.md",
   "docs/SPEC.md",
   "docs/DEMO.md",
   "docs/DEPLOY.md",
@@ -161,6 +162,35 @@ describe("the figures in prose", () => {
     expect(claims.length).toBeGreaterThan(6);
     for (const [path, needle] of claims) {
       expect(flat(path), `${path} should state "${needle}"`).toContain(needle);
+    }
+  });
+
+  it("names the flag wherever it says when the paid tool exists", () => {
+    // Narrow by design, and a co-occurrence check rather than a semantic one: `search_products` is
+    // the only agent call that spends money, and D106 put it behind a second switch beside the
+    // key. The three documents that describe *when* the tool exists must name that switch — one
+    // went on saying "when `CHANNEL3_API_KEY` is set" long enough to contradict its own earlier
+    // paragraph, and `TOOLS.md`, the one an agent author actually reads, stated the old condition
+    // without ever repeating the tool's name, so a grep for `search_products` walked past it.
+    // The flag is read out of the condition so renaming it cannot strand this.
+    //
+    // A stronger version was tried and rejected: requiring any *paragraph* that names the key and
+    // the word "search" to name the flag. It fails on a service-config table and a shell example
+    // in SERVICES.md, neither of which states a condition — two false alarms out of four matches.
+    // Mentioning the key near the word search is not the same as stating when the tool exists.
+    const condition = /catalogueSearch:[^;]*?env\["(\w+)"\][^;]*?env\["(\w+)"\]/.exec(
+      read("apps/web/src/server/services.ts"),
+    );
+    expect(condition).not.toBeNull();
+    const flag = [condition?.[1], condition?.[2]].find((name) => name !== "CHANNEL3_API_KEY");
+    expect(flag).toBeTruthy();
+
+    for (const path of ["README.md", "TOOLS.md", "docs/SERVICES.md"]) {
+      const text = read(path);
+      if (!text.includes("search_products")) continue;
+      expect(text, `${path} describes search_products without naming ${flag}`).toContain(
+        flag as string,
+      );
     }
   });
 
