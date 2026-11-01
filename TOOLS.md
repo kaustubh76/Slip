@@ -160,8 +160,15 @@ On real Channel3 data an offer has no text of its own, so the product's `text` i
 there is to read — which is why Slip records what it showed you and judges that text when you check
 out (D67, D69).
 
-The tool exists where the host has a catalogue: Channel3 when `CHANNEL3_API_KEY` is set, and the
-desk's stand-in catalogue in demo mode.
+The tool exists where the host has a catalogue: in demo mode, the desk's own stand-in catalogue;
+outside it, Channel3 — but only where the deployment asked for it, with `SLIP_AGENT_SEARCH=1`
+alongside `CHANNEL3_API_KEY`. **It is the one tool here that costs the owner money**, so it is off
+unless asked for (D106): a checkout prices from Channel3's product-detail endpoint, which is free,
+while a search is billed per call.
+
+So **check `tools/list` rather than assuming**. Where this tool is absent the deployment has not
+opted in, and you will be given product ids to buy rather than looking them up — `checkout` works
+exactly the same either way.
 
 ## Refusals and failures
 
