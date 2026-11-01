@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { RULE_OUTCOME } from "@slip/domain";
@@ -262,6 +262,59 @@ describe("the figures in prose", () => {
       }
     }
     expect(offenders.join("\n")).toBe("");
+  });
+
+  it("cites no pnpm script that no package defines", () => {
+    // The class the other session hit on 1 Nov: a document printing an instruction that cannot
+    // succeed. Theirs could not succeed for a reason no checker can see — the command existed but
+    // the key it needed had been discarded. This catches the mechanical half: a script that was
+    // renamed, removed or mistyped, leaving a command in prose that fails on the first line.
+    //
+    // Scope, stated because it is narrower than the finding that prompted it: **this proves the
+    // script exists, never that it can work.** `pnpm test:live:paypal` is defined and still cannot
+    // run against the deployment, because the vault id is encrypted under a key only the
+    // deployment holds. A command that exists and fails for want of a credential, a grant or a
+    // database is exactly what this does not see.
+    const defined = new Set<string>();
+    const manifests = [
+      "package.json",
+      "study/package.json",
+      "bench/package.json",
+      "tests/package.json",
+    ];
+    for (const dir of ["packages", "apps"]) {
+      for (const name of readdirSync(join(root, dir)))
+        manifests.push(`${dir}/${name}/package.json`);
+    }
+    for (const manifest of manifests) {
+      const file = join(root, manifest);
+      if (!existsSync(file)) continue;
+      for (const name of Object.keys(JSON.parse(readFileSync(file, "utf8")).scripts ?? {})) {
+        defined.add(name);
+      }
+    }
+    expect(defined.size).toBeGreaterThan(20);
+
+    // Only inside code — a fenced block or a span. In prose, "because pnpm has a built-in
+    // `doctor`" reads as a citation of a script named `has`, and did.
+    const reserved = new Set(["run", "install", "i", "exec", "dlx", "add", "remove", "why", "ls"]);
+    const cited = new Map<string, string>();
+    for (const path of [...LIVING, "bench/results/slipbench.md", "study/results/market-study.md"]) {
+      const raw = read(path);
+      const chunks = [...raw.matchAll(/```[^\n]*\n([\s\S]*?)```/g)].map((m) => m[1] ?? "");
+      const prose = raw.replace(/```[\s\S]*?```/g, "");
+      chunks.push(...prose.split("`").filter((_, index) => index % 2 === 1));
+      for (const chunk of chunks) {
+        for (const match of chunk.matchAll(/\bpnpm (?:-s |--silent )?([a-z][\w:.-]*)/g)) {
+          const name = match[1] ?? "";
+          if (!reserved.has(name)) cited.set(name, path);
+        }
+      }
+    }
+    expect(cited.size).toBeGreaterThan(15);
+
+    const unknown = [...cited].filter(([name]) => !defined.has(name));
+    expect(unknown.map(([name, path]) => `${path} cites \`pnpm ${name}\``).join("\n")).toBe("");
   });
 
   it("lists in every rule table exactly the rules the code implements", () => {
