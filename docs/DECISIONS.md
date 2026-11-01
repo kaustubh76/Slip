@@ -2941,8 +2941,12 @@ hyphenated token, which matters because this project's filenames are hyphen-heav
 one reflow from the original defect. Re-counting independently reproduced its totals exactly for
 `:`, `,` and `=` (75, 35, 7) **but not for the hyphen: three spans do have a legitimate space after
 `-`**, all arithmetic — `scrollWidth - clientWidth`, `calc(100vw - 32px)` and a list bullet. So the
-hyphen is flagged only when it is **not preceded by whitespace**, which separates a token from an
-operator. Without that the three would have become false alarms at their first reflow, failing the
+hyphen is flagged only when it is **preceded by a character that exists and is not whitespace**,
+which separates a token from an operator. The exact lookbehind matters and took a third pass: a
+*negative* lookbehind is satisfied by the absence of any character, so `(?<!\s)-$` fires on a left
+half that is only the hyphen — a `- store: …` bullet wrapped right after the bullet, which is in
+the ledger span set. `(?<=[^\s])-$` is the whole correction, and the empty-left case is its only
+behavioural difference. Without that the three would have become false alarms at their first reflow, failing the
 very test that kept `:`, `,` and `=` out. **A measurement is worth re-taking even when it comes
 from someone applying the right method** — the method was right and one of the four counts was not.
 
