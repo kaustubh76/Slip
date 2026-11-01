@@ -2895,3 +2895,41 @@ amendment folded both into the pattern problem, which was generous to this sessi
 wrong. **A record that blurs two causes teaches the wrong lesson to whoever reads it next**, so both
 are now stated separately above. The practical rule: a search that finds nothing has told you about
 your regular expression, and you still know nothing about the document.
+
+## D108 · 2026-11-01 · A path broken across a line, and the narrowest rule that catches it
+
+**A defect this session wrote, found by the other one.** D107's new paragraph in
+[TOOLS.md](../TOOLS.md) named the file a reader should open, and wrapped the path inside its own
+backticks:
+
+```
+(`apps/web/src/app/api/v1/agent/checkout/
+route.ts`)
+```
+
+Markdown renders a newline inside a code span as a space, so the reader met
+`apps/web/src/app/api/v1/agent/checkout/ route.ts` — **a path that does not exist, in the sentence
+whose only job was to say which file to look at**. Fixed in `39c4e46`: two line breaks moved, no
+words changed. These documents wrap at 100 characters and the paths here are long, so any path near
+a wrap point is a candidate; that is the general hazard, not the one occurrence.
+
+**The sweep found nothing else, and the first sweep was wrong about that.** A regex pairing
+backticks reported 1634 wrapped spans and 203 suspects, which was implausible on its face and was:
+pairing by regex matches the prose *between* two spans, not the inside of one. Splitting on the
+backtick and taking the odd segments gives the real number — **seven** wrapped code spans in the
+whole repository, of which the one above was the only broken one. **An implausible count from a
+tool you just wrote is a bug in the tool**, and treating it as a finding would have produced two
+hundred false corrections.
+
+**The rule in the guard is the narrowest one that works, chosen by measurement.** Flag a break
+immediately after `/`, `.` or `_`, where a space is never part of the token. Two looser rules were
+written and rejected because each flags correct prose — "the span contains no other whitespace" and
+"either half begins or ends mid-token" both condemn `POST` + `/api/v1/agent/checkout`,
+`vercel … --billing-plan free_v3` and `--errands 2 --conditions clean`, all of which want the space
+they have. The shipped rule flags **none** of the seven wrapped spans today and does flag the
+defect it was written for, checked against `70a6c5b` before the fix.
+
+**What it does not catch**, stated so nobody assumes otherwise: a path broken anywhere a space
+could legitimately sit, a wrong path that happens to be well-formed, and anything inside a fenced
+block, which the check blanks out. It is a rendering check, not a correctness one — it cannot tell
+whether `route.ts` exists, only whether a reader will be shown a path that was never written.
