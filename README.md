@@ -381,8 +381,10 @@ same as traffic from a live account.
   repeated and out-of-order deliveries converge.
 - **Mandates and agents** — setup at PayPal, the kill switch, limit changes as new policy
   versions, API keys shown once and stored hashed, and agent-scoped receipts and report card.
-- **Search, and what an agent read** — outside the demo `search_products` searches Channel3 itself,
-  shows the agent each product's own words, and records what it showed per agent and product. The
+- **Search, and what an agent read** — where a deployment opts in with `SLIP_AGENT_SEARCH=1`,
+  `search_products` searches Channel3 itself, shows the agent each product's own words, and records
+  what it showed per agent and product. It is the one agent call that spends money, so it is off
+  unless asked for (D106). The
   checkout that follows hands that text to the steering check, which on real catalogue data is the
   only thing there is to judge: a Channel3 offer carries no text of its own (D67, D69). Cached five
   minutes, with a ceiling of 60 uncached searches an hour per permission.
@@ -407,7 +409,7 @@ agent checkout endpoint and demo mode. Browser tests cover the money paths and r
 page in both themes.
 
 **MCP server** — agents pay through Slip's MCP tools at `/api/mcp`: `checkout`, `get_receipt`,
-`get_report`, and `search_products` where a catalogue is available. Each wraps the same use case
+`get_report`, and `search_products` where a deployment opted into a catalogue. Each wraps the same use case
 as the REST endpoint, run with the agent's own key, and answers with the owner's receipt and a
 next step. 2025-era and 2026-07-28 clients are both served; the key is checked on every request.
 A real MCP client drives every tool path on both stores. See [TOOLS.md](TOOLS.md).

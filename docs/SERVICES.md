@@ -357,7 +357,8 @@ counting the unrun one.
 page. Without it, Slip is the thing itself, and these are the parts that only exist there.
 
 **An agent can find products.** `search_products` searches Channel3 when `CHANNEL3_API_KEY` is set
-— it never existed outside the demo before, so an agent had to be handed product ids. Search costs
+**and `SLIP_AGENT_SEARCH=1` asks for it** (D106) — it never existed outside the demo before, so an
+agent had to be handed product ids. Search costs
 a credit where product detail is free, so Slip caches identical queries for five minutes (shared
 across permissions) and allows 60 uncached searches an hour per permission before answering
 `RATE_LIMITED`. Both are per process, so several replicas get several allowances.
