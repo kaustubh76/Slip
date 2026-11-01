@@ -2885,3 +2885,13 @@ about to report the correction as missing; the sentence continues onto the next 
 `SLIP_AGENT_SEARCH=1` asks for it"*. A hard-wrapped document defeats a line-oriented grep in both
 directions — the same wrapping that made the guard's own pinned phrases need whitespace collapsing.
 Read the surrounding lines before reporting a stale string.
+
+**The sharpest form of the lesson came from the other session, after it corrected its own account
+of it: a clean grep is evidence about the pattern, never about the file.** Its sweep did include
+`TOOLS.md` in the path list and returned nothing for `search_products`, which it believed; the
+sentence it was looking for never names the tool. So the two misses had genuinely different causes —
+a pattern that could not match, and a file that was never searched — and the first write-up of this
+amendment folded both into the pattern problem, which was generous to this session and therefore
+wrong. **A record that blurs two causes teaches the wrong lesson to whoever reads it next**, so both
+are now stated separately above. The practical rule: a search that finds nothing has told you about
+your regular expression, and you still know nothing about the document.
