@@ -9,7 +9,7 @@ the owner) with the receipt the owner reads and the agent's next step.
 | Endpoint | `POST /api/mcp` on the Slip web app (MCP Streamable HTTP) |
 | Protocol | the 2025 revisions (served statelessly) and 2026-07-28 |
 | Auth | `Authorization: Bearer slip_live_…`, the agent's own key |
-| Tools | `checkout`, `get_receipt`, `get_report`, and `search_products` where a catalogue is available |
+| Tools | `checkout`, `get_receipt`, `get_report`, and `search_products` where the deployment opted into a catalogue — `SLIP_AGENT_SEARCH`, off by default, so read `tools/list` rather than assuming (D106) |
 | Also | `POST /api/v1/agent/checkout` for agents without MCP (same decisions; see [docs/UI.md](docs/UI.md#the-read-api)) |
 
 ## Keys
