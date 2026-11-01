@@ -85,6 +85,15 @@ const answer = await client.callTool({
 Arguments and answers are snake_case JSON. Each answer also has a text block written for a model:
 the outcome, the receipt lines, `Next: …` and the `receipt_id`.
 
+**The REST endpoint takes the same decisions but not the same field names.** `POST
+/api/v1/agent/checkout` is handed its body unchanged (`apps/web/src/app/api/v1/agent/checkout/
+route.ts`), so it wants `CheckoutRequestSchema`'s **camelCase** — `productId`, `chosenOfferUrl`,
+`selectedOptions` — where this server takes `product_id`, `chosen_offer_url` and
+`selected_options` and translates them for you (`packages/mcp/src/server.ts:101`). Sending
+snake_case to REST is a validation failure, not a different decision. Verified on the deployment:
+both paths refuse an inactive mandate with `403 MANDATE_NOT_ACTIVE` — the same answer in two
+shapes, which is why "same decisions" above means the outcome and never the payload.
+
 ### `checkout`
 
 Ask to pay for the offer you chose. Slip prices the item from its own copy of the listing,
