@@ -1,5 +1,7 @@
+import { fileURLToPath } from "node:url";
 import { Client, StreamableHTTPClientTransport } from "@modelcontextprotocol/client";
 import { chromium } from "@playwright/test";
+import { createChannel3Offers } from "@slip/offers";
 
 /**
  * `pnpm verify:deployment [https://host]` — drives a real deployment and reports which wires carry
@@ -54,6 +56,16 @@ const say = (what: string, state: State, detail: string) => {
   lines.push({ what, state, detail });
 };
 
+// The keys live beside the app, as every other script here reads them. Absent is not a fault:
+// without one the checkout below carries a placeholder offer and says so.
+try {
+  process.loadEnvFile(fileURLToPath(new URL("../.env.local", import.meta.url)));
+} catch (error) {
+  if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+    throw error;
+  }
+}
+
 const base = (process.argv[2] ?? DEFAULT_BASE).replace(/\/+$/, "");
 const stamp = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 /** A fresh owner per run, and a passphrase that exists only in this process. */
@@ -65,6 +77,42 @@ let mandateId: string | null = null;
 let agentKey: string | null = null;
 /** MCP's answer to a checkout, so the REST path can be held to the same one. */
 let mcpRefusal: string | null = null;
+/** A real offer for the test product, so a run after approval is a purchase and not a rejection. */
+let offerUrl = "https://example.invalid/offer";
+let offerIsReal = false;
+
+const productId = process.env["CHANNEL3_TEST_PRODUCT_ID"] ?? "t1SLQyj";
+const channel3Key = process.env["CHANNEL3_API_KEY"]?.trim() ?? "";
+if (channel3Key !== "") {
+  // Product detail, which is free — the paid call is search, and nothing here makes it (D106). An
+  // agent handed a product id does exactly this to find an offer worth asking to pay for.
+  const found = await createChannel3Offers({ apiKey: channel3Key }).fetchProduct(
+    productId,
+    AbortSignal.timeout(30_000),
+  );
+  const cheapest = found.ok
+    ? [...found.product.offers]
+        .filter((offer) => offer.priceCents !== null)
+        .sort((a, b) => (a.priceCents ?? 0) - (b.priceCents ?? 0))[0]
+    : undefined;
+  if (cheapest !== undefined) {
+    offerUrl = cheapest.url;
+    offerIsReal = true;
+  }
+  say(
+    "a real offer to buy",
+    offerIsReal ? "ok" : "absent",
+    offerIsReal
+      ? `the cheapest of ${found.ok ? found.product.offers.length : 0} offers for ${productId}, so a run after approval buys`
+      : `no priced offer for ${productId}${found.ok ? "" : ` (${found.reason})`} — a run after approval would be rejected, not a purchase`,
+  );
+} else {
+  say(
+    "a real offer to buy",
+    "absent",
+    "no CHANNEL3_API_KEY here, so the checkout below carries a placeholder offer url",
+  );
+}
 
 // ── The owner, in a browser, because sign-up and key issue are server actions ────────────────────
 
@@ -220,8 +268,8 @@ if (agentKey !== null) {
     // The gate. A purchase needs an approved vault, so a refusal is the correct answer and proves
     // the whole chain behind it: key → agent → permission → gate.
     const text = await callText(client, "checkout", {
-      product_id: process.env["CHANNEL3_TEST_PRODUCT_ID"] ?? "t1SLQyj",
-      chosen_offer_url: "https://example.invalid/offer",
+      product_id: productId,
+      chosen_offer_url: offerUrl,
       reason: "verifying this deployment's wiring",
     });
     mcpRefusal = reasonIn(text);
@@ -265,8 +313,8 @@ if (agentKey !== null) {
       method: "POST",
       headers: { authorization: `Bearer ${agentKey}`, "content-type": "application/json" },
       body: JSON.stringify({
-        productId: process.env["CHANNEL3_TEST_PRODUCT_ID"] ?? "t1SLQyj",
-        chosenOfferUrl: "https://example.invalid/offer",
+        productId,
+        chosenOfferUrl: offerUrl,
         reason: "verifying this deployment's wiring",
       }),
     });
@@ -327,11 +375,23 @@ function render(): string {
       "One step is left, and it is a person's: approve the vault signed in as a **sandbox buyer**",
       "(PayPal dashboard → Testing tools → Sandbox accounts → a Personal account).",
       `  ${approval}`,
-      ...(mandateId === null
-        ? []
+      "",
+      ...(offerIsReal
+        ? [
+            "Then run this again. The mandate reads ACTIVE, and `checkout` stops refusing and",
+            "**buys that cheapest offer with real sandbox money**. That is the proof, and it needs",
+            "nothing local. A repeat replays the same decision rather than paying twice.",
+          ]
         : [
-            `Then: PAYPAL_TEST_VAULT_ID=$(pnpm -s paypal:vault-id ${mandateId}) pnpm test:live:paypal`,
+            "Then run this again: the mandate reads ACTIVE and `checkout` stops refusing. It will",
+            "not buy, because the offer url above is a placeholder — set CHANNEL3_API_KEY so this",
+            "can read a real offer, or hand an agent one yourself.",
           ]),
+      "",
+      "`pnpm test:live:paypal` is **not** the route for this mandate. `paypal:vault-id` opens the",
+      "DATABASE_URL in apps/web/.env.local — the local PGlite, not the deployment's database — and",
+      "the vault id is encrypted under the deployment's own SLIP_ENCRYPTION_KEY, which is a Vercel",
+      "secret and cannot be read back. That suite wants a mandate whose key you hold.",
     );
   }
   return `${out.join("\n")}\n`;

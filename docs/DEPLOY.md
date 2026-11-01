@@ -434,7 +434,12 @@ exact error names):
 | pay by card without vaulting | `PAYEE_NOT_ENABLED_FOR_CARD_PROCESSING` |
 
 So G2 needs a **sandbox buyer account login**, which is a human step at PayPal's approval page.
-Once it exists:
+
+**Once it exists, the route depends on which mandate was approved, and the two are not
+interchangeable.**
+
+For a mandate in a **local** database — the flow `SERVICES.md` sets up — the contract suite is the
+route:
 
 ```sh
 PAYPAL_TEST_VAULT_ID=$(pnpm -s paypal:vault-id <mandate id>) pnpm test:live:paypal
@@ -443,3 +448,20 @@ PAYPAL_TEST_VAULT_ID=$(pnpm -s paypal:vault-id <mandate id>) pnpm test:live:payp
 `paypal:vault-id` prints only the token, so it can be captured without being shown — and it
 **refuses to run while the web app is answering**, because PGlite takes no lock and two processes on
 one database corrupt it. Stop the dev server first.
+
+**For the mandate on the deployment, that command cannot work, for two independent reasons.**
+`paypal:vault-id` opens whatever `DATABASE_URL` is in `apps/web/.env.local`, which is the local
+PGlite and not Neon; and even pointed at Neon it could not decrypt, because the vault id is
+encrypted under the deployment's own `SLIP_ENCRYPTION_KEY`, which is stored as a Vercel **Secret**
+and cannot be read back. It was generated in a subshell and never written down — deliberately for a
+key that protects the thing that can charge an owner, and the consequence is that the deployment is
+the only thing that can read its own vault ids.
+
+So the deployment's proof is **a real purchase**, not the contract suite: approve, then
+`pnpm verify:deployment` again, where the mandate reads ACTIVE and `checkout` buys instead of
+refusing. That is the stronger claim anyway — a real agent paying through the real endpoint against
+real prices, rather than a gateway contract exercised in isolation.
+
+**`pnpm verify:deployment` printed the wrong one of these until 1 Nov 2026**, naming the contract
+suite beside a production mandate id. An instruction that cannot succeed is the defect this runbook
+exists to prevent, and it was inside the tool written to catch it.
