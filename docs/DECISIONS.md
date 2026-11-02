@@ -3194,3 +3194,46 @@ which is exactly why the seventh species is the most durable of the family: D107
 D108's implausible count, D109's fix that stopped at its example, D110's mention that was not a
 line, D111's uncalibrated instrument, D112's claim taken from a description, and now a justification
 that outlived its justification.
+
+## D114 · 2026-11-02 · The handoff list was wrong in the table a reader would consult
+
+**Both sessions had been reciting "four things remain" to the user from each other's messages rather
+than from the repository.** Checking it found that the one table a reader would open to see what is
+left was stale in two of its three rows, and a second table in the same document repeated one of
+them.
+
+`DEPLOY.md`'s G2 preconditions said **"the webhook pointed at this deployment — pointed at a dead
+tunnel"**, while §2.3 of the same document says *"Done, 31 Oct 2026"*, with eight events and the id
+unchanged, and the summary at line 49 reads *"re-pointed to the deployment, 8 events, id
+unchanged."* A third place, the path table, said **"not arriving — the registered address is a dead
+tunnel."** Three statements of a fact that had been corrected a day earlier, in the same file as its
+own correction. **This is D107's shape exactly** — a new paragraph added, the old table never
+touched, and nothing comparing them — and it landed in the most consequential table in the project.
+
+**The webhook row now says what is actually true, which is narrower than "fixed".** The address is
+correct; unsigned, the endpoint answers `400 BAD_SIGNATURE`, which proves the door, the check and
+that `PAYPAL_WEBHOOK_ID` is set, **but not that it is the right id.** No delivery can be observed
+until a real transaction, and the Hobby plan retains no runtime logs to look in. "Not arriving" and
+"nothing seen yet" are different claims and only the second is supported.
+
+**The buyer row was stale in the other direction** — it still prescribed *"a sandbox buyer login at
+PayPal's approval page"* after `a384505` automated exactly that. It now says credentials, not a
+click, and names the two variables and the script that drives the approval.
+
+**And one of the four items this session had been reciting was simply wrong.** The list it gave the
+user included *authorising a Channel3 search credit*; that is not a gate. `CHANNEL3_API_KEY` works
+and §4 records real prices as **shut**, while search is the paid extra that D106 put behind
+`SLIP_AGENT_SEARCH`, deliberately off. The item that belongs in its place is the one the other
+session had right and this one had dropped: **`CRON_SECRET` as a GitHub repository secret**, without
+which the pinger warns and exits 0 and the deployment sweeps once a day against a thirty-minute
+resend window.
+
+**Verified, the list is:** sandbox buyer credentials in `apps/web/.env.local`; the Transaction
+Search tick; `CRON_SECRET` under Settings → Secrets and variables → Actions; and connecting the
+Render Blueprint. Four, and not the four either session was saying.
+
+**The lesson is the one the whole family has been circling, applied to the handoff itself.** Two
+sessions recited a list to the user for two days, each taking it from the other, and neither read it
+off the repository. **A fact repeated between agents acquires confidence without acquiring
+evidence** — which is why the standing rule is to check a claim against the file, number or run it
+is about, and why the most-repeated claim is the one least likely to have been checked recently.
