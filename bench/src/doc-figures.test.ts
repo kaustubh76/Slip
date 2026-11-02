@@ -487,8 +487,9 @@ describe("the figures in prose", () => {
     // `CRON_SECRET` hid: the prose named it while the only line to fill in was `SLIP_CRON_SECRET`,
     // which is the name that answers 401 to its own cron on Vercel for ever.
     //
-    // What it cannot do: it checks that a variable is named, never that the comment beside it is
-    // true or that a value would be sane. The same narrowness as the pnpm-script check above.
+    // What it cannot do: it checks that a variable is named, never that a value would be sane.
+    // Whether a default stated beside it is true is the rule below, which exists because this one
+    // passed over three figures that were wrong.
     const PLATFORM = [
       "NODE_ENV", // the runtime sets it
       "VERCEL", // Vercel sets it; Slip reads it only to know where it is
@@ -544,5 +545,99 @@ describe("the figures in prose", () => {
     expect(missingFrom(asMention).join("\n")).toContain("CRON_SECRET");
 
     expect(missingFrom(example).join("\n")).toBe("");
+  });
+
+  it("states beside each variable the default the code actually uses", () => {
+    // The rule above demands a fillable line for every variable, and says in its own comment that
+    // it never asks whether the line beside it is true. It was not. `.env.example` gave the demo's
+    // latency as 0 and its desk ceilings as 200 and 3, where the code uses 2000, 500 and 10. Two
+    // of those three are the figures `render.yaml` *sets* for a 512 MB box and the third matches
+    // nothing at all: one deployment's settings copied into the file that documents the defaults.
+    // `docs/UI.md` had all three right the whole time, which is how the document nobody deploys
+    // from stays correct while the file everybody copies drifts.
+    //
+    // The figures are read out of the source rather than written here, so this cannot become a
+    // third copy that drifts in its turn: if a literal moves, the extraction matches nothing and
+    // the test says which pattern went stale instead of quietly passing.
+    const literal = (path: string, pattern: RegExp): number => {
+      const found = pattern.exec(read(path));
+      expect(found, `${String(pattern)} no longer matches anything in ${path}`).not.toBeNull();
+      return Number((found?.[1] ?? "").replace(/_/g, ""));
+    };
+    const CODE: Record<string, number> = {
+      SLIP_DEMO_LATENCY_MS: literal("apps/web/src/server/demo/timing.ts", /latencyMs:\s*([\d_]+)/),
+      SLIP_DEMO_MAX_DESKS: literal(
+        "apps/web/src/server/runtime.ts",
+        /positiveInt\(env\["SLIP_DEMO_MAX_DESKS"\],\s*([\d_]+)\)/,
+      ),
+      SLIP_DEMO_DESKS_PER_ADDRESS: literal(
+        "apps/web/src/server/runtime.ts",
+        /positiveInt\(env\["SLIP_DEMO_DESKS_PER_ADDRESS"\],\s*([\d_]+)\)/,
+      ),
+    };
+
+    // A block is a run of comment lines together with the variables it introduces. Only blocks
+    // that state a default in figures are checked, so documenting one is never made compulsory:
+    // a rule that demanded a figure everywhere would cry wolf over every variable whose default
+    // is "unset", which is most of them.
+    const wrong = (example: string): string[] => {
+      const blocks: { comment: string; names: string[] }[] = [];
+      let comment: string[] = [];
+      let names: string[] = [];
+      const flush = (): void => {
+        if (names.length > 0) blocks.push({ comment: comment.join(" "), names });
+        comment = [];
+        names = [];
+      };
+      for (const line of example.split("\n")) {
+        if (line.startsWith("#")) {
+          if (names.length > 0) flush();
+          comment.push(line);
+        } else if (/^[A-Z][A-Z0-9_]{2,}=/.test(line)) {
+          names.push(/^([A-Z][A-Z0-9_]{2,})=/.exec(line)?.[1] ?? "");
+        } else {
+          flush();
+        }
+      }
+      flush();
+
+      const found: string[] = [];
+      for (const block of blocks) {
+        const stated = /\bDefaults?\s+(\d+(?:\s+and\s+\d+)*)/.exec(block.comment);
+        if (stated === null) continue;
+        const figures = [...(stated[1] ?? "").matchAll(/\d+/g)].map((m) => Number(m[0]));
+        const named = block.names.filter((name) => CODE[name] !== undefined);
+        if (named.length === 0) continue;
+        if (figures.length !== block.names.length) {
+          found.push(
+            `"${stated[0]}" states ${figures.length} figures for ${block.names.length} variables (${block.names.join(", ")})`,
+          );
+          continue;
+        }
+        for (const [index, name] of block.names.entries()) {
+          const code = CODE[name];
+          if (code !== undefined && code !== figures[index]) {
+            found.push(
+              `.env.example says ${name} defaults to ${figures[index]}, the code uses ${code}`,
+            );
+          }
+        }
+      }
+      return found;
+    };
+
+    const example = read(".env.example");
+
+    // **Calibrated against the known-bad case before it is believed**, like the rule above: the
+    // three figures as they actually stood, put back. A sweep that reports nothing has proved
+    // nothing until it has been made to report something.
+    const asDrifted = example
+      .replace(/# Default \d+, which is what makes/, "# Default 0, which is what makes")
+      .replace(/# Defaults \d+ and \d+\. A seeded desk/, "# Defaults 200 and 3. A seeded desk");
+    expect(asDrifted).not.toBe(example); // the fixture must differ, or it proves nothing
+    expect(wrong(asDrifted)).toHaveLength(3);
+    expect(wrong(asDrifted).join("\n")).toContain("SLIP_DEMO_LATENCY_MS");
+
+    expect(wrong(example).join("\n")).toBe("");
   });
 });
