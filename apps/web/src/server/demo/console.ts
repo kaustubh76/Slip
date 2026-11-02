@@ -1,5 +1,12 @@
 import "server-only";
-import { type AppDeps, type CheckoutResult, issueAgentKey, listReceipts } from "@slip/app";
+import {
+  type AppDeps,
+  type CheckoutResult,
+  issueAgentKey,
+  listAgents,
+  listReceipts,
+  revokeAgentKey,
+} from "@slip/app";
 import { type Cents, formatUsd, type OwnerId } from "@slip/domain";
 import { shortNo } from "@slip/receipt";
 import { ERRANDS, type ErrandName, productIdFor } from "./catalogue";
@@ -49,6 +56,21 @@ async function agentKey(desk: Desk): Promise<string | null> {
   const known = desk.desks.get(desk.mandateId);
   if (known !== undefined) {
     return known.apiKey;
+  }
+  // The key lives nowhere but the map above: the store keeps a hash of it. So a process that has
+  // lost that map can find the console's previous agent but can never present it. That is
+  // reachable only where a demo sets `SLIP_ENCRYPTION_KEY` and then restarts — without one the
+  // session was signed under a key that died with the process, so nobody arrives here still
+  // holding the old desk. Issuing a second `shopper-2` beside the first would leave an agent that
+  // is active and unusable, which is a dangling credential; the one nobody can present is revoked
+  // rather than left standing beside its replacement.
+  const existing = await listAgents(desk.deps, desk.ownerId, desk.mandateId);
+  if (existing.status === "listed") {
+    for (const agent of existing.agents) {
+      if (agent.name === CONSOLE_AGENT && agent.revokedAt === null) {
+        await revokeAgentKey(desk.deps, desk.ownerId, agent.id);
+      }
+    }
   }
   const issued = await issueAgentKey(desk.deps, desk.ownerId, desk.mandateId, {
     name: CONSOLE_AGENT,

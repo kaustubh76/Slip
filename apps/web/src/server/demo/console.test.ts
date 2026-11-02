@@ -43,6 +43,21 @@ describe("the demo console", () => {
     expect(names.filter((n) => n === "shopper-2")).toEqual(["shopper-2"]);
   });
 
+  it("reaching the same desk from a restarted process leaves one agent that can be used", async () => {
+    const world = demoWorld();
+    const desk = await deskOf(world);
+    await consoleErrand(desk, "top-pick", "answers");
+
+    // The same desk, reached by a process that has lost its map — which is what a restart is.
+    // The key it issued before is unrecoverable, because the store keeps only a hash of it.
+    const restarted: Desk = { ...desk, desks: new Map<string, DemoDesk>() };
+    await consoleErrand(restarted, "lamp", "answers");
+
+    const agents = await world.deps.store.agents.listByMandate(desk.mandateId as never);
+    const consoles = agents.filter((a) => a.name === "shopper-2");
+    expect(consoles.filter((a) => a.revokedAt === null)).toHaveLength(1);
+  });
+
   it("runs an errand as the desk's own agent and says what Slip decided", async () => {
     const world = demoWorld();
     const desk = await deskOf(world);
