@@ -267,7 +267,7 @@ try {
   await shot(
     page,
     "SlipBench",
-    "`/bench`. What the benchmark measured about agents shopping with and without Slip in front of them, from the run's own data rather than retyped.",
+    "`/bench`. What was measured about agents shopping with and without Slip, computed from the run's own snapshots rather than retyped. The notable thing is that the table is **all zeros** - across both agents and all four conditions, nothing overpaid, nothing took the planted offer, nothing had to be stopped. That is a negative result about the thing the product exists to catch, and the page prints it at full size instead of finding a flattering slice. The market study beside it is where the measured case actually is: of the products whose offers stated two different commission rates, the dearer offer paid more commission 47.5% of the time.",
     true,
   );
 
