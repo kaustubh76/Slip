@@ -3147,3 +3147,50 @@ signal, which is a guard reporting a reassuring zero in a different organ.
 suspected of clipping its tab strip. Measured: `overflow-x: auto`, `scrollWidth` 658 against
 `clientWidth` 390, all seven links present and reachable, the document not overflowing, and the
 wordmark not overlapping — that last an artefact of reading a 3× screenshot. **No defect.**
+
+## D113 · 2026-11-02 · The guard's own comments were figures in prose, and they went stale in two days
+
+**Prompted by the other session's observation**, after it found four defects in two days by reading
+an artefact it had produced rather than the description of it: the offer "named above" that is only
+described, the step that silently took no screenshot, the caption that reversed its own claim, and
+a caption that omitted its page's headline. Asking the same question here has one answer —
+`bench/src/doc-figures.test.ts` has been written across dozens of small edits and never read end to
+end.
+
+**Its comments are dense with measurements, and six of nine were wrong.** Measured today against
+the same corpus the file itself walks:
+
+| the comment claimed | actually |
+|---|---|
+| 2,577 code spans | **2,722** |
+| 214 spans with a hyphenated token | **268** |
+| 75 spans reading `plan: free` or similar | **80** |
+| 35 reading `{ store, url, price }` | **36** |
+| **three** spans with an operator hyphen | **four** |
+| 278 `path:line` citations | **282** |
+| 7 reading `reconcileUnmatched === 1` | 7 — correct |
+| seven wrapped code spans | 7 — correct |
+| 23 `pnpm` scripts cited, 23 defined | correct |
+
+**This is the defect the file exists to prevent, inside the file, in the one place it cannot look.**
+Every check in it pins prose to a source; its own prose was pinned to nothing. And the mechanism is
+worth naming precisely: **the corpus grew because we kept recording the measurements.** Each ledger
+entry describing a count added code spans and citations to the body being counted, so the act of
+writing the figure down is part of what falsified it. Nothing was edited carelessly — D108 and D111
+were accurate the day they were written.
+
+**The fix is not to update the numbers.** They would be wrong again by the next entry, and a
+treadmill of corrections in a code comment is worse than no figure at all. The counts are gone from
+the comments; what stays is the reasoning they were there to support — that `@` is clean, that the
+hyphen needed the `(?<=[^\s])` restriction because operator hyphens exist, that `:`, `,` and `=`
+were excluded because correct prose uses them — **with a pointer to D108 and D111, which hold the
+counts with the dates they were taken.** That is this project's own convention for a measurement,
+and the test file was the one document not following it.
+
+**The rule, stated for the next person who justifies a check with a number:** a measurement belongs
+in a dated record, and a comment should carry the argument, not the evidence. The argument does not
+drift. **A code comment has no date on it, so a figure inside one reads as current for ever** —
+which is exactly why the seventh species is the most durable of the family: D107's clean grep,
+D108's implausible count, D109's fix that stopped at its example, D110's mention that was not a
+line, D111's uncalibrated instrument, D112's claim taken from a description, and now a justification
+that outlived its justification.
