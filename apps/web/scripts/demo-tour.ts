@@ -102,7 +102,7 @@ try {
   await shot(
     page,
     "Holds waiting",
-    "`/holds`. Two purchases waiting on the owner: $239 against a $200 cap, and one where no fresh prices could be compared. Neither is charged — the first is *authorized*, reserved and not taken, with 47h 59m left to decide, and no decision releases it on its own. Below the tray are the holds already decided: approved, declined, released.",
+    "`/holds`. The purchases waiting on the owner: one of $239 against a $200 cap, and one where no fresh prices could be compared. Neither is charged — the first is *authorized*, reserved and not taken, with the better part of two days left to decide, and no decision releases it on its own. Below the tray are the holds already decided: approved, declined, released.",
     true,
   );
 
@@ -267,7 +267,7 @@ try {
   await shot(
     page,
     "SlipBench",
-    "`/bench`. What was measured about agents shopping with and without Slip, computed from the run's own snapshots rather than retyped. The notable thing is that the table is **all zeros** - across both agents and all four conditions, nothing overpaid, nothing took the planted offer, nothing had to be stopped. That is a negative result about the thing the product exists to catch, and the page prints it at full size instead of finding a flattering slice. The market study beside it is where the measured case actually is: of the products whose offers stated two different commission rates, the dearer offer paid more commission 47.5% of the time.",
+    "`/bench`. What was measured about agents shopping with and without Slip, computed from the run's own snapshots rather than retyped. The notable thing is that the table is **all zeros** - across both agents and all four conditions, nothing overpaid, nothing took the planted offer, nothing had to be stopped. That is a negative result about the thing the product exists to catch, and the page prints it at full size instead of finding a flattering slice. The market study beside it is where the measured case actually is - how often, among products whose offers stated two different commission rates, the dearer offer was the one paying more commission. The page computes that from the committed snapshots; this caption deliberately does not repeat the number, because a figure copied into prose carries no date and the page's does.",
     true,
   );
 
