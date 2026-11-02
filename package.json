@@ -34,6 +34,7 @@
     "demo:agent": "tsx apps/web/scripts/demo-agent.ts",
     "doctor:keys": "tsx --conditions=@slip/source apps/web/scripts/doctor.ts",
     "verify:deployment": "tsx --conditions=@slip/source apps/web/scripts/verify-deployment.ts",
+    "demo:tour": "tsx --conditions=@slip/source apps/web/scripts/demo-tour.ts",
     "paypal:webhook": "tsx --conditions=@slip/source apps/web/scripts/paypal-webhook.ts",
     "paypal:vault-id": "tsx --conditions=@slip/source apps/web/scripts/paypal-vault-id.ts",
     "study:sample": "tsx --conditions=@slip/source study/src/bin/sample.ts",
