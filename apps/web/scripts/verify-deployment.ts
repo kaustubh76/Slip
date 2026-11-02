@@ -246,13 +246,17 @@ try {
       say("buyer approval", "FAILED", `PayPal's login did not complete: ${message(error)}`);
     }
   } else {
-    say(
-      "buyer approval",
-      "absent",
+    // Name which half is missing. "set both" is useless advice to somebody who has set one of
+    // them and is looking at this line wondering which.
+    const missing =
       approval === null
         ? "no approval link to follow"
-        : "set PAYPAL_SANDBOX_BUYER_EMAIL and PAYPAL_SANDBOX_BUYER_PASSWORD in apps/web/.env.local to drive it",
-    );
+        : buyerEmail === "" && buyerPassword === ""
+          ? "set PAYPAL_SANDBOX_BUYER_EMAIL and PAYPAL_SANDBOX_BUYER_PASSWORD in apps/web/.env.local"
+          : buyerPassword === ""
+            ? "PAYPAL_SANDBOX_BUYER_EMAIL is set; PAYPAL_SANDBOX_BUYER_PASSWORD is not"
+            : "PAYPAL_SANDBOX_BUYER_PASSWORD is set; PAYPAL_SANDBOX_BUYER_EMAIL is not";
+    say("buyer approval", "absent", missing);
   }
 
   await page.goto("/agents", { waitUntil: "domcontentloaded" });
