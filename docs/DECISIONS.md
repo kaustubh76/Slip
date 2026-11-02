@@ -3107,3 +3107,43 @@ line; `MERCHANTS.md:280` cites a comment that **paraphrases** `RULE_OUTCOME` wit
 `MERCHANTS.md:45` names `prepareCheck` while citing `comparable.ts:8`, which is
 `dedupeByNormalizedUrl` — **a document may name the caller and cite the implementation**, and that
 is good writing rather than a defect.
+
+## D112 · 2026-11-02 · A caption written from the description, and the clause that invited it
+
+**The other session's captioned UI tour contradicted its own screenshots three times**, and only
+opening the images caught any of them: a holds caption said four purchases waiting where the picture
+showed two; a roll caption said thirty receipts where the page said thirty-one; and one step claimed
+that approving a stale hold is **refused** with `PRICE_CHANGED` when the screenshot showed the
+opposite — it re-checked and captured the raised price in a single step. That last claim was written
+from `UI.md`'s description rather than from the run.
+
+**`UI.md` was not wrong, and checking that was the work.** Both code paths refuse only on a
+mismatch with the caller's `expectedAmountCents` (`packages/app/src/holds.ts:295` and `:342`), and
+`UI.md` says exactly that: *"Approving sends the exact amount the preview showed. If the price moved,
+the server refuses."* D33 above states the behaviour in full — **a reserved hold charges exactly what
+was reserved; a hold with nothing reserved is checked again on current prices.** Nothing in the
+documentation says what the caption said. **No correction was needed, and the negative result is
+recorded so nobody "fixes" an accurate document on the strength of a caption.**
+
+**But the misreading came from a real gap, so one clause is added.** `UI.md` described the mechanism
+without saying that the preview may show *more* than was reserved. That is the single most
+consequential fact about the most consequential click in the product, and it lived only in a dated
+ledger entry. §"Money commands are never optimistic" now says that a hold with nothing reserved is
+re-priced by `previewApproval`, that the dialog's amount may therefore exceed what was held, that
+approving charges it, and that **`PRICE_CHANGED` is the narrower guard — it fires when the price
+moves between preview and approval, not while the hold sat waiting.** A document that is accurate
+but omits the precondition is how an accurate document produces a false claim downstream.
+
+**The class is new and belongs beside the other five.** D107–D111 are all forms of trusting a
+procedure's output as evidence about the world. This one is trusting *a description* as evidence
+about behaviour: the caption was derived from a document instead of from the thing the document
+describes. The remedy the other session applied is the right one — **read the output back from a
+real run**, which is also how it found that it had written "the offer named above" where the offer is
+only described, and how it found a step that had silently taken no screenshot at all because it
+searched for a price on a hold that displays none. Sixteen shots instead of seventeen was the only
+signal, which is a guard reporting a reassuring zero in a different organ.
+
+**A negative finding carried over so neither session re-runs it.** The owner UI at 390px was
+suspected of clipping its tab strip. Measured: `overflow-x: auto`, `scrollWidth` 658 against
+`clientWidth` 390, all seven links present and reachable, the document not overflowing, and the
+wordmark not overlapping — that last an artefact of reading a 3× screenshot. **No defect.**
