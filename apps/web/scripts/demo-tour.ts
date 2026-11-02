@@ -184,6 +184,75 @@ try {
     true,
   );
 
+  // 9b · The sharpest thing the product does: notice money that moved without it. The console
+  // plants a PayPal charge for a purchase Slip refused; the reconcile then finds a record it can
+  // tie to a decision where the amounts disagree. Demo timing makes that reachable in seconds
+  // (`DEMO_TIMING.reportingLagMs` is 10 s and the resolver loops) rather than in a day.
+  await visit(page, "/demo");
+  await page.getByRole("button", { name: "Charge for a purchase Slip refused" }).click();
+  await page.waitForTimeout(4_000);
+  await visit(page, "/mandate");
+  const disagree = page.getByText(/do not agree about how much money moved/);
+  const noticed = await disagree
+    .waitFor({ state: "visible", timeout: 45_000 })
+    .then(() => true)
+    .catch(() => false);
+  if (!noticed) {
+    // Give the loop one more turn before concluding; the reconcile window moves with the clock.
+    await page.waitForTimeout(12_000);
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await page.getByRole("main").first().waitFor();
+  }
+  await shot(
+    page,
+    "Money that moved without Slip",
+    (await disagree.count()) > 0
+      ? "`/mandate`, after PayPal was made to charge for a purchase Slip **refused**. The daily reconcile compares PayPal's own records against what Slip decided, and says so: *the records do not agree about how much money moved*. This is the claim the whole product rests on — and the page is careful about its own limit, which the caption should be too: a charge Slip cannot tie to any purchase it decided goes to the server log, not this counter, because there is no permission to file it under."
+      : "`/mandate` after planting a charge for a refused purchase. The reconcile had not yet run when this was taken — it compares the last few days of PayPal's records on a loop, and the page says what it checked rather than claiming everything has been checked.",
+    true,
+  );
+
+  // 9c · A refusal that exists only because time passed.
+  await visit(page, "/demo");
+  await page
+    .getByRole("button", { name: "Buys a $310 standing desk while Channel3 is down" })
+    .click();
+  await page.waitForTimeout(SETTLE_MS);
+  await page.getByRole("button", { name: /Raise the standing desk/ }).click();
+  await page.waitForTimeout(2_000);
+  // Slip prices from its own copy of the listing, which it keeps for a minute. Approving after that
+  // re-checks at current prices, and the raise above is then a reason to refuse that did not exist
+  // when the hold was taken.
+  await page.waitForTimeout(62_000);
+  await visit(page, "/holds");
+  // A hold taken when no prices could be read shows no amount, so it cannot be found by one.
+  // Match the sentence the card actually carries. The first attempt looked for "$310" and silently
+  // matched nothing, which is how a tour loses a step without anybody noticing.
+  const stale = page
+    .getByRole("article")
+    .filter({ hasText: /No fresh listed item prices/ })
+    .first();
+  const ask = stale.getByRole("button", { name: /Approve/ }).first();
+  if ((await ask.count()) === 0) {
+    // Loud, not silent. A step that cannot find its subject has to say so.
+    process.stdout.write("  ! no re-checkable hold in the tray - skipped the price-change step\n");
+  } else {
+    await ask.click();
+    const dialog = page.getByRole("dialog");
+    await dialog.waitFor();
+    await dialog
+      .getByRole("button", { name: /^Approve/ })
+      .last()
+      .click();
+    await page.waitForTimeout(SETTLE_MS);
+    await shot(
+      page,
+      "The price moved underneath it",
+      "A hold taken when no prices could be read, approved after that product's price was raised by $8. Slip did not pay the number from when the hold was taken: approving re-checks at current listed prices and pays in one step, so the capture in the decided list below is the **raised** price, not the old one. The card said so before it was approved - *Nothing is reserved. Approving checks again at current listed prices and pays in one step* - which is the difference between re-pricing an owner was warned about and a stale number charged quietly.",
+      true,
+    );
+  }
+
   // 10 · Every state of the kit, in one page.
   await visit(page, "/kit");
   await shot(

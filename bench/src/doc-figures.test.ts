@@ -520,12 +520,28 @@ describe("the figures in prose", () => {
         if (name !== "" && !wanted.has(name)) wanted.set(name, path);
       }
     }
-    const declared = new Set(
-      [...read(".env.example").matchAll(/^([A-Z][A-Z0-9_]{2,})=/gm)].map((m) => m[1]),
+    const missingFrom = (example: string): string[] => {
+      const declared = new Set([...example.matchAll(/^([A-Z][A-Z0-9_]{2,})=/gm)].map((m) => m[1]));
+      return [...wanted]
+        .filter(([name]) => !declared.has(name) && !PLATFORM.includes(name))
+        .map(([name, path]) => `${name} is read by ${path} and is not in .env.example`);
+    };
+
+    const example = read(".env.example");
+
+    // **The rule is asserted to still work before it is believed.** A zero from an instrument that
+    // has quietly stopped matching is indistinguishable from a zero from a clean corpus, and every
+    // check in this file was wrong on its first run — one of them reported 203 defects, another
+    // reported none because its pattern could not match what it was looking for. So the known-bad
+    // case is pinned beside the real one: `.env.example` with `CRON_SECRET=` turned back into the
+    // prose mention it was before `fd06ec1`, which is the exact failure this rule exists to catch.
+    const asMention = example.replace(
+      /^CRON_SECRET=.*$/m,
+      "# CRON_SECRET works too, which is the name Vercel injects.",
     );
-    const undeclared = [...wanted]
-      .filter(([name]) => !declared.has(name) && !PLATFORM.includes(name))
-      .map(([name, path]) => `${name} is read by ${path} and is not in .env.example`);
-    expect(undeclared.join("\n")).toBe("");
+    expect(asMention).not.toBe(example); // the fixture must actually differ, or it proves nothing
+    expect(missingFrom(asMention).join("\n")).toContain("CRON_SECRET");
+
+    expect(missingFrom(example).join("\n")).toBe("");
   });
 });
