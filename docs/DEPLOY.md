@@ -300,7 +300,7 @@ The resolver is four branches, not one path, so the honest picture is per branch
 
 | path | what it does | state |
 |---|---|---|
-| Webhook → `POST /api/webhooks/paypal` | PayPal reports what became of orders, captures, authorizations and vault tokens, each delivery verified against the webhook id | **not arriving** — the registered address is a dead tunnel |
+| Webhook → `POST /api/webhooks/paypal` | PayPal reports what became of orders, captures, authorizations and vault tokens, each delivery verified against the webhook id | **address correct, nothing seen yet** — re-pointed 31 Oct (§2.3); unsigned, the endpoint answers `400 BAD_SIGNATURE`, which proves the door, the check and that `PAYPAL_WEBHOOK_ID` is set, but not that it is the *right* id. No delivery can be observed until a real transaction, and Hobby retains no runtime logs to look in |
 | Resolver, known order id | `getOrder(orderId)` through `/v2/checkout/orders` | **working** — needs no feature |
 | Resolver, inside the resend window | re-sends with the *same* `PayPal-Request-Id`, the only repeat PayPal will not charge twice for | **working** |
 | Resolver, last resort | `findOrderByInvoice` — reached only when Slip never learned an order id **and** the resend window has closed | **dead** — Transaction Search |
@@ -426,9 +426,9 @@ command reports them rather than a paragraph hoping to be read:
 
 | precondition | state | fixed by |
 |---|---|---|
-| a vaulted sandbox buyer | missing — **G2**, all three ways round it refused by name | a sandbox buyer login at PayPal's approval page |
+| a vaulted sandbox buyer | missing — **G2**, all three ways round it refused by name | **credentials, not a click**: `PAYPAL_SANDBOX_BUYER_EMAIL` and `PAYPAL_SANDBOX_BUYER_PASSWORD` in `apps/web/.env.local`, after which `pnpm verify:deployment` drives the approval itself (`a384505`) |
 | Transaction Search granted | not granted — the reconcile cannot look | a tick-box: dashboard → Apps & Credentials → your app → Features |
-| the webhook pointed at this deployment | pointed at a dead tunnel | `pnpm paypal:webhook https://<host> --save` |
+| the webhook pointed at this deployment | **done, 31 Oct 2026** — re-pointed to the deployment, 8 events, id unchanged, so `PAYPAL_WEBHOOK_ID` did not move (§2.3) | `pnpm paypal:webhook https://<host> --save` |
 
 **One asymmetry in that command worth knowing**, because it is deliberate: a missing grant exits 1,
 but a webhook pointed elsewhere exits 1 **only when PayPal could have reached this deployment**.
