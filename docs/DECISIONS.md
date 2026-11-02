@@ -2999,3 +2999,63 @@ script exists, never that it can work. `pnpm test:live:paypal` is defined and st
 against the deployment. **A command that exists and fails for want of a credential, a grant or a
 database is exactly what this cannot see** — that remains a question for a person, and this entry is
 the record that it was asked today.
+
+## D110 · 2026-11-01 · A mention is not a line
+
+**`.env.example` was missing four variables the application reads**, found by the other session and
+fixed in `fd06ec1`. `doctor.ts` tells an operator to copy that file, so a variable it omits is one
+they never set. The four: `CRON_SECRET`, `SLIP_AGENT_SEARCH`, and the two sandbox buyer credentials
+that had been asked for in a message and written down nowhere.
+
+**`CRON_SECRET` is the sharp one, because it was not absent.** The file *named* it, in prose —
+*"`CRON_SECRET` works too, which is the name Vercel injects"* — while the only **fillable line** was
+`SLIP_CRON_SECRET=`. Verified against `fd06ec1~1`: comment on line 59, line to fill on line 62. So
+an operator doing exactly what they were told would set the one name Vercel never sends, and the
+deployment would answer **401 to its own cron for ever** — invisible until something needed a hold
+expired. D76's failure, pre-loaded into the file whose job is to prevent it. Both names are real:
+`apps/web/src/server/cron.ts:33` reads `[env["SLIP_CRON_SECRET"], env["CRON_SECRET"]]`, so the
+application was never at fault.
+
+**"A mention is not a line" is the other session's formulation and it is the fourth species.** The
+string was present and proved nothing — which is *"a clean grep is evidence about the pattern, never
+about the file"* (D107) wearing different clothes, and the companion to *"an implausible count from
+a tool you wrote five minutes ago is a bug in the tool"* (D108) and *"a fix applied to the instance
+is not applied to the class"* (D109). All four are the same mistake: **accepting the presence of a
+token as evidence about the thing the token refers to.**
+
+**The seventh check** walks every non-test source under `apps` and `packages`, extracts each
+`env["NAME"]` and `env.NAME` read, and demands a fillable `NAME=` line in `.env.example` — not a
+mention, precisely because that is how `CRON_SECRET` hid. Platform-set variables are excluded by a
+literal list with a reason each (`NODE_ENV`, `VERCEL`, `RENDER_EXTERNAL_URL`, the two E2E ports).
+Confirmed independently by turning the fillable line back into a prose mention in a scratchpad copy
+and watching the variable go missing. **What it cannot do**, in the same terms as D109: it checks
+that a variable is named, never that the comment beside it is true or that a value would be sane.
+
+**One stale sentence that no sweep would have caught, and that is worth the record.** The comment
+beside `PAYPAL_TEST_VAULT_ID` called the buyer approval *"the one step nothing can automate"*. That
+stopped being true at `a384505`, by the same session's own hand, two files away — and it was found
+by **reading the file being edited**, not by any search. A change that invalidates a sentence
+elsewhere leaves no token to grep for. That is the limit of every check in this file.
+
+**`a384505` also changes what remains a human step**, which this session had been stating wrongly.
+The API route was closed first and the proof recorded — 29 token scopes, none matching sandbox,
+account, reporting or transaction; `GET /v1/sandbox/accounts` and `/v2/sandbox/accounts` both 404 —
+so *"a human must"* was tested before it was worked around. A Playwright browser now signs in as the
+sandbox buyer **in the same context as the owner**, because PayPal redirects to
+`/mandates/<id>/return`, which reads the owner's session; a fresh context lands on `/sign-in`. **So
+the remaining ask is credentials, not a click.**
+
+**A design call recorded because it trades one kind of honesty for another.**
+`.github/workflows/housekeeping.yml` pings `/api/cron/resolve` every five minutes with
+`secrets.CRON_SECRET`, no checkout and `permissions: {}`. **Unconfigured it warns and exits 0, not
+1.** A scheduled job failing every five minutes until somebody adds a secret sends hundreds of
+notifications and ends up disabled by the platform — a worse outcome than a warning nobody reads.
+The honest record of "not yet working" stays where it belongs, in §4's housekeeping gate, which is
+**still open**. The workflow's own command was verified by hand (200 with the report, 401 without a
+bearer); whether GitHub's scheduler actually fires it is **unverified**, and the file says so.
+
+**And the resolver has work in front of it for the first time.** The live report now reads
+`setups: { waiting: 7 }` where every group used to be 0 — seven pending mandates created by
+verification runs, two of whose PayPal setup tokens have already expired. They are test debris on a
+production database rather than owners, which is worth knowing before anybody reads that number as
+demand.
