@@ -219,20 +219,19 @@ describe("the figures in prose", () => {
     // measured and rejected — "the span has no other whitespace" and "either half starts or ends
     // mid-token" each flag `POST` + `/api/v1/agent/checkout`, `vercel … --billing-plan free_v3`
     // and `--errands 2 --conditions clean`, all of which want the space they have. This rule
-    // flags none of the seven wrapped spans in the repository today and does flag the defect it
-    // was written for.
+    // flags nothing in the repository today and does flag the defect it was written for.
     //
-    // `-` and `@` earn their place by the same measurement, over all 2,577 code spans in the
+    // `-` and `@` earn their place by the same measurement, taken over every code span in the
     // repository's Markdown. `@` is clean: not one span has a legitimate space after it, and
-    // `@slip/ui` wrapped after the `@` ruins a package name. The hyphen needed one more turn —
-    // a re-count found **three** spans with a legitimate space after `-`, all of them arithmetic:
+    // `@slip/ui` wrapped after the `@` ruins a package name. The hyphen needed one more turn — a
+    // re-count found spans with a legitimate space after `-`, all of them arithmetic:
     // `scrollWidth - clientWidth`, `calc(100vw - 32px)` and a list bullet. So the hyphen is
     // flagged only when it is *not* preceded by whitespace, which is the difference between a
-    // token (`verify-deployment.ts`) and an operator (`a - b`). Without that guard the three
-    // would have become false alarms on their first reflow — the same test that kept `:`, `,`
-    // and `=` out. 214 spans contain a hyphenated token, and this project's filenames are
-    // hyphen-heavy (`verify-deployment.ts`, `owner-start.spec.ts`, `doc-figures.test.ts`), so the
-    // character is worth having with that restriction.
+    // token (`verify-deployment.ts`) and an operator (`a - b`). Without that guard those would
+    // have become false alarms on their first reflow — the same test that kept `:`, `,` and `=`
+    // out. Many spans contain a hyphenated token and this project's filenames are hyphen-heavy
+    // (`verify-deployment.ts`, `owner-start.spec.ts`, `doc-figures.test.ts`), so the character is
+    // worth having with that restriction. **D108 and D111 hold the counts, with their dates.**
     //
     // The restriction is `(?<=[^\s])` and not `(?<!\s)`, which is not pedantry: a *negative*
     // lookbehind is satisfied by the absence of any character, so `(?<!\s)-$` fires on a left half
@@ -241,9 +240,9 @@ describe("the figures in prose", () => {
     // case is its only behavioural difference: every token case above fires either way.
     //
     // `:`, `,` and `=` are deliberately **out**, by the rule that a check must not condemn correct
-    // prose: 75 spans read `plan: free` or similar, 35 read `{ store, url, price }`, and 7 read
-    // `reconcileUnmatched === 1`. None of them wraps at that point today, so each would be a
-    // cry-wolf waiting for a reflow rather than a defect waiting to be caught.
+    // prose: spans read `plan: free`, `{ store, url, price }` and `reconcileUnmatched === 1` in
+    // numbers, and none of them wraps at that point today, so each would be a cry-wolf waiting
+    // for a reflow rather than a defect waiting to be caught.
     const BREAKS_A_TOKEN = /[/._@]$|(?<=[^\s])-$/;
 
     // The rule took three passes and each one was a real defect, so its behaviour is pinned here
@@ -344,8 +343,10 @@ describe("the figures in prose", () => {
   });
 
   it("cites no file that is missing, and no line past the end of one", () => {
-    // These documents carry 278 `path:line` citations. A file that moves or shrinks leaves one
-    // pointing at nothing, and nothing checked them until now.
+    // These documents carry several hundred `path:line` citations. A file that moves or shrinks
+    // leaves one pointing at nothing, and nothing checked them until now. D111 has the count on
+    // the day it was taken; it is not repeated here, because it changes every time the ledger
+    // grows — which is how the figures that used to be in these comments went stale (D113).
     //
     // **Longest extension first.** Ordered alternation is why the first run of this reported
     // eleven missing paths that all existed: `js` before `json` truncated `apps/web/vercel.json`
