@@ -3059,3 +3059,51 @@ bearer); whether GitHub's scheduler actually fires it is **unverified**, and the
 verification runs, two of whose PayPal setup tokens have already expired. They are test debris on a
 production database rather than owners, which is worth knowing before anybody reads that number as
 demand.
+
+## D111 · 2026-11-02 · Two clean classes, and three instruments that were wrong first
+
+**Two kinds of defect had never been checked, and these documents are unusually exposed to both.**
+Across the fourteen Markdown documents there are **280 file citations** (`packages/check/src/rules.ts:41`
+and the like), **67 of which carry a line number**, and **4 anchor links** into a heading. A file
+that moves or shrinks leaves a citation pointing at nothing. A renamed heading does not break a
+link — it lands the reader silently at the top of the page, which is worse than a 404 because
+nothing announces it.
+
+**Both classes are clean.** No citation names a file that does not exist, no line number is past
+the end of its file, and all four anchors resolve. That is worth stating with its numbers, because
+a negative result nobody can size is not a result.
+
+**The finding is that all three measuring instruments reported defects that were not there.**
+
+| Probe | First reported | Cause |
+|---|---|---|
+| Wrapped code spans (D108) | 1634 spans, **203 suspects** | Paired backticks by regex, which matches the prose *between* two spans. True: 7 spans, 1 defect |
+| File citations | **11 missing paths**, the same truncated `vercel.json` six times | Ordered alternation: `js` matched before `json`, dropping the final two characters, and `ts` before `tsx` did the same to every view. True: 0 |
+| Anchor links | **1 broken anchor**, `DIAGRAM.md:11` | Collapsed whitespace runs to one hyphen. GitHub hyphenates each space, and `·` leaves two, so `## D82 · 2026-10-23 · …` slugs to `d82--2026-10-23--…`. True: 0 |
+
+**D108 said an implausible count is a bug in the tool. That rule would have caught one of these
+three.** A truncated `vercel.json` is a thoroughly plausible filename, and one broken anchor in a long
+document is exactly what a real sweep turns up — neither reading set off any alarm, and both were
+believed until the hits were opened. **So the rule is not about plausibility: calibrate the
+instrument against a case you know is bad before trusting any count it gives you**, including a
+count of zero. That is the fifth of this family, after D107's clean grep, D108's implausible count,
+D109's fix that stopped at its example and D110's mention that was not a line — all of them the
+same error, which is taking the output of a procedure as evidence about the world rather than
+evidence about the procedure.
+
+**So the two new checks carry their own proof of sensitivity.** Each asserts, in the same test, that
+its rule still flags a known-bad fixture *and* that the real corpus is clean. An instrument that
+has quietly stopped matching now fails CI instead of reporting a reassuring zero. The wrapped-path
+rule from D108 was retrofitted the same way, because it took three passes to settle
+(`/[/._@]$|(?<=[^\s])-$/`) and a corpus that happens to contain no offender cannot show that it
+still works. The other checks were left alone: their predicates are set equality or substring
+containment, where silent loss of sensitivity is not a realistic failure.
+
+**A third check was written, measured and rejected** — the same fate as the arithmetic cross-check
+and the paragraph-scoped flag check. Requiring an identifier named on a prose line to appear within
+±6 lines of the citation on that line flagged **10 of 32**, and all three inspected were correct
+prose: `SPEC.md:159` cites `attempt.ts:19` for `RULE_CODES` *and* `:45` for `RULE_OUTCOME` on one
+line; `MERCHANTS.md:280` cites a comment that **paraphrases** `RULE_OUTCOME` without naming it; and
+`MERCHANTS.md:45` names `prepareCheck` while citing `comparable.ts:8`, which is
+`dedupeByNormalizedUrl` — **a document may name the caller and cite the implementation**, and that
+is good writing rather than a defect.
