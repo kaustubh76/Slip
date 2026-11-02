@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { RULE_OUTCOME } from "@slip/domain";
 import { describe, expect, it } from "vitest";
@@ -75,6 +75,20 @@ const LIVING = [
   "docs/RAILS.md",
   "docs/UI.md",
   "docs/DIAGRAM.md",
+];
+
+/**
+ * Every Markdown document in the repository, the ledger and the generated reports included. The
+ * *figure* checks use `LIVING` instead, which excludes the ledger, because a dated entry may keep
+ * what was believed that day — but a citation to a file that no longer exists, or a link to a
+ * heading that was renamed, is broken for a reader of an old entry exactly as much as a new one.
+ */
+const CITED = [
+  ...LIVING,
+  "docs/DECISIONS.md",
+  "bench/results/slipbench.md",
+  "bench/results/steering-judge.md",
+  "study/results/market-study.md",
 ];
 
 /**
@@ -230,6 +244,18 @@ describe("the figures in prose", () => {
     // prose: 75 spans read `plan: free` or similar, 35 read `{ store, url, price }`, and 7 read
     // `reconcileUnmatched === 1`. None of them wraps at that point today, so each would be a
     // cry-wolf waiting for a reflow rather than a defect waiting to be caught.
+    const BREAKS_A_TOKEN = /[/._@]$|(?<=[^\s])-$/;
+
+    // The rule took three passes and each one was a real defect, so its behaviour is pinned here
+    // rather than left to the corpus — a corpus that happens to contain no offender today cannot
+    // tell you the rule still works.
+    for (const left of ["apps/web/src/app/api/v1/agent/checkout/", "doc-", "@slip/", "offer."]) {
+      expect(BREAKS_A_TOKEN.test(left), `${left} should break a token`).toBe(true);
+    }
+    for (const left of ["POST", "scrollWidth -", "calc(100vw -", "pnpm", "409", "-"]) {
+      expect(BREAKS_A_TOKEN.test(left), `${left} should not`).toBe(false);
+    }
+
     const offenders: string[] = [];
     // Every document, the ledger included. `LIVING` excludes `docs/DECISIONS.md` from the *figure*
     // checks because a dated entry is allowed to keep what was believed that day — but a path
@@ -253,7 +279,7 @@ describe("the figures in prose", () => {
         if (index % 2 === 1 && part.includes("\n")) {
           const halves = part.split(/\s*\n\s*/);
           const left = halves[0] ?? "";
-          if (/[/._@]$|(?<=[^\s])-$/.test(left)) {
+          if (BREAKS_A_TOKEN.test(left)) {
             const line = text.slice(0, offset).split("\n").length;
             offenders.push(`${path}:${line} renders as "${part.replace(/\s*\n\s*/g, " ")}"`);
           }
@@ -315,6 +341,109 @@ describe("the figures in prose", () => {
 
     const unknown = [...cited].filter(([name]) => !defined.has(name));
     expect(unknown.map(([name, path]) => `${path} cites \`pnpm ${name}\``).join("\n")).toBe("");
+  });
+
+  it("cites no file that is missing, and no line past the end of one", () => {
+    // These documents carry 278 `path:line` citations. A file that moves or shrinks leaves one
+    // pointing at nothing, and nothing checked them until now.
+    //
+    // **Longest extension first.** Ordered alternation is why the first run of this reported
+    // eleven missing paths that all existed: `js` before `json` truncated `apps/web/vercel.json`
+    // to `apps/web/vercel.js`, and `ts` before `tsx` did the same to every `.tsx` view. Six
+    // identical phantom hits across six files is the shape of a tool bug, not a finding.
+    const CITE =
+      /((?:apps|packages|study|bench|tests|docs|\.github)\/[\w./-]+\.(?:tsx|ts|mjs|json|js|yaml|yml|sql|css|md))(?![\w])(?::(\d+))?/g;
+
+    const offenders = (corpus: ReadonlyArray<readonly [string, string]>): string[] => {
+      const out: string[] = [];
+      for (const [doc, text] of corpus) {
+        for (const [index, line] of text.split("\n").entries()) {
+          for (const match of line.matchAll(CITE)) {
+            const cited = match[1] ?? "";
+            const at = match[2];
+            const file = join(root, cited);
+            if (!existsSync(file)) {
+              out.push(`${doc}:${index + 1} cites ${cited}, which does not exist`);
+            } else if (at !== undefined) {
+              const lines = readFileSync(file, "utf8").split("\n").length;
+              if (Number(at) > lines) {
+                out.push(`${doc}:${index + 1} cites ${cited}:${at}, but it has ${lines} lines`);
+              }
+            }
+          }
+        }
+      }
+      return out;
+    };
+
+    // Sensitivity, pinned here rather than checked once by hand: three instruments in this file's
+    // history reported defects that did not exist, and a rule that has quietly stopped matching
+    // reports a reassuring zero. Both halves of the rule must still fire.
+    expect(offenders([["probe.md", "see `packages/nope/missing.ts`"]])).not.toEqual([]);
+    expect(offenders([["probe.md", "see `bench/src/conditions.ts:99999`"]])).not.toEqual([]);
+    expect(offenders([["probe.md", "see `bench/src/conditions.ts:12`"]])).toEqual([]);
+
+    const corpus = CITED.map((path) => [path, read(path)] as const);
+    expect(corpus.length).toBeGreaterThan(10);
+    expect(offenders(corpus).join("\n")).toBe("");
+  });
+
+  it("links to no heading that does not exist", () => {
+    // A renamed heading does not break a markdown link, it silently lands the reader at the top of
+    // the page, which is worse than a 404 because nothing announces it.
+    //
+    // Slugs are built the way GitHub builds them, and the detail that matters is the last step:
+    // **each space becomes its own hyphen.** Collapsing runs reported `DIAGRAM.md:11` as broken,
+    // because `## D82 · 2026-10-23 · …` leaves two spaces where the `·` was and so slugs to
+    // `d82--2026-10-23--…` with doubled hyphens. The link was right; the instrument was not.
+    const slugs = (markdown: string): Set<string> => {
+      const body = markdown.replace(/```[\s\S]*?```/g, "");
+      const out = new Set<string>();
+      for (const match of body.matchAll(/^#{1,6}\s+(.*)$/gm)) {
+        const text = (match[1] ?? "")
+          .replace(/`([^`]*)`/g, "$1")
+          .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+          .replace(/[*_]/g, "")
+          .trim()
+          .toLowerCase()
+          .replace(/[^\w\s-]/g, "");
+        out.add(text.replaceAll(" ", "-"));
+      }
+      return out;
+    };
+
+    const offenders = (corpus: ReadonlyArray<readonly [string, string]>): string[] => {
+      const out: string[] = [];
+      for (const [doc, text] of corpus) {
+        for (const [index, line] of text.split("\n").entries()) {
+          for (const match of line.matchAll(/\]\((?!https?:)([^)#]*)#([^)]+)\)/g)) {
+            const target = match[1] ?? "";
+            const fragment = (match[2] ?? "").toLowerCase();
+            const file = target === "" ? join(root, doc) : join(root, dirname(doc), target);
+            if (!existsSync(file)) {
+              out.push(`${doc}:${index + 1} links to ${target}, which does not exist`);
+            } else if (!slugs(readFileSync(file, "utf8")).has(fragment)) {
+              out.push(`${doc}:${index + 1} links to ${target}#${fragment}, which is no heading`);
+            }
+          }
+        }
+      }
+      return out;
+    };
+
+    expect(offenders([["docs/x.md", "see [D82](DECISIONS.md#no-such-heading)"]])).not.toEqual([]);
+    expect(offenders([["docs/x.md", "see [gone](NOPE.md#whatever)"]])).not.toEqual([]);
+    expect(
+      offenders([
+        [
+          "docs/x.md",
+          "see [D82](DECISIONS.md#d82--2026-10-23--the-diagram-read-back-against-the-code)",
+        ],
+      ]),
+    ).toEqual([]);
+
+    const corpus = CITED.map((path) => [path, read(path)] as const);
+    expect(offenders(corpus).join("\n")).toBe("");
   });
 
   it("lists in every rule table exactly the rules the code implements", () => {
