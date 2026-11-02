@@ -212,7 +212,14 @@ hooks take over from there.
 
 **Money commands are never optimistic (D48).** The page shows only what the server returned.
 Approving sends the exact amount the preview showed. If the price moved, the server refuses
-with `PRICE_CHANGED` and the new amount, and the dialog asks again. An answer that never arrived
+with `PRICE_CHANGED` and the new amount, and the dialog asks again.
+
+**What the preview shows is not always what was reserved**, and this is the one thing to be sure of
+before approving: a reserved hold charges exactly what was reserved, but **a hold with nothing
+reserved is re-priced on current prices by `previewApproval`** (D33). So the amount in the dialog
+may be *higher* than when the hold was taken, and approving charges that higher amount in one step
+rather than refusing. `PRICE_CHANGED` is the narrower guard — it fires only when the price moves
+between the preview and the approval, not when it moved while the hold sat waiting. An answer that never arrived
 shows "Checking with PayPal…" and re-reads; it is never sent a second time.
 
 ### Live updates
