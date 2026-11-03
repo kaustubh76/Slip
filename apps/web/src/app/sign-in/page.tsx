@@ -8,8 +8,11 @@ import { signInToDemo, signInWithPassword, startWithPayPal } from "../actions/se
 export const dynamic = "force-dynamic";
 
 const REFUSALS: Record<string, string> = {
+  // `full` is the demo's alone: it is the ceiling on desks one process will hold. `slow` is shown
+  // on three paths — opening a desk, opening an owner, and trying a password — so it cannot say
+  // "desks", which is a word that means nothing on the two that are not the demo.
   full: "This server has opened as many desks as it can hold. Restart it, or try again later.",
-  slow: "That is a lot of desks from one place in a few minutes. Wait a little, then open another.",
+  slow: "That is a lot of attempts from one place in a few minutes. Wait a little, then try again.",
   live: "While PayPal is live, starting needs an email and a password: without one there is no way back in if the browser forgets you.",
   credential:
     "That email and password do not match an owner — or the address is already in use, or the password is under 12 characters.",

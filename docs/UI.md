@@ -306,7 +306,7 @@ says it is simulated.
 | `SLIP_BASE_URL` | — | the public URL; plain `http://` keeps the session cookie usable locally |
 | `SLIP_DEMO_LATENCY_MS` | 2000 | how long each stand-in PayPal call takes |
 | `SLIP_DEMO_MAX_DESKS` | 500 | desks one process will open, and never frees — a seeded desk measures 789 KB, so size this against the box (`render.yaml` sets 200 for a 512 MB instance) |
-| `SLIP_DEMO_DESKS_PER_ADDRESS` | 10 | desks per visitor address per 10 minutes |
+| `SLIP_DEMO_DESKS_PER_ADDRESS` | 10 | desks per visitor address per 10 minutes — and, outside the demo, owner openings and password attempts, counted in the store so the allowance holds across instances (D115) |
 | `SLIP_ENCRYPTION_KEY` | random per process in demo | signs sessions; required outside demo mode |
 
 ## Tests

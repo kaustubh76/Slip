@@ -51,6 +51,12 @@ export interface Runtime {
   fakes: Fakes | null;
   /** Demo desks opened by this process, by mandate, and the limits on opening more. */
   demo: { desks: Map<string, DemoDesk>; limiter: DeskLimiter };
+  /**
+   * What one visitor address may do in a window, counted in the store so the allowance holds
+   * across every instance (D115). The demo's own ceiling stays in `demo.limiter`, because there
+   * it is a heap budget for this process and not a limit on a caller.
+   */
+  limits: { perAddress: number; windowMs: number };
 }
 
 /** How often a deployment outside the demo looks for loose ends (the demo looks every 5 s). */
@@ -124,10 +130,17 @@ async function build(): Promise<Runtime> {
     log,
     config,
   };
-  const limiter = new DeskLimiter({
-    maxDesks: positiveInt(env["SLIP_DEMO_MAX_DESKS"], 500),
+  // One set of figures for both: the demo counts desks in this process, and every other path
+  // counts the same allowance per address in the store. `SLIP_DEMO_DESKS_PER_ADDRESS` has governed
+  // the real sign-up and sign-in limit since that path borrowed the demo's limiter; the name is
+  // the demo's and the reach is not, which is worth knowing when changing it.
+  const limits = {
     perAddress: positiveInt(env["SLIP_DEMO_DESKS_PER_ADDRESS"], 10),
     windowMs: 10 * 60_000,
+  };
+  const limiter = new DeskLimiter({
+    maxDesks: positiveInt(env["SLIP_DEMO_MAX_DESKS"], 500),
+    ...limits,
   });
   if (env["NODE_ENV"] !== "test" && !serverless(env)) {
     // A long-lived process finishes its own loose ends — unknown payments, holds left by a revoke,
@@ -148,6 +161,7 @@ async function build(): Promise<Runtime> {
     standIns,
     fakes,
     demo: { desks: new Map(), limiter },
+    limits,
   };
 }
 

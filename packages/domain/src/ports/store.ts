@@ -37,6 +37,7 @@ export interface Store {
   leases: LeaseRepo;
   impressions: ImpressionRepo;
   reports: ReportRepo;
+  admissions: AdmissionRepo;
 }
 
 /** The result of a status move: see `classifyMove` for applied / unchanged / stale. */
@@ -225,6 +226,27 @@ export interface AgentRepo {
   authenticate(apiKeyHash: string): Promise<AgentAuth | null>;
   listByMandate(id: MandateId): Promise<Agent[]>;
   revoke(id: AgentId, now: Date): Promise<Transitioned<Agent>>;
+}
+
+/** `ok` was inside the allowance and has been counted; `slow` was not, and nothing was counted. */
+export type Admission = "ok" | "slow";
+
+export interface AdmissionRepo {
+  /**
+   * Counts one admission for `address` inside a sliding window, and says whether it was allowed.
+   * Shared, so the count holds across every instance serving the deployment — an allowance kept
+   * in one process is multiplied by however many processes there are, which is a guard that looks
+   * exactly like a guard that passes (D74).
+   *
+   * There is deliberately no process-wide ceiling to go with it. That one was a heap budget for a
+   * single long-lived process, and a shared store has no equivalent of a heap.
+   */
+  admit(input: {
+    address: string;
+    now: Date;
+    windowMs: number;
+    perAddress: number;
+  }): Promise<Admission>;
 }
 
 export interface SnapshotRepo {

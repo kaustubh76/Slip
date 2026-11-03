@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
 import { demoWorld } from "./demo/__fixtures__/world";
-import { DeskLimiter } from "./demo/desks";
 import { startOwner } from "./sign-up";
 
 const SANDBOX = {
@@ -9,7 +8,7 @@ const SANDBOX = {
   steering: "simulated",
   catalogueSearch: false,
 } as const;
-const limiter = () => new DeskLimiter({ maxDesks: 100, perAddress: 2, windowMs: 60_000 });
+const LIMITS = { perAddress: 2, windowMs: 60_000 };
 
 describe("starting as an owner outside the demo", () => {
   it("opens an owner and a permission, and hands back PayPal's approval link", async () => {
@@ -18,7 +17,7 @@ describe("starting as an owner outside the demo", () => {
       services: SANDBOX,
       host: "localhost:3100",
       address: "203.0.113.7",
-      limiter: limiter(),
+      limits: LIMITS,
     });
     expect(result).toMatchObject({ status: "started" });
     if (result.status !== "started") {
@@ -31,7 +30,7 @@ describe("starting as an owner outside the demo", () => {
 
   it("is refused where PayPal is live, and for a host that is not Slip's own", async () => {
     const world = demoWorld();
-    const base = { host: "localhost:3100", address: "a", limiter: limiter() };
+    const base = { host: "localhost:3100", address: "a", limits: LIMITS };
     expect(
       await startOwner(world.deps, { ...base, services: { ...SANDBOX, payment: "live" } }),
     ).toEqual({ status: "refused", reason: "LIVE" });
@@ -48,13 +47,15 @@ describe("starting as an owner outside the demo", () => {
 
   it("opens only a few owners from one address, and says so when PayPal cannot start", async () => {
     const world = demoWorld();
-    const shared = limiter();
+    // Nothing is shared between these calls but the store, which is the point: the allowance used
+    // to live in a limiter object the caller passed in, so each instance of a serverless
+    // deployment held one of its own (D115).
     const open = () =>
       startOwner(world.deps, {
         services: SANDBOX,
         host: "localhost:3100",
         address: "a",
-        limiter: shared,
+        limits: LIMITS,
       });
     await open();
     await open();
@@ -69,7 +70,7 @@ describe("starting as an owner outside the demo", () => {
         services: SANDBOX,
         host: "localhost:3100",
         address: "b",
-        limiter: limiter(),
+        limits: LIMITS,
       }),
     ).toEqual({ status: "refused", reason: "PAYPAL_UNAVAILABLE" });
   });

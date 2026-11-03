@@ -177,6 +177,8 @@ export {
 } from "./ports/payments.js";
 export type { Clock, IdSource, LogFields, Logger } from "./ports/runtime.js";
 export type {
+  Admission,
+  AdmissionRepo,
   AgentRepo,
   AttemptRepo,
   ChangeStamp,

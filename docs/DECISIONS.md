@@ -662,6 +662,10 @@ Starting answers only on the host of `SLIP_BASE_URL`. A local run that tunnels P
 in must not let tunnel visitors open owners there. Openings are rate-limited per address with the
 demo's limiter; the demo and this path never run in one process.
 
+*3 Nov: the last sentence was true and about the wrong thing — the problem was never that the demo
+and this path share a process, but that this path runs in many. The limiter is in the store now;
+see D115. This paragraph stands as what was known when.*
+
 ## D66 · 2026-10-19 · Every long-lived process runs the resolver
 
 The resolver finishes Slip's loose ends:
@@ -3237,3 +3241,49 @@ sessions recited a list to the user for two days, each taking it from the other,
 off the repository. **A fact repeated between agents acquires confidence without acquiring
 evidence** — which is why the standing rule is to check a claim against the file, number or run it
 is about, and why the most-repeated claim is the one least likely to have been checked recently.
+
+## D115 · 2026-11-03 · A rate limit kept in one process is no rate limit on a host that has many
+
+Looking for something else — whether the demo could be made to run on Vercel — turned up a guard
+that does not work on the deployment that is live and publicly reachable. **`DeskLimiter` keeps its
+counters in process memory, and two of its three callers are the real deployment's**:
+`startOwner` caps owner openings per address, and `signInWithPassword` caps password attempts on
+the same counter, with the comment *"a sign-in form is a guessing surface."* The runtime holding
+that counter is cached on `globalThis`, which on a serverless host means **one allowance per
+instance**. Sign-up is open on the public alias.
+
+**It is worse than the instance count suggests, and that is the part worth keeping.** Twenty
+simultaneous admits for one address, against real Postgres with the row lock removed, let
+**seventeen** through where three were allowed — inside a *single* process, before any second
+instance is involved. A limiter built as "read the count, then write" holds only against callers
+who are not trying; concurrency alone defeats it. That is the measurement that decided the shape of
+the fix rather than an argument about it.
+
+**So the window moved into the store, as one lockable row per address** (`admissions`, migration
+`0009`), holding the times inside the window as epoch milliseconds. Two choices are deliberate:
+
+- **The row holds the same shape the in-process limiter holds**, a filtered list of times, so the
+  two implementations cannot drift apart in behaviour — and the shared store contract runs the same
+  cases against the in-memory fake, PGlite and real Postgres, where a difference between them is a
+  bug in one of them.
+- **One row to lock, rather than a count over many rows.** `SELECT … FOR UPDATE` on a row that is
+  not there locks nothing, so the row is inserted with `ON CONFLICT DO NOTHING` before it is
+  locked; otherwise two first-time guesses from one address both pass. The race is pinned by a
+  concurrency case that only a multi-connection Postgres can exercise, and it was calibrated by
+  removing the lock and watching it report seventeen.
+
+**`FULL` is gone from the real path, rather than left as a branch that cannot fire.** It was a
+ceiling on how many desks one process would hold — a heap budget, at 789 KB a desk — and a shared
+store has no heap to run out of. The demo keeps `DeskLimiter` for exactly that, which is the one
+place it was always right. The sign-in page's `slow` copy said *"that is a lot of desks from one
+place"*, on two paths where there are no desks; it says "attempts" now.
+
+**And a correction, because it is the same mistake in miniature.** This session reported to the user
+that `DeskLimiter`'s `#recent` map grew without bound on attacker-supplied addresses. It does not:
+`admit` returns `"full"` on its first line, before any write, and a new address can only be
+inserted on the path that increments the desk count — so the map is bounded by `maxDesks`. The claim
+came from reading a subagent's accurate note that nothing is ever evicted and inferring the
+consequence instead of tracing the gate above it. **The fix for that is the same as the fix for the
+limiter: check the artifact, not the summary of it.** The store-backed window genuinely does need
+sweeping, since nothing short-circuits its writes — which is why it sweeps every address on each
+admit and not only the one asking.

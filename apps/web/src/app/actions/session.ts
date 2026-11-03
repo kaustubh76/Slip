@@ -39,7 +39,7 @@ export async function startWithPayPal(form: FormData): Promise<void> {
   if (isDemo()) {
     redirect("/sign-in");
   }
-  const { deps, demo } = await runtime();
+  const { deps, limits } = await runtime();
   const request = await headers();
   // An email and a password are optional, and are the only way back in if this browser forgets
   // the session (D71). Read from the form and never put in a url.
@@ -52,7 +52,7 @@ export async function startWithPayPal(form: FormData): Promise<void> {
       services: SERVICES,
       host: request.get("x-forwarded-host") ?? request.get("host"),
       address: addressOf(request),
-      limiter: demo.limiter,
+      limits,
       credential,
     });
   } catch (error) {
@@ -74,10 +74,17 @@ export async function signInWithPassword(form: FormData): Promise<void> {
   if (isDemo()) {
     redirect("/sign-in");
   }
-  const { deps, demo } = await runtime();
+  const { deps, limits } = await runtime();
   const request = await headers();
-  // Rate-limited on the same counter as openings: a sign-in form is a guessing surface.
-  const admitted = demo.limiter.admit(addressOf(request), deps.clock.now().getTime());
+  // Rate-limited on the same counter as openings: a sign-in form is a guessing surface. Counted
+  // in the store, because an allowance kept in one process is no allowance at all where there are
+  // many: twenty simultaneous guesses got seventeen through a single process's own counter, before
+  // any second instance is involved (D115).
+  const admitted = await deps.store.admissions.admit({
+    address: addressOf(request),
+    now: deps.clock.now(),
+    ...limits,
+  });
   if (admitted !== "ok") {
     redirect(`/sign-in?refused=${admitted}`);
   }

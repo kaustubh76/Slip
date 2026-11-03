@@ -423,6 +423,28 @@ export const searchImpressions = pgTable(
   ],
 );
 
+/**
+ * What a visitor's address has recently been admitted to do: one row per address, holding the
+ * times inside the window as epoch milliseconds. That is deliberately the same shape the
+ * in-process limiter keeps, so the two implementations cannot drift apart in behaviour — and it
+ * is one row to lock, which is what makes two simultaneous guesses impossible to let through.
+ *
+ * It is a rate limit, not evidence: `admit` forgets anything older than the window it is asked
+ * about and drops a row nobody has used inside one. Like `search_impressions`, nothing here may
+ * be append-only — a table that is pruned cannot carry `slip_append_only()`.
+ */
+export const admissions = pgTable(
+  "admissions",
+  {
+    /** As the request reported it; never joined to anything, and never an identity. */
+    address: text("address").primaryKey(),
+    /** Epoch milliseconds, already filtered to the window, newest last. */
+    at: jsonb("at").$type<number[]>().notNull(),
+    updatedAt: ts("updated_at").notNull(),
+  },
+  (t) => [index("admissions_updated_at_idx").on(t.updatedAt)],
+);
+
 export const checkoutLeases = pgTable(
   "checkout_leases",
   {

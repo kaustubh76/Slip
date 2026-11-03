@@ -1,6 +1,5 @@
 import "server-only";
 import { type AppDeps, registerOwner, startMandate } from "@slip/app";
-import type { DeskLimiter } from "./demo/desks";
 import type { Services } from "./services";
 
 /**
@@ -13,17 +12,17 @@ import type { Services } from "./services";
  * prevent — so it is now refused only when no credential was set.
  *
  * It answers only on Slip's own address: a visitor arriving through the tunnel that carries PayPal's
- * webhooks to a local run cannot open owners there. Openings are rate-limited per address with the
- * demo's limiter (the demo and this path never run in one process).
+ * webhooks to a local run cannot open owners there. Openings are rate-limited per address through
+ * the store, so the allowance holds across every instance serving the deployment: this path used
+ * the demo's in-process limiter, which on a serverless host gives each instance an allowance of
+ * its own and so multiplies the one it is supposed to enforce (D115).
  */
 
-export type StartRefusal =
-  | "LIVE"
-  | "FOREIGN_HOST"
-  | "FULL"
-  | "SLOW"
-  | "PAYPAL_UNAVAILABLE"
-  | "CREDENTIAL";
+/**
+ * No `FULL`: that was a ceiling on how many desks one process would hold, which is a heap budget
+ * and belongs to the demo. Nothing here has a heap to run out of.
+ */
+export type StartRefusal = "LIVE" | "FOREIGN_HOST" | "SLOW" | "PAYPAL_UNAVAILABLE" | "CREDENTIAL";
 
 export type StartOwnerResult =
   | { status: "started"; ownerId: string; mandateId: string; approveUrl: string }
@@ -36,7 +35,8 @@ export async function startOwner(
     /** The host the request arrived for (`x-forwarded-host`, else `host`). */
     host: string | null;
     address: string;
-    limiter: DeskLimiter;
+    /** How many openings one address may make, and over how long. */
+    limits: { perAddress: number; windowMs: number };
     /** Optional, except where PayPal is live: without it there is no way back in. */
     credential?: { email: string; password: string } | undefined;
   },
@@ -48,9 +48,13 @@ export async function startOwner(
   if (input.host !== new URL(deps.config.publicBaseUrl).host) {
     return refused("FOREIGN_HOST");
   }
-  const admitted = input.limiter.admit(input.address, deps.clock.now().getTime());
+  const admitted = await deps.store.admissions.admit({
+    address: input.address,
+    now: deps.clock.now(),
+    ...input.limits,
+  });
   if (admitted !== "ok") {
-    return refused(admitted === "full" ? "FULL" : "SLOW");
+    return refused("SLOW");
   }
   const owner = await registerOwner(
     deps,

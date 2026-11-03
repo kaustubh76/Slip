@@ -117,6 +117,7 @@ export function createMemoryStore(): Store {
   const leases = new Map<string, { holder: string; expiresAt: Date }>();
   /** `agentId|productId` → the text that agent was last shown for it. */
   const impressions = new Map<string, { text: string; shownAt: Date }>();
+  const admissions = new Map<string, number[]>();
 
   // ---------- helpers ----------
 
@@ -1126,6 +1127,30 @@ export function createMemoryStore(): Store {
         return held === undefined
           ? null
           : { agentId, productId, text: held.text, shownAt: held.shownAt };
+      },
+    },
+
+    admissions: {
+      async admit({ address, now, windowMs, perAddress }) {
+        const nowMs = now.getTime();
+        const since = nowMs - windowMs;
+        // Every address is swept, not only the one asking: a row left behind by an address that
+        // never returns is what makes this grow without bound once there is no process-wide
+        // ceiling short-circuiting the write.
+        for (const [key, times] of admissions) {
+          const kept = times.filter((at) => at > since);
+          if (kept.length === 0) {
+            admissions.delete(key);
+          } else {
+            admissions.set(key, kept);
+          }
+        }
+        const recent = admissions.get(address) ?? [];
+        if (recent.length >= perAddress) {
+          return "slow";
+        }
+        admissions.set(address, [...recent, nowMs]);
+        return "ok";
       },
     },
 

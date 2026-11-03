@@ -74,6 +74,20 @@ export function describeConcurrency(label: string, make: () => Promise<Concurren
       expect(won.filter(Boolean)).toHaveLength(1);
     });
 
+    it(`${N} guesses from one address at once: only the allowance gets through`, async () => {
+      const address = `198.51.100.${randomUUID().slice(0, 8)}`;
+      const results = await Promise.all(
+        Array.from({ length: N }, () =>
+          store.admissions.admit({ address, now: NOW, windowMs: 60_000, perAddress: 3 }),
+        ),
+      );
+      // This is the whole reason the window is one lockable row rather than a count over many:
+      // a read followed by a write lets every one of these see the same number and pass, which
+      // is a rate limit that holds only against callers who were not trying.
+      expect(results.filter((r) => r === "ok")).toHaveLength(3);
+      expect(results.filter((r) => r === "slow")).toHaveLength(N - 3);
+    });
+
     it("10 concurrent policy edits produce versions 2..11 with no gap or duplicate", async () => {
       const w = await world(store);
       const versions = await Promise.all(

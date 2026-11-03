@@ -1,4 +1,5 @@
 import {
+  type AdmissionRepo,
   type AgentReport,
   cents,
   type ImpressionRepo,
@@ -10,7 +11,14 @@ import {
 } from "@slip/domain";
 import { and, asc, eq, isNull, lt, sql } from "drizzle-orm";
 import type { Db } from "../client.js";
-import { attempts, checkoutLeases, payments, searchImpressions, webhookEvents } from "../schema.js";
+import {
+  admissions,
+  attempts,
+  checkoutLeases,
+  payments,
+  searchImpressions,
+  webhookEvents,
+} from "../schema.js";
 import { guarded } from "./errors.js";
 
 export function pgWebhooks(db: Db): WebhookRepo {
@@ -153,6 +161,44 @@ export function pgLeases(db: Db): LeaseRepo {
               eq(checkoutLeases.holder, holder),
             ),
           );
+      }),
+  };
+}
+
+export function pgAdmissions(db: Db): AdmissionRepo {
+  return {
+    admit: ({ address, now, windowMs, perAddress }) =>
+      guarded(() => {
+        const nowMs = now.getTime();
+        const since = nowMs - windowMs;
+        return db.transaction(async (tx) => {
+          // Swept before any row lock is taken. The rows this drops are older than the window, so
+          // no live admit is still counting them, and the row locked below was written at `now` —
+          // the two cannot contend. The in-process limiter was spared this only because its desk
+          // ceiling short-circuited the write once the process was full, and a shared store has
+          // no equivalent of a heap to run out of.
+          await tx.delete(admissions).where(lt(admissions.updatedAt, new Date(since)));
+          // The row has to exist before it can be locked: `for update` on a row that is not there
+          // locks nothing at all, and two first-time guesses from one address would both pass.
+          await tx
+            .insert(admissions)
+            .values({ address, at: [], updatedAt: now })
+            .onConflictDoNothing({ target: admissions.address });
+          const [row] = await tx
+            .select({ at: admissions.at })
+            .from(admissions)
+            .where(eq(admissions.address, address))
+            .for("update");
+          const recent = (row?.at ?? []).filter((at) => at > since);
+          const admitted = recent.length < perAddress;
+          // The filtered window is written back either way, so a refusal does not keep re-reading
+          // times it has already judged too old.
+          await tx
+            .update(admissions)
+            .set({ at: admitted ? [...recent, nowMs] : recent, updatedAt: now })
+            .where(eq(admissions.address, address));
+          return admitted ? "ok" : "slow";
+        });
       }),
   };
 }

@@ -1693,6 +1693,42 @@ export function describeStoreContract(label: string, make: () => Promise<Harness
       });
     });
 
+    describe("admissions: what one address may do inside a window", () => {
+      // Unique per test: the harness builds one store for the whole contract, so a fixed address
+      // would carry one case's window into the next.
+      const newAddress = (): string => `198.51.100.${randomUUID().slice(0, 8)}`;
+
+      it("admits up to the allowance, then refuses — and a refusal counts nothing", async () => {
+        const shape = { address: newAddress(), windowMs: 10 * 60_000, perAddress: 3 };
+        for (const minute of [0, 1, 2]) {
+          expect(await store.admissions.admit({ ...shape, now: at(minute) })).toBe("ok");
+        }
+        expect(await store.admissions.admit({ ...shape, now: at(3) })).toBe("slow");
+        // The refusal did not push the first admission out of the window, so the window still
+        // clears exactly when that first one leaves it and not a moment sooner. A limiter that
+        // counted its own refusals would let a caller extend their own lockout for ever.
+        expect(await store.admissions.admit({ ...shape, now: at(9) })).toBe("slow");
+        expect(await store.admissions.admit({ ...shape, now: at(11) })).toBe("ok");
+      });
+
+      it("counts each address on its own", async () => {
+        const shape = { windowMs: 10 * 60_000, perAddress: 1 };
+        const mine = newAddress();
+        const theirs = newAddress();
+        expect(await store.admissions.admit({ ...shape, address: mine, now: NOW })).toBe("ok");
+        expect(await store.admissions.admit({ ...shape, address: mine, now: NOW })).toBe("slow");
+        expect(await store.admissions.admit({ ...shape, address: theirs, now: NOW })).toBe("ok");
+      });
+
+      it("forgets a window that has passed entirely, rather than holding it against an address", async () => {
+        const shape = { address: newAddress(), windowMs: 60_000, perAddress: 2 };
+        expect(await store.admissions.admit({ ...shape, now: at(0) })).toBe("ok");
+        expect(await store.admissions.admit({ ...shape, now: at(0) })).toBe("ok");
+        expect(await store.admissions.admit({ ...shape, now: at(0) })).toBe("slow");
+        expect(await store.admissions.admit({ ...shape, now: at(2) })).toBe("ok");
+      });
+    });
+
     describe("reports", () => {
       it("counts decisions, price gaps, steering and conflicts; ignores owner follow-ups", async () => {
         const w = await world(store);
