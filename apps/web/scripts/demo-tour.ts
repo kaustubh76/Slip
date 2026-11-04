@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium, type Page } from "@playwright/test";
@@ -26,6 +26,9 @@ import { chromium, type Page } from "@playwright/test";
 
 const base = (process.argv[2] ?? "http://localhost:3200").replace(/\/+$/, "");
 const outDir = fileURLToPath(new URL("../test-results/tour/", import.meta.url));
+// Cleared first: a step that is renamed or renumbered otherwise leaves its old PNG beside the new
+// one, and a directory whose newest file is not obvious is how a stale screenshot gets sent by hand.
+rmSync(outDir, { recursive: true, force: true });
 mkdirSync(outDir, { recursive: true });
 
 interface Shot {
@@ -47,7 +50,12 @@ async function shot(page: Page, title: string, caption: string, fullPage = false
   process.stdout.write(`  ${file}\n`);
 }
 
-/** Demo PayPal takes 2 s by default, so the in-flight states are reachable rather than theoretical. */
+/**
+ * Longer than the stand-in PayPal's 2 s of pretend latency, so a shot taken after this wait has
+ * the *settled* answer rather than one still in flight. The tour does not race that window to
+ * show an in-flight state: it scripts PayPal to time out instead, and the payment then sits at
+ * `INITIATED` for as long as anyone wants to look at it.
+ */
 const SETTLE_MS = 3_500;
 
 /**
@@ -72,7 +80,7 @@ try {
   await shot(
     page,
     "The front door",
-    "`/sign-in`. An owner can start with PayPal, or open a throwaway demo desk. This is the one page that renders with no session, no database and no key — which is why it is the deployment's health check.",
+    "`/sign-in`, as demo mode renders it: the only way in here is a throwaway desk, because demo mode replaces the PayPal start and the returning-owner sign-in that a real deployment shows in their place. It is the one page that renders with no session, no database and no key, which is why it is the deployment's health check.",
   );
 
   // 2 · A desk: an owner, a permission in force, three agents, thirty receipts.
@@ -125,7 +133,7 @@ try {
     await shot(
       page,
       "After approving",
-      "The same tray once PayPal has been asked. Demo PayPal takes two seconds on purpose, so the in-flight states an owner would otherwise never see — `CAPTURING`, `INITIATED` — are visible here rather than theoretical.",
+      "The same tray once PayPal has been asked and has answered. The approved hold has left the tray — one left, and the nav agrees — and moved into the decided list below, reading `CAPTURED · Paid $239.00 at Store K`. The in-flight states are not in this shot because the capture has already finished; the new receipt further down catches one, still reading `INITIATED`.",
       true,
     );
   }
@@ -135,7 +143,7 @@ try {
   await shot(
     page,
     "The limits",
-    "`/limits`. The owner's policy: what an agent may spend, per purchase and per day, and how far above the cheapest offer it may go. Changing it writes a new version rather than editing the old one, so a receipt is always readable against the limits it was decided under.",
+    "`/limits`. The owner's policy: how far above the cheapest offer an agent may go, in percent and in dollars both; the order size above which a purchase waits for the owner however good the price; when Slip starts reading a listing closely; and when prices are too old to trust. Changing it writes a new version rather than editing the old one, so a receipt is always readable against the limits it was decided under.",
     true,
   );
 
@@ -153,7 +161,7 @@ try {
   await shot(
     page,
     "The permission",
-    "`/mandate`. The permission slip: what PayPal has been asked to save, and the kill switch. Revoking stops every agent at once and deletes the saved payment method — the thing an owner wants to be one click when they want it at all.",
+    "`/mandate`. The permission slip — what the owner allowed, the limits it was signed under, how many agents spend against it, and when PayPal's own records were last compared with Slip's — beside the kill switch. Revoking refuses every checkout by every agent at once and deletes the saved payment method at PayPal. It is deliberately *not* one click: the owner types REVOKE first, because it is the one thing on this page that cannot be undone.",
     true,
   );
 
@@ -162,7 +170,7 @@ try {
   await shot(
     page,
     "The console",
-    "`/demo`. The console sends this desk's own agent shopping, and decides how PayPal answers — properly, slowly, declining, or leaving the payment pending. The point of the demo is the cases a desk that only ever succeeds never reaches.",
+    "`/demo`. The console sends this desk's own agent shopping, and decides how PayPal answers — properly, by declining, by leaving the payment pending, or by not answering at all. That last one is not slowness: a timeout leaves the payment *unknown*, which is the case Slip is most careful about, because unknown is not failed. The point of the demo is the cases a desk that only ever succeeds never reaches.",
     true,
   );
 

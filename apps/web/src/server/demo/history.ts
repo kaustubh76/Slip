@@ -10,8 +10,8 @@ import type { ForcedOutcomes } from "./paypal";
  * under two earlier dates, three agents to filter between, holds that were already decided, and
  * the payment states a desk that only ever succeeds never shows.
  *
- * Every step runs through `runCheckout` and the real hold use cases, exactly as the four purchases
- * of the present do — the only difference is the clock it is handed. That matters: the checkout
+ * Every step runs through `runCheckout` and the real hold use cases, exactly as this morning's
+ * purchases do — the only difference is the clock it is handed. That matters: the checkout
  * gate replays a repeat of the same (agent, product) within ten minutes, and refuses a fifth
  * attempt on one product within an hour, so a history crammed into one instant would be mostly
  * replays. Spacing it over days is what makes it a history rather than a pile.

@@ -1,11 +1,21 @@
 import { redirect } from "next/navigation";
 import { WhatSlipDecides } from "../../components/WhatSlipDecides";
 import { demoRefused, isDemo } from "../../server/demo";
+import { TODAY } from "../../server/demo/seed";
 import { currentOwner } from "../../server/owner";
 import { SERVICES } from "../../server/runtime";
 import { signInToDemo, signInWithPassword, startWithPayPal } from "../actions/session";
 
 export const dynamic = "force-dynamic";
+
+/**
+ * Counted from `TODAY` rather than written out, because it was written out and went stale: the
+ * errand list grew from four to five in `d38e914` and this sentence still said four, on the one
+ * page every visitor meets first. The stale sentence never named `TODAY`, so grepping the
+ * identifier found nothing to fix.
+ */
+const COUNT_WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight"] as const;
+const inWords = (n: number): string => COUNT_WORDS[n] ?? String(n);
 
 const REFUSALS: Record<string, string> = {
   // `full` is the demo's alone: it is the ceiling on desks one process will hold. `slow` is shown
@@ -50,8 +60,8 @@ export default async function SignIn(props: { searchParams: Promise<{ refused?: 
           <form action={signInToDemo}>
             <p className="slip-prose">
               This demo gives you your own owner, a PayPal mandate approved against a stand-in for
-              PayPal, three agents, and a roll of what they have already tried — four purchases this
-              morning, two days of them before that.
+              PayPal, three agents, and a roll of what they have already tried —{" "}
+              {inWords(TODAY.length)} purchases this morning, two days of them before that.
             </p>
             <button type="submit" className="slip-button" data-variant="ink">
               Open a demo desk →
