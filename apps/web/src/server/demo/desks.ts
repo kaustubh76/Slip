@@ -4,7 +4,13 @@
  * desks in all, and a few per visitor's address in a sliding window. A seeded desk measures about
  * 789 KB of heap, so the ceiling is a memory budget; `render.yaml` sets it for the box it runs on.
  */
-export type Admission = "ok" | "full" | "slow";
+/**
+ * The demo's own answer, which has a `full` the shared one does not: `@slip/domain` exports an
+ * `Admission` of `ok | slow` for the limit counted in the store, and that one has no ceiling on
+ * a process because it does not belong to one (D115). Two different types under one name is a
+ * trap, so this is the desk's.
+ */
+export type DeskAdmission = "ok" | "full" | "slow";
 
 export class DeskLimiter {
   readonly #maxDesks: number;
@@ -20,7 +26,7 @@ export class DeskLimiter {
   }
 
   /** Counts a new desk for `address`, or says why not. */
-  admit(address: string, nowMs: number): Admission {
+  admit(address: string, nowMs: number): DeskAdmission {
     if (this.#opened >= this.#maxDesks) {
       return "full";
     }
