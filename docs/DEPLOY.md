@@ -190,9 +190,24 @@ Actions*, with the same value the Vercel project holds — one secret serves bot
 
 Two honest limits, both written into the file:
 
-- **Whether Actions runs here is unverified.** This project's notes say CI has never run for billing
-  reasons, and a private repository's workflow runs cannot be queried from here. If it does not
-  run, nothing is lost but a file and cron-job.org remains the fallback.
+- **Measured, 11 Nov 2026, and both halves of the old note here were wrong.** A private
+  repository's runs *can* be queried — `gh run list -R kaustubh76/Slip` returns them — and CI has
+  *not* "never run": it ran and passed **nine times** between 1 and 2 November. What is true is
+  narrower and worse. **Every run since 2 Nov 14:09 UTC has failed in under ten seconds**, CI and
+  Housekeeping alike, never reaching a step:
+
+  > The job was not started because recent account payments have failed or your spending limit
+  > needs to be increased.
+
+  So **GitHub Actions is blocked at the account, not by anything in these files**, and adding
+  `CRON_SECRET` would not start it — `gh secret list` is empty, but the billing block sits upstream
+  of that. It also means the commits pushed since 2 November, D115's rate limit among them, have
+  never been checked by CI; their green status is from local runs only.
+- **The five-minute schedule is aspirational even unblocked.** Fifteen scheduled runs were created
+  over 84 hours — **one every six hours**, where `*/5 * * * *` implies about a thousand. GitHub
+  throttles schedules on a quiet repository. Against the resolver's 30-minute resend window that is
+  not a slow sweep, it is a missed one, which is the same objection §2.4 makes to the daily Vercel
+  cron. cron-job.org remains the fallback that is actually on a timer.
 - **Unconfigured, it warns and exits 0 rather than failing.** A scheduled job that fails every five
   minutes until somebody adds a secret sends hundreds of notifications and gets itself disabled,
   which is a worse outcome than a warning. The honest record of "not yet working" is the gate below,
@@ -393,7 +408,7 @@ app — no money can move from a deployment it refuses.
 | A real steering check (`ANTHROPIC_API_KEY`) | a scripted stand-in is a receipt claiming a listing was checked when one phrase was matched | **shut** — accepted 30 Oct 2026; it was rejected earlier the same day, and the guard could not see the difference |
 | Postgres, not PGlite | one process, no lock, no backup; two of them corrupt it | **shut** — Neon `slip-db`, migrated 31 Oct |
 | `https` base URL | PayPal is told this hostname, and the session cookie carrying the kill switch is issued without `Secure` otherwise | **shut** — `https://slip-two-chi.vercel.app` |
-| Somewhere for housekeeping | without it nothing expires a hold or finishes an unknown payment, so a real authorization sits on a real card | **open** — the secret is set and the endpoint answers by hand, but a Hobby plan sweeps **daily** against a 30-minute resend window, and no pinger-driven sweep has been seen yet (§2.4) |
+| Somewhere for housekeeping | without it nothing expires a hold or finishes an unknown payment, so a real authorization sits on a real card | **open, and now with a measured cause** — Vercel's secret is set and the endpoint answers by hand, but a Hobby plan sweeps **daily** against a 30-minute resend window, and the GitHub pinger meant to close that gap has never started: Actions is billing-blocked at the account since 2 Nov (§2.4). Adding `CRON_SECRET` would not fix it |
 
 §2 shut two of those three. Housekeeping is the one still open, and it is open for a reason worth
 reading rather than ticking: a daily sweep is not a slow sweep, it is a missed one (§2.4). **Beyond

@@ -3318,3 +3318,39 @@ indexes, 9 migrations becoming 10, 16 tables becoming 17, and a row written, rea
 **"Merged" and "deployed" are different claims about different artifacts**, and this repository had
 been quietly treating the first as the end of the work. Every status line here that says something
 is live now owes its reader the deployment it was observed on, not the commit it was merged in.
+
+## D117 · 2026-11-11 · A hedge is a claim, and this one was never tested
+
+`DEPLOY.md` §2.4 carried a careful-sounding sentence: *"Whether Actions runs here is unverified.
+This project's notes say CI has never run for billing reasons, and a private repository's workflow
+runs cannot be queried from here."* **Both halves were wrong, and the second was a claim about this
+agent's own capability that nobody had ever tried.** `gh run list -R kaustubh76/Slip` returns the
+runs in full, and it is installed and authenticated. The hedge had been doing the work of a check
+for twelve days.
+
+**The truth is narrower than "never run" and worse than "unverified".** CI ran and **passed nine
+times** between 1 and 2 November. Then **every run since 2 Nov 14:09 UTC has failed in under ten
+seconds**, CI and Housekeeping alike, never reaching a step:
+
+> The job was not started because recent account payments have failed or your spending limit needs
+> to be increased.
+
+So Actions is blocked at the **account**, not by anything in these files, and the remedy that was
+written down — add `CRON_SECRET` under repository secrets — would not have started it. (The secret
+is unset as well; the billing block simply sits upstream of it.) The consequence worth stating
+plainly: **every commit pushed since 2 November has never been checked by CI**, D115's rate limit
+among them. Their green status comes from local runs, which is a weaker claim than it has been
+reading as.
+
+**And the schedule was aspirational regardless.** Fifteen scheduled runs were created over 84
+hours — **one every six hours**, where `*/5 * * * *` implies about a thousand. GitHub throttles
+schedules on a quiet repository. Against the resolver's 30-minute resend window, that is the same
+objection this document already makes to the daily Vercel cron: not a slow sweep, a missed one.
+
+**The reading error is the one to keep.** Last week's pass over the tour read seventeen screenshots
+against their captions and found four false. Caption 17 said *"the axe pass **in CI** runs over
+every page in both"*. It was checked by opening `a11y.spec.ts`, confirming the suite really does
+iterate `original` and `carbon`, and marking it accurate — **without checking the clause that said
+"in CI"**. A sentence with two claims was verified against one of them. Verifying the interesting
+half of a sentence and reporting the sentence as checked is how a caption survives a review that
+was looking for exactly that fault.

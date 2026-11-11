@@ -289,7 +289,7 @@ try {
   await shot(
     page,
     "The same roll, dark",
-    "The roll again in dark mode. Both themes are built from the same tokens, so nothing is a second stylesheet that drifts — and the axe pass in CI runs over every page in both.",
+    "The roll again in dark mode — `carbon`, which is the dark of the two themes the toggle offers. Both are built from the same tokens, so neither is a second stylesheet that drifts, and the accessibility pass sweeps every page in both. It runs locally: CI has been billing-blocked at the account since 2 November, so nothing in this repository has been checked by it since.",
     true,
   );
 } catch (error) {
