@@ -4,7 +4,9 @@
 services), [SPEC.md](SPEC.md) §19.6 (the credential hole)
 **Status:** **deployed and live at <https://slip-two-chi.vercel.app>** (31 Oct 2026) on real
 Channel3 prices, the real PayPal sandbox and the real steering check. The Render demo is still
-**not connected** — §1 is one dashboard action. Nothing here sets `PAYPAL_ENV=live`.
+**not connected** — §1 is one dashboard action, and the repository being private means Render needs
+a GitHub connection before it can clone it. Nothing here sets `PAYPAL_ENV=live`.
+**Deployments are manual (§2.6): merging to `main` does not deploy anything.**
 
 Two deployments, because they cannot be one. Demo mode keeps its stand-ins for Channel3 and PayPal
 in the process and gives every visitor a throwaway desk, so `isDemo()` refuses wherever `VERCEL` is
@@ -282,6 +284,34 @@ transaction, which is to say on G2. Hobby retains no runtime logs to inspect eit
 window came back empty.
 
 ---
+
+### 2.6 A push is not a deploy
+
+**This project has no Git integration on Vercel.** Every production deployment has been made with
+the CLI from a checkout — `vercel --prod` — and the `githubCommitSha` on each one is only the local
+commit the CLI read while uploading. Pushing `main` deploys nothing.
+
+That is a defensible setup, and it is written down here because it is invisible: nothing warns you,
+and the site keeps serving the last deployment quite happily. On **11 Nov 2026** the live
+deployment was found to be **50 commits behind `main`**. Only four of those touched runtime code,
+so production was not as stale as the number suggests — but the fix in three of them, including the
+rate limit of D115, was not running anywhere.
+
+**So check what is deployed rather than what is merged:**
+
+```sh
+vercel ls slip                       # the deployments, newest first
+vercel inspect <deployment-url>      # its commit, among other things
+```
+
+and compare that commit with `git log --oneline <sha>..HEAD -- apps/web/src packages/*/src`, which
+lists only the undeployed commits that can change what the server does. Documentation and test
+commits moving ahead of the deployment is normal and harmless; a runtime commit doing so is not.
+
+**Deploying needs a schema that is already there.** The server does not migrate Postgres itself —
+it would race its own replicas — so `pnpm db:migrate` runs against the deployment's database
+*before* the code that needs it is deployed. Adding a table is backward-compatible, so the running
+deployment ignores it until the new code arrives. The reverse order is an outage.
 
 ## 3 · Is a sandbox transaction tracked?
 

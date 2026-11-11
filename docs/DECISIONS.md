@@ -3287,3 +3287,34 @@ consequence instead of tracing the gate above it. **The fix for that is the same
 limiter: check the artifact, not the summary of it.** The store-backed window genuinely does need
 sweeping, since nothing short-circuits its writes — which is why it sweeps every address on each
 admit and not only the one asking.
+
+## D116 · 2026-11-11 · A push is not a deploy, and nothing in here said so
+
+Migration `0009` was applied to Neon and `main` pushed, on the understanding that the push would
+deploy it. It did not. **The live deployment was 50 commits behind `main`**, and had been since
+31 October: this project has no Git integration on Vercel, every production deployment has been a
+`vercel --prod` from a checkout, and the `githubCommitSha` on each one is only the local commit the
+CLI happened to read while uploading. Three pushes over nine days produced zero deployments.
+
+**Nothing warned, which is the part worth keeping.** The site serves its last deployment perfectly
+well; `pnpm verify:deployment` passed its twelve checks against it on 4 November and would have
+passed them on any day in between, because every one of those checks is about whether the
+deployment is wired, not about *which commit* it is. An instrument that is working as designed can
+still leave a question unasked.
+
+**The number is smaller than it sounds, and saying so is not a softening.** Of those 50 commits,
+**four touched `apps/web/src` or `packages/*/src`**; the other 46 were documentation, tests and
+scripts, which change nothing a server does. So the honest claim is not "production is ten days
+stale" but "production is missing this week's hardening" — of which the one that matters is D115's
+rate limit. `git log --oneline <deployed-sha>..HEAD -- apps/web/src packages/*/src` is the query
+that tells those two claims apart, and it is in §2.6 now along with how to find the deployed sha.
+
+**The ordering this was all arranged around held.** Adding a table is backward-compatible, so the
+migration went first and the running deployment ignored it; the reverse order would have answered
+500 to every password sign-in. It was confirmed by **reading the database** — table present, both
+indexes, 9 migrations becoming 10, 16 tables becoming 17, and a row written, read back and deleted
+— rather than by the migrator's exit code, which is a different claim.
+
+**"Merged" and "deployed" are different claims about different artifacts**, and this repository had
+been quietly treating the first as the end of the work. Every status line here that says something
+is live now owes its reader the deployment it was observed on, not the commit it was merged in.
