@@ -57,8 +57,8 @@ pnpm install
 SLIP_DEMO=1 SLIP_BASE_URL=http://localhost:3000 pnpm web:dev
 ```
 
-Open <http://localhost:3000> and choose **Open a demo desk**. You get an owner with two days of
-history already on the roll — purchases paid, rejected and held — stand-ins for Channel3 and PayPal
+Open <http://localhost:3000> and choose **Open a demo desk**. You get an owner with a history already
+on the roll — purchases paid, rejected and held — stand-ins for Channel3 and PayPal
 in the same process, and a console that issues an agent key so you can watch a real MCP client be
 checked. [Run the demo](#run-the-demo) walks through it. Needs Node ≥ 22.12 and pnpm 10.
 
