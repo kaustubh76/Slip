@@ -39,6 +39,33 @@ it is built. Design decisions are
 logged in [docs/DECISIONS.md](docs/DECISIONS.md), and [docs/DEMO.md](docs/DEMO.md) is the shot
 list for the video — including the one beat still waiting on a vaulted sandbox buyer.
 
+## For judges
+
+**The live deployment: <https://slip-two-chi.vercel.app>** — real Channel3 listings, PayPal's
+sandbox, Slip as the seller of record. No real money moves and no order reaches a retailer, and the
+line under the tabs names which services are live and which are stand-ins on every page.
+
+Signing in means approving a payment method at PayPal, so it needs a **PayPal sandbox buyer
+account** — free, about a minute, at developer.paypal.com → Testing Tools → Sandbox accounts. That
+is PayPal's own approval flow doing what it does in production, which is rather the point; it is
+also the one step nothing in this repository can do on your behalf.
+
+**Or run the whole thing with no account, no keys and no database:**
+
+```sh
+pnpm install
+SLIP_DEMO=1 SLIP_BASE_URL=http://localhost:3000 pnpm web:dev
+```
+
+Open <http://localhost:3000> and choose **Open a demo desk**. You get an owner with two days of
+history already on the roll — purchases paid, rejected and held — stand-ins for Channel3 and PayPal
+in the same process, and a console that issues an agent key so you can watch a real MCP client be
+checked. [Run the demo](#run-the-demo) walks through it. Needs Node ≥ 22.12 and pnpm 10.
+
+Five minutes, well spent: open a **rejected receipt** — it quotes the offer text its own decision
+was about — then the **Bench** tab, where every benchmark run is committed so you can recompute the
+numbers rather than take them. [The evidence](#the-evidence) says how.
+
 ## Layout
 
 ```
@@ -108,6 +135,11 @@ Schema changes: edit `packages/db/src/schema.ts`, run `pnpm db:generate`, commit
 `packages/db/drizzle/`. Triggers and lookup tables live in hand-written migrations.
 
 Requires Node ≥ 22.12 and pnpm 10 (`corepack enable` picks the pinned version).
+
+**Starting the app itself?** The script is `pnpm web:dev` — there is no `pnpm dev`. On its own it
+expects a real deployment's configuration: with no `DATABASE_URL` it starts and renders `/sign-in`
+quite happily, then fails on the first click with the generic error sheet rather than naming what
+is missing. Add `SLIP_DEMO=1` and it needs neither, which is [Run the demo](#run-the-demo).
 
 ### More than one of you in this checkout
 
