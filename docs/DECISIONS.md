@@ -3441,3 +3441,48 @@ mechanically available. What is covered: `doc-figures` extracts the default thro
 pattern loudly and lands whoever does it here. D118's credential rule earned a guard because it
 compares two identifiers inside one unit; this one would have to infer intent, and a guard that
 reads stronger than it is costs more than none.
+
+## D120 · 2026-11-12 · The figure a test pins stays true; the ones beside it drift
+
+Submission day. `docs/Slip-overview.html` is the one page that reads like a pitch, and its "As
+built" block has eight rows. `doc-figures.test.ts:502` pins exactly one of them —
+`114 entries, latest D119` — which is why that one line has been current all along, updated twice
+today in the same edits that added D118 and D119.
+
+The other seven drift freely, and four were wrong:
+
+| row | printed | measured today |
+|---|---|---|
+| Date | 30 October 2026 | 12 November 2026 |
+| Commit | `256ad11` | `7b10651` |
+| Tests | 2,129 passing · 5 skipped · **135** files | 2,153 passing · 5 skipped · **136** files |
+| Real Postgres | **310** contract tests | **320** contract tests |
+
+The block's own opening sentence is what makes these wrong rather than merely old: *"Every number
+in it was read from the repository or produced by running it, on the date below."* A date that
+moves while the figures beside it do not turns a stale number into a false claim. The Postgres row
+is the one worth noticing — it had drifted by ten tests with nobody reading it, because it needs
+`pnpm test:pg` against a real server, which the default gate deliberately skips.
+
+**And the PDF was a fifth copy nobody was holding to anything.** `docs/Slip-overview.pdf` was last
+printed by hand on 2 Nov, so it still read `109 entries, latest D114` — five entries behind the
+HTML that the suite *had* kept current. A printed artefact that nobody can reprint in one command
+drifts by construction, and the PDF is the copy that gets attached to a form.
+
+So: `pnpm overview:pdf` prints it (`apps/web/scripts/print-overview.ts`, Chromium with
+`preferCSSPageSize` so the document's own `@page` rule survives), and the printer records the
+SHA-256 of **its source** in `docs/Slip-overview.pdf.sha256`. The new rule asserts that hash is
+still the HTML on disk. Hashing the PDF would have proved nothing — Chromium stamps a creation
+date, so two prints of one file differ.
+
+**What the rule cannot do, said plainly:** it reports that the PDF is stale, never that either
+file's figures are right. Nothing here would have caught `310` — that took running the suite the
+figure describes. The honest fix is to generate the whole block from a gate run and assert the
+HTML matches it, which is the right answer and was not a nine-hours-to-deadline answer.
+
+**A second thing this cost an hour to learn.** The deadline is 13 Nov 01:30 IST, which `SPEC.md:4`
+has recorded correctly since 11 Oct — and which is noon PT on **12 Nov**, the same moment written
+in the other party's time zone. Carried in memory as "13 Nov" with the time dropped, it read as
+*tomorrow* and was in fact nine hours away. §19.5 is closed by two searches: the official page and
+the rules agree on noon Pacific. The lesson is narrow and reusable — **a deadline recorded without
+its time zone is a deadline recorded wrong**, and the entrant's own clock is the one that lies.

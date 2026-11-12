@@ -41,7 +41,8 @@
     "study:report": "tsx --conditions=@slip/source study/src/bin/report.ts",
     "bench:run": "tsx --conditions=@slip/source bench/src/bin/run.ts",
     "bench:report": "tsx --conditions=@slip/source bench/src/bin/report.ts",
-    "bench:judge": "tsx --conditions=@slip/source bench/src/bin/judge.ts"
+    "bench:judge": "tsx --conditions=@slip/source bench/src/bin/judge.ts",
+    "overview:pdf": "tsx apps/web/scripts/print-overview.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",

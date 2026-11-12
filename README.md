@@ -64,7 +64,9 @@ checked. [Run the demo](#run-the-demo) walks through it. Needs Node ≥ 22.12 an
 
 Five minutes, well spent: open a **rejected receipt** — it quotes the offer text its own decision
 was about — then the **Bench** tab, where every benchmark run is committed so you can recompute the
-numbers rather than take them. [The evidence](#the-evidence) says how.
+numbers rather than take them. [The evidence](#the-evidence) says how, and
+[the one-pager](docs/Slip-overview.pdf) is the whole product on thirteen printed pages: what it
+does, how a purchase travels through it, what was measured, and what is still open.
 
 ## Layout
 

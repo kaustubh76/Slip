@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -500,6 +501,27 @@ describe("the figures in prose", () => {
     expect([...printed.keys()].sort()).toEqual([...expected.keys()].sort());
     for (const [code, outcome] of printed) expect(outcome).toBe(expected.get(code));
     expect(html).toContain(`${DECISIONS} entries, latest D${LATEST}`);
+  });
+
+  it("prints the one-pager's PDF from the one-pager that is on disk now", () => {
+    // The rule above kept the HTML's decision figure current. Nothing held the PDF to anything, so
+    // it sat ten days and five entries behind the page it was printed from — 109/D114 against
+    // 114/D119 — and the PDF is the copy that gets attached to a form (D120).
+    //
+    // Hashing the PDF would prove nothing: Chromium stamps a creation date, so two prints of one
+    // file differ. `pnpm overview:pdf` therefore records the hash of its *source*, and this asserts
+    // that source is still what is here.
+    //
+    // What it cannot do: it says the PDF is stale, never that either file's figures are right.
+    // Nothing here would have caught the Postgres row drifting from 310 to 320 — that took running
+    // the suite the figure describes.
+    const overview = join(root, "docs/Slip-overview.html");
+    const stamp = join(root, "docs/Slip-overview.pdf.sha256");
+    if (!existsSync(overview) || !existsSync(stamp)) return;
+
+    const printedFrom = readFileSync(stamp, "utf8").trim();
+    const onDisk = createHash("sha256").update(readFileSync(overview)).digest("hex");
+    expect(printedFrom, "docs/Slip-overview.pdf is stale — run `pnpm overview:pdf`").toBe(onDisk);
   });
 
   it("declares in .env.example every variable the application reads", () => {
