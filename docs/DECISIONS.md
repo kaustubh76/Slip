@@ -1709,10 +1709,10 @@ guardrails between a shopping agent and PayPal — one of them with a policy eng
 *Cleared / Hold (needs the owner's OK) / Refused* and listing every rule that fired, which is
 Slip's own outcome set almost exactly:
 
-- https://github.com/SAMMETAMEGHASHYAM/mandateguard
-- https://github.com/rochak779/the-payer
-- https://github.com/FredBourouliou/mandat
-- https://github.com/MuhammadNabiyev/mandate
+Four of them, found on 27 Oct 2026. *Their repository URLs stood here until 12 Nov and came out
+when this repository was made public to be submitted: naming competitors by handle in a judged
+entry carries none of the finding, and publication is the one edit that cannot be taken back. The
+count and the shape are the finding; the handles never were.*
 
 Read the right way round, that supports the pitch: a problem four strangers reach for
 independently is a real one, and PayPal's docs not addressing it is the gap. It also says plainly
