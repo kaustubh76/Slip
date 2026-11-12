@@ -374,8 +374,10 @@ mail service involved). It is required where `PAYPAL_ENV=live`, because losing t
 otherwise lose the kill switch over real money. There is no reset — Slip cannot send email.
 
 **Housekeeping runs.** A long-lived process resolves on a timer; a serverless one needs
-`SLIP_CRON_SECRET` and the `/api/cron/resolve` schedule in `apps/web/vercel.json`. Without one of those,
-nothing expires a hold or finishes an unknown payment.
+`CRON_SECRET` — the only name Vercel's scheduler sends, though `cronSecrets()` takes Slip's own
+`SLIP_CRON_SECRET` too — and the `/api/cron/resolve` schedule in `apps/web/vercel.json`. Without
+one of those, nothing expires a hold or finishes an unknown payment. The committed schedule is a
+daily backstop and not enough on its own, for the reason [DEPLOY.md](DEPLOY.md) §2.4 measures.
 
 **Two combinations are refused outright.** `PAYPAL_ENV=live` with simulated prices, or with a
 simulated steering check, does not boot: real money against an invented market, or a receipt

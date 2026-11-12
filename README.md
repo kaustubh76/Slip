@@ -222,8 +222,9 @@ pnpm test:live:bench      # SlipBench's grader against a real model answer
 ```
 
 Only one case anywhere spends a Channel3 credit, and it is opt-in twice: a key, then
-`CHANNEL3_LIVE_SEARCH=1`. A deployment that will run on serverless also needs `SLIP_CRON_SECRET`,
-because nothing resolves holds or unknown payments there without the schedule in `apps/web/vercel.json`.
+`CHANNEL3_LIVE_SEARCH=1`. A deployment that will run on serverless also needs `CRON_SECRET` — the
+name Vercel's scheduler sends, with Slip's own `SLIP_CRON_SECRET` accepted too — because nothing
+resolves holds or unknown payments there without the schedule in `apps/web/vercel.json`.
 
 Every variable is listed in [.env.example](.env.example). Copy it to **`apps/web/.env.local`** —
 that is the file Next loads and the one the operator scripts read; nothing reads a `.env` at the
@@ -376,7 +377,7 @@ same as traffic from a live account.
   with their original request ids within 30 minutes, then looks them up; releases authorizations
   that arrive after their hold closed; polls mandate setups; re-runs webhooks that failed. A
   long-lived process runs it on a timer; a serverless one runs the same pass from
-  `/api/cron/resolve` every five minutes, authorised by `SLIP_CRON_SECRET`.
+  `/api/cron/resolve` on a schedule — set up where running the real thing is described above.
 - **Webhooks** — verified, stored once, and applied through the same state machines, so late,
   repeated and out-of-order deliveries converge.
 - **Mandates and agents** — setup at PayPal, the kill switch, limit changes as new policy
