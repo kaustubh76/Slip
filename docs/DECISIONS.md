@@ -3406,3 +3406,38 @@ config is at `apps/web/vercel.json` because Vercel reads its configuration from 
 directory, which is `apps/web` (`1bc9aae`). A wrong file path had nearly become a reported defect in
 the deployment, and a fix for a problem that did not exist. Checking the claim against the artifact
 cost two commands; the plan built on the hypothesis would have cost an afternoon.
+
+## D119 · 2026-11-12 · A demo's name on a real deployment's limit
+
+`SLIP_DEMO_DESKS_PER_ADDRESS` sets `runtime.ts`'s `limits.perAddress`, and since D115 that figure
+is what `admissions.admit` enforces. **Both of its consumers run only when the demo is off.**
+`startWithPayPal` and `signInWithPassword` each `redirect("/sign-in")` when `isDemo()` is true, so
+the variable whose name says *demo* is the one capping owner sign-ups and password attempts on a
+real deployment — counted in the database, so the allowance holds across instances.
+
+The hazard runs both ways. An operator running the real thing never sets a variable named for the
+demo, and so never learns they have a password-guessing limit or what it is. Worse in the other
+direction: the comment beside it in `.env.example` invited exactly the wrong change — *"size the
+first against the box: `render.yaml` sets 200 for a 512 MB instance"* — so someone giving the demo
+a roomier box raises the number that also governs how many passwords one address may try.
+`playwright.config.ts` sets **1000**, which is a test's number and would be an open door.
+
+**`docs/UI.md` had the reach right the whole time** and `.env.example` did not, which is the same
+pattern the defaults rule already records in its own comment: the document nobody deploys from
+stays correct while the file everybody copies drifts. `doctor.ts` tells an operator to copy that
+file, so it is the one that had to say it.
+
+**Documented, not renamed, and that is a decision rather than an omission.** `SLIP_LIMIT_PER_ADDRESS`
+is the honest name, but two things argue against taking it today. The deployment's own environment
+cannot be enumerated from here — listing the Vercel project's variables now answers 403 — so an
+outright rename risks silently restoring the default on a live limit, and a fallback that accepts
+both names is the two-names-for-one-knob trap D76 is about. It belongs with the next deliberate
+configuration change, when the deployment's variables can be read and set in the same pass.
+
+**No guard fits this one, and saying so is better than a weak one.** "A variable named for the demo
+must not be read on a non-demo path" needs to know which paths are demo-only, which is not
+mechanically available. What is covered: `doc-figures` extracts the default through
+`/positiveInt\(env\["SLIP_DEMO_DESKS_PER_ADDRESS"\],\s*([\d_]+)\)/`, so a rename breaks that
+pattern loudly and lands whoever does it here. D118's credential rule earned a guard because it
+compares two identifiers inside one unit; this one would have to infer intent, and a guard that
+reads stronger than it is costs more than none.
