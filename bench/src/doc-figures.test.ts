@@ -34,6 +34,32 @@ const read = (path: string): string => readFileSync(join(root, path), "utf8");
  */
 const flat = (path: string): string => read(path).replace(/\s+/g, " ");
 
+/**
+ * A unit is the smallest piece of a markdown document that stands on its own: a paragraph, a list
+ * item, a table row. Paragraphs alone are too coarse for the rules below — the three defects they
+ * exist for were a paragraph, one bullet inside a ten-bullet list, and a line of a checklist, and
+ * a bullet whose sibling happens to say the right thing is still a bullet that misleads.
+ */
+const units = (text: string): string[] => {
+  const found: string[] = [];
+  let current: string[] = [];
+  const flush = (): void => {
+    if (current.join(" ").trim() !== "") found.push(current.join(" "));
+    current = [];
+  };
+  for (const line of text.split("\n")) {
+    if (line.trim() === "") {
+      flush();
+      continue;
+    }
+    // A bullet, a numbered item or a table row begins a new unit; its continuation lines do not.
+    if (/^\s*(?:[-*]\s|\d+\.\s|\|)/.test(line)) flush();
+    current.push(line.trim());
+  }
+  flush();
+  return found;
+};
+
 interface Tally {
   readonly agent: string;
   readonly errands: number;
@@ -639,5 +665,101 @@ describe("the figures in prose", () => {
     expect(wrong(asDrifted).join("\n")).toContain("SLIP_DEMO_LATENCY_MS");
 
     expect(wrong(example).join("\n")).toBe("");
+  });
+
+  /**
+   * **`CRON_SECRET`, not `SLIP_CRON_SECRET`, wherever a document tells a serverless deployment
+   * what to set.**
+   *
+   * `cronSecrets()` accepts either name, which is what makes them look interchangeable in prose.
+   * They are not. Vercel's scheduler sends a bearer token only for a variable named exactly
+   * `CRON_SECRET`, so a deployment that followed a document naming Slip's own name instead answers
+   * 401 to its own cron for ever — and that looks like nothing at all until an authorization has
+   * been sitting on a real card for a week (D76). `services.ts` refuses a live boot over it and
+   * `.env.example` warns about it in bold; three living documents told the operator the opposite
+   * anyway, one of them in a go-live checklist.
+   *
+   * Why those three outlived two corrections is why this is a rule rather than three edits. D76
+   * swept the sentences that named `CRON_SECRET`; D105 swept the ones that named "Hobby" or
+   * "daily". None of the three says any of those words, so each sweep for the newly-correct
+   * condition passed straight over the stale claim. A rule that matches the trap itself does not
+   * care what words surround it.
+   */
+  it("offers the cron secret Vercel sends wherever it offers Slip's own", () => {
+    // `_` is a word character, so `\bCRON_SECRET\b` cannot match inside `SLIP_CRON_SECRET`. The
+    // whole rule rests on that, so it is proven here rather than assumed.
+    expect(/\bCRON_SECRET\b/.test("SLIP_CRON_SECRET")).toBe(false);
+    expect(/\bCRON_SECRET\b/.test("set CRON_SECRET to a generated secret")).toBe(true);
+
+    const trapped = (docs: readonly (readonly [string, string])[]): string[] =>
+      docs.flatMap(([path, text]) =>
+        units(text)
+          .filter((unit) => unit.includes("SLIP_CRON_SECRET") && !/\bCRON_SECRET\b/.test(unit))
+          .map((unit) => `${path} offers only SLIP_CRON_SECRET — ${unit.slice(0, 80)}`),
+      );
+
+    const docs = LIVING.map((path): readonly [string, string] => [path, read(path)]);
+
+    // **Calibrated against the known-bad case before it is believed**, like every rule here — and
+    // the known-bad case is the real one: the README's live-suites paragraph exactly as it stood
+    // before this rule existed, with the platform's name taken back out and Slip's own left behind.
+    const trap = (text: string): string =>
+      text.replace(
+        /needs `CRON_SECRET` — the\s+name Vercel's scheduler sends, with Slip's own `SLIP_CRON_SECRET` accepted too —/,
+        "needs `SLIP_CRON_SECRET`,",
+      );
+    const asTrap = docs.map((entry): readonly [string, string] =>
+      entry[0] === "README.md" ? [entry[0], trap(entry[1])] : entry,
+    );
+    // Found by name, not by position: a reordered `LIVING` must not quietly compare two documents
+    // that were both left alone.
+    const readmeText = read("README.md");
+    expect(trap(readmeText)).not.toBe(readmeText); // the fixture must differ, or it proves nothing
+    expect(trapped(asTrap).join("\n")).toContain("README.md");
+
+    expect(trapped(docs).join("\n")).toBe("");
+  });
+
+  /**
+   * **One cadence, written down once.** The README stated the serverless resolver's schedule in
+   * two places and they disagreed: the deployment passage said "every few minutes, and a daily
+   * sweep will not do" and named the Hobby cap, while the feature list a hundred lines later said
+   * it runs "every five minutes" — which the committed `apps/web/vercel.json` has never done.
+   * D105 corrected the first and left the second, and the ledger then recorded the passage as
+   * fixed. `config.ts` already reasons this way about `reconcileEveryMs` ("the stored 'as of' is
+   * what decides when to look again, so this is the only place the cadence is written down"); the
+   * second copy is what drifted, so the fix was to delete it rather than correct it.
+   *
+   * **What this rule does not do**, because a guard that reads stronger than it is costs more than
+   * no guard: it cannot tell a true cadence from a false one, so one wrong sentence still passes.
+   * It catches the *second* sentence, whatever figure that one states. The credential rule above
+   * is the one that would have caught all three of this commit's defects.
+   */
+  it("states the serverless resolver's cadence in exactly one place", () => {
+    const crons = JSON.parse(read("apps/web/vercel.json")).crons as { schedule: string }[];
+    const schedule = crons[0]?.schedule ?? "";
+    expect(schedule, "apps/web/vercel.json no longer declares a cron for the resolver").not.toBe(
+      "",
+    );
+
+    const CADENCE =
+      /every (?:few|five|\d+) minutes|once a day|\bdaily\b|(?:\*|\d+)(?:\/\d+)? \d+ \* \* \*/;
+    const stating = (text: string): string[] =>
+      units(text).filter((unit) => unit.includes("/api/cron/resolve") && CADENCE.test(unit));
+
+    const readme = read("README.md");
+
+    // The known-bad case is again the real one: the cadence this commit deleted, put back.
+    const asDuplicated = readme.replace(
+      "`/api/cron/resolve` on a schedule — set up where running the real thing is described above.",
+      "`/api/cron/resolve` every five minutes, authorised by `SLIP_CRON_SECRET`.",
+    );
+    expect(asDuplicated).not.toBe(readme); // the fixture must differ, or it proves nothing
+    expect(stating(asDuplicated)).toHaveLength(2);
+
+    expect(
+      stating(readme),
+      `the committed schedule is "${schedule}", and README.md should state a cadence for the route in one place only`,
+    ).toHaveLength(1);
   });
 });

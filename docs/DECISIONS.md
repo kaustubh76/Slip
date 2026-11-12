@@ -3354,3 +3354,55 @@ iterate `original` and `carbon`, and marking it accurate — **without checking 
 "in CI"**. A sentence with two claims was verified against one of them. Verifying the interesting
 half of a sentence and reporting the sentence as checked is how a caption survives a review that
 was looking for exactly that fault.
+
+## D118 · 2026-11-12 · The sentence that never named the condition
+
+Three living documents told a serverless deployment to set **`SLIP_CRON_SECRET`** as the credential
+for `/api/cron/resolve`. On Vercel that is the one name the platform will never send, so a
+deployment that followed them answers 401 to its own scheduler for ever while nothing expires a
+hold — the failure D76 was written about. The repository already knew: `services.ts` refuses a live
+boot with *"Set CRON_SECRET (not SLIP_CRON_SECRET)"*, `.env.example` warns in bold, and `DEPLOY.md`
+puts **"This exact name"** in its environment table. The documents a reader reaches first said the
+opposite, one of them in a go-live checklist:
+
+| where | what it said |
+|---|---|
+| `README.md`, the live-suites section | "A deployment that will run on serverless also needs `SLIP_CRON_SECRET`" |
+| `README.md`, the Resolver bullet | "runs the same pass from `/api/cron/resolve` **every five minutes**, authorised by `SLIP_CRON_SECRET`" |
+| `docs/SERVICES.md`, "Housekeeping runs" | "a serverless one needs `SLIP_CRON_SECRET` and the `/api/cron/resolve` schedule" |
+
+**The README also contradicted itself about its own deployment, a hundred lines apart.** Its
+deployment passage says "every few minutes, and a daily sweep will not do" and names the Hobby cap;
+its Resolver bullet said five minutes, which the committed `apps/web/vercel.json` has never done —
+the schedule there is `0 3 * * *`. D105 records that passage as *"now says every few minutes, names
+the Hobby cap"*. That was true of the one line it edited and never true of the other.
+
+**Why two corrections passed over all three is the entry.** D76 swept the sentences that named
+`CRON_SECRET`; D105 swept the ones that named "Hobby" or "daily". **None of these three says any of
+those words.** Each sweep grepped for the condition it had just made correct, and a stale claim
+states the *old* condition — or, as here, states no condition at all and merely implies one. This is
+`d38e914`'s "four purchases" again, and D117's half-verified caption: the sentences that mention the
+feature get swept, and the ones that only imply it survive.
+
+**The cadence was deleted rather than corrected.** A bullet describing what the resolver *is* has no
+business restating a deployment figure; that second copy is precisely what drifted. `config.ts`
+already reasons this way about `reconcileEveryMs` — *"the stored 'as of' is what decides when to
+look again, so this is the only place the cadence is written down"*.
+
+**Pinned, at unit granularity.** `bench/src/doc-figures.test.ts` now flags any paragraph, list item
+or table row that names `SLIP_CRON_SECRET` without also naming bare `CRON_SECRET`. Paragraphs alone
+were too coarse: one defect was a single bullet in a ten-bullet list, and a bullet whose sibling
+says the right thing is still a bullet that misleads. The rule was **calibrated against the real
+corpus before the prose was touched** and reported exactly those three and nothing else across all
+ten living documents, `DEPLOY.md`'s three correct mentions included — then shown red against a real
+file, not only against its fixture. A second rule holds the README to one cadence statement, and
+says in its own comment that it cannot tell a true cadence from a false one: it catches the
+*second* sentence, whatever figure that one states.
+
+**The near-miss is worth keeping too.** This began as a different hypothesis — that no cron existed
+at all, since there is no `vercel.json` at the repository root, and `runtime.ts` starts no timer
+where `VERCEL` is set. Two reads ended it: `vercel crons list` shows the job registered, and the
+config is at `apps/web/vercel.json` because Vercel reads its configuration from the project's root
+directory, which is `apps/web` (`1bc9aae`). A wrong file path had nearly become a reported defect in
+the deployment, and a fix for a problem that did not exist. Checking the claim against the artifact
+cost two commands; the plan built on the hypothesis would have cost an afternoon.
